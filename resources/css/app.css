@@ -1,15 +1,3 @@
-@import "nucleo-icons.css";
-@import "nucleo-svg.css";
-@import "perfect-scrollbar.css";
-@import "soft-ui-dashboard-tailwind.css";
-@import "soft-ui-dashboard-tailwind.min.css";
-@import "tooltips.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
-[x-cloak] {
-    display: none;
-}
