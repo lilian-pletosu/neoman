@@ -127,9 +127,6 @@ import {defineComponent} from 'vue'
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link} from "@inertiajs/vue3";
 import vSelect from 'vue-select'
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import { Select, initTE } from "tw-elements";
 
 
 defineProps({
@@ -144,9 +141,7 @@ defineProps({
         AdminLayout,
         Link,
         vSelect,
-        Dropdown,
-        Select,
-        initTE
+
     },
 })
 </script>
