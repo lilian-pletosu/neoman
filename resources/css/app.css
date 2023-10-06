@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.container-rounded {
+    @apply bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8  2xl:col-span-2;
+}
+
+.primary-text {
+    @apply text-xl font-bold text-gray-900 mb-2;
+}
+.secondary-text {
+    @apply text-base font-normal text-gray-500;
+}
+
+.big-text {
+    @apply text-2xl sm:text-3xl leading-none font-bold text-gray-900;
+}
+.text-link {
+    @apply text-sm font-medium  hover:bg-gray-100 rounded-lg p-2;
+}
+.text-link-blue {
+    @apply text-link text-cyan-600;
+}

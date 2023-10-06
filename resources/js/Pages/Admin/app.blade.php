@@ -19,7 +19,6 @@
     <!-- Styles -->
 </head>
 <body class="font-sans antialiased">
-    <h1>asdsssssssssssssssssssssssssssssssss</h1>
 @inertia
 </body>
 </html>
