@@ -64,8 +64,8 @@ services:
       MYSQL_USER: '${DB_USERNAME:-root}'
       MYSQL_PASSWORD: '${DB_PASSWORD:-secrets}'
       MYSQL_DATABASE: '${DB_DATABASE:-neomandb}'
-#    ports:
-#      - 33066:3306
+    ports:
+      - 33066:3306
     volumes:
       - ./database-storage:/var/lib/mysql
     networks:
@@ -78,8 +78,8 @@ services:
       ADMINER_DEFAULT_SERVER: neoman-mariadb
       ADMINER_DEFAULT_USER: root
       ADMINER_DESIGN: pappu687
-#    ports:
-#      - 8096:8080
+    ports:
+      - 8096:8080
     networks:
       - neoman
       - traff

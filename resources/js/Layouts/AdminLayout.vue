@@ -1,8 +1,8 @@
 <template>
     <div>
-        <nav-bar/>
+        <nav-bar @sidebar="toggleSidebar"/>
         <div class="flex overflow-hidden bg-white pt-16">
-            <sidebar :current-route=currentRoute />
+            <Sidebar :hidden=sidebarHidden :current-route=currentRoute />
             <div class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10" id="sidebarBackdrop"></div>
             <div id="main-content" class="h-full w-full bg-gray-50 relative overflow-y-auto lg:ml-64">
                 <main>
@@ -73,6 +73,17 @@ export  default defineComponent({
     components: {NavBar, Sidebar},
     props: {
         currentRoute: String
+    },
+    data(){
+        return {
+            sidebarHidden: Boolean
+        };
+    },
+    methods: {
+        toggleSidebar() {
+            console.log(this.sidebarHidden);
+            this.sidebarHidden = !this.sidebarHidden;
+        }
     }
 
 })

@@ -9,4 +9,9 @@ return [
     'associations' => 'Ассоциации',
     'promotions' => 'Акции',
     'banners' => 'Баннеры',
+    'logout' => 'Выйти',
+    'status' => 'Статус',
+    'dateTime' => 'Время',
+    'clients' => 'Клиенты',
+    'order_price' => 'Цена'
 ];

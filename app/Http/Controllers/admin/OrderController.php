@@ -3,16 +3,31 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\DataTableBuilder;
+use App\Services\DataTableService;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+
+
+    private DataTableService $dataTableService;
+
+
+    public function __construct(DataTableService  $dataTableService)
+
+
+    {
+        $this->dataTableService = $dataTableService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+
+        return inertia('Admin/Orders');
     }
 
     /**

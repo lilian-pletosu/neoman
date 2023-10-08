@@ -9,114 +9,44 @@
                             <span class="secondary-text">This is a list of latest transactions</span>
                         </div>
                         <div class="flex-shrink-0">
-                            <a href="#" class="text-link-blue">View all</a>
+                            <secondary-button @click="showModal" class="text-link-blue">{{ __('add_products') }}</secondary-button>
                         </div>
                     </div>
-                    <div class="flex flex-col mt-8">
-                        <div class="overflow-x-auto rounded-lg">
-                            <div class="align-middle inline-block min-w-full">
-                                <div class="shadow overflow-hidden sm:rounded-lg">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Transactions
-                                            </th>
-                                            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Date & Time
-                                            </th>
-                                            <th scope="col" class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Amount
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="bg-white">
-                                        <tr>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                                Payment from <span class="font-semibold">Bonnie Green</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 23 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                $2300
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-gray-50">
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                                Payment refund to <span class="font-semibold">#00910</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 23 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                -$670
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                                Payment failed from <span class="font-semibold">#087651</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 18 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                $234
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-gray-50">
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                                Payment from <span class="font-semibold">Lana Byrd</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 15 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                $5000
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                                Payment from <span class="font-semibold">Jese Leos</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 15 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                $2300
-                                            </td>
-                                        </tr>
-                                        <tr class="bg-gray-50">
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                                Payment from <span class="font-semibold">THEMESBERG LLC</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 11 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                $560
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                                Payment from <span class="font-semibold">Lana Lysle</span>
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                                Apr 6 ,2021
-                                            </td>
-                                            <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                                $1437
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    <div v-if="resources.data.length != 0" class="flex flex-col mt-8">
+                        <data-table :resources="resources" :columns="$page.props.columnsOrder" />
+                    </div>
+                <div>
+                    <h2 class="flex justify-center" v-if="resources.data.length === 0">{{__('no_products')}}...</h2>
+                </div>
+
+                <Modal class="w-full" :show="isOpen" @close="isOpen">
+                    <div class="p-6 container-rounded">
+                        <h2 class="text-lg font-medium text-gray-900">
+                            {{__('select_file_csv')}}
+                        </h2>
+
+
+                        <div class="my-4 text-sm text-gray-600">
+                                <form @submit.prevent="submit">
+                                    <input @input="form.file = $event.target.files[0]" class="block w-full mb-5 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="default_size" type="file">
+                                    <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                                        {{ form.progress.percentage }}%
+                                    </progress>
+                                    <button type="submit">Submit</button>
+                                </form>
+                        </div>
+
+
+
+                        <div class="mt-6  flex justify-end">
+                            <SecondaryButton class="mx-2" @click="showModal"> Cancel </SecondaryButton>
+                            <PrimaryButton class="mx-2">Submit</PrimaryButton>
                         </div>
                     </div>
-
-
+                </Modal>
             </div>
+
+
 
         </div>
     </admin-layout>
@@ -125,15 +55,38 @@
 <script setup>
 import {defineComponent} from 'vue'
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import vSelect from 'vue-select'
+import DataTable from "@/Components/DataTable.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import Modal from "@/Components/Modal.vue";
+import {ref} from "vue";
+import { useForm } from '@inertiajs/vue3';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 
 defineProps({
     initialRoute: {
        type: String
    },
+    resources: {
+        type: Object
+    }
 });
+const isOpen = ref(false);
+
+const form = useForm({
+    file: null,
+})
+function submit() {
+    form.post(route('importCSV'))
+}
+
+const showModal = () => {
+    console.log('test')
+    isOpen.value = !isOpen.value;
+};
+
  defineComponent({
     name: "Products",
 
@@ -141,6 +94,8 @@ defineProps({
         AdminLayout,
         Link,
         vSelect,
+        Modal,
+        useForm
 
     },
 })
