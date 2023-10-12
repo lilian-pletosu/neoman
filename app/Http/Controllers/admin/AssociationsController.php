@@ -13,7 +13,7 @@ class AssociationsController extends Controller
      */
     public function index()
     {
-        //
+        return inertia('Admin/Associations');
     }
 
     /**

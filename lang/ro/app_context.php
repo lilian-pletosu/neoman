@@ -1,15 +1,16 @@
 <?php
 
 return [
-  'key'=> 'test',
-   'dashboard' => 'Dashboard',
-   'products' => 'Produse',
-   'orders' => 'Comenzi',
-   'categories' => 'Categorii',
-   'associations' => 'Asociații',
-   'promotions' => 'Promoții',
-   'banners' => 'Banere',
-   'logout' => 'Logout',
+    'key' => 'test',
+    'dashboard' => 'Dashboard',
+    'products' => 'Produse',
+    'orders' => 'Comenzi',
+    'categories' => 'Categorii',
+    'brands' => 'Branduri',
+    'associations' => 'Asociații',
+    'promotions' => 'Promoții',
+    'banners' => 'Banere',
+    'logout' => 'Logout',
     'status' => 'Status',
     'dateTime' => 'Data și ora',
     'clients' => 'Clienți',
@@ -17,5 +18,18 @@ return [
     'title' => 'Titlu',
     'image' => 'Imagine',
     'price' => 'Preț',
-    'no_products' => 'Nu sunt produse'
+    'no_products' => 'Nu sunt produse',
+    'validation.required' => 'Completați câmpul',
+    'pagination.previous' => 'Precedentă',
+    'pagination.next' => 'Următoarea',
+    'select_file_csv' => 'Importă un file excel',
+    'add_products' => 'Adaugă produse',
+    'import' => 'Importă',
+    'cancel' => 'Anulează',
+    'submit' => 'Salvează',
+    'products_description_admin' => 'Aici este lista cu toate produsele',
+    'product_code' => 'Cod produs',
+    'search...' => 'Căutare...',
+    'search' => 'Caută'
+
 ];

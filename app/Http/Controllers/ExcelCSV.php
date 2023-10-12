@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExcelCSV extends Controller

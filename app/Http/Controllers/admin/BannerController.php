@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Promotion;
+use App\Models\Banner;
 use Illuminate\Http\Request;
 
-class PromotionsController extends Controller
+class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return inertia('Admin/Promotions');
+        return inertia('Admin/Banners');
     }
 
     /**
@@ -35,7 +35,7 @@ class PromotionsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Promotion $promotion)
+    public function show(Banner $banner)
     {
         //
     }
@@ -43,7 +43,7 @@ class PromotionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Promotion $promotion)
+    public function edit(Banner $banner)
     {
         //
     }
@@ -51,7 +51,7 @@ class PromotionsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Promotion $promotion)
+    public function update(Request $request, Banner $banner)
     {
         //
     }
@@ -59,7 +59,7 @@ class PromotionsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Promotion $promotion)
+    public function destroy(Banner $banner)
     {
         //
     }

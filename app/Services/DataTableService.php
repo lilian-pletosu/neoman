@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class DataTableService
@@ -13,12 +13,13 @@ class DataTableService
 
     private Model $resource;
     private Builder $query;
-    private int|null $perPage = 10;
+    private int|null $perPage = 20;
     public array $resourceColumns = ['*'];
     private array $extraColumns = [];
     public array $relations = [];
     private array $relationFields = [];
     public string $resourceName;
+    public bool $editInModal = true;
     public array $filters;
     public string $resourceRoute = '';  //this is checked on vue js side, as empty
     public string $searchRoute = '';
@@ -208,7 +209,7 @@ class DataTableService
     }
 
 
-    public function setInventoryCategoryPageRoute(array $route):static
+    public function setInventoryCategoryPageRoute(array $route): static
     {
         $this->inventoryCategoryPageRoute = $route;
         return $this;
@@ -230,7 +231,6 @@ class DataTableService
 
         return $this;
     }
-
 
 
     /**
@@ -293,7 +293,7 @@ class DataTableService
            but satisfying the the relation query condition
         */
         foreach ($this->relationFields as $relation => $fields) {
-            if ( $this->resource->$relation() instanceof  \Illuminate\Database\Eloquent\Relations\BelongsTo) {
+            if ($this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo) {
                 $foreignKeysInSelect[] = $this->resource->$relation()->getForeignKeyName();
             }
         }
@@ -306,7 +306,7 @@ class DataTableService
         $this->query->select(...array_unique([...$this->extraColumns, ...$foreignKeysInSelect, ...$this->resourceColumns]));
 
         //apply where conditions
-        foreach($this->whereConditions as $condition) {
+        foreach ($this->whereConditions as $condition) {
             // If condition key exists in request as url params let it override the default condition
             if (!request()->has($condition[0])) {
                 $this->query->where($condition[0], $condition[1], $condition[2]);
@@ -314,12 +314,12 @@ class DataTableService
         }
 
         //temporary testing group by and sum aggregated functions
-        if( !empty($this->aggregatedCriteria)) {
+        if (!empty($this->aggregatedCriteria)) {
             $this->query->selectRaw(" {$this->aggregatedCriteria['function']}({$this->aggregatedCriteria['field']}) as {$this->aggregatedCriteria['alias']}")
                 ->groupBy($this->aggregatedCriteria['group_by']);
 
             // default true including results with zero value; run condition on false;
-            if(!$this->aggregatedCriteria['nonzero']) {
+            if (!$this->aggregatedCriteria['nonzero']) {
                 $this->query->where("{$this->aggregatedCriteria['field']}", '>', 0);
             }
         }
@@ -331,11 +331,11 @@ class DataTableService
             //this is to avoid requesting extra fields in method params, since the foreign ksy may be extracted automatically
             $foreignKeyInRelation = '';
 
-            if ( $this->resource->$relation() instanceof  \Illuminate\Database\Eloquent\Relations\HasMany
+            if ($this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\HasMany
                 ||
-                $this->resource->$relation() instanceof  \Illuminate\Database\Eloquent\Relations\HasOne ) {
+                $this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\HasOne) {
 
-                $foreignKeyInRelation = $this->resource->$relation()->getForeignKeyName() . ',' ;
+                $foreignKeyInRelation = $this->resource->$relation()->getForeignKeyName() . ',';
             }
 
             $this->query->with($relation
@@ -347,27 +347,9 @@ class DataTableService
                 . implode(',', $fields));
         }
 
-        //check and set warehouse filter
-        //the params is triggered by a link from DataTable vue
-        if( request()->has('wh') && !empty(request('wh'))) {
-            $this->filters['wh'] = request('wh');
-            $this->query->where('warehouse_id', request('wh'));
-        }
-
-        //check and set garage filter
-        //the params is triggered by a link from DataTable vue
-        if( request()->has('gar') && !empty(request('gar'))) {
-            $this->filters['gar'] = request('gar');
-            $this->query->where('garage_id', request('gar'));
-        }
-
         //check and set status filter
         // at this moment just for Assets
         //the params is triggered by a link from DataTable vue
-        if( request()->has('status') && !empty(request('status'))) {
-            $this->filters['status'] = request('status');
-            $this->query->where('status', request('status'));
-        }
 
         //if there is a search for something, define the searchable fields and relations
         if (request('search')) {
@@ -377,7 +359,7 @@ class DataTableService
 
             $this->query->where(function (Builder $query) use ($attributes, $searchTerm) {
                 foreach (($attributes) as $attribute) {
-                    $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
+                    $query->orWhere($attribute, 'like', "%{$searchTerm}%");
                 }
             });
 
@@ -386,14 +368,6 @@ class DataTableService
                 $this->query->orWhereHas($relation, function ($query) use ($fields, $searchTerm) {
                     $query->where(function (Builder $query) use ($fields, $searchTerm) {
                         // Keep condition for warehouse when searching through related fields.
-                        if( request()->has('wh') && !empty(request('wh'))) {
-                            $query->where('warehouse_id', request('wh'));
-                        }
-
-                        // Keep condition for garage when searching through related fields.
-                        if( request()->has('gar') && !empty(request('gar'))) {
-                            $query->where('garage_id', request('gar'));
-                        }
 
                         /*
                          * $query->where('warehouse_id','=',2);
@@ -401,7 +375,7 @@ class DataTableService
                          * apply the global conditions from $this->where inside subqueries
                          *
                          */
-                        foreach($this->whereConditions as $condition) {
+                        foreach ($this->whereConditions as $condition) {
                             // If condition key exists in request as url params let it override the default condition
                             if (!request()->has($condition[0])) {
                                 //pay attention to $query local variable wich should be augmented, not the global $this->query
@@ -428,7 +402,7 @@ class DataTableService
         //apply ordering on resource model
         if (request()->has(['field', 'direction'])) {
             $this->query->orderBy(request('field'), request('direction'));
-        }else{
+        } else {
             $this->query->orderBy($this->defaultSortField, $this->defaultSortDirection);
 
             $this->filters['field'] = $this->defaultSortField;
@@ -441,7 +415,7 @@ class DataTableService
          * so, after building the query but before returning the fields, push the aggregated alias as usable field,
          * as the aggregated field must not be as selectable field, but it is returned by the aggregated query
          */
-        if( !empty($this->aggregatedCriteria)) {
+        if (!empty($this->aggregatedCriteria)) {
             $this->resourceColumns[] = $this->aggregatedCriteria['alias'];
         }
 
@@ -464,16 +438,14 @@ class DataTableService
     {
         return [
             'resources' => $this->run(),
+            'editInModal' => $this->editInModal,
             'filters' => $this->filters,
             'columns' => $this->resourceColumns,
             'relationColumns' => $this->relations,
             'resourceRoute' => $this->resourceRoute,
             'searchRoute' => $this->searchRoute,
-            'warehouses' => $this->warehouses??[],
-            'formatters' => $this->formatters??[],
-            'columnsOrder' => $this->columnsOrder??[],
-            'garages' => $this->garages??[],
-            'assetsStatus' => $this->assetsStatus??[],
+            'formatters' => $this->formatters ?? [],
+            'columnsOrder' => $this->columnsOrder ?? [],
         ];
 
     }

@@ -12,7 +12,7 @@ class ProductsController extends Controller
     private DataTableService $dataTableService;
 
 
-    public function __construct(DataTableService  $dataTableService)
+    public function __construct(DataTableService $dataTableService)
 
 
     {
@@ -24,11 +24,18 @@ class ProductsController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Product')
-            ->setResourceColumns(['id', 'title', 'price'])
-            ->setColumnsOrder(['id', 'title', 'price'])
+            ->setResourceColumns(['product_code', 'title', 'price', 'description'])
+            ->setRelationColumn('subSubCategory', 'category', ['name'])
+            ->setRelationColumn('brand', 'brand', ['name'])
+            ->setColumnsOrder(['product_code', 'title', 'description', 'price'])
+            ->editInModal(true)
+            ->paginate(10)
+            ->setSearchRoute('admin.products')
             ->sortBy('id');
+
+//        dd($builder->getData()['resources'][1]);
         return inertia('Admin/Products', [
-            'initialRoute'=> 'admin.products'
+            'initialRoute' => 'admin.products'
         ])->loadData($builder);
     }
 }
