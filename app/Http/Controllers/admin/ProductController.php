@@ -5,7 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Services\DataTableService;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
 
 

@@ -89,7 +89,7 @@
           </ul>
           <div class="space-y-2 pt-2  ">
 
-            <div class="bg-gray-200 mt-auto">
+            <div class="hover:bg-gray-200 mt-auto">
               <Link :href="route('logout')"
                     method="post" target="_blank"
                     class="text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 group transition duration-75 flex items-center p-2">

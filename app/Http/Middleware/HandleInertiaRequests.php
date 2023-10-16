@@ -35,13 +35,14 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'ziggy' => fn () => [
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
             'currentLocale' => fn() => app()->currentLocale(),
+            'currentYear' => today()->year,
             'localization' => function () {
-            return __('app_context');
+                return __('app_context');
             },
             'availableLanguages' => config('availableLanguages'),
         ];

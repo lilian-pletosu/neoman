@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Association;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
-class AssociationsController extends Controller
+class PromotionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return inertia('Admin/Associations');
+        return inertia('Admin/Promotions');
     }
 
     /**
@@ -35,7 +35,7 @@ class AssociationsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Association $association)
+    public function show(Promotion $promotion)
     {
         //
     }
@@ -43,7 +43,7 @@ class AssociationsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Association $association)
+    public function edit(Promotion $promotion)
     {
         //
     }
@@ -51,7 +51,7 @@ class AssociationsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Association $association)
+    public function update(Request $request, Promotion $promotion)
     {
         //
     }
@@ -59,7 +59,7 @@ class AssociationsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Association $association)
+    public function destroy(Promotion $promotion)
     {
         //
     }

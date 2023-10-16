@@ -30,6 +30,21 @@ return [
     'products_description_admin' => 'Aici este lista cu toate produsele',
     'product_code' => 'Cod produs',
     'search...' => 'Căutare...',
-    'search' => 'Caută'
+    'search' => 'Caută',
+    'rights_reserved' => 'Toate drepturile sunt rezervate',
+    'is_enabled' => 'Status',
+    'active' => "Activ",
+    'inactive' => 'Inactiv',
+    'name' => 'Nume',
+    'description' => "Descriere",
+    'website' => 'Website',
+    'create_brand' => 'Crează un brand nou',
+    'complete_all_fields' => 'Completează toate câmpurile',
+    'select_status' => 'Selectează statusul',
+
+
+    //validation
+    'validation.url' => 'Introduce-ți un url valid',
+    'validation.min.string' => 'Prea puține caractere'
 
 ];
