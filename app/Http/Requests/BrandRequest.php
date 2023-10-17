@@ -26,7 +26,7 @@ class BrandRequest extends FormRequest
             'description' => 'required|min:5|String',
             'website' => 'required',
             'is_enabled' => 'required',
-            'image' => 'file|image|mimes:jpg,bmp,png'
+            'image' => 'file|image|mimes:jpg,bmp,png,svg'
 
         ];
     }

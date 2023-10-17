@@ -15,10 +15,10 @@ RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
 RUN mkdir -p /var/www/html
 
 
-# Instalarea extensiilor PHP (pdo și pdo_mysql)
+# Instalarea extensiilor PHP (pdo, pdo_mysql si exif)
 RUN apk --no-cache add shadow && \
     usermod -u $uuid www-data && \
-    docker-php-ext-install pdo pdo_mysql
+    docker-php-ext-install pdo pdo_mysql exif
 
 # Instalarea extensiilor PHP (gd și zip)
 RUN apk update && apk add libpng-dev libzip-dev && \

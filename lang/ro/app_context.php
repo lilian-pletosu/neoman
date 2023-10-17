@@ -19,6 +19,7 @@ return [
     'image' => 'Imagine',
     'price' => 'Preț',
     'no_products' => 'Nu sunt produse',
+    'no_brands' => 'Nu sunt branduri',
     'validation.required' => 'Completați câmpul',
     'pagination.previous' => 'Precedentă',
     'pagination.next' => 'Următoarea',
@@ -39,6 +40,7 @@ return [
     'description' => "Descriere",
     'website' => 'Website',
     'create_brand' => 'Crează un brand nou',
+    'create' => 'Crează',
     'complete_all_fields' => 'Completează toate câmpurile',
     'select_status' => 'Selectează statusul',
 

@@ -1,5 +1,5 @@
 <template>
-  <admin-layout :current-route="initialRoute" :title="Products">
+  <admin-layout :current-route="initialRoute" title="Promotions">
     <div class="w-full grid grid-cols-1  gap-4">
       <div class="container-rounded ">
 
