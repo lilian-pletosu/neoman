@@ -1,9 +1,43 @@
+<script setup>
+import {onMounted, ref} from 'vue';
+
+defineProps({
+  modelValue: {
+    type: String,
+    required: true,
+  },
+  errorMessage: {
+    type: String,
+  },
+  label: {
+    type: String,
+  },
+  type: {
+    type: String
+  }
+});
+
+defineEmits(['update:modelValue']);
+
+const input = ref(null);
+
+onMounted(() => {
+  if (input.value.hasAttribute('autofocus')) {
+    input.value.focus();
+  }
+});
+
+defineExpose({focus: () => input.value.focus()});
+</script>
+
 <template>
+
   <div class="mb-5">
-    <label :for="id" class="block mb-2 text-sm font-medium text-gray-900 ">{{ label }}</label>
+    <label class="block mb-2 text-sm font-medium text-gray-900 ">{{ label }}</label>
     <input
         :type="type"
-        :id="id"
+        ref="input"
+        :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :class="{'border-2 dark:border-red-600' :errorMessage}"
         class="bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg
@@ -17,23 +51,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  props: [
-    'id',
-    'type',
-    'errorMessage',
-    'label',
-    'classStyle'
-  ],
-
-  methods: {
-    focus() {
-      this.$refs.input.focus()
-    }
-  }
-})
-</script>

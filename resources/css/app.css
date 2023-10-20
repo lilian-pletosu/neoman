@@ -1,3 +1,5 @@
+@import "vue-select/dist/vue-select.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +12,7 @@
 .primary-text {
     @apply text-xl font-bold text-gray-900 mb-2;
 }
+
 .secondary-text {
     @apply text-base font-normal text-gray-500;
 }
@@ -17,9 +20,26 @@
 .big-text {
     @apply text-2xl sm:text-3xl leading-none font-bold text-gray-900;
 }
+
 .text-link {
     @apply text-sm font-medium  hover:bg-gray-100 rounded-lg p-2;
 }
+
 .text-link-blue {
     @apply text-link text-cyan-600;
+}
+
+.vSelectBlack .vs__search::placeholder,
+.vSelectBlack .vs__dropdown-toggle,
+.vSelectBlack .vs__dropdown-menu {
+    @apply p-0 border border-gray-300 text-white  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full bg-gray-700 border-gray-600 placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500
+}
+
+.vSelectBlack .vs__clear,
+.vSelectBlack .vs__open-indicator {
+    /*fill: #ee081e;*/
+}
+
+.test .vs__selected {
+    @apply text-white
 }

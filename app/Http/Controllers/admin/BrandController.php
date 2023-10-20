@@ -24,13 +24,14 @@ class BrandController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Brand')
-            ->setResourceColumns(['image', 'name', 'description', 'website', 'is_enabled'])
+            ->setResourceColumns(['id', 'image', 'name', 'description', 'website', 'is_enabled'])
             ->editInModal(true)
             ->paginate(10)
+            ->setResourceRoute('admin.brands')
             ->setSearchRoute('admin.brands')
             ->sortBy('id');
 
-        return inertia('Admin/Brands', ['initialRoute' => 'admin.brands'])->loadData($builder);
+        return inertia('Admin/Brands')->loadData($builder);
     }
 
     /**
@@ -71,7 +72,7 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        dd($request->all());
     }
 
     /**

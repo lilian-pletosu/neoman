@@ -47,6 +47,6 @@ return [
 
     //validation
     'validation.url' => 'Introduce-ți un url valid',
-    'validation.min.string' => 'Prea puține caractere'
+    'validation.min.string' => 'Prea puține caractere',
 
 ];

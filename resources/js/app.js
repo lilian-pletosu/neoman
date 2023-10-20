@@ -1,9 +1,11 @@
 import './bootstrap';
 import '../css/app.css';
+import "vue-select/dist/vue-select.css";
 import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
+import vSelect from "vue-select";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
 
@@ -27,19 +29,29 @@ createInertiaApp({
             }
             return str;
         };
+
         app.config.globalProperties.truncate = (str, length) => {
             if (str.length > length) {
-                console.log('yes')
                 return str.substring(0, length) + '...';
             } else {
-                console.log('no')
                 return str;
             }
-
         };
+        app.config.globalProperties.clearObject = (obj, val = '') => {
+            Object.keys(obj).forEach(k => {
+                if (Array.isArray(obj[k])) {
+                    obj[k] = [];
+                } else if (typeof obj[k] === 'object' && obj[k] !== null) {
+                    this.clearObject(obj[k]);
+                } else {
+                    obj[k] = val
+                }
+            });
+        }
 
         return app
             .use(plugin)
+            .component("v-select", vSelect)
             .use(ZiggyVue)
             .mount(el);
     },

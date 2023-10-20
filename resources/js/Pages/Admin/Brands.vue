@@ -19,14 +19,19 @@
         </div>
         <div class="flex flex-col mt-8">
           <div class="overflow-x-auto rounded-lg">
-            <data-table :resources="resources" :columnsOrder="$page.props.columnsOrder"
-                        :columns="$page.props.columns" :search-route="$page.props.searchRoute"/>
+            <data-table
+                @emit-click="args => schemaForm(args)"
+                :resources="resources"
+                :columnsOrder="$page.props.columnsOrder"
+                :columns="$page.props.columns"
+                :initial-route="$page.props.initialRoute"
+                :search-route="$page.props.searchRoute"/>
           </div>
         </div>
         <div>
           <h2 class="flex justify-center" v-if="resources.data.length === 0">{{ __('no_brands') }}...</h2>
         </div>
-        <Modal :show="isOpen" @close="isOpen" :closeable="true">
+        <Modal :show="isOpen" @close="modalCreateBrand">
           <div class="container-rounded">
             <template v-if="createBrand">
               <div class="flex flex-col">
@@ -34,24 +39,24 @@
                 <p class="secondary-text">{{ __('complete_all_fields') }}</p>
               </div>
               <div>
-                <form @submit.prevent="submit" method="POST">
+                <form @submit.prevent="submitCreate" method="POST">
                   <div class="my-4 text-sm text-gray-600">
-                    <black-input v-model="form.name" :label="__('name')"
-                                 :error-message="__(form.errors.name)"/>
-                    <black-input v-model="form.description" :label="__('description')"
-                                 :error-message="__(form.errors.description)"/>
-                    <black-input v-model="form.website" :label="__('website')"
-                                 :error-message="__(form.errors.website)"/>
-                    <black-selector @update:status="setStatus"
-                                    :options="{1: 'active', 0: 'inactive'}"
-                                    :error-message="__(form.errors.is_enabled)"/>
-
+                    <black-input v-model="form1.name" :label="__('name')"
+                                 :error-message="__(form1.errors.name)"/>
+                    <black-input v-model="form1.description" :label="__('description')"
+                                 :error-message="__(form1.errors.description)"/>
+                    <black-input v-model="form1.website" :label="__('website')"
+                                 :error-message="__(form1.errors.website)"/>
+                    <black-selector @update:status="args => setStatus(args)" :value="form1.is_enabled"
+                                    :error-message="__(form1.errors.is_enabled)"
+                                    :options="{ 1: 'active', 0: 'inactive'}"
+                                    :model-value="form1.is_enabled"/>
                     <div class="my-5">
                       <label for="image" class="block mb-2 text-sm font-medium text-gray-900 ">{{
                           __('image')
                         }}</label>
 
-                      <input @input="form.image = $event.target.files[0]"
+                      <input @input="form1.image = $event.target.files[0]"
                              class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                              id="image" type="file">
                     </div>
@@ -96,7 +101,7 @@
                     <label for="status" class="block mb-2 text-sm font-medium text-gray-900 ">{{
                         __('status')
                       }}</label>
-                    <select id="countries"
+                    <select id="status"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option selected>{{ __('select_status') }}</option>
                       <option value="1">{{ __('active') }}</option>
@@ -124,7 +129,13 @@
             </template>
           </div>
         </Modal>
-
+        <schema-form-builder type="edit"
+                             :modal-is-open="modalIsOpen"
+                             @close="schemaForm"
+                             :resource="res"
+                             :endpoint="initialRoute"
+                             method="PUT"
+                             :fields="$page.props.columnsOrder"/>
 
       </div>
 
@@ -141,8 +152,9 @@ import Modal from "@/Components/Modal.vue";
 import {ref} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import BlackInput from "@/Components/BlackInput.vue";
-import BlackSelector from "@/Components/BlackSelector.vue";
 import CustomNotification from "@/Components/CustomNotification.vue";
+import SchemaFormBuilder from "@/Components/SchemaFormBuilder.vue";
+import BlackSelector from "@/Components/BlackSelector.vue";
 
 
 defineProps({
@@ -161,8 +173,11 @@ const notification = ref(false);
 
 
 const setStatus = (status) => {
-  form.is_enabled = status;
+  form1.is_enabled = status;
 }
+
+const modalIsOpen = ref(false);
+const res = ref();
 
 const clickit = () => {
   notification.value = !notification.value;
@@ -173,10 +188,10 @@ const clickit = () => {
 const modalCreateBrand = () => {
   createBrand.value = !createBrand.value
   isOpen.value = !isOpen.value;
-  form.clearErrors()
-  form.reset()
+  form1.clearErrors()
+  form1.reset()
 }
-const form = useForm({
+const form1 = useForm({
   name: '',
   description: '',
   website: '',
@@ -184,14 +199,24 @@ const form = useForm({
   image: null
 })
 
-function submit() {
-  form.post(route('admin.brands.store'), {
+function submitCreate() {
+  form1.post(route('admin.brands.store'), {
     onSuccess() {
       modalCreateBrand();
-      form.reset();
+      form1.reset();
       clickit();
     }
   });
 }
 
+
+function schemaForm(resource) {
+  modalIsOpen.value = !modalIsOpen.value;
+  if (resource) {
+    console.log(resource)
+    res.value = resource;
+  }
+}
+
 </script>
+
