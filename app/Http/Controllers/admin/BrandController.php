@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BrandRequest;
 use App\Services\BrandCreateService;
 use App\Services\DataTableService;
+use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
@@ -39,7 +40,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        return (new SchemaFormBuilder)('Brand', 'post', 'admin.brands.store');
     }
 
     /**
@@ -64,7 +65,8 @@ class BrandController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return (new SchemaFormBuilder)("Brand", 'put', 'admin.brands.update', $id);
+
     }
 
     /**
@@ -72,6 +74,7 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
+//        return to_route('admin.brands.index');
         dd($request->all());
     }
 

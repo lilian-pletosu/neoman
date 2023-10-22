@@ -49,6 +49,15 @@ createInertiaApp({
             });
         }
 
+        app.config.globalProperties.fetchedSchemaFormBuild = (schema) => {
+            let form = {};
+            schema.fields.forEach((f) => form[f.name] = f.value)
+
+            //append the relations set in schema form builder
+            form.relations = schema.relations
+            return form;
+        };
+
         return app
             .use(plugin)
             .component("v-select", vSelect)
