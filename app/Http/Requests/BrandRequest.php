@@ -22,11 +22,11 @@ class BrandRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:3|String',
-            'description' => 'required|min:5|String',
-            'website' => 'required',
-            'is_enabled' => 'required',
-            'image' => 'file|image|mimes:jpg,bmp,png,svg'
+            'form.name' => 'required|min:3|String',
+            'form.description' => 'required|min:5|String',
+            'form.website' => 'required',
+            'form.is_enabled' => 'required',
+            'form.image' => 'sometimes|nullable|file|image|mimes:jpg,bmp,png,svg'
 
         ];
     }

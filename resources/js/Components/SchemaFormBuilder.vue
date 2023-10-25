@@ -1,16 +1,15 @@
 <script setup>
 import Modal from "@/Components/Modal.vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 import BlackInput from "@/Components/BlackInput.vue";
 import {getCurrentInstance, onMounted, onUpdated, ref} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
-import CustomInputFile from "@/Components/CustomInputFile.vue";
 
 let form = useForm({});
 const app = getCurrentInstance();
-const emit = defineEmits(['close-modal'])
+const emit = defineEmits(['close-modal', 'showNotify'])
 
 const cloneFields = ref();
 const schemaForm = ref({});
@@ -42,14 +41,6 @@ const props = defineProps({
         required: true,
         default: false
     },
-    title: {
-        type: String,
-        default: 'Modal title'
-    },
-    subtitle: {
-        type: String,
-        default: 'Modal subtitle'
-    },
     resource: {
         type: Object,
         required: true
@@ -69,6 +60,14 @@ function fetchFields() {
                 form = useForm(app.appContext.config.globalProperties.fetchedSchemaFormBuild(data))
             })
     }
+    if (props.type == 'create') {
+        fetch(route(`${props.resourceRoute}.create`))
+            .then(response => response.json())
+            .then(data => {
+                schemaForm.value = data;
+                form = useForm(app.appContext.config.globalProperties.fetchedSchemaFormBuild(data))
+            })
+    }
 }
 
 onUpdated(() => {
@@ -76,7 +75,17 @@ onUpdated(() => {
 })
 
 function submit() {
-    form.put(route('admin.brands.update', {brand: props.resource.id}))
+    if (props.type == 'edit') {
+        router.post(route(`${props.resourceRoute}.update`, {brand: props.resource.id}), {
+            _method: 'put',
+            form: form,
+        })
+    }
+    if (props.type == 'create') {
+        form.post(route(`${props.resourceRoute}.create`,))
+        form.reset()
+    }
+
 }
 </script>
 
@@ -86,29 +95,36 @@ function submit() {
             <div class="">
                 <div class="flex  flex-col">
                     <template v-if="type === 'modal'">
-                        <h1 class="primary-text ">{{ __(title) }}</h1>
-                        <p class="secondary-text">{{ __(subtitle) }}</p>
+                        <h1 class="primary-text ">{{ __('modal_title') }}</h1>
+                        <p class="secondary-text">{{ __('subtitle') }}</p>
                     </template>
                     <template v-else-if="type === 'edit'">
                         <h1 class="primary-text">Edit Resource</h1>
                         <form @submit.prevent="submit()">
                             <template v-for="field in schemaForm.fields">
-                                <template v-if="field.type === 'text' || field.type === 'textarea' ">
+                                <template v-if="['text', 'textarea'].includes(field.type)">
                                     <black-input :type="field.type" @update:modelValue="args => form[field.name] = args"
                                                  :model-value="form[field.name]"
+                                                 :error-message="__($page.props.errors[`form.${field.name}`])"
                                                  :label="__(field.placeholder)"/>
                                 </template>
-                                <template v-if="field.type === 'select'">
+                                <template v-if="['select'].includes(field.type)">
                                     <black-selector @update:status="args => form[field.name] = (args)"
                                                     :value="form[field.name]"
-                                                    :error-message="__(form.errors[field.name])"
+                                                    :error-message="__($page.props.errors[`form.${field.name}`])"
                                                     :options="{ 1: 'active', 0: 'inactive'}"
                                                     :model-value="form[field.name]"/>
                                 </template>
-                                <template v-if="field.type === 'file'">
-                                    <custom-input-file
-                                        @update:file="args => form[field.name] = args"
-                                        v-model="form[field.name]"/>
+                                <template v-if="['file'].includes(field.type)">
+                                    <div class="my-5">
+                                        <label for="image"
+                                               class="block mb-2 text-sm font-medium text-gray-900 ">{{
+                                                __('image')
+                                            }}</label>
+                                        <input @change="form.image = $event.target.files[0]"
+                                               class="block text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                               :id="field.name" :type="field.type">
+                                    </div>
                                 </template>
                             </template>
                             <div class="mt-6  flex justify-end">
@@ -126,30 +142,37 @@ function submit() {
                             <p class="secondary-text">{{ __('complete_all_fields') }}</p>
                         </div>
                         <div>
-                            <form @submit.prevent="submitCreate" method="POST">
-                                {{ form1 }}
+                            <form @submit.prevent="submit">
 
                                 <div class="my-4 text-sm text-gray-600">
-                                    <black-input v-model="form.name" :label="__('name')"
-                                                 :error-message="__(form.errors.name)"/>
-                                    <black-input v-model="form.description" :label="__('description')"
-                                                 :error-message="__(form1.errors.description)"/>
-                                    <black-input v-model="form.website" :label="__('website')"
-                                                 :error-message="__(form1.errors.website)"/>
-                                    <black-selector @update:status="args => setStatus(args)"
-                                                    :value="form.is_enabled"
-                                                    :error-message="__(form1.errors.is_enabled)"
-                                                    :options="{ 1: 'active', 0: 'inactive'}"
-                                                    :model-value="form.is_enabled"/>
-                                    <div class="my-5">
-                                        <label for="image" class="block mb-2 text-sm font-medium text-gray-900 ">{{
-                                                __('image')
-                                            }}</label>
+                                    <template v-for="(field, key) in schemaForm.fields">
+                                        {{ }}
+                                        <template v-if="['text', 'textarea'].includes(field.type)">
+                                            <black-input v-model="form[field.name]" :type="field.type"
+                                                         :label="__(field.name)"
+                                                         :error-message="__(form.errors[field.name])"/>
+                                        </template>
+                                        <template v-if="['select'].includes(field.type)">
+                                            <black-selector @update:status="args => form[field.name] = args"
+                                                            :value="form[field.name]"
+                                                            :error-message="__(form.errors[field.name])"
+                                                            :options="{ 1: 'active', 0: 'inactive'}"
+                                                            :model-value="form[field.name]"/>
+                                        </template>
+                                        <template v-if="['file'].includes(field.type)">
+                                            <div class="my-5">
+                                                <label for="image"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 ">{{
+                                                        __('image')
+                                                    }}</label>
 
-                                        <input @input="form1.image = $event.target.files[0]"
-                                               class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                               id="image" type="file">
-                                    </div>
+                                                <input @input="form.image = $event.target.files[0]"
+                                                       class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                                       :id="field.name" type="file">
+                                            </div>
+                                        </template>
+                                    </template>
+
                                 </div>
                                 <div class="mt-6  flex justify-end">
                                     <SecondaryButton class="mx-2" @close="emit('close-modal')"> {{

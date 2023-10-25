@@ -37,6 +37,7 @@ createInertiaApp({
                 return str;
             }
         };
+
         app.config.globalProperties.clearObject = (obj, val = '') => {
             Object.keys(obj).forEach(k => {
                 if (Array.isArray(obj[k])) {
@@ -52,9 +53,9 @@ createInertiaApp({
         app.config.globalProperties.fetchedSchemaFormBuild = (schema) => {
             let form = {};
             schema.fields.forEach((f) => form[f.name] = f.value)
-
             //append the relations set in schema form builder
             form.relations = schema.relations
+            form.image = null
             return form;
         };
 
