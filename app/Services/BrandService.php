@@ -6,7 +6,7 @@ use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class BrandCreateService
+class BrandService
 {
     public function create(Request $request, $data)
     {
@@ -19,5 +19,18 @@ class BrandCreateService
         }
 //        Image::load($img)->width(64)->height(19)->optimize()->save(storage_path('brands') . 'image.png');
         Brand::create($data);
+    }
+
+    public function update(array $data, Brand $brand)
+    {
+        if ($data['image'] === null) {
+            $data['image'] = $brand->image;
+        } else {
+            $fileName = $data['image']->hashName();
+            $data['image']->move(public_path('brands'), $fileName);
+            $data['image'] = '/brands/' . $fileName;//
+        }
+        $data['slug'] = Str::slug($data['name'], '_');
+        $brand->update($data);
     }
 }

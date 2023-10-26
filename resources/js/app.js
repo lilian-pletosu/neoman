@@ -30,6 +30,7 @@ createInertiaApp({
             return str;
         };
 
+
         app.config.globalProperties.truncate = (str, length) => {
             if (str.length > length) {
                 return str.substring(0, length) + '...';
@@ -38,17 +39,17 @@ createInertiaApp({
             }
         };
 
-        app.config.globalProperties.clearObject = (obj, val = '') => {
-            Object.keys(obj).forEach(k => {
-                if (Array.isArray(obj[k])) {
-                    obj[k] = [];
-                } else if (typeof obj[k] === 'object' && obj[k] !== null) {
-                    this.clearObject(obj[k]);
-                } else {
-                    obj[k] = val
-                }
-            });
-        }
+        // app.config.globalProperties.clearObject = (obj, val = '') => {
+        //     Object.keys(obj).forEach(k => {
+        //         if (Array.isArray(obj[k])) {
+        //             obj[k] = [];
+        //         } else if (typeof obj[k] === 'object' && obj[k] !== null) {
+        //             this.clearObject(obj[k]);
+        //         } else {
+        //             obj[k] = val
+        //         }
+        //     });
+        // }
 
         app.config.globalProperties.fetchedSchemaFormBuild = (schema) => {
             let form = {};
@@ -58,6 +59,19 @@ createInertiaApp({
             form.image = null
             return form;
         };
+
+        app.config.globalProperties.clearObject =
+            function (obj, val = '') {
+                Object.keys(obj).forEach(k => {
+                    if (Array.isArray(obj[k])) {
+                        obj[k] = [];
+                    } else if (typeof obj[k] === 'object' && obj[k] !== null) {
+                        this.clearObject(obj[k]);
+                    } else {
+                        obj[k] = val
+                    }
+                });
+            };
 
         return app
             .use(plugin)

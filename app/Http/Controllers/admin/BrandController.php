@@ -4,9 +4,11 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BrandRequest;
-use App\Services\BrandCreateService;
+use App\Models\Brand;
+use App\Services\BrandService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
@@ -38,7 +40,7 @@ class BrandController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): array
     {
         return (new SchemaFormBuilder)('Brand', 'post', 'admin.brands.store');
     }
@@ -46,9 +48,9 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, BrandRequest $brandRequest)
+    public function store(Request $request, BrandRequest $brandRequest): RedirectResponse
     {
-        (new BrandCreateService())->create($request, $brandRequest->all());
+        (new BrandService())->create($request, $brandRequest->all());
         return to_route('admin.brands.index');
     }
 
@@ -63,7 +65,7 @@ class BrandController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): array
     {
         return (new SchemaFormBuilder)("Brand", 'put', 'admin.brands.update', $id);
 
@@ -72,10 +74,10 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id, BrandRequest $brandRequest)
+    public function update(Request $request, Brand $brand, BrandRequest $brandRequest): RedirectResponse
     {
-//        return to_route('admin.brands.index');
-        dd($request->all());
+        (new BrandService())->update($request->form, $brand);
+        return to_route('admin.brands.index');
     }
 
     /**
