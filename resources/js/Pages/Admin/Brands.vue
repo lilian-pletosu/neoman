@@ -1,6 +1,6 @@
 <template>
     <admin-layout :current-route="initialRoute" title="Brands">
-        <custom-notification :message="__(`success_created`)" type="success" :show="notification"/>
+        <custom-notification :message="__(`success_${notifyType}`)" type="success" :show="notification"/>
 
         <div class="w-full grid grid-cols-1  gap-4">
             <div class="container-rounded ">
@@ -23,7 +23,7 @@
                 <div class="flex flex-col mt-8">
                     <div class="overflow-x-auto rounded-lg">
                         <data-table
-                            @emit-click="args => schemaForm(args, 'edit', 'PUT')"
+                            @emit-click="args => schemaForm(args, 'modal', 'PUT')"
                             :resources="resources"
                             :columnsOrder="$page.props.columnsOrder"
                             :columns="$page.props.columns"
@@ -75,12 +75,14 @@ const createBrand = ref(false);
 const importBrands = ref(false);
 const notification = ref(false);
 const type = ref('modal');
-const method = ref('POST')
+const method = ref('POST');
+const notifyType = ref();
 
 const modalIsOpen = ref(false);
 const res = ref();
 
-const showNotify = () => {
+const showNotify = (type) => {
+    notifyType.value = type;
     notification.value = !notification.value;
     setTimeout(() => {
         notification.value = !notification.value

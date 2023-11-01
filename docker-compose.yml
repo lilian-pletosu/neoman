@@ -1,96 +1,95 @@
 version: '3.9'
 
 networks:
-  neoman:
-    name: neoman
-  traff:
-    name: '${TRAEFIK_NETWORK:-traff}'
-    external: true
+    neoman:
+        name: neoman
+    traff:
+        name: '${TRAEFIK_NETWORK:-traff}'
+        external: true
 
 
 services:
 
-  neoman-nginx:
-    build:
-      context: ./docker-settings
-      dockerfile:  nginx.dockerfile
-    depends_on:
-      - neoman-php
-      - neoman-mariadb
-    ports:
-      - 86:80
-    volumes:
-      - .:/var/www/html
-    networks:
-      - neoman
-      - traff
-    labels:
-      - traefik.enable=true
-#      - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
-      - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`) || HostRegexp(`{subdomain:[a-z-]+}.${APP_DROPLET_DOMAIN:-neoman}`)
-      - traefik.port=80
-      - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-      - traefik.http.routers.neoman.tls=${APP_TLS:-false}
-      - traefik.http.routers.neoman.tls.certresolver=lets-encrypt
+    neoman-nginx:
+        build:
+            context: ./docker-settings
+            dockerfile: nginx.dockerfile
+        depends_on:
+            - neoman-php
+            - neoman-mariadb
+        ports:
+            - 86:80
+        volumes:
+            - .:/var/www/html
+        networks:
+            - neoman
+            - traff
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.neoman-nginx.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
+            - traefik.port=80
+            - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
+            - traefik.http.routers.neoman-nginx.tls=${APP_TLS:-false}
+            - traefik.http.routers.neoman-nginx.tls.certresolver=lets-encrypt
 
 
-  neoman-php:
-    build:
-      context: ./docker-settings
-      args:
-        uuid: '${UID:-1000}'
-      dockerfile: php.dockerfile
-    volumes:
-      - .:/var/www/html
-    networks:
-      - neoman
+    neoman-php:
+        build:
+            context: ./docker-settings
+            args:
+                uuid: '${UID:-1000}'
+            dockerfile: php.dockerfile
+        volumes:
+            - .:/var/www/html
+        networks:
+            - neoman
 
-  neoman-redis:
-    image: redis:7.0.12-alpine3.18
-    command: redis-server --requirepass '${REDIS_PASSWORD:-secrets}'
-    networks:
-      - neoman
-#    ports:
-#      - 6379:6379
-    volumes:
-      - ./redis-storage:/var/list/redis
-      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    neoman-redis:
+        image: redis:7.0.12-alpine3.18
+        command: redis-server --requirepass '${REDIS_PASSWORD:-secrets}'
+        networks:
+            - neoman
+        #    ports:
+        #      - 6379:6379
+        volumes:
+            - ./redis-storage:/var/list/redis
+            - ./redis.conf:/usr/local/etc/redis/redis.conf
 
 
-  neoman-mariadb:
-    image: mariadb:11.0.2
-    environment:
-      MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD:-secrets}'
-      MYSQL_USER: '${DB_USERNAME:-root}'
-      MYSQL_PASSWORD: '${DB_PASSWORD:-secrets}'
-      MYSQL_DATABASE: '${DB_DATABASE:-neomandb}'
-#    ports:
-#      - 33066:3306
-    volumes:
-      - ./database-storage:/var/lib/mysql
-    networks:
-      - neoman
+    neoman-mariadb:
+        image: mariadb:11.0.2
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD:-secrets}'
+            MYSQL_USER: '${DB_USERNAME:-root}'
+            MYSQL_PASSWORD: '${DB_PASSWORD:-secrets}'
+            MYSQL_DATABASE: '${DB_DATABASE:-neomandb}'
+        #    ports:
+        #      - 33066:3306
+        volumes:
+            - ./database-storage:/var/lib/mysql
+        networks:
+            - neoman
 
-  neoman-adminer:
-    image: library/adminer:latest
-    restart: unless-stopped
-    environment:
-      ADMINER_DEFAULT_SERVER: neoman-mariadb
-      ADMINER_DEFAULT_USER: root
-      ADMINER_DESIGN: pappu687
-    ports:
-      - 8096:8080
-    networks:
-      - neoman
-      - traff
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`) && Path(`/adminer`)
-#      - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
-      - traefik.port=80
-      - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-      - traefik.http.routers.neoman.tls=${APP_TLS:-false}
-      - traefik.http.routers.neoman.tls.certresolver=lets-encrypt
-    volumes:
-      - ./database-storage:/var/lib/mysql
+    neoman-adminer:
+        image: library/adminer:latest
+        restart: unless-stopped
+        environment:
+            ADMINER_DEFAULT_SERVER: neoman-mariadb
+            ADMINER_DEFAULT_USER: root
+            ADMINER_DESIGN: pappu687
+        ports:
+            - 8096:8080
+        networks:
+            - neoman
+            - traff
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`) && Path(`/adminer`)
+            #      - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
+            - traefik.port=80
+            - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
+            - traefik.http.routers.neoman.tls=${APP_TLS:-false}
+            - traefik.http.routers.neoman.tls.certresolver=lets-encrypt
+        volumes:
+            - ./database-storage:/var/lib/mysql
 

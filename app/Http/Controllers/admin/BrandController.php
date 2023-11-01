@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BrandRequest;
+use App\Http\Requests\BrandEditRequest;
+use App\Http\Requests\BrandStoreRequest;
 use App\Models\Brand;
 use App\Services\BrandService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
@@ -48,10 +48,9 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, BrandRequest $brandRequest): RedirectResponse
+    public function store(Request $request, BrandStoreRequest $brandRequest)
     {
         (new BrandService())->create($request, $brandRequest->all());
-        return to_route('admin.brands.index');
     }
 
     /**
@@ -74,17 +73,16 @@ class BrandController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand, BrandRequest $brandRequest): RedirectResponse
+    public function update(Request $request, Brand $brand, BrandEditRequest $brandRequest)
     {
-        (new BrandService())->update($request->form, $brand);
-        return to_route('admin.brands.index');
+        return (new BrandService())->update($request->form, $brand);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Brand $brand)
     {
-        //
+        $brand->delete();
     }
 }

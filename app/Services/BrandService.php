@@ -15,7 +15,7 @@ class BrandService
             $data['image'] = '/brands/' . $request->file('image')->hashName();
             $request->image->move(public_path('brands'), $request->file('image')->hashName());
         } else {
-            $data['image'] = 'img/no_image.svg';
+            $data['image'] = '/img/no_image.svg';
         }
 //        Image::load($img)->width(64)->height(19)->optimize()->save(storage_path('brands') . 'image.png');
         Brand::create($data);
