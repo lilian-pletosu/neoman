@@ -136,6 +136,11 @@ function submit() {
     if (['import'].includes(props.type)) {
         router.post(route(`import${props.resourceType}CSV`), {
             file: importFile.value
+        }, {
+            onSuccess: params => {
+                closeCreateForm()
+                emit('showNotify', props.type)
+            }
         });
     }
 }

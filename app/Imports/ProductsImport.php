@@ -149,6 +149,9 @@ class ProductsImport
                     'is_enabled' => 1,
                     'image' => 'image'
                 ]);
+                $subSubcategory = SubSubCategory::firstOrCreate(['name' => $item['sub_subcategory_id']], [
+                    'slug' => Str::slug($item['sub_subcategory_id'], '_')
+                ]);
 
                 if (Product::where('title', $item['title'])->first() == null) {
                     $product = Product::create([
@@ -160,7 +163,7 @@ class ProductsImport
                         'product_code' => (new GenerateProductCode)((new Product())),
                         'specifications_id' => null,
                         'brand_id' => $brand->id,  // Asigură că ai deja $row['brand_id'] disponibil înainte
-                        'sub_subcategory_id' => SubSubCategory::where('name', '=', $item['sub_subcategory_id'] ?? '')->first()->id,
+                        'sub_subcategory_id' => $subSubcategory->id,
 
                     ]);
                     $this->associateImagesWithProduct($product, $item);
