@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class ProductController extends Controller
 {
@@ -44,7 +43,6 @@ class ProductController extends Controller
         return inertia('Admin/Products', [
             'initialRoute' => 'admin.products',
             'resourceType' => 'product',
-            'drawing' => Redis::get('drawing')
         ])->loadData($builder);
     }
 
