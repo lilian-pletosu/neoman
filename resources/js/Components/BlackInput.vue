@@ -43,6 +43,19 @@ defineExpose({focus: () => input.value.focus()});
                 :placeholder="label">
         </template>
 
+        <template v-if="['number'].includes(type)">
+            <input
+                class="bg-gray-50  border border-gray-300 text-gray-900 text-sm rounded-lg
+        focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700
+        dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                :id="id"
+                :type="type"
+                :value="modelValue"
+                :min="min"
+                :max="max"
+                @input="$emit('update:modelValue', $event.target.value)" ref="input">
+        </template>
+
         <template v-if="type === 'textarea'">
             <textarea
                 :value="modelValue"

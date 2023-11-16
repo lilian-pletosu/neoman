@@ -2,13 +2,15 @@
 
 namespace App\SchemaForms;
 
-class BrandSchema
+use App\Models\Brand;
+
+class ProductSchema
 {
     public function __invoke()
     {
         return [
             [
-                'name' => 'name',
+                'name' => 'title',
                 'value' => '',
                 'type' => 'text',
                 'placeholder' => 'name',
@@ -28,35 +30,35 @@ class BrandSchema
                 ],
             ],
             [
-                'name' => 'website',
+                'name' => 'price',
                 'value' => '',
-                'type' => 'text',
-                'placeholder' => 'website',
+                'type' => 'number',
+                'placeholder' => 'price',
                 'options' => [],
                 'rules' => [
                     'required'
                 ],
             ],
             [
-                'name' => 'is_enabled',
+                'name' => 'brand_id',
                 'value' => '',
                 'type' => 'select',
-                'placeholder' => 'status',
-                'options' => [['id' => 0, 'value' => 'inactive'], ['id' => 1, 'value' => 'active']],
+                'placeholder' => 'brand',
+                'options' => Brand::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
                 'rules' => [
                     'required'
                 ],
             ],
-            [
-                'name' => 'image',
-                'value' => '',
-                'type' => 'file',
-                'placeholder' => 'image',
-                'options' => [],
-                'rules' => [
-                    'required'
-                ],
-            ],
+//            [
+//                'name' => 'image',
+//                'value' => '',
+//                'type' => 'file',
+//                'placeholder' => 'image',
+//                'options' => [],
+//                'rules' => [
+//                    'required'
+//                ],
+//            ],
 
 //            [
 //                'name' => 'currency',

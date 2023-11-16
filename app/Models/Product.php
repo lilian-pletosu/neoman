@@ -12,7 +12,7 @@ class Product extends Model
     protected $table = 'products';
 
     protected $fillable = [
-        'title', 'description', 'price', 'product_code', 'slug', 'brand_id', 'sub_subcategory_id', 'specifications_id'
+        'title', 'description', 'price', 'product_code', 'slug', 'brand_id', 'image_id', 'sub_subcategory_id', 'specifications_id'
     ];
 
     public function subSubCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -23,6 +23,11 @@ class Product extends Model
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    public function images(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(ProductsImage::class, 'product_id');
     }
 
 }

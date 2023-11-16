@@ -6,15 +6,20 @@ import BlackInput from "@/Components/BlackInput.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Description from "@/Components/Description.vue";
+import ImageSlider from "@/Components/ImageSlider.vue";
 
 let formEdit = useForm({});
 let formCreate = useForm({});
+let formImport = useForm({});
 const app = getCurrentInstance();
 const emit = defineEmits(['close-modal', 'showNotify'])
 const errors = ref({});
+let importFile = ref({});
 
 const cloneFields = ref();
 const schemaForm = ref({});
+const resourceModal = ref({});
 
 const props = defineProps({
     type: {
@@ -46,6 +51,13 @@ const props = defineProps({
     resource: {
         type: Object,
         required: true
+    },
+    columns: {
+        type: Array,
+        required: true
+    },
+    resourceType: {
+        type: String
     }
 })
 
@@ -55,13 +67,24 @@ onMounted(() => {
 })
 
 
-async function fetchFieldsEdit() {
-    if (['edit', 'modal'].includes(props.type) && props.resource) {
-        await fetch(route(`${props.resourceRoute}.edit`, {brand: props.resource.id}))
+async function fetchModalData() {
+    if (['edit'].includes(props.type) && props.resource) {
+        await fetch(route(`${props.resourceRoute}.edit`, props.resource.id))
             .then(response => response.json())
             .then(data => {
                 schemaForm.value = data;
                 formEdit = useForm(app.appContext.config.globalProperties.fetchedSchemaFormBuild(data))
+            })
+    }
+}
+
+async function fetchResourceData() {
+    if (['modal'].includes(props.type) && props.resource) {
+
+        await fetch(route(`${props.resourceRoute}.show`, props.resource.id))
+            .then(response => response.json())
+            .then(data => {
+                resourceModal.value = data;
             })
     }
 }
@@ -78,7 +101,8 @@ async function fetchFieldsCreate() {
 }
 
 onUpdated(() => {
-    fetchFieldsEdit();
+    fetchModalData();
+    fetchResourceData();
 })
 
 const closeModalWithNotify = (typeNotify) => {
@@ -93,7 +117,7 @@ const closeCreateForm = () => {
 
 function submit() {
     if (props.type == 'edit') {
-        router.post(route(`${props.resourceRoute}.update`, {brand: props.resource.id}), {
+        router.post(route(`${props.resourceRoute}.update`, props.resource.id), {
             _method: 'put',
             form: formEdit,
         }, {
@@ -109,15 +133,18 @@ function submit() {
             }
         })
     }
+    if (['import'].includes(props.type)) {
+        router.post(route(`import${props.resourceType}CSV`), {
+            file: importFile.value
+        });
+    }
 }
 
 const deleteResource = (resId) => {
-    router.delete(route(`${props.resourceRoute}.destroy`, {brand: resId}), {
-        onBefore: () => confirm('Are you sure you want to delete this user?'),
+    router.delete(route(`${props.resourceRoute}.destroy`, resId), {
+        onBefore: () => confirm(`Are you sure you want to delete this ${props.resourceType}?`),
         onSuccess: () => closeModalWithNotify('delete')
     })
-
-
 }
 
 </script>
@@ -129,15 +156,35 @@ const deleteResource = (resId) => {
             <div class="">
                 <div class="flex  flex-col">
                     <template v-if="type === 'modal'">
+                        <h1 class="primary-text ">{{ __(`view_${resourceType}`) }}</h1>
 
-                        <h1 class="primary-text ">{{ __('modal_title') }}</h1>
-                        <p class="secondary-text">{{ __('subtitle') }}</p>
+                        <div class="columns-2md">
+                            <template v-if="resource.image">
+                                <div class="w-full mt-4 flex justify-center border border-solid">
+                                    <img class="w-1/2 p-6" :src="resource.image">
+                                </div>
+                            </template>
+                            <template v-if="resource.images">
+                                <div v-for="filed in $page.props.relationColumns">
+                                    <template v-if="['image', 'images'].includes(filed.label)">
+                                        <div class="w-full mt-4 flex justify-center border border-solid">
+                                            <ImageSlider :columns="$page.props.relationColumns"
+                                                         :resource-type="resourceType"
+                                                         :images="resource.images"/>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                            <div class="columns-2 p-2">
+                                <description :resource="resourceModal" :columns="columns"/>
+                            </div>
+                        </div>
                     </template>
                     <template v-else-if="type === 'edit'">
-                        <h1 class="primary-text">Edit Resource</h1>
+                        <h1 class="primary-text">{{ __('edit_resource') }}</h1>
                         <form @submit.prevent="submit">
                             <template v-for="field in schemaForm.fields">
-                                <template v-if="['text', 'textarea'].includes(field.type)">
+                                <template v-if="['text', 'textarea', 'number'].includes(field.type)">
                                     <black-input :type="field.type"
                                                  @update:modelValue="args => formEdit[field.name] = args"
                                                  :model-value="formEdit[field.name]"
@@ -147,8 +194,9 @@ const deleteResource = (resId) => {
                                 <template v-if="['select'].includes(field.type)">
                                     <black-selector @update:status="args => formEdit[field.name] = (args)"
                                                     :value="formEdit[field.name]"
+                                                    :label="__(field.name)"
                                                     :error-message="__($page.props.errors[`form.${field.name}`])"
-                                                    :options="{ 1: 'active', 0: 'inactive'}"
+                                                    :options="field.options"
                                                     :model-value="formEdit[field.name]"/>
                                 </template>
                                 <template v-if="['file'].includes(field.type)">
@@ -174,7 +222,7 @@ const deleteResource = (resId) => {
                     </template>
                     <template v-else-if="type === 'create'">
                         <div class="flex flex-col">
-                            <h1 class="primary-text">{{ __('create_brand') }}</h1>
+                            <h1 class="primary-text">{{ __(`create_${resourceType}`) }}</h1>
                             <p class="secondary-text">{{ __('complete_all_fields') }}</p>
                         </div>
                         <div>
@@ -182,8 +230,7 @@ const deleteResource = (resId) => {
 
                                 <div class="my-4 text-sm text-gray-600">
                                     <template v-for="(field, key) in schemaForm.fields">
-                                        {{ }}
-                                        <template v-if="['text', 'textarea'].includes(field.type)">
+                                        <template v-if="['text', 'textarea', 'number'].includes(field.type)">
                                             <black-input v-model="formCreate[field.name]" :type="field.type"
                                                          :label="__(field.name)"
                                                          :error-message="__(formCreate.errors[field.name])"/>
@@ -191,8 +238,9 @@ const deleteResource = (resId) => {
                                         <template v-if="['select'].includes(field.type)">
                                             <black-selector @update:status="args => formCreate[field.name] = args"
                                                             :value="formCreate[field.name]"
+                                                            :label="__(field.name)"
                                                             :error-message="__(formCreate.errors[field.name])"
-                                                            :options="{ 1: 'active', 0: 'inactive'}"
+                                                            :options="field.options"
                                                             :model-value="formCreate[field.name]"/>
                                         </template>
                                         <template v-if="['file'].includes(field.type)">
@@ -218,6 +266,35 @@ const deleteResource = (resId) => {
                                     <PrimaryButton type="submit" class="mx-2">{{ __('submit') }}</PrimaryButton>
                                 </div>
                             </form>
+                        </div>
+                    </template>
+                    <template v-else-if="type === 'import'">
+                        <div class="flex flex-col">
+                            <h1 class="primary-text">{{ __(`import_${resourceType}`) }}</h1>
+                            <p class="secondary-text">{{ __('upload_excel_file') }}</p>
+                        </div>
+                        <div>
+
+                            <div class="my-4 text-sm text-gray-600">
+                                <div class="my-5">
+                                    <label for="image"
+                                           class="block mb-2 text-sm font-medium text-gray-900 ">{{
+                                            __('excel')
+                                        }}</label>
+
+                                    <input @input="importFile = $event.target.files[0]"
+                                           class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                           :id="formImport.file" type="file">
+                                </div>
+
+                            </div>
+                            <div class="mt-6  flex justify-end">
+                                <SecondaryButton class="mx-2" @click="closeCreateForm"> {{
+                                        __('cancel')
+                                    }}
+                                </SecondaryButton>
+                                <PrimaryButton @click="submit()" class="mx-2">{{ __('submit') }}</PrimaryButton>
+                            </div>
                         </div>
                     </template>
                 </div>

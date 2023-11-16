@@ -40,8 +40,10 @@
                                      @close-modal="schemaForm"
                                      @showNotify="showNotify"
                                      :resource="res"
+                                     :resource-type="resourceType"
                                      :endpoint="initialRoute"
                                      :method="method"
+                                     :columns="['name', 'website', 'is_enabled', 'description',  'image']"
                                      :resource-route="$page.props.resourceRoute"
                                      :fields="$page.props.columnsOrder"/>
 
@@ -63,6 +65,9 @@ import SchemaFormBuilder from "@/Components/SchemaFormBuilder.vue";
 
 defineProps({
     initialRoute: {
+        type: String
+    },
+    resourceType: {
         type: String
     },
     resources: {

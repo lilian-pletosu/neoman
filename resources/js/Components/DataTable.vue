@@ -19,11 +19,15 @@
                     <table class="min-w-full divide-y divide-gray-200 ">
                         <thead class="bg-gray-50">
                         <tr>
-                            <th v-for="(column) in columnsOrder" scope="col" :key="column"
-                                class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                :class="{'hidden xl:block' : column === 'description'}">
-                                {{ __(column) }}
-                            </th>
+                            <template v-for="(column) in columnsOrder">
+                                <template v-if="resourceType != 'product'">
+                                    <th scope="col"
+                                        class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                        :class="{'hidden xl:block' : column === 'description'}">
+                                        {{ __(column) }}
+                                    </th>
+                                </template>
+                            </template>
                         </tr>
                         </thead>
                         <tbody class="bg-white">
@@ -39,10 +43,16 @@
                                                      :src="resource[columnInOrder]"
                                                      alt="image"/>
                                             </template>
-                                            <template v-else>
+
+                                            <template v-else-if="column === 'is_enabled'">
                                                 <div class="rounded w-14 flex justify-center"
                                                      :class="{'bg-green-400 font-semibold ' : resource[columnInOrder] === 1,
                                                      'bg-red-400 font-semibold' : resource[columnInOrder] === 0}">
+                                                    {{ __(applyFormat(column, resource[columnInOrder])) }}
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <div class="rounded w-14 flex justify-center">
                                                     {{ __(applyFormat(column, resource[columnInOrder])) }}
                                                 </div>
                                             </template>
@@ -51,10 +61,13 @@
                                 </template>
                                 <template v-if="$page.props.relationColumns"
                                           v-for=" relationColumn in $page.props.relationColumns">
-                                    <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover"
-                                        v-if="relationColumn.label === columnInOrder">
-                                        {{ resource[relationColumn.relation][relationColumn.fields] }}
-                                    </td>
+                                    <template v-if="['product'].includes(resourceType)">
+                                        <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover"
+                                            v-if="relationColumn.label === columnInOrder">
+                                            {{ resource[relationColumn.relation][relationColumn.fields] }}
+                                        </td>
+
+                                    </template>
                                 </template>
                             </template>
                         </tr>
@@ -96,6 +109,9 @@ defineProps({
     initialRoute: {
         type: String,
         required: true
+    },
+    resourceType: {
+        type: String,
     }
 });
 const app = getCurrentInstance();

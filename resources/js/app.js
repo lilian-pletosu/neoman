@@ -38,6 +38,10 @@ createInertiaApp({
                 return str;
             }
         };
+        app.config.globalProperties.asset = (path) => {
+            var base_path = window._asset || '';
+            return base_path + path;
+        }
 
         // app.config.globalProperties.clearObject = (obj, val = '') => {
         //     Object.keys(obj).forEach(k => {

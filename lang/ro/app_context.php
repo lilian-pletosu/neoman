@@ -7,6 +7,10 @@ return [
     'orders' => 'Comenzi',
     'categories' => 'Categorii',
     'brands' => 'Branduri',
+    'brand_name' => 'Brand',
+    'sub_sub_category_name' => 'Subcategorie',
+    'create_product' => 'Adăugare produs nou',
+    'create_brand' => 'Adăugare brand nou',
     'associations' => 'Asociații',
     'promotions' => 'Promoții',
     'banners' => 'Banere',
@@ -43,6 +47,9 @@ return [
     'create' => 'Crează',
     'complete_all_fields' => 'Completează toate câmpurile',
     'select_status' => 'Selectează statusul',
+    'brand_id' => 'Brand',
+    'view_product' => 'Detalii produs',
+    'view_brand' => 'Detalii brand',
 
 
     //validation

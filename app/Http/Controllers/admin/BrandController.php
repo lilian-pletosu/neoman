@@ -34,7 +34,7 @@ class BrandController extends Controller
             ->setSearchRoute('admin.brands')
             ->sortBy('id');
 
-        return inertia('Admin/Brands')->loadData($builder);
+        return inertia('Admin/Brands', ['resourceType' => 'brand'])->loadData($builder);
     }
 
     /**
@@ -56,9 +56,9 @@ class BrandController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Brand $brand)
     {
-        //
+        return $brand;
     }
 
     /**
