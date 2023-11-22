@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,12 +16,13 @@ class RedirectToAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+
         if ($request->routeIs('admin')) {
             return redirect()->route('admin.dashboard');
         }
         if (auth()->check()) {
             if ($request->routeIs('login')) {
-                return redirect()->route('admin.dashboard');
+                return redirect()->intended(RouteServiceProvider::HOME);
             }
         }
         return $next($request);

@@ -58,12 +58,18 @@ onMounted(() => {
             <div class="duration-700 ease-in-out" data-carousel-item>
                 <template v-for="column in columns">
                     <template v-if="['image', 'images'].includes(column.label)">
-                        <div v-if="images[column.fields[currentSlideIndex]] != null">
+                        <template v-if="images[column.fields[currentSlideIndex]] != null">
                             <img
                                 :src="asset(`/storage/${resourceType}s/${images[column.fields[currentSlideIndex]]}`)"
                                 class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                                 alt="">
-                        </div>
+                        </template>
+                        <template v-if="images[column.fields[currentSlideIndex]] === null">
+                            <img
+                                :src="'/img/no_image.svg'"
+                                class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
+                                alt="">
+                        </template>
                     </template>
                 </template>
             </div>

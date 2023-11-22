@@ -10,15 +10,52 @@ class BrandService
 {
     public function create(Request $request, $data)
     {
-        $data['slug'] = Str::slug($data['name'], '_');
+
+        $data['slug'] = array_key_exists('brand', $data) ? Str::slug($data['brand'], '_') : Str::slug('No name', '_');
         if ($request->file('image')) {
             $data['image'] = '/brands/' . $request->file('image')->hashName();
             $request->image->move(public_path('brands'), $request->file('image')->hashName());
         } else {
             $data['image'] = '/img/no_image.svg';
         }
-//        Image::load($img)->width(64)->height(19)->optimize()->save(storage_path('brands') . 'image.png');
-        Brand::create($data);
+        $brand = Brand::firstOrCreate(['name' => $data['brand']], [
+            'slug' => Str::slug($data['brand'], '_'),
+            'website' => Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
+            'description' => $data['brand'] . ' ' . 'description',
+            'seo_title' => $data['brand'],
+            'seo_description' => $data['brand'] . ' ' . 'description',
+            'is_enabled' => 1,
+            'image' => 'image'
+        ]);
+
+
+        foreach (config('translatable.locales') as $locale) {
+            $brand->translateOrNew($locale)->description = "{$data['description'] } $locale";
+            $brand->save();
+        }
+
+
+        return $brand;
+    }
+
+    public function createWithProduct($data)
+    {
+        $brand = Brand::firstOrCreate(['name' => $data['brand']], [
+            'slug' => Str::slug($data['brand'], '_'),
+            'website' => Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
+            'description' => $data['brand'] . ' ' . 'description',
+            'seo_title' => $data['brand'],
+            'seo_description' => $data['brand'] . ' ' . 'description',
+            'is_enabled' => 1,
+            'image' => 'image'
+        ]);
+
+        foreach (config('translatable.locales') as $locale) {
+            $brand->translateOrNew($locale)->description = "{$data['brand']} . description . $locale";
+            $brand->save();
+        }
+
+        return $brand;
     }
 
     public function update(array $data, Brand $brand)

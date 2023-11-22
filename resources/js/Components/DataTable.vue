@@ -60,6 +60,9 @@ const applyFormat = (columnName, columnValue) => {
     }
 
     if (columnName === 'description') {
+        if (columnValue === null) {
+            return '---';
+        }
         return app.appContext.config.globalProperties.truncate(columnValue, 50);
     }
     return columnValue;
@@ -111,13 +114,12 @@ onMounted(() => {
                         <thead class="bg-gray-50">
                         <tr>
                             <template v-for="(column) in columnsOrder">
-                                <template v-if="resourceType == 'product' && column != 'image'">
-                                    <th scope="col"
-                                        class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                                        :class="{'hidden xl:block' : column === 'description'}">
-                                        {{ __(column) }}
-                                    </th>
-                                </template>
+
+                                <th scope="col"
+                                    class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    :class="{'hidden xl:block' : column === 'description'}">
+                                    {{ __(column) }}
+                                </th>
 
                             </template>
                         </tr>
@@ -131,22 +133,37 @@ onMounted(() => {
                                             class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap  text-center"
                                             :class="{ 'hidden    xl:block' : columnInOrder === 'description'}">
                                             <template v-if="columnInOrder === 'image'">
-                                                <img v-if="resource[columnInOrder]" class="w-16"
-                                                     :src="resource[columnInOrder]"
-                                                     alt="image"/>
-                                            </template>
-                                            
+                                                <template
+                                                    v-if="resource[columnInOrder] != null && resource[columnInOrder] != 'image'">
+                                                    <img v-if="resource[columnInOrder]" class="w-16"
+                                                         :src="resource[columnInOrder]"
+                                                         alt="image if"/>
+                                                </template>
+                                                <template v-else>
+                                                    <img v-if="resource[columnInOrder]" class="w-16"
+                                                         :src="'/img/no_image.svg'"
+                                                         alt="image else"/>
 
+                                                </template>
+                                            </template>
+                                            <template v-else-if="column === 'website'">
+                                                <div class="rounded w-14 flex justify-center">
+                                                    <a rel="stylesheet" title="sds"
+                                                       :href="`http://${resource[columnInOrder]}`">{{
+                                                            resource[columnInOrder]
+                                                        }}</a>
+                                                </div>
+                                            </template>
                                             <template v-else-if="column === 'is_enabled'">
                                                 <div class="rounded w-14 flex justify-center"
                                                      :class="{'bg-green-400 font-semibold ' : resource[columnInOrder] === 1,
                                                      'bg-red-400 font-semibold' : resource[columnInOrder] === 0}">
-                                                    {{ __(applyFormat(column, resource[columnInOrder])) }}
+                                                    {{ __(applyFormat(column, resource[columnInOrder])) ?? '--' }}
                                                 </div>
                                             </template>
                                             <template v-else>
                                                 <div class="rounded w-14 flex justify-center">
-                                                    {{ __(applyFormat(column, resource[columnInOrder])) }}
+                                                    {{ __(applyFormat(column, resource[columnInOrder])) ?? '---' }}
                                                 </div>
                                             </template>
                                         </td>
@@ -154,13 +171,16 @@ onMounted(() => {
                                 </template>
                                 <template v-if="$page.props.relationColumns"
                                           v-for=" relationColumn in $page.props.relationColumns">
-                                    <template v-if="['product'].includes(resourceType)">
-                                        <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover"
-                                            v-if="relationColumn.label === columnInOrder">
-                                            {{ resource[relationColumn.relation][relationColumn.fields] }}
-                                        </td>
 
-                                    </template>
+                                    <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover"
+                                        v-if="relationColumn.label === columnInOrder">
+
+                                        {{
+                                            resource[relationColumn.relation]?.name ?? '---'
+                                        }}
+                                        <!--                                        {{ resource[relationColumn.relation][relationColumn.fields][0 }}-->
+                                    </td>
+    
                                 </template>
                             </template>
                         </tr>

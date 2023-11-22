@@ -164,9 +164,16 @@ const deleteResource = (resId) => {
                         <h1 class="primary-text ">{{ __(`view_${resourceType}`) }}</h1>
 
                         <div class="columns-2md">
-                            <template v-if="resource.image">
+                            <template v-if="resource.image != null && resource.image != 'image'">
                                 <div class="w-full mt-4 flex justify-center border border-solid">
-                                    <img class="w-1/2 p-6" :src="resource.image">
+                                    <img class="w-1/2" :src="resource.image" alt="">
+                                </div>
+                            </template>
+                            <template v-if="resource.image === 'image'">
+                                <div class="w-full mt-4 flex justify-center border border-solid">
+                                    <img class=""
+                                         :src="'/img/no_image.svg'"
+                                         alt="image else"/>
                                 </div>
                             </template>
                             <template v-if="resource.images">

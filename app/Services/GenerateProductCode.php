@@ -28,7 +28,8 @@ class GenerateProductCode
      */
     private function generateCode(): int
     {
-        return $this->generator->create()->unique()->buildingNumber;
+        $rand = random_int(0, 99999);
+        return str_pad($rand, 5, 0, STR_PAD_LEFT);
     }
 
 }

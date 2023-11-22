@@ -2,9 +2,9 @@
 
 namespace App\Imports;
 
-use App\Models\Brand;
 use App\Models\Product;
 use App\Models\SubSubCategory;
+use App\Services\BrandService;
 use App\Services\GenerateProductCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -140,15 +140,18 @@ class ProductsImport
         foreach ($data as $item) {
 
             if (isNull(Product::where('title', $item['title'])->first())) {
-                $brand = Brand::firstOrCreate(['name' => $item['brand']], [
-                    'slug' => Str::slug($item['brand'], '_'),
-                    'website' => Str::lower('www' . '.' . $item['brand'] . '.' . 'com',),
-                    'description' => $item['brand'] . ' ' . 'description',
-                    'seo_title' => $item['brand'],
-                    'seo_description' => $item['brand'] . ' ' . 'description',
-                    'is_enabled' => 1,
-                    'image' => 'image'
-                ]);
+//                $brand = Brand::firstOrCreate(['name' => $item['brand']], [
+//                    'slug' => Str::slug($item['brand'], '_'),
+//                    'website' => Str::lower('www' . '.' . $item['brand'] . '.' . 'com',),
+//                    'description' => $item['brand'] . ' ' . 'description',
+//                    'seo_title' => $item['brand'],
+//                    'seo_description' => $item['brand'] . ' ' . 'description',
+//                    'is_enabled' => 1,
+//                    'image' => 'image'
+//                ]);
+
+                $brand = (new BrandService)->createWithProduct($item);
+
                 $subSubcategory = SubSubCategory::firstOrCreate(['name' => $item['sub_subcategory_id']], [
                     'slug' => Str::slug($item['sub_subcategory_id'], '_')
                 ]);

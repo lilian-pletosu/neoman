@@ -16,8 +16,11 @@ return new class extends Migration {
             $table->string('image2');
             $table->string('image3');
             $table->string('image4');
-            $table->unsignedBigInteger('product_id');
+            $table->foreignId('product_id')->unsigned();
             $table->timestamps();
+
+            $table->unique(['product_id']);
+            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
         });
 
 //        Schema::table('products', function (Blueprint $blueprint) {

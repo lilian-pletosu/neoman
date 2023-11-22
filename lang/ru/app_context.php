@@ -1,7 +1,7 @@
 <?php
 
 return [
-  'key'=> 'Рус',
+    'key' => 'Рус',
     'dashboard' => 'Главная',
     'products' => 'Товары',
     'orders' => 'Заказы',
@@ -9,6 +9,7 @@ return [
     'associations' => 'Ассоциации',
     'promotions' => 'Акции',
     'banners' => 'Баннеры',
+    'brands' => 'Бранды',
     'logout' => 'Выйти',
     'status' => 'Статус',
     'dateTime' => 'Время',
