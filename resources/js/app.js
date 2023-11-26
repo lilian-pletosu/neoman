@@ -43,18 +43,6 @@ createInertiaApp({
             return base_path + path;
         }
 
-        // app.config.globalProperties.clearObject = (obj, val = '') => {
-        //     Object.keys(obj).forEach(k => {
-        //         if (Array.isArray(obj[k])) {
-        //             obj[k] = [];
-        //         } else if (typeof obj[k] === 'object' && obj[k] !== null) {
-        //             this.clearObject(obj[k]);
-        //         } else {
-        //             obj[k] = val
-        //         }
-        //     });
-        // }
-
         app.config.globalProperties.fetchedSchemaFormBuild = (schema) => {
             let form = {};
             schema.fields.forEach((f) => form[f.name] = f.value)
