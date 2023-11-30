@@ -60,8 +60,8 @@ const openMenu = () => {
                     Alături la fiecare etapă în viață</p>
                 <p class="text-2 text-sm ">Confortul tău - prioritatea noastră!</p>
             </div>
-            <div class="flex-initial lg:w-1/12 flex justify-end space-x-6">
-                <heart-icon class="w-6"/>
+            <div class="flex-initial lg:w-1/12 flex justify-end space-x-6 dark:text-white">
+                <heart-icon class="w-6 "/>
                 <shopping-cart-icon class="w-6"/>
             </div>
         </div>
