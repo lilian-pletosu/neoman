@@ -25,6 +25,7 @@
         "@inertiajs/vue3": "^1.0.11",
         "@vueuse/components": "^10.6.1",
         "@vueuse/core": "^10.6.1",
+        "motion": "^10.16.4",
         "notiwind": "^2.0.2",
         "tw-elements": "^1.0.0",
         "vue": "^3.3.4",

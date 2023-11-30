@@ -1,7 +1,8 @@
 <template>
+    <body class=" dark:bg-gray-800">
     <Head :title="title"/>
 
-    <FrontNavBar/>
+    <FrontNavBar :is-dark="isDark" @darkMode="toggleDark"/>
 
     <div class="w-full ">
 
@@ -21,24 +22,33 @@
             </main>
         </div>
     </div>
+    </body>
 </template>
 
-<script>
-import {defineComponent} from "vue";
+<script setup>
 import FrontHeader from "@/Components/FrontHeader.vue";
 import FrontNavBar from "@/Components/FrontNavBar.vue";
-import CarouselFront from "@/Components/CarouselFront.vue";
+import {useDark, useToggle} from "@vueuse/core";
+import {ref} from "vue";
 
 
-export default defineComponent({
-    components: {CarouselFront, FrontNavBar, FrontHeader},
-    props: {
-        currentRoute: String,
-        title: String
-    },
-
-
+const isDark = ref();
+const setDark = useDark();
+const changeTheme = useDark({
+    onChanged(dark) {
+        useToggle(setDark)
+        isDark.value = dark;
+    }
 })
+
+const toggleDark = useToggle(changeTheme);
+
+const props = defineProps({
+    currentRoute: String,
+    title: String
+});
+
+
 </script>
 
 

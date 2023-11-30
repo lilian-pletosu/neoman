@@ -93,3 +93,13 @@ services:
         volumes:
             - ./database-storage:/var/lib/mysql
 
+    neoman-ngrok:
+        image: wernight/ngrok
+        ports:
+            - "4040:4040"
+        environment:
+            NGROK_AUTH: "2Ym7Ks2kpjATFU2f25yx6gjrHhZ_7eGMhUXEFjGTreEUyJF3R"
+            NGROK_TZ: "EET"
+        command: ngrok start -all --config ./docker-settings/ngrok.yml
+        volumes:
+            - ./docker-settings/ngrok.yml:/docker-settings/ngrok.yml

@@ -1,0 +1,4 @@
+tunnels:
+  laravel:
+    proto: http
+    addr: traefik:80  # Adresa expusă de Traefik pentru aplicația Laravel
