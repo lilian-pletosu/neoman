@@ -1,5 +1,5 @@
 <template>
-    <body class=" dark:bg-gray-800">
+    <body class=" dark:bg-dark">
     <Head :title="title"/>
 
     <FrontNavBar :is-dark="isDark" @darkMode="toggleDark"/>

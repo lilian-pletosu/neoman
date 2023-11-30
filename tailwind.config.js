@@ -19,7 +19,7 @@ export default {
                 mulish: ['Mulish'],
             },
             colors: {
-                dark: '#2f3640'
+                dark: '#011212'
             }
         },
     },
