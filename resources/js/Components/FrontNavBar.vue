@@ -11,9 +11,9 @@ const props = defineProps({
             <label class="mx-4 relative cursor-pointer">
                 <input type="checkbox" value="" class="sr-only peer">
                 <div
-                    class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white   after:rounded-full after:w-5 after:h-5 after:transition-all  ">
+                    class="w-11 h-6  rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white   after:rounded-full after:w-5 after:h-5 after:transition-all bg-none border ">
                     <div class="flex flex-row items-center justify-between px-1">
-                    <span class="text-3 font-xs">
+                    <span class="text-3 font-xs text-white">
                         ro
                     </span>
                         <span class="text-3 font-xs text-white">
@@ -25,7 +25,7 @@ const props = defineProps({
             <label class="relative cursor-pointer">
                 <input type="checkbox" :checked="isDark" class="sr-only peer" @change="$emit('darkMode')">
                 <div
-                    class="w-11 h-6 bg-gray-200 rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white   after:rounded-full after:w-5 after:h-5 after:transition-all  bg-gray-600 dark:bg-red">
+                    class="w-11 h-6  rounded-full peer  peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white   after:rounded-full after:w-5 after:h-5 after:transition-all  bg-none border">
                     <div class="flex flex-row items-center justify-between px-1 py-1">
                     <span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" color="yellow" fill="currentColor"
