@@ -50,6 +50,7 @@ return [
     'brand_id' => 'Brand',
     'view_product' => 'Detalii produs',
     'view_brand' => 'Detalii brand',
+    'no_categories' => 'Nu sunt categorii',
 
 
     //validation

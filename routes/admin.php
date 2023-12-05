@@ -28,7 +28,7 @@ Route::group([], function () {
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->name('profile.destroy');
         });
 
-    Route::post('import-excel-csv-file', [\App\Http\Controllers\ExcelCSV::class, 'importExcelCSV'])->name('importproductCSV');
+    Route::post('import-excel-csv-file{resourceType}', [\App\Http\Controllers\ExcelCSV::class, 'importExcelCSV'])->name('importResource');
 
 
 });

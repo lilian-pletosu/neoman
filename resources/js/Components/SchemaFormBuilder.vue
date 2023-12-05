@@ -134,7 +134,7 @@ function submit() {
         })
     }
     if (['import'].includes(props.type)) {
-        router.post(route(`import${props.resourceType}CSV`), {
+        router.post(route(`importResource`, props.resourceType), {
             file: importFile.value
         }, {
             onSuccess: params => {

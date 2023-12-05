@@ -4,16 +4,40 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\DataTableService;
+use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+
+    private DataTableService $dataTableService;
+
+    public function __construct(DataTableService $dataTableService)
+    {
+        $this->dataTableService = $dataTableService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return inertia('Admin/Categories');
+        $builder = $this->dataTableService
+            ->setResource('Category')
+            ->setResourceColumns(['id', 'name', 'slug'])
+            ->setColumnsOrder(['id', 'name'])
+            ->editInModal(true)
+            ->paginate(10)
+            ->setSearchRoute('admin.categories')
+            ->setResourceRoute('admin.categories')
+            ->sortBy('id');
+
+        return inertia('Admin/Categories', [
+            'initialRoute' => 'admin.categories',
+            'resourceType' => 'category'
+        ])->loadData($builder);
     }
 
     /**
@@ -21,7 +45,8 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return (new SchemaFormBuilder)('Category', 'post', 'admin.category.store');
+
     }
 
     /**
@@ -29,7 +54,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required'
+        ]);
+        $data['slug'] = Str::of($data['name'])->slug('_');;
+        Category::create($data);
     }
 
     /**
@@ -37,7 +66,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return $category;
     }
 
     /**
@@ -45,7 +74,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return (new SchemaFormBuilder)('Category', 'put', 'admin.categories.update', $category->id);
+
     }
 
     /**
@@ -61,6 +91,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
     }
 }

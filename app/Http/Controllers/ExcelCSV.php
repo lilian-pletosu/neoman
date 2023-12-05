@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Imports\ProductsImport;
 use Illuminate\Http\Request;
 
 class ExcelCSV extends Controller
 {
-    public function importExcelCSV(Request $request)
+    public function importExcelCSV(Request $request, string $resourceType)
     {
         $request->validate([
             'file' => 'required'
         ]);
 
-        (new ProductsImport)($request);
+        //TODO: Make conditional case if resourceType is equal with product make productImport and the like
     }
 }

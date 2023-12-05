@@ -14,5 +14,6 @@ return [
     'status' => 'Статус',
     'dateTime' => 'Время',
     'clients' => 'Клиенты',
-    'order_price' => 'Цена'
+    'order_price' => 'Цена',
+    'no_categories' => 'Список пуст',
 ];
