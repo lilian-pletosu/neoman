@@ -6,4 +6,4 @@
  | ------------------------
  |
  */
-Route::get('/home', [\App\Http\Controllers\front\HomeController::class, 'index'])->name('home');
+Route::get('/', [\App\Http\Controllers\front\HomeController::class, 'index'])->name('home');
