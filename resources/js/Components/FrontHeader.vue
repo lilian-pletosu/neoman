@@ -12,20 +12,18 @@ import {
     ReceiptPercentIcon,
     ShoppingCartIcon,
     SparklesIcon,
-    StarIcon,
-    XMarkIcon
+    StarIcon
 } from "@heroicons/vue/24/outline/index.js";
+import SidebarMobile from "@/Components/SidebarMobile.vue";
 
 
 const menu = ref(false);
 const sidebar = ref(null)
 
 
-const openMenu = () => {
-    console.log('menu')
+const toggleSidebar = () => {
     menu.value = !menu.value
 }
-
 // onClickOutside(sidebar, (event) => menu.value ? menu.value = false : menu.value = false)
 
 
@@ -76,16 +74,86 @@ const openMenu = () => {
                     placeholder="Caută un produs..."
                 />
             </div>
+
         </div>
-        <div class="flex flex-row h-10 md:h-16 md:border-t dark:md:border-slate-500 xl:px-60">
-            <div class="flex-initial cursor-pointer w-full bg-1 flex
-             justify-center items-center space-x-2 md:w-3/12 md:border-x dark:md:border-slate-500 md:bg-white dark:bg-dark "
-                 @click="openMenu">
-                <bars3-icon class="w-[25px] h-[25px] text-white md:text-black dark:text-white"/>
-                <p class="text-2 text-base text-white md:text-black dark:text-white uppercase">Catalog</p>
-                <chevron-down-icon v-if="menu" class="w-5 text-blue-800"/>
-                <chevron-up-icon v-if="!menu" class="w-5 text-blue-800"/>
+        <div class="flex flex-row  h-10 md:h-16 md:border-t dark:md:border-slate-500 xl:px-60">
+            <div class="relative z-20
+             justify-center items-center md:w-3/12 md:border-x dark:md:border-slate-500 md:bg-white dark:bg-dark"
+                 @click="toggleSidebar">
+                <div class="flex justify-center items-center space-x-3 py-5">
+                    <bars3-icon class="w-[25px] h-[25px] text-black md:text-black dark:text-white"/>
+                    <p class="text-2 text-base text-black md:text-black dark:text-white uppercase">
+                        Catalog</p>
+                    <chevron-down-icon v-if="menu" class="w-5 text-blue-800"/>
+                    <chevron-up-icon v-if="!menu" class="w-5 text-blue-800"/>
+                </div>
+                <div class="">
+                    <div ref="sidebar" v-show="menu"
+                         class="hidden md:block">
+                        <div
+                            class="static z-10 bg-2 h-[700px] hide-scrollbar overflow-y-scroll w-full -mt-0.5 shadow-xl dark:bg-dark"
+                        >
+                            <div class="space-y-1 text-2 text-lg bg-gray-200 px-2 font-semibold pt-1">
+                                <div
+                                    class="flex flex-row space-x-2">
+                                    <div
+                                        class="w-7 bg-[#eef90a] circle rounded-2xl z-10 h-7 items-center flex justify-center shadow-xl">
+                                        <receipt-percent-icon class="w-6"/>
+                                    </div>
+                                    <a href="">
+                                        <div class="flex flex-col">
+                                            <p>Atenție Produse</p>
+                                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
+                                                Nu rata
+                                                profitul</p>
+                                        </div>
+                                    </a>
+
+                                </div>
+                                <div class="flex flex-row space-x-2">
+                                    <star-icon class="w-6"/>
+                                    <a href="">
+                                        <div class="flex flex-col">
+                                            <p>Hit Vânzări</p>
+                                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
+                                                Produse populare</p>
+                                        </div>
+                                    </a>
+
+                                </div>
+                                <div class="flex flex-row space-x-2">
+                                    <sparkles-icon class="w-6"/>
+                                    <a href="">
+                                        <div class="flex flex-col">
+                                            <p>Produse Sezoniere</p>
+                                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
+                                                Tot ce iți trebuie pentru toamnă!</p>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="flex flex-row space-x-2">
+                                    <gift-icon class="w-6"/>
+                                    <a href="">
+                                        <div class="flex flex-col">
+                                            <p>Carduri Cadou</p>
+                                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
+                                                Oferă alegere!</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+                            <div class=" text-lg">
+                                <p class="px-2 py-1 hover:bg-emerald-950 hover:text-white cursor-pointer"
+                                   v-for="category in $page.props.categories">{{
+                                        category.name
+                                    }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class=" hidden md:flex flex-1 items-center justify-end pl-4 md:pr-2 xl:pr-0">
                 <div class="relative h-10  w-full ">
                     <div
@@ -102,128 +170,12 @@ const openMenu = () => {
     </div>
 
 
-    <div ref="sidebar" v-show="menu" class="flex md:hidden ease-in duration-300">
-        <div
-            class="fixed z-10 top-0 bg-2 h-full hide-scrollbar overflow-y-scroll  flex flex-col   shadow-xl dark:bg-dark rounded-r-xl w-3/4  sm:w-1/2 ">
-            <x-mark-icon class="absolute right-2 top-2 w-5 dark:text-white cursor-pointer" @click="openMenu"/>
-            <div class="flex p-2 ">
-                <application-logo/>
-            </div>
-            <div class="space-y-1 text-2 text-lg bg-gray-200 px-2 font-semibold pt-1">
-                <div
-                    class="flex flex-row space-x-2">
-                    <div
-                        class="w-7 bg-[#eef90a] circle rounded-2xl z-10 h-7 items-center flex justify-center shadow-xl">
-                        <receipt-percent-icon class="w-6"/>
-                    </div>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Atenție Produse</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Nu rata
-                                profitul</p>
-                        </div>
-                    </a>
-
-                </div>
-                <div class="flex flex-row space-x-2">
-                    <star-icon class="w-6"/>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Hit Vânzări</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Produse populare</p>
-                        </div>
-                    </a>
-
-                </div>
-                <div class="flex flex-row space-x-2">
-                    <sparkles-icon class="w-6"/>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Produse Sezoniere</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Tot ce iți trebuie pentru toamnă!</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="flex flex-row space-x-2">
-                    <gift-icon class="w-6"/>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Carduri Cadou</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Oferă alegere!</p>
-                        </div>
-                    </a>
-                </div>
-
-            </div>
-            <div class="space-y-2 px-2 ">
-                <p v-for="(item) in 20">{{ 'Categorie' + ' ' + item }}</p>
-            </div>
+    <SidebarMobile :show="menu" @close="toggleSidebar">
+        <div class="flex flex-col justify-center px-4 py-2  group text-lg">
+            <p v-for="category in  $page.props.categories">{{ category.name }}</p>
         </div>
-    </div>
-    <div ref="sidebar" v-show="menu" class="hidden  md:flex ease-in duration-300">
-        <div
-            class="fixed z-10 bg-2 h-full hide-scrollbar overflow-y-scroll  shadow-xl dark:bg-dark rounded-r-xl  sm:w-1/2 ">
-            <x-mark-icon class="absolute right-2 top-2 w-5 dark:text-white cursor-pointer" @click="openMenu"/>
+    </SidebarMobile>
 
-            <div class="space-y-1 text-2 text-lg bg-gray-200 px-2 font-semibold pt-1">
-                <div
-                    class="flex flex-row space-x-2">
-                    <div
-                        class="w-7 bg-[#eef90a] circle rounded-2xl z-10 h-7 items-center flex justify-center shadow-xl">
-                        <receipt-percent-icon class="w-6"/>
-                    </div>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Atenție Produse</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Nu rata
-                                profitul</p>
-                        </div>
-                    </a>
-
-                </div>
-                <div class="flex flex-row space-x-2">
-                    <star-icon class="w-6"/>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Hit Vânzări</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Produse populare</p>
-                        </div>
-                    </a>
-
-                </div>
-                <div class="flex flex-row space-x-2">
-                    <sparkles-icon class="w-6"/>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Produse Sezoniere</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Tot ce iți trebuie pentru toamnă!</p>
-                        </div>
-                    </a>
-                </div>
-                <div class="flex flex-row space-x-2">
-                    <gift-icon class="w-6"/>
-                    <a href="">
-                        <div class="flex flex-col">
-                            <p>Carduri Cadou</p>
-                            <p class=" text-2 text-sm text-gray-500 transition ease-in-out  hover:text-gray-900 duration-300">
-                                Oferă alegere!</p>
-                        </div>
-                    </a>
-                </div>
-
-            </div>
-            <div class="space-y-2 px-2 ">
-                <p v-for="(item) in 20">{{ 'Categorie' + ' ' + item }}</p>
-            </div>
-        </div>
-    </div>
 
 </template>
 
