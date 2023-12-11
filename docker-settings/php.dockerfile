@@ -1,6 +1,10 @@
 # Utilizați o imagine PHP mai recentă
 FROM php:8.2-fpm-alpine
 
+# Setarea unei variabile de argument (uuid)
+ARG uid
+# Exponați portul specificat prin variabila uuid
+EXPOSE $uid
 
 # Instalarea Composer
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
@@ -11,14 +15,19 @@ RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
 RUN mkdir -p /var/www/html
 
 
-# Instalarea extensiilor PHP (pdo, pdo_mysql si exif)
+# Instalarea extensiilor PHP (pdo și pdo_mysql)
 RUN apk --no-cache add shadow && \
-    docker-php-ext-install pdo pdo_mysql exif
+    usermod -s /bin/bash www-data && \
+    docker-php-ext-install pdo pdo_mysql
 
 # Instalarea extensiilor PHP (gd și zip)
 RUN apk update && apk add libpng-dev libzip-dev && \
     docker-php-ext-install gd zip
 
+# Comentați secțiunea xdebug (dacă nu este necesară)
+# Acest lucru trebuie să apară înaintea următoarei comenzi docker-php-source
+RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+    echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 # Instalarea extensiei Redis
 ENV EXT_REDIS_VERSION=5.3.4
