@@ -36,8 +36,6 @@ services:
     neoman-php:
         build:
             context: ./docker-settings
-            args:
-                uuid: '${UID:-1000}'
             dockerfile: php.dockerfile
         volumes:
             - .:/var/www/html
