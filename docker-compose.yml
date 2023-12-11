@@ -3,9 +3,9 @@ version: '3.9'
 networks:
     neoman:
         name: neoman
-    traff:
-        name: '${TRAEFIK_NETWORK:-traff}'
-        external: true
+#    traff:
+#        name: '${TRAEFIK_NETWORK:-traff}'
+#        external: true
 
 
 services:
@@ -21,19 +21,19 @@ services:
             - neoman-php
             - neoman-mariadb
         ports:
-            - 86:80
+            - 80:80
         volumes:
             - .:/var/www/html
         networks:
             - neoman
-            - traff
-        labels:
-            - traefik.enable=true
-            - traefik.http.routers.neoman-nginx.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
-            - traefik.port=80
-            - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-            - traefik.http.routers.neoman-nginx.tls=${APP_TLS:-false}
-            - traefik.http.routers.neoman-nginx.tls.certresolver=lets-encrypt
+#            - traff
+#        labels:
+#            - traefik.enable=true
+#            - traefik.http.routers.neoman-nginx.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
+#            - traefik.port=80
+#            - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
+#            - traefik.http.routers.neoman-nginx.tls=${APP_TLS:-false}
+#            - traefik.http.routers.neoman-nginx.tls.certresolver=lets-encrypt
 
 
     neoman-php:
@@ -64,8 +64,8 @@ services:
             MYSQL_USER: '${DB_USERNAME:-root}'
             MYSQL_PASSWORD: '${DB_PASSWORD:-secrets}'
             MYSQL_DATABASE: '${DB_DATABASE:-neomandb}'
-        #    ports:
-        #      - 33066:3306
+        ports:
+            - "3306:3306"
         volumes:
             - ./database-storage:/var/lib/mysql
         networks:
@@ -82,14 +82,14 @@ services:
             - 8096:8080
         networks:
             - neoman
-            - traff
-        labels:
-            - traefik.enable=true
-            #            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`) && Path(`/adminer`)
-            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
-            - traefik.port=80
-            - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-            - traefik.http.routers.neoman.tls=${APP_TLS:-false}
-            - traefik.http.routers.neoman.tls.certresolver=lets-encrypt
+#            - traff
+#        labels:
+#            - traefik.enable=true
+#            #            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`) && Path(`/adminer`)
+#            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
+#            - traefik.port=80
+#            - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
+#            - traefik.http.routers.neoman.tls=${APP_TLS:-false}
+#            - traefik.http.routers.neoman.tls.certresolver=lets-encrypt
         volumes:
             - ./database-storage:/var/lib/mysql

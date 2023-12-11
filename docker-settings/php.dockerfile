@@ -22,7 +22,7 @@ RUN apk --no-cache add shadow && \
 
 # Instalarea extensiilor PHP (gd și zip)
 RUN apk update && apk add libpng-dev libzip-dev && \
-    docker-php-ext-install gd zip
+    docker-php-ext-install gd zip exif
 
 # Comentați secțiunea xdebug (dacă nu este necesară)
 # Acest lucru trebuie să apară înaintea următoarei comenzi docker-php-source
