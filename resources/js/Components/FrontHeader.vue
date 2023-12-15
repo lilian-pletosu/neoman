@@ -38,7 +38,7 @@ const toggleSidebar = () => {
                 </a>
             </div>
             <div class="flex flex-1 flex-col text-center ">
-                <a href="tel:+40770247678"><p class="text-1 text-lg dark:text-white">022 268 000</p></a>
+                <a href="tel:+37378107017"><p class="text-1 text-lg dark:text-white">078107017</p></a>
                 <p class="cursor-pointer underline text-b-link text-xs pointer md:text-sm">Revenim cu un apel?</p>
             </div>
             <div class="hidden md:flex flex-1 flex justify-center space-x-2">
