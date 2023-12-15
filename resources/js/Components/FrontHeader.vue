@@ -76,13 +76,13 @@ const toggleSidebar = () => {
             </div>
 
         </div>
-        <div class="flex flex-row  h-10 md:h-16 md:border-t dark:md:border-slate-500 xl:px-60">
+        <div class="flex flex-row  h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60">
             <div class="relative z-20
-             justify-center items-center md:w-3/12 md:border-x dark:md:border-slate-500 md:bg-white dark:bg-dark"
+             justify-center items-center md:w-3/12 md:border-x md:border-gray-500 dark:md:border-slate-500  dark:bg-dark"
                  @click="toggleSidebar">
                 <div class="flex justify-center items-center space-x-3 py-5">
-                    <bars3-icon class="w-[25px] h-[25px] text-black md:text-black dark:text-white"/>
-                    <p class="text-2 text-base text-black md:text-black dark:text-white uppercase">
+                    <bars3-icon class="w-[25px] h-[25px] text-black md:text-white dark:text-white"/>
+                    <p class="text-2 text-base text-black md:text-white dark:text-white uppercase">
                         Catalog</p>
                     <chevron-down-icon v-if="menu" class="w-5 text-blue-800"/>
                     <chevron-up-icon v-if="!menu" class="w-5 text-blue-800"/>
