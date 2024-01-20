@@ -14,7 +14,7 @@ class Brand extends Model implements TranslatableContract
 
     protected $table = 'brands';
 
-    public $translatedAttributes = ['description'];
+    public array $translatedAttributes = ['description'];
 
     protected $fillable = [
         'name', 'slug', 'website', 'description', 'position', 'is_enabled', 'seo_title', 'seo_description', 'image'

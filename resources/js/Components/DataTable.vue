@@ -63,7 +63,8 @@ const applyFormat = (columnName, columnValue) => {
         if (columnValue === null) {
             return '---';
         }
-        return app.appContext.config.globalProperties.truncate(columnValue, 50);
+        return columnValue.slice(0, 23) + '...'
+        // return app.appContext.config.globalProperties.truncate(columnValue, 50);
     }
     return columnValue;
 }
@@ -108,15 +109,15 @@ onMounted(() => {
 
     <div class="flex flex-col mt-8">
         <div class="overflow-x-auto md:overflow-hidden flex rounded-lg">
-            <div class="align-middle inline-block min-w-full">
+            <div class="align-middle inline-block w-full">
                 <div class="shadow overflow-hidden sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-200 ">
+                    <table class="w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                         <tr>
                             <template v-for="(column) in columnsOrder">
 
                                 <th scope="col"
-                                    class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                    class="p-4 text-xs font-medium text-gray-500 uppercase tracking-wider flex-1"
                                     :class="{'hidden xl:block' : column === 'description'}">
                                     {{ __(column) }}
                                 </th>
@@ -125,44 +126,47 @@ onMounted(() => {
                         </tr>
                         </thead>
                         <tbody class="bg-white">
-                        <tr v-for="(resource, index) in resources.data" :key="index" class=" hover:bg-gray-100 ">
+                        <tr v-for="(resource, index) in resources.data" :key="index" class="hover:bg-gray-100 w-full">
                             <template v-for="(columnInOrder) in columnsOrder">
                                 <template v-for="column in columns">
                                     <template v-if="column === columnInOrder">
                                         <td @click="emitClick(resource)"
-                                            class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap  text-center"
-                                            :class="{ 'hidden    xl:block' : columnInOrder === 'description'}">
+                                            class="py-2 px-6 text-sm text-gray-900 whitespace-wrap"
+                                            :class="{ 'hidden xl:block': columnInOrder === 'description' }">
+                                            <!--                    image                        -->
                                             <template v-if="columnInOrder === 'image'">
-                                                <template
-                                                    v-if="resource[columnInOrder] != null && resource[columnInOrder] != 'image'">
-                                                    <img v-if="resource[columnInOrder]" class="w-16"
-                                                         :src="resource[columnInOrder]"
-                                                         alt="image if"/>
-                                                </template>
-                                                <template v-else>
-                                                    <img v-if="resource[columnInOrder]" class="w-16"
-                                                         :src="'/img/no_image.svg'"
-                                                         alt="image else"/>
-
-                                                </template>
+                                                <img
+                                                    v-if="resource[columnInOrder] && resource[columnInOrder] !== 'image'"
+                                                    class="w-16 mx-auto"
+                                                    :src="resource[columnInOrder]"
+                                                    alt="image if"/>
+                                                <img v-else-if="resource[columnInOrder]"
+                                                     class="w-16 mx-auto"
+                                                     :src="'/img/no_image.svg'"
+                                                     alt="image else"/>
                                             </template>
+                                            <!--                    website                        -->
                                             <template v-else-if="column === 'website'">
-                                                <div class="rounded w-14 flex justify-center">
+                                                <div class="rounded flex  justify-center">
                                                     <a rel="stylesheet" title="sds"
                                                        :href="`http://${resource[columnInOrder]}`">{{
                                                             resource[columnInOrder]
                                                         }}</a>
                                                 </div>
                                             </template>
+                                            <!--                    status                        -->
                                             <template v-else-if="column === 'is_enabled'">
-                                                <div class="rounded w-14 flex justify-center"
-                                                     :class="{'bg-green-400 font-semibold ' : resource[columnInOrder] === 1,
-                                                     'bg-red-400 font-semibold' : resource[columnInOrder] === 0}">
+                                                <div class="rounded w-14 text-center   mx-auto"
+                                                     :class="{
+            'bg-green-400 font-semibold': resource[columnInOrder] === 1,
+            'bg-red-400 font-semibold': resource[columnInOrder] === 0
+         }">
                                                     {{ __(applyFormat(column, resource[columnInOrder])) ?? '--' }}
                                                 </div>
                                             </template>
+                                            <!--                    else                        -->
                                             <template v-else>
-                                                <div class="rounded w-14 flex justify-center">
+                                                <div class="rounded text-center">
                                                     {{ __(applyFormat(column, resource[columnInOrder])) ?? '---' }}
                                                 </div>
                                             </template>
@@ -170,20 +174,16 @@ onMounted(() => {
                                     </template>
                                 </template>
                                 <template v-if="$page.props.relationColumns"
-                                          v-for=" relationColumn in $page.props.relationColumns">
-
-                                    <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover"
+                                          v-for="relationColumn in $page.props.relationColumns">
+                                    <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover text-center"
                                         v-if="relationColumn.label === columnInOrder">
-
-                                        {{
-                                            resource[relationColumn.relation]?.name ?? '---'
-                                        }}
-                                        <!--                                        {{ resource[relationColumn.relation][relationColumn.fields][0 }}-->
+                                        {{ resource[relationColumn.relation]?.name ?? '---' }}
                                     </td>
-    
                                 </template>
                             </template>
                         </tr>
+
+
                         </tbody>
                     </table>
                 </div>
@@ -197,7 +197,11 @@ onMounted(() => {
 
 </template>
 
-
 <style scoped>
-
+.flexible-text {
+    @apply overflow-hidden
+    whitespace-normal
+    break-words;
+    /* sau poate folosiți overflow-ellipsis pentru a afișa puncte de suspensie (...) când textul depășește containerul */
+}
 </style>

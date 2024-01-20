@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Services\DataTableService;
+use App\Services\ProductService;
 use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-
+    private Product $product;
 
     private DataTableService $dataTableService;
 
@@ -27,19 +30,17 @@ class ProductController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Product')
-            ->setResourceColumns(['id', 'product_code', 'title', 'price', 'description'])
-            ->setRelationColumn('subSubCategory', 'category', ['name'])
+            ->setResourceColumns(['id', 'product_code', 'name', 'price', 'description'])
+            ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
             ->setRelationColumn('images', 'image', ['image1', 'image2', 'image3', 'image4'])
-//            ->expandResourceQuery(['brand_id', 'sub_subcategory_id'])
-            ->setColumnsOrder(['id', 'product_code', 'title', 'description', 'price'])
+            ->setColumnsOrder(['id', 'product_code', 'name', 'description', 'price'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.products')
             ->setResourceRoute('admin.products')
             ->sortBy('id');
 
-//        dd($builder->getData()['resources'][1]);
         return inertia('Admin/Products', [
             'initialRoute' => 'admin.products',
             'resourceType' => 'product',
@@ -51,9 +52,9 @@ class ProductController extends Controller
         return (new SchemaFormBuilder)('Product', 'post', 'admin.products.store');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, ProductRequest $productRequest)
     {
-        dd($request->all());
+        (new ProductService())->create($request, $productRequest->all());
     }
 
     public function show(Product $product)
@@ -67,22 +68,22 @@ class ProductController extends Controller
     public function edit(string $id): array
     {
         return (new SchemaFormBuilder)('Product', 'put', 'admin.products.update', $id);
-
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $product, ProductUpdateRequest $productUpdateRequest)
     {
-        dd($request->all());
+        (new ProductService())->update($productUpdateRequest->form, $product, $request);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
+        $product = Product::find($id);
         $product->delete();
     }
 

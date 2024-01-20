@@ -16,4 +16,6 @@ return [
     'clients' => 'Клиенты',
     'order_price' => 'Цена',
     'no_categories' => 'Список пуст',
+    'subcategories' => 'Подкатегории',
+
 ];

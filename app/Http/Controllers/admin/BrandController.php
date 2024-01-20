@@ -10,6 +10,7 @@ use App\Services\BrandService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
 {
@@ -83,6 +84,8 @@ class BrandController extends Controller
      */
     public function destroy(Brand $brand)
     {
+        $imagePath = str_replace('/storage', 'public', $brand->image);
+        Storage::delete($imagePath);
         $brand->delete();
     }
 }

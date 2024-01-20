@@ -4,10 +4,10 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Services\CategoryService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -57,8 +57,8 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => 'required'
         ]);
-        $data['slug'] = Str::of($data['name'])->slug('_');;
-        Category::create($data);
+
+        (new CategoryService())->create($request, $data);
     }
 
     /**
@@ -83,7 +83,10 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $data = $request->validate([
+            'form.name' => 'required'
+        ]);
+        (new CategoryService())->update($data['form'], $category, $request);
     }
 
     /**

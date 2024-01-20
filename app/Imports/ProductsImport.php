@@ -139,7 +139,7 @@ class ProductsImport
         $data = $this->combineImagesWithText();
         foreach ($data as $item) {
 
-            if (isNull(Product::where('title', $item['title'])->first())) {
+            if (isNull(Product::where('name', $item['name'])->first())) {
 //                $brand = Brand::firstOrCreate(['name' => $item['brand']], [
 //                    'slug' => Str::slug($item['brand'], '_'),
 //                    'website' => Str::lower('www' . '.' . $item['brand'] . '.' . 'com',),
@@ -156,7 +156,7 @@ class ProductsImport
                     'slug' => Str::slug($item['sub_subcategory_id'], '_')
                 ]);
 
-                if (Product::where('title', $item['title'])->first() == null) {
+                if (Product::where('name', $item['name'])->first() == null) {
                     $product = Product::create([
                         'title' => $item['title'],
                         // Atribuie celelalte atribute ale produsului

@@ -2,22 +2,24 @@
 
 namespace App\Models;
 
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Product extends Model implements TranslatableContract
 {
     use HasFactory;
+    use Translatable;
 
-    protected $table = 'products';
 
-    protected $fillable = [
-        'title', 'description', 'price', 'product_code', 'slug', 'brand_id', 'image_id', 'sub_subcategory_id', 'specifications_id'
-    ];
+    public $translatedAttributes = ['name', 'description'];
 
-    public function subSubCategory(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    protected $fillable = ['name', 'description', 'price', 'product_code', 'slug', 'brand_id', 'sub_sub_category_id'];
+
+    public function subSubCategory()
     {
-        return $this->belongsTo(SubSubCategory::class, 'sub_subcategory_id');
+        return $this->belongsTo(SubSubCategory::class, 'sub_sub_category_id');
     }
 
     public function brand()
@@ -25,9 +27,8 @@ class Product extends Model
         return $this->belongsTo(Brand::class, 'brand_id');
     }
 
-    public function images(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function images()
     {
-        return $this->hasOne(ProductsImage::class, 'product_id');
+        return $this->hasMany(ProductImage::class, 'product_id');
     }
-
 }

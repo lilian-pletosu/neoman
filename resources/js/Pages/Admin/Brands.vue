@@ -16,7 +16,10 @@
                                 __('create')
                             }}
                         </primary-button>
-                        <secondary-button>{{ __('import') }}</secondary-button>
+                        <secondary-button @click="schemaForm(null, 'import', 'POST')">{{
+                                __('import')
+                            }}
+                        </secondary-button>
                     </div>
 
                 </div>

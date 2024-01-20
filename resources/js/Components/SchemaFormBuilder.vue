@@ -7,7 +7,6 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Description from "@/Components/Description.vue";
-import ImageSlider from "@/Components/ImageSlider.vue";
 
 let formEdit = useForm({});
 let formCreate = useForm({});
@@ -146,9 +145,10 @@ function submit() {
 }
 
 const deleteResource = (resId) => {
-    router.delete(route(`${props.resourceRoute}.destroy`, resId), {
+    router.delete(route(`${props.resourceRoute}.destroy`, props.resource.id), {
         onBefore: () => confirm(`Are you sure you want to delete this ${props.resourceType}?`),
-        onSuccess: () => closeModalWithNotify('delete')
+        onSuccess: () => closeModalWithNotify('delete'),
+        onError: (err) => console.log(err)
     })
 }
 
@@ -160,6 +160,7 @@ const deleteResource = (resId) => {
         <div class="container-rounded">
             <div class="">
                 <div class="flex  flex-col">
+                    <!--        View Resource            -->
                     <template v-if="type === 'modal'">
                         <h1 class="primary-text ">{{ __(`view_${resourceType}`) }}</h1>
 
@@ -187,13 +188,15 @@ const deleteResource = (resId) => {
                                     </template>
                                 </div>
                             </template>
+
                             <div class="columns-2 p-2">
-                                <description :resource="resourceModal" :columns="columns"/>
+                                <description :resource="resource" :resource-modal="resourceModal" :columns="columns"/>
                             </div>
                         </div>
                     </template>
+                    <!--        Edit Section            -->
                     <template v-else-if="type === 'edit'">
-                        <h1 class="primary-text">{{ __('edit_resource') }}</h1>
+                        <h1 class="primary-text">{{ __(`edit_${resourceType}`) }}</h1>
                         <form @submit.prevent="submit">
                             <template v-for="field in schemaForm.fields">
                                 <template v-if="['text', 'textarea', 'number'].includes(field.type)">
@@ -204,13 +207,15 @@ const deleteResource = (resId) => {
                                                  :label="__(field.placeholder)"/>
                                 </template>
                                 <template v-if="['select'].includes(field.type)">
-                                    <black-selector @update:status="args => formEdit[field.name] = (args)"
-                                                    :value="formEdit[field.name]"
-                                                    :label="__(field.name)"
-                                                    :error-message="__($page.props.errors[`form.${field.name}`])"
-                                                    :options="field.options"
-                                                    :model-value="formEdit[field.name]"/>
+                                    <black-selector
+                                        @update:status="args => formEdit[field.name] = args"
+                                        :value="formEdit[field.name]"
+                                        :label="__(field.label)"
+                                        :error-message="__($page.props.errors[`form.${field.name}`])"
+                                        :options="field.options"
+                                    />
                                 </template>
+
                                 <template v-if="['file'].includes(field.type)">
                                     <div class="my-5">
                                         <label for="image"
@@ -232,6 +237,7 @@ const deleteResource = (resId) => {
                             </div>
                         </form>
                     </template>
+                    <!--        Create Section           -->
                     <template v-else-if="type === 'create'">
                         <div class="flex flex-col">
                             <h1 class="primary-text">{{ __(`create_${resourceType}`) }}</h1>
@@ -250,7 +256,7 @@ const deleteResource = (resId) => {
                                         <template v-if="['select'].includes(field.type)">
                                             <black-selector @update:status="args => formCreate[field.name] = args"
                                                             :value="formCreate[field.name]"
-                                                            :label="__(field.name)"
+                                                            :label="__(field.label)"
                                                             :error-message="__(formCreate.errors[field.name])"
                                                             :options="field.options"
                                                             :model-value="formCreate[field.name]"/>
@@ -259,7 +265,7 @@ const deleteResource = (resId) => {
                                             <div class="my-5">
                                                 <label for="image"
                                                        class="block mb-2 text-sm font-medium text-gray-900 ">{{
-                                                        __('image')
+                                                        __(field.label)
                                                     }}</label>
 
                                                 <input @input="formCreate.image = $event.target.files[0]"
@@ -280,6 +286,7 @@ const deleteResource = (resId) => {
                             </form>
                         </div>
                     </template>
+                    <!--        Import Section            -->
                     <template v-else-if="type === 'import'">
                         <div class="flex flex-col">
                             <h1 class="primary-text">{{ __(`import_${resourceType}`) }}</h1>

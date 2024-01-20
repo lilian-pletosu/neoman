@@ -19,6 +19,13 @@ Route::group([], function () {
             Route::resource('/products', \App\Http\Controllers\admin\ProductController::class);
             Route::resource('/orders', \App\Http\Controllers\admin\OrderController::class);
             Route::resource('/categories', \App\Http\Controllers\admin\CategoryController::class);
+            Route::prefix('category')
+                ->name('categories.')
+                ->group(function () {
+                    Route::resource('/subcategories', \App\Http\Controllers\admin\SubcategoryController::class);
+                    Route::resource('/subSubcategories', \App\Http\Controllers\admin\SubSubcategoryController::class);
+
+                });
             Route::resource('/brands', \App\Http\Controllers\admin\BrandController::class);
             Route::resource('/associations', \App\Http\Controllers\admin\AssociationController::class);
             Route::resource('/banners', \App\Http\Controllers\admin\BannerController::class);
@@ -28,7 +35,7 @@ Route::group([], function () {
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->name('profile.destroy');
         });
 
-    Route::post('import-excel-csv-file{resourceType}', [\App\Http\Controllers\ExcelCSV::class, 'importExcelCSV'])->name('importResource');
+    Route::post('import-excel-csv-file{resourceType}', [\App\Http\Controllers\ImportResources::class, 'importExcelCSV'])->name('importResource');
 
 
 });

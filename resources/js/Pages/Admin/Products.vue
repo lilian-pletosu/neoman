@@ -8,15 +8,15 @@
                         <h3 class="primary-text">{{ __('products') }}</h3>
                         <span class="secondary-text">{{ __('products_description_admin') }}</span>
                     </div>
-                    <div class="flex-shrink-0 flex space-x-3">
-                        <secondary-button @click="schemaForm(null, 'create', 'POST')" class="text-link-blue">{{
+                    <div class="flex-shrink-0">
+                        <primary-button @click="schemaForm(null, 'create', 'POST')" class="mx-2">{{
                                 __('create')
                             }}
-                        </secondary-button>
-                        <primary-button @click="schemaForm(null, 'import', 'POST')" class="text-link">{{
+                        </primary-button>
+                        <secondary-button @click="schemaForm(null, 'import', 'POST')">{{
                                 __('import')
                             }}
-                        </primary-button>
+                        </secondary-button>
                     </div>
                 </div>
                 <div class="flex flex-col mt-8">
@@ -39,7 +39,7 @@
                                      :endpoint="initialRoute"
                                      :method="method"
                                      :resource-type="resourceType"
-                                     :columns="['title', 'description', 'product_code', 'price', 'brand_name', 'sub_sub_category_name']"
+                                     :columns="['name', 'description', 'product_code', 'price', 'brand_name', 'sub_sub_category_name']"
                                      :resource-route="$page.props.resourceRoute"
                                      :fields="$page.props.columnsOrder"/>
 
@@ -95,11 +95,14 @@ const showNotify = (type) => {
 }
 
 function schemaForm(resource = null, sendType, sendMethod) {
+    console.log(resource);
     method.value = sendMethod;
     type.value = sendType;
     modalIsOpen.value = !modalIsOpen.value;
     if (resource) {
         res.value = resource;
+        res.value['brand_name'] = res.value['brand']['name']
+        res.value['sub_sub_category_name'] = res.value['sub_sub_category']['name']
     }
 }
 

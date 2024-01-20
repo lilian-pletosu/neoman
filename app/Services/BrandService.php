@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Brand;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BrandService
@@ -11,21 +12,23 @@ class BrandService
     public function create(Request $request, $data)
     {
 
-        $data['slug'] = array_key_exists('brand', $data) ? Str::slug($data['brand'], '_') : Str::slug('No name', '_');
+        $data['slug'] = array_key_exists('name', $data) ? Str::slug($data['name'], '_') : Str::slug('No name', '_');
         if ($request->file('image')) {
-            $data['image'] = '/brands/' . $request->file('image')->hashName();
-            $request->image->move(public_path('brands'), $request->file('image')->hashName());
+            $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('image')->extension();
+            $data['image'] = '/storage/brands/' . $fileName;
+            $imageContents = $request->file('image')->getContent();
+            Storage::disk('brands')->put($fileName, $imageContents);
         } else {
             $data['image'] = '/img/no_image.svg';
         }
-        $brand = Brand::firstOrCreate(['name' => $data['brand']], [
-            'slug' => Str::slug($data['brand'], '_'),
-            'website' => Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
-            'description' => $data['brand'] . ' ' . 'description',
-            'seo_title' => $data['brand'],
-            'seo_description' => $data['brand'] . ' ' . 'description',
-            'is_enabled' => 1,
-            'image' => 'image'
+        $brand = Brand::firstOrCreate(['name' => $data['name']], [
+            'slug' => Str::slug($data['name'], '_'),
+            'website' => $data['website'],
+            'description' => $data['description'],
+            'seo_title' => $data['name'],
+            'seo_description' => $data['name'] . ' ' . 'description',
+            'is_enabled' => $data['is_enabled'],
+            'image' => $data['image']
         ]);
 
 

@@ -57,6 +57,20 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'subcategories' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/subcategories'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
+        'subSubcategories' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/subSubcategories'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
 
         's3' => [
             'driver' => 's3',

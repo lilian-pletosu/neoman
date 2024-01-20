@@ -41,6 +41,7 @@ class BrandSchema
                 'name' => 'is_enabled',
                 'value' => '',
                 'type' => 'select',
+                'label' => 'Status',
                 'placeholder' => 'status',
                 'options' => [['id' => 0, 'value' => 'inactive'], ['id' => 1, 'value' => 'active']],
                 'rules' => [
@@ -51,6 +52,7 @@ class BrandSchema
                 'name' => 'image',
                 'value' => '',
                 'type' => 'file',
+                'label' => 'image',
                 'placeholder' => 'image',
                 'options' => [],
                 'rules' => [

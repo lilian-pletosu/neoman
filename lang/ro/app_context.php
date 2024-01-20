@@ -8,6 +8,7 @@ return [
     'categories' => 'Categorii',
     'brands' => 'Branduri',
     'brand_name' => 'Brand',
+    'category' => 'Categorie',
     'sub_sub_category_name' => 'Subcategorie',
     'create_product' => 'Adăugare produs nou',
     'create_brand' => 'Adăugare brand nou',
@@ -51,6 +52,20 @@ return [
     'view_product' => 'Detalii produs',
     'view_brand' => 'Detalii brand',
     'no_categories' => 'Nu sunt categorii',
+    'no_subSubcategories' => 'Nu sunt sub-subcategorii',
+    'subcategories' => 'Subcategorii',
+    'create_subcategory' => 'Crează o subcategorie',
+    'no_subcategories' => 'Nu sunt subcategorii',
+    'import_subcategory' => 'Importă subcategorii',
+    'upload_excel_file' => 'Încarcă un file xlsx',
+    'select' => 'Selectează',
+    'view_subcategory' => 'Vizualizare subcategorie',
+    'view_subSubcategories' => 'Vizualizare sub-subcategorie',
+    'edit_subcategory' => 'Editare subcategorie',
+    'subcategory' => 'Subcategorie',
+    'sub_subcategories' => 'Sub-subcategorie',
+    'subSubCategory' => 'Sub-subcategorie',
+    'sub_sub_category' => 'Sub-subcategorie',
 
 
     //validation
