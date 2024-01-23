@@ -51,7 +51,7 @@ class BrandController extends Controller
      */
     public function store(Request $request, BrandStoreRequest $brandRequest)
     {
-        (new BrandService())->create($request, $brandRequest->all());
+        (new BrandService($request))->create($brandRequest->all(), true);
     }
 
     /**

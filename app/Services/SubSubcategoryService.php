@@ -9,6 +9,15 @@ use Illuminate\Support\Str;
 
 class SubSubcategoryService
 {
+
+    private array $translatedAttributes;
+
+    public function __construct()
+    {
+        $this->translatedAttributes = (new SubSubCategory())->translatedAttributes;
+    }
+
+
     public function create(Request $request, $data)
     {
 
@@ -35,25 +44,26 @@ class SubSubcategoryService
         return $subSubcategory;
     }
 
-//    public function createWithProduct($data)
-//    {
-//        $brand = SubCategory::firstOrCreate(['name' => $data['subcategory']], [
-//            'slug' => Str::slug($data['brand'], '_'),
-//            'website' => Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
-//            'description' => $data['brand'] . ' ' . 'description',
-//            'seo_title' => $data['brand'],
-//            'seo_description' => $data['brand'] . ' ' . 'description',
-//            'is_enabled' => 1,
-//            'image' => 'image'
-//        ]);
-//
-//        foreach (config('translatable.locales') as $locale) {
-//            $brand->translateOrNew($locale)->description = "{$data['brand']} . description . $locale";
-//            $brand->save();
-//        }
-//
-//        return $brand;
-//    }
+    public function createWithProduct($data)
+    {
+        dd($data);
+        $data['image'] = '/img/no_image.svg';
+        $subSubcategory = SubSubCategory::firstOrCreate(['slug' => Str::slug($data['sub_subcategory'], '_')], [
+            'slug' => Str::slug($data['sub_subcategory'], '_'),
+            'image' => $data['image']
+        ]);
+        foreach (config('app.available_locales') as $locale) {
+            foreach ($this->translatedAttributes as $translatedAttribute) {
+                $xlsxKey = $translatedAttribute . ' ' . $locale;
+                if (isset($data[$xlsxKey])) {
+                    $subSubcategory->translateOrNew($locale)->$translatedAttribute = $data[$xlsxKey];
+                } else {
+                    $subSubcategory->translateOrNew($locale)->$translatedAttribute = $data['sub_subcategory'];
+                }
+            }
+        }
+        return $subSubcategory;
+    }
 
     public function update(array $data, SubSubCategory $subSubCategory)
     {

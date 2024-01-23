@@ -9,54 +9,82 @@ use Illuminate\Support\Str;
 
 class BrandService
 {
-    public function create(Request $request, $data)
+
+    public $request;
+    private array $translatedAttributes;
+
+    public function __construct(Request $request = null)
+    {
+        $this->request = $request;
+        $this->translatedAttributes = (new Brand())->translatedAttributes;
+    }
+
+    public function create($data, bool $useSaveImage = true)
     {
 
         $data['slug'] = array_key_exists('name', $data) ? Str::slug($data['name'], '_') : Str::slug('No name', '_');
-        if ($request->file('image')) {
-            $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('image')->extension();
-            $data['image'] = '/storage/brands/' . $fileName;
-            $imageContents = $request->file('image')->getContent();
-            Storage::disk('brands')->put($fileName, $imageContents);
-        } else {
-            $data['image'] = '/img/no_image.svg';
+        if ($useSaveImage) {
+            $data['image'] = $this->saveImage($this->request, $data);
         }
-        $brand = Brand::firstOrCreate(['name' => $data['name']], [
-            'slug' => Str::slug($data['name'], '_'),
+
+        $brand = Brand::firstOrCreate(['slug' => $data['slug']], [
+            'name' => $data['name'],
             'website' => $data['website'],
-            'description' => $data['description'],
             'seo_title' => $data['name'],
             'seo_description' => $data['name'] . ' ' . 'description',
-            'is_enabled' => $data['is_enabled'],
+            'is_enabled' => $data['is_enabled'] ?? 1,
             'image' => $data['image']
         ]);
 
 
-        foreach (config('translatable.locales') as $locale) {
-            $brand->translateOrNew($locale)->description = "{$data['description'] } $locale";
-            $brand->save();
+        foreach (config('app.available_locales') as $locale) {
+            foreach ($this->translatedAttributes as $translatedAttribute) {
+                $xlsxKey = $translatedAttribute . ' ' . $locale;
+                if (isset($data[$xlsxKey])) {
+                    $brand->translateOrNew($locale)->$translatedAttribute = $data[$xlsxKey];
+                }
+            }
         }
+        $brand->save();
 
 
         return $brand;
     }
 
+    public function saveImage(Request $request, $data)
+    {
+        if ($request->file('image')) {
+            $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('image')->extension();
+            $data['image'] = '/storage/brands/' . $fileName;
+            $imageContents = $request->file('image')->getContent();
+            Storage::disk('brands')->put($fileName, $imageContents);
+            return $data['image'];
+        } else {
+            $data['image'] = '/img/no_image.svg';
+            return $data['image'];
+        }
+    }
+
     public function createWithProduct($data)
     {
-        $brand = Brand::firstOrCreate(['name' => $data['brand']], [
-            'slug' => Str::slug($data['brand'], '_'),
-            'website' => Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
-            'description' => $data['brand'] . ' ' . 'description',
+        $brand = Brand::firstOrCreate(['slug' => Str::slug($data['brand'], '_')], [
+            'name' => $data['brand'],
+            'website' => $data['site'] ?? Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
             'seo_title' => $data['brand'],
-            'seo_description' => $data['brand'] . ' ' . 'description',
+            'seo_description' => $data['description ro'] ?? '',
             'is_enabled' => 1,
-            'image' => 'image'
+            'image' => $data['image'] = '/img/no_image.svg'
         ]);
 
-        foreach (config('translatable.locales') as $locale) {
-            $brand->translateOrNew($locale)->description = "{$data['brand']} . description . $locale";
-            $brand->save();
+        foreach (config('app.available_locales') as $locale) {
+            foreach ($this->translatedAttributes as $translatedAttribute) {
+                $xlsxKey = $translatedAttribute . ' ' . $locale;
+                if (isset($data[$xlsxKey])) {
+                    $brand->translateOrNew($locale)->$translatedAttribute = $data[$xlsxKey];
+                }
+            }
         }
+        $brand->save();
 
         return $brand;
     }

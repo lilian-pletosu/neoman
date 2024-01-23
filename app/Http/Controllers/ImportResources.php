@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Imports\BrandsImport;
 use App\Imports\CategoriesImport;
+use App\Imports\ProductsImport;
 use App\Imports\SubCategoriesImport;
 use App\Imports\SubSubCategoriesImport;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class ImportResources extends Controller
 //        dd(Str::lower($resourceType));
         switch (Str::lower($resourceType)) {
             case 'product':
-                dd('product');
+                (new ProductsImport())($request);
                 break;
             case 'category':
                 (new CategoriesImport())($request);

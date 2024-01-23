@@ -3,20 +3,25 @@
 namespace App\Imports;
 
 use App\Models\Product;
-use App\Models\SubSubCategory;
 use App\Services\BrandService;
 use App\Services\GenerateProductCode;
+use App\Services\SubSubcategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
-use function PHPUnit\Framework\isNull;
 
 
 class ProductsImport
 {
 
+    private array $translatedAttributes;
+
+    public function __construct()
+    {
+        $this->translatedAttributes = (new Product())->translatedAttributes;
+    }
 
     public function __invoke(Request $request)
     {
@@ -34,7 +39,6 @@ class ProductsImport
         foreach ($worksheet->getRowIterator() as $rowIndex => $row) {
             if (!$row->isEmpty()) {
                 foreach ($row->getCellIterator() as $cell) {
-
                     $cellValue = $cell->getValue();
 
                     if ($rowIndex === 1) {
@@ -42,13 +46,12 @@ class ProductsImport
                     } else {
                         $columnIndex = $cell->getColumn();
                         $columnIndex = array_search($columnIndex, range('A', 'Z'));
-                        $columns[$rowIndex][$firstRowKeys[$columnIndex]] = $cellValue;
+                        $columns[$rowIndex - 1][$firstRowKeys[$columnIndex]] = $cellValue;
                     }
                 }
             }
-
-
         }
+        dd($columns);
         return $columns;
     }
 
@@ -139,50 +142,43 @@ class ProductsImport
         $data = $this->combineImagesWithText();
         foreach ($data as $item) {
 
-            if (isNull(Product::where('name', $item['name'])->first())) {
-//                $brand = Brand::firstOrCreate(['name' => $item['brand']], [
-//                    'slug' => Str::slug($item['brand'], '_'),
-//                    'website' => Str::lower('www' . '.' . $item['brand'] . '.' . 'com',),
-//                    'description' => $item['brand'] . ' ' . 'description',
-//                    'seo_title' => $item['brand'],
-//                    'seo_description' => $item['brand'] . ' ' . 'description',
-//                    'is_enabled' => 1,
-//                    'image' => 'image'
-//                ]);
+            dd($item);
+            $brand = (new BrandService)->createWithProduct($item);
+            $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
 
-                $brand = (new BrandService)->createWithProduct($item);
 
-                $subSubcategory = SubSubCategory::firstOrCreate(['name' => $item['sub_subcategory_id']], [
-                    'slug' => Str::slug($item['sub_subcategory_id'], '_')
-                ]);
-
-                if (Product::where('name', $item['name'])->first() == null) {
-                    $product = Product::create([
-                        'title' => $item['title'],
-                        // Atribuie celelalte atribute ale produsului
-                        'description' => $item['description'],
-                        'price' => $item['price'],
-                        'slug' => Str::slug($item['title'], '_'),
-                        'product_code' => (new GenerateProductCode)((new Product())),
-                        'specifications_id' => null,
-                        'brand_id' => $brand->id,  // Asigură că ai deja $row['brand_id'] disponibil înainte
-                        'sub_subcategory_id' => $subSubcategory->id,
-
-                    ]);
-                    $this->associateImagesWithProduct($product, $item);
+            //------------------------------>
+            $product = Product::firstOrCreate(['slug' => $item['name ro']], [
+                'price' => $item['price'],
+                'slug' => Str::slug($item['name ro'], '_'),
+                'product_code' => (new GenerateProductCode)((new Product())),
+                'specifications_id' => null,
+                'brand_id' => $brand->id,  // Asigură că ai deja $row['brand_id'] disponibil înainte
+                'sub_sub_category_id' => $subSubcategory->id,
+            ]);
+            foreach (config('app.available_locales') as $locale) {
+                foreach ($this->translatedAttributes as $translatedAttribute) {
+                    $xlsxKey = $translatedAttribute . ' ' . $locale;
+                    if (isset($item[$xlsxKey])) {
+                        $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey];
+                    } else {
+                        $product->translateOrNew($locale)->$translatedAttribute = $item['name ro'];
+                    }
                 }
-
-
             }
-
+            $product->save();
+            $this->associateImagesWithProduct($product, $item);
 
         }
+
+
+        return $product;
+
 
     }
 
     private function associateImagesWithProduct($product, $item)
     {
-//        dd($item);
         $images = [];
 
         foreach ($item as $key => $value) {

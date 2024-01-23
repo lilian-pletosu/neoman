@@ -2,6 +2,8 @@
 
 return [
     'key' => 'test',
+    'edit' => 'Editează',
+    'delete' => 'Șterge',
     'dashboard' => 'Dashboard',
     'products' => 'Produse',
     'orders' => 'Comenzi',

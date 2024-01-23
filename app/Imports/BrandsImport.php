@@ -2,10 +2,9 @@
 
 namespace App\Imports;
 
-use App\Models\Category;
+use App\Services\BrandService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Worksheet\MemoryDrawing;
 
@@ -75,19 +74,23 @@ class BrandsImport
 
     private function combineImagesWithText(): array
     {
-        $texts = $this->processString();
-        $images = $this->processImages();
+        $textColumns = $this->processString();
+        $imageColumns = $this->processImages();
         $combinedColumns = [];
-        foreach ($texts as $key => $text) {
-            foreach ($images as $k => $image) {
-                if ($key == $k) {
-                    foreach ($image as $keyI => $image) {
-                        $index = ++$keyI;
-                        $text['image' . $index] = $image;
+        foreach ($textColumns as $textKey => $text) {
+            foreach ($imageColumns as $imageKey => $image) {
+                if ($textKey == $imageKey) {
+                    if (count($image) > 1) {
+                        foreach ($image as $imageIndex => $img) {
+                            $index = ++$imageIndex;
+                            $text['image' . $index] = $img;
+                        }
+                    } else {
+                        $text['image'] = $image[0];
                     }
                 }
             }
-            $combinedColumns[$key] = $text;
+            $combinedColumns[$textKey] = $text;
         }
         return $combinedColumns;
     }
@@ -131,16 +134,12 @@ class BrandsImport
         $data = $this->combineImagesWithText();
 
         foreach ($data as $item) {
-
-
-            // Caută sau creează o categorie cu slug-ul furnizat
-            $category = Category::firstOrCreate(['slug' => Str::slug($item['name ro'], '_')]);
-
-            $category->translateOrNew('ro')->name = $item['name ro'];
-            $category->translateOrNew('ru')->name = $item['name ru'];
-
-            $category->save();
-
+            if ($item['image'] != null) {
+                $item['image'] = '/storage/brands/' . $item['image'];
+            } else {
+                $item['image'] = '/img/no_image.svg';
+            }
+            (new BrandService())->create($item, false);
         }
 
     }
