@@ -102,6 +102,15 @@
                             </ul>
                         </li>
                         <li>
+                            <Link :href="route('admin.attributes.index')"
+                                  class="text-base font-normal rounded-lg flex items-center p-2 group"
+                                  :class="checkRoute(route('admin.attributes.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
+                                <swatch-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
+                                             :class="checkRoute(route('admin.brands.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
+                                <span class="ml-3 flex-1 whitespace-nowrap">{{ __('attributes') }}</span>
+                            </Link>
+                        </li>
+                        <li>
                             <Link :href="route('admin.brands.index')"
                                   class="text-base font-normal rounded-lg flex items-center p-2 group"
                                   :class="checkRoute(route('admin.brands.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
@@ -171,6 +180,7 @@ import {
     PuzzlePieceIcon,
     RocketLaunchIcon,
     ShoppingBagIcon,
+    SwatchIcon,
     TruckIcon,
     ViewColumnsIcon
 } from "@heroicons/vue/20/solid/index.js";

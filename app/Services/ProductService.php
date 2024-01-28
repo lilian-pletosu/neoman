@@ -54,6 +54,10 @@ class ProductService
             Storage::disk('products')->put($fileName, $imageContents);
         }
 
+        $product->attributes()->syncWithoutDetaching([21 => ['value' => '1 Tb']]);
+        $product->attributes()->syncWithoutDetaching([19 => ['value' => '16 inch']]);
+
+
         $product->update($data);
 //
 //        $locale = app()->currentLocale();

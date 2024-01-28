@@ -6,13 +6,18 @@ ARG uid
 # Exponați portul specificat prin variabila uuid
 EXPOSE $uid
 
+USER 1000:1000
+
 # Instalarea Composer
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    php composer-setup.php --install-dir=/var/www/html --filename=composer && \
     rm -rf composer-setup.php
 
 # Creați directorul pentru site
 RUN mkdir -p /var/www/html
+
+RUN chown -R www-data:www-data /usr/local/bin
+
 
 
 # Instalarea extensiilor PHP (pdo, pdo_mysql si exif)

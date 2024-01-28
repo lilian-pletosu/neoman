@@ -59,6 +59,12 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
+        $attributesArray = [];
+
+        foreach ($product->attributes as $attribute) {
+            $attributesArray[$attribute->name] = $attribute->pivot->value;
+        }
+        $product['attributes'] = $attributesArray;
         return $product->loadAggregate(['brand', 'subSubCategory'], 'name');
     }
 

@@ -11,8 +11,14 @@ class SchemaFormBuilder
                              string $endpoint,
                              int    $resourceId = null,
                              string $relation = null,
+                             bool   $hasTranslate = false,
                              string $routeParamName = null)
     {
+        //for lang
+        $currentLocale = app()->currentLocale();
+        $reserveLanguage = $currentLocale == 'ru' ? 'ro' : 'ru';
+
+
         //input, textarea, select, checkbox, radio,
 
         $schemaClass = new ("\App\SchemaForms\\{$model}Schema");
@@ -25,11 +31,25 @@ class SchemaFormBuilder
             $modelClass = new ("\App\Models\\{$model}");
             $resource = $modelClass->find($resourceId);
 
-            //loop the schema fields and attach the value from the model
-            $schema = array_map(function ($s) use ($resource) {
-                $s['value'] = $resource->{$s['name']}; //read from model or empty
-                return $s;
-            }, $schemaClass());
+
+            if (!$hasTranslate) {
+                //loop the schema fields and attach the value from the model
+                $schema = array_map(function ($s) use ($resource) {
+                    $s['value'] = $resource->{$s['name']}; //read from model or empty
+                    return $s;
+                }, $schemaClass());
+            } // --------------------------------
+            else if ($hasTranslate) {
+
+                $schema = array_map(function ($s) use ($resource) {
+                    if (array_key_exists(1, explode(' ', $s['name']))) {
+                        $s['value'] = $resource->translate(explode(' ', $s['name'])[1])->{explode(' ', $s['name'])[0]}; //read from model or empty
+                    } else {
+                        $s['value'] = $resource->{explode(' ', $s['name'])[0]}; //read from model or empty
+                    }
+                    return $s;
+                }, $schemaClass());
+            }
 
 
             $relations = $resource->$relation?->toArray();

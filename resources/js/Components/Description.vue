@@ -5,8 +5,7 @@ import {ref} from "vue";
 const readActivated = ref(false);
 const props = defineProps({
     resource: {
-        type: Object,
-        required: true
+        type: Object
     },
     resourceModal: {
         type: Object,
@@ -36,20 +35,34 @@ const applyFormat = (columnName, columnValue) => {
         <template v-if="!['image', 'id'].includes(column)">
             <span class="mr-2 uppercase secondary-text">{{ __(column) }}</span>
             <div v-bind:class="{'rounded w-14 flex justify-center' : column === 'is_enabled'}"
-                 :class="{'bg-green-400 font-semibold ' : resource[column] === 1,'bg-red-400 font-semibold' : resource[column] === 0}">
+                 :class="{'bg-green-400 font-semibold ' : resourceModal[column] === 1,'bg-red-400 font-semibold' : resourceModal[column] === 0}">
                 <template v-if="['description'].includes(column)">
-                    <p class="p" v-if="!readActivated">
-                        {{ resource[column] ? resource[column].slice(0, 180) : '----' ?? resourceModal[column] }}
-                        <span class="read font-bold" v-if="!readActivated"
-                              @click="readActivated = !readActivated">..read more</span>
-                    </p>
-                    <p class="p" v-if="readActivated">{{
-                            applyFormat(column, resource[column] ?? resourceModal[column])
-                        }}</p>
+                    <div>
+                        <p class="p" v-if="!readActivated">
+                            {{ resourceModal[column] ? resourceModal[column].slice(0, 50) : '-' }}
+                            <span class="read font-bold" v-if="!readActivated"
+                                  @click="readActivated = !readActivated">..read more</span>
+                        </p>
+                        <p class="p" v-if="readActivated">{{ applyFormat(column, resourceModal[column]) }}</p>
+                    </div>
                 </template>
-
+                <template v-else-if="['attributes'].includes(column)">
+                    <div>
+                        <template v-for="attribute in resourceModal[column]">
+                            <table>
+                                <tr>
+                                    <td class="font-bold">{{ attribute.name + ' - ' }}</td>
+                                    <td>{{ attribute.pivot.value }}</td>
+                                </tr>
+                            </table>
+                        </template>
+                    </div>
+                </template>
                 <template v-else>
-                    <p class="text-sm ">{{ __(applyFormat(column, resource[column])) }}</p>
+                    <div class="flex">
+                        <p class="text-sm ">{{ __(applyFormat(column, resourceModal[column] ?? resource[column])) }}</p>
+
+                    </div>
                 </template>
             </div>
         </template>

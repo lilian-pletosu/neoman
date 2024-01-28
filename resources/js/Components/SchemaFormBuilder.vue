@@ -7,6 +7,7 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Description from "@/Components/Description.vue";
+import ImageSlider from "@/Components/ImageSlider.vue";
 
 let formEdit = useForm({});
 let formCreate = useForm({});
@@ -73,6 +74,7 @@ async function fetchModalData() {
             .then(data => {
                 schemaForm.value = data;
                 formEdit = useForm(app.appContext.config.globalProperties.fetchedSchemaFormBuild(data))
+                console.log(formEdit);
             })
     }
 }

@@ -31,4 +31,9 @@ class Product extends Model implements TranslatableContract
     {
         return $this->hasMany(ProductImage::class, 'product_id');
     }
+
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'product_attributes')->withPivot('value');
+    }
 }

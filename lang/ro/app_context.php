@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'attributes' => 'Atribute',
+    'no_attributes' => 'Nu sunt atribute',
+    'here_is_list_of_attribute' => 'Aici este lista de atribute',
     'key' => 'test',
     'edit' => 'Editează',
     'delete' => 'Șterge',
@@ -68,6 +71,10 @@ return [
     'sub_subcategories' => 'Sub-subcategorie',
     'subSubCategory' => 'Sub-subcategorie',
     'sub_sub_category' => 'Sub-subcategorie',
+    'name ro' => 'Numele în română',
+    'name ru' => 'Numele în rusă',
+    'view_attribute' => 'Detalii atribut',
+    'edit_attribute' => 'Editare atribut',
 
 
     //validation

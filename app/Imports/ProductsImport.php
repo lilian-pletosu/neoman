@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Attribute;
 use App\Models\Product;
 use App\Services\BrandService;
 use App\Services\GenerateProductCode;
@@ -40,20 +41,31 @@ class ProductsImport
             if (!$row->isEmpty()) {
                 foreach ($row->getCellIterator() as $cell) {
                     $cellValue = $cell->getValue();
-
                     if ($rowIndex === 1) {
                         $firstRowKeys[] = $cellValue;
                     } else {
                         $columnIndex = $cell->getColumn();
-                        $columnIndex = array_search($columnIndex, range('A', 'Z'));
-                        $columns[$rowIndex - 1][$firstRowKeys[$columnIndex]] = $cellValue;
+                        $numericColumnIndex = $this->_columnIndexToNumber($columnIndex);
+                        $columns[$rowIndex][$firstRowKeys[$numericColumnIndex]] = $cellValue;
                     }
                 }
             }
         }
-        dd($columns);
         return $columns;
     }
+
+    private function _columnIndexToNumber($columnIndex)
+    {
+        $numericColumnIndex = 0;
+        $base = ord('A') - 1;
+
+        for ($i = strlen($columnIndex) - 1, $j = 0; $i >= 0; $i--, $j++) {
+            $numericColumnIndex += (ord($columnIndex[$i]) - $base) * (26 ** $j);
+        }
+
+        return $numericColumnIndex - 1;
+    }
+
 
     private function processImages()
     {
@@ -64,18 +76,27 @@ class ProductsImport
 
             $imagePositions = [];
 
-            foreach ($spreadSheet->getActiveSheet()->getDrawingCollection() as $drawing) {
-                $col = $drawing->getCoordinates()[0]; // image column
-                $row = $drawing->getCoordinates()[1]; // image row
+            foreach ($spreadSheet->getActiveSheet()->getDrawingCollection() as $key => $drawing) {
+
+
+//                $col = $drawing->getCoordinates()[0]; // image column
+//                $row = $drawing->getCoordinates()[1]; // image row
+
+
+                $drawingCoordinates = $drawing->getCoordinates();
+                $matches = [];
+                preg_match('/[0-9]+/', $drawingCoordinates, $matches);
+                $row = $matches[0];
 
                 // Identifică rândul în funcție de poziția imaginii
-                $rowKey = "{$row}";
+                $rowKey = $row;
 
                 // Adaugă poziția imaginii la array-ul $imagePositions
                 $productImages[$rowKey][] = $this->saveImage($drawing);
             }
 
         }
+
 
         return $productImages;
 
@@ -92,6 +113,7 @@ class ProductsImport
                     foreach ($image as $keyI => $image) {
                         $index = ++$keyI;
                         $text['image' . $index] = $image;
+
                     }
                 }
             }
@@ -133,7 +155,7 @@ class ProductsImport
             $fileName = uniqid('prod') . '.' . $extension;
 //            Storage::put('public/products/' . $fileName, $imageContents);
             Storage::disk('products')->put($fileName, $imageContents);
-            return $fileName;
+            return '/storage/products/' . $fileName;
         }
     }
 
@@ -141,39 +163,46 @@ class ProductsImport
     {
         $data = $this->combineImagesWithText();
         foreach ($data as $item) {
+            if ($item['name ro'] || $item['name ru']) {
 
-            dd($item);
-            $brand = (new BrandService)->createWithProduct($item);
-            $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
+                $product = Product::where('slug', Str::slug($item['name ro'], '_'))->first();
+                if (!$product) {
+
+                    $brand = (new BrandService)->createWithProduct($item);
+                    $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
 
 
-            //------------------------------>
-            $product = Product::firstOrCreate(['slug' => $item['name ro']], [
-                'price' => $item['price'],
-                'slug' => Str::slug($item['name ro'], '_'),
-                'product_code' => (new GenerateProductCode)((new Product())),
-                'specifications_id' => null,
-                'brand_id' => $brand->id,  // Asigură că ai deja $row['brand_id'] disponibil înainte
-                'sub_sub_category_id' => $subSubcategory->id,
-            ]);
-            foreach (config('app.available_locales') as $locale) {
-                foreach ($this->translatedAttributes as $translatedAttribute) {
-                    $xlsxKey = $translatedAttribute . ' ' . $locale;
-                    if (isset($item[$xlsxKey])) {
-                        $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey];
-                    } else {
-                        $product->translateOrNew($locale)->$translatedAttribute = $item['name ro'];
+                    //------------------------------>
+                    $product = Product::firstOrCreate(['slug' => $item['name ro']], [
+                        'price' => $item['price'],
+                        'slug' => Str::slug($item['name ro'], '_'),
+                        'product_code' => (new GenerateProductCode)((new Product())),
+                        'specifications_id' => null,
+                        'brand_id' => $brand->id,  // Asigură că ai deja $row['brand_id'] disponibil înainte
+                        'sub_sub_category_id' => $subSubcategory->id,
+                    ]);
+                    foreach (config('app.available_locales') as $locale) {
+                        foreach ($this->translatedAttributes as $translatedAttribute) {
+                            $xlsxKey = $translatedAttribute . ' ' . $locale;
+                            if (isset($item[$xlsxKey])) {
+                                $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey];
+                            } else {
+                                $product->translateOrNew($locale)->$translatedAttribute = $item['name ro'];
+                            }
+                        }
                     }
+
+
+                    $this->associateAttributes($product, $subSubcategory, $item);
+                    $this->associateImagesWithProduct($product, $item);
+                    $product->save();
                 }
             }
-            $product->save();
-            $this->associateImagesWithProduct($product, $item);
 
         }
 
 
         return $product;
-
 
     }
 
@@ -189,6 +218,23 @@ class ProductsImport
 
         if (!empty($images)) {
             $product->images()->create($images);
+        }
+    }
+
+    public function associateAttributes($product, $subSubcategory, $item)
+    {
+////        TODO://  Nu functioneaza, trebuie sa faci sa primesti toate fieldurile
+//        $fields = Schema::getColumnListing((new Attribute())->getTable());
+//        foreach ($fields as $key => $field) {
+//            if ('id' == $field || 'created_at' == $field || 'updated_at' == $field) {
+//                unset($fields[$key]);
+//            }
+//        }
+
+
+        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->pluck('slug', 'id')->toArray();
+        foreach ($attributes as $key => $attribute) {
+            $product->attributes()->syncWithoutDetaching([$key => ['value' => $item[$attribute]]]);
         }
     }
 }

@@ -126,11 +126,12 @@ onMounted(() => {
                         </tr>
                         </thead>
                         <tbody class="bg-white">
-                        <tr v-for="(resource, index) in resources.data" :key="index" class="hover:bg-gray-100 w-full">
+                        <tr v-for="(resource, index) in resources.data" :key="index" class="hover:bg-gray-100 w-full"
+                            @click="emitClick(resource)">
                             <template v-for="(columnInOrder) in columnsOrder">
                                 <template v-for="column in columns">
                                     <template v-if="column === columnInOrder">
-                                        <td @click="emitClick(resource)"
+                                        <td
                                             class="py-2 px-6 text-sm text-gray-900 whitespace-wrap"
                                             :class="{ 'hidden xl:block': columnInOrder === 'description' }">
                                             <!--                    image                        -->
@@ -158,9 +159,9 @@ onMounted(() => {
                                             <template v-else-if="column === 'is_enabled'">
                                                 <div class="rounded w-14 text-center   mx-auto"
                                                      :class="{
-            'bg-green-400 font-semibold': resource[columnInOrder] === 1,
-            'bg-red-400 font-semibold': resource[columnInOrder] === 0
-         }">
+                                                        'bg-green-400 font-semibold': resource[columnInOrder] === 1,
+                                                        'bg-red-400 font-semibold': resource[columnInOrder] === 0
+                                                     }">
                                                     {{ __(applyFormat(column, resource[columnInOrder])) ?? '--' }}
                                                 </div>
                                             </template>
