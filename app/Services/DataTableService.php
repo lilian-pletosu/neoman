@@ -354,7 +354,7 @@ class DataTableService
         //if there is a search for something, define the searchable fields and relations
         if (request('search')) {
 
-            $attributes = &$this->resourceColumns;
+            $attributes = $this->resourceColumns;
             $searchTerm = request('search');
 
             $this->query->where(function (Builder $query) use ($attributes, $searchTerm) {
@@ -418,7 +418,6 @@ class DataTableService
         if (!empty($this->aggregatedCriteria)) {
             $this->resourceColumns[] = $this->aggregatedCriteria['alias'];
         }
-
 
         return $this->query
             ->paginate($this->perPage)

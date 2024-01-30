@@ -29,7 +29,7 @@ class ProductController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Product')
-            ->setResourceColumns(['id', 'product_code', 'name', 'price', 'description'])
+            ->setResourceColumns(['id', 'product_code', 'name', 'price', 'description', 'slug'])
             ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
             ->setRelationColumn('images', 'image', ['image1', 'image2', 'image3', 'image4'])
