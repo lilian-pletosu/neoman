@@ -22,7 +22,7 @@ class Attribute extends Model implements TranslatableContract
 
     public function attributeValues()
     {
-        return $this->hasMany(AttributeValues::class, 'attribute_id', 'id');
+        return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
     }
 
     public function subSubcategory()

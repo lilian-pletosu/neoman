@@ -7,14 +7,16 @@
                 <template v-for="column in columns">
 
                     <template v-if="['image', 'images'].includes(column.label)">
-                        <template v-if="images[0][column.fields[currentSlideIndex]] != null">
+                        <template
+                            v-if="images && images[0] && column.fields && column.fields[currentSlideIndex] && images[0][column.fields[currentSlideIndex]]">
 
                             <img
                                 :src="asset(`${images[0][column.fields[currentSlideIndex]]}`)"
                                 class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
                                 alt="">
                         </template>
-                        <template v-if="images[0][column.fields[currentSlideIndex]] === null">
+                        <template
+                            v-if="images && images[0] && column.fields && column.fields[currentSlideIndex] && images[0][column.fields[currentSlideIndex]] === null">
                             <img
                                 :src="'/img/no_image.svg'"
                                 class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
@@ -95,9 +97,10 @@ const previousSlide = () => {
 
 const indexes = () => {
     for (let column of props.columns) {
+        console.log(column.label)
         if (['image', 'images'].includes(column.label)) {
             for (let columnElement of column.fields) {
-                if (props.images[0][columnElement] != null) {
+                if (props.images && props.images[0] && columnElement && props.images[0][columnElement] != null) {
                     maxSlideIndex.value++
                 }
             }

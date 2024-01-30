@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\AttributeValues;
+use App\Models\AttributeValue;
 use Illuminate\Http\Request;
 
 class AttributeValuesController extends Controller
@@ -35,7 +35,7 @@ class AttributeValuesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AttributeValues $attributeValues)
+    public function show(AttributeValue $attributeValues)
     {
         //
     }
@@ -43,7 +43,7 @@ class AttributeValuesController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(AttributeValues $attributeValues)
+    public function edit(AttributeValue $attributeValues)
     {
         //
     }
@@ -51,7 +51,7 @@ class AttributeValuesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, AttributeValues $attributeValues)
+    public function update(Request $request, AttributeValue $attributeValues)
     {
         //
     }
@@ -59,7 +59,7 @@ class AttributeValuesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AttributeValues $attributeValues)
+    public function destroy(AttributeValue $attributeValues)
     {
         //
     }

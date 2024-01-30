@@ -71,7 +71,7 @@ class BrandService
             'name' => $data['brand'],
             'website' => $data['site'] ?? Str::lower('www' . '.' . $data['brand'] . '.' . 'com',),
             'seo_title' => $data['brand'],
-            'seo_description' => $data['description ro'] ?? '',
+            'seo_description' => $data['brand'],
             'is_enabled' => 1,
             'image' => $data['image'] = '/img/no_image.svg'
         ]);

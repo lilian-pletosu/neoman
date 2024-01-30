@@ -75,10 +75,13 @@ return [
     'name ru' => 'Numele în rusă',
     'view_attribute' => 'Detalii atribut',
     'edit_attribute' => 'Editare atribut',
+    'description ro' => 'Descriere în română',
+    'description ru' => 'Descriere în rusă',
 
 
     //validation
     'validation.url' => 'Introduce-ți un url valid',
     'validation.min.string' => 'Prea puține caractere',
+    'validation.decimal' => 'Numărul trebuie sa fie decimal'
 
 ];

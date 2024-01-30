@@ -22,10 +22,7 @@ class SubSubCategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|min:3|String',
-            'subcategory_id' => 'required',
-            'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
-
+            //
         ];
     }
 }

@@ -52,7 +52,7 @@ const applyFormat = (columnName, columnValue) => {
                             <table>
                                 <tr>
                                     <td class="font-bold">{{ attribute.name + ' - ' }}</td>
-                                    <td>{{ attribute.pivot.value }}</td>
+                                    <td>{{ attribute.attribute_values[0].value }}</td>
                                 </tr>
                             </table>
                         </template>

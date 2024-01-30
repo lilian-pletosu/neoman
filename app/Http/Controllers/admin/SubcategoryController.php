@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SubcategoryStoreRequest;
 use App\Http\Requests\SubcategoryUpdateRequest;
 use App\Models\SubCategory;
 use App\Services\DataTableService;
@@ -52,9 +51,25 @@ class SubcategoryController extends Controller
     }
 
 
-    public function store(Request $request, SubcategoryStoreRequest $storeRequest)
+    public function store(Request $request)
     {
-        (new SubcategoryService())->create($request, $storeRequest->all());
+        if ($request->hasFile('image')) {
+            $data = $request->validate([
+                'name_ro' => 'required|min:3',
+                'name_ru' => 'required|min:3',
+                'category_id' => 'required',
+                'image' => 'nullable|image|mimes:jpg,bmp,png,svg'
+            ]);
+        } else {
+            $data = $request->validate([
+                'name ro' => 'required|min:3',
+                'name ru' => 'required|min:3',
+                'category_id' => 'required',
+                'image' => 'nullable|image|mimes:jpg,bmp,png,svg'
+            ]);
+        }
+
+        (new SubcategoryService())->create($request, $data);
     }
 
     public function show(SubCategory $subCategory)

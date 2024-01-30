@@ -21,8 +21,8 @@ class SubSubcategoryService
     public function create(Request $request, $data)
     {
 
-        $data['slug'] = array_key_exists('name', $data) ? Str::slug($data['name'], '_') : Str::slug('No name', '_');
-        if ($request->file('image')) {
+        if ($request->hasFile('image')) {
+            $data['slug'] = array_key_exists('name_ro', $data) ? Str::slug($data['name_ro'], '_') : Str::slug('No name', '_');
 
             $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('image')->extension();
 
@@ -30,17 +30,29 @@ class SubSubcategoryService
             $imageContents = $request->file('image')->getContent();
             Storage::disk('subSubcategories')->put($fileName, $imageContents);
         } else {
+            $data['slug'] = array_key_exists('name ro', $data) ? Str::slug($data['name ro'], '_') : Str::slug('No name', '_');
+
             $data['image'] = '/img/no_image.svg';
         }
-//        dd($data);
 
         $subSubcategory = SubSubCategory::create($data);
 
 
-        $subSubcategory->translateOrNew(app()->getLocale())->name = $data['name'];
-        $subSubcategory->save();
-
-
+        if ($request->hasFile('image')) {
+            foreach ($this->translatedAttributes as $translatableAttribute) {
+                foreach (config('translatable.locales') as $locale) {
+                    $subSubcategory->translateOrNew($locale)->$translatableAttribute = $data[$translatableAttribute . '_' . $locale];
+                    $subSubcategory->save();
+                }
+            }
+        } else {
+            foreach ($this->translatedAttributes as $translatableAttribute) {
+                foreach (config('translatable.locales') as $locale) {
+                    $subSubcategory->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
+                    $subSubcategory->save();
+                }
+            }
+        }
         return $subSubcategory;
     }
 

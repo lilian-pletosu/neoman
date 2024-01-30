@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SubSubCategoryStoreRequest;
 use App\Models\SubSubCategory;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
@@ -51,9 +50,25 @@ class SubSubcategoryController extends Controller
     }
 
 
-    public function store(Request $request, SubSubCategoryStoreRequest $storeRequest)
+    public function store(Request $request)
     {
-        (new SubSubcategoryService())->create($request, $storeRequest->all());
+
+        if ($request->hasFile('image')) {
+            $data = $request->validate([
+                'name_ro' => 'required|min:3|String',
+                'name_ru' => 'required|min:3|String',
+                'subcategory_id' => 'required',
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+            ]);
+        } else {
+            $data = $request->validate([
+                'name ro' => 'required|min:3|String',
+                'name ru' => 'required|min:3|String',
+                'subcategory_id' => 'required',
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+            ]);
+        }
+        (new SubSubcategoryService())->create($request, $data);
     }
 
     public function show(string $id)

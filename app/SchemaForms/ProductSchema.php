@@ -14,20 +14,40 @@ class ProductSchema
         $reserveLanguage = $currentLocale == 'ro' ? 'ru' : 'ro';
         return [
             [
-                'name' => 'name',
+                'name' => "name $currentLocale",
                 'value' => '',
                 'type' => 'text',
-                'placeholder' => 'name',
+                'placeholder' => "name $currentLocale",
                 'options' => [],
                 'rules' => [
                     'required'
                 ],
             ],
             [
-                'name' => 'description',
+                'name' => "name $reserveLanguage",
+                'value' => '',
+                'type' => 'text',
+                'placeholder' => "name $reserveLanguage",
+                'options' => [],
+                'rules' => [
+                    'required'
+                ],
+            ],
+            [
+                'name' => "description $currentLocale",
                 'value' => '',
                 'type' => 'textarea',
-                'placeholder' => 'description',
+                'placeholder' => "description $currentLocale",
+                'options' => [],
+                'rules' => [
+                    'required'
+                ],
+            ],
+            [
+                'name' => "description $reserveLanguage",
+                'value' => '',
+                'type' => 'textarea',
+                'placeholder' => "description $reserveLanguage",
                 'options' => [],
                 'rules' => [
                     'required'
@@ -35,7 +55,7 @@ class ProductSchema
             ],
             [
                 'name' => 'price',
-                'value' => '',
+                'value' => '12.0',
                 'type' => 'number',
                 'placeholder' => 'price',
                 'options' => [],
@@ -65,6 +85,7 @@ class ProductSchema
                     'required'
                 ],
             ],
+
 //            [
 //                'name' => 'image',
 //                'value' => '',

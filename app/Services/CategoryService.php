@@ -8,37 +8,34 @@ use Illuminate\Support\Str;
 
 class CategoryService
 {
+    private $currentLocale;
+    private $rereserveLanguage;
+
+    public function __construct()
+    {
+        $currentLocale = app()->currentLocale();
+        $reserveLanguage = $currentLocale == 'ru' ? 'ro' : 'ru';
+    }
+
     public function create(Request $request, $data)
     {
 
-        $data['slug'] = array_key_exists('name', $request->all()) ? Str::slug($request['name'], '_') : Str::slug('No name', '_');
-//        if ($request->file('image')) {
-//            $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('image')->extension();
-//            $data['image'] = '/storage/brands/' . $fileName;
-//            $imageContents = $request->file('image')->getContent();
-//            Storage::disk('brands')->put($fileName, $imageContents);
-//        } else {
-//            $data['image'] = '/img/no_image.svg';
-//        }
+        $data['slug'] = array_key_exists('name ro', $request->all()) ? Str::slug($request["name ro"], '_') : Str::slug('No name', '_');
+
         $category = Category::create($data);
 
+        foreach (config('translatable.locales') as $locale) {
+            foreach ((new Category())->translatedAttributes as $translatedAttribute) {
+                $category->translateOrNew($locale)->$translatedAttribute = $data["$translatedAttribute $locale"] ?? $data[$translatedAttribute];
+                $category->save();
+            }
 
-//        foreach (config('translatable.locales') as $locale) {
-//            $brand->translateOrNew($locale)->description = "{$data['description'] } $locale";
-//            $brand->save();
-//        }
+        }
 
 
         return $category;
     }
 
-//    public function firstOrCreate(string $subCategoryName)
-//    {
-//        return Category::firstOrCreate(['slug' => Str::slug($subCategoryName, '_')], [
-//            'name' => $subCategoryName
-//        ])->id;
-//
-//    }
 
     public function update($data, Category $category, Request $request)
     {

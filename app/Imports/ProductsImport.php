@@ -223,18 +223,19 @@ class ProductsImport
 
     public function associateAttributes($product, $subSubcategory, $item)
     {
-////        TODO://  Nu functioneaza, trebuie sa faci sa primesti toate fieldurile
-//        $fields = Schema::getColumnListing((new Attribute())->getTable());
-//        foreach ($fields as $key => $field) {
-//            if ('id' == $field || 'created_at' == $field || 'updated_at' == $field) {
-//                unset($fields[$key]);
-//            }
-//        }
-
-
         $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->pluck('slug', 'id')->toArray();
-        foreach ($attributes as $key => $attribute) {
-            $product->attributes()->syncWithoutDetaching([$key => ['value' => $item[$attribute]]]);
+        foreach ($attributes as $key => $attributeName) {
+
+            $product->attributes()->syncWithoutDetaching($key);
+//-------------------------------------------------------------------------------------
+            $attribute = Attribute::find($key);
+            $valueAttribute = $attribute->attributeValues()->create([
+                'slug' => Str::slug($item["$attributeName ro"], '_')
+            ]);
+            foreach (config('app.available_locales') as $locale) {
+                $valueAttribute->translateOrNew($locale)->value = $item["$attributeName $locale"];
+                $valueAttribute->save();
+            }
         }
     }
 }

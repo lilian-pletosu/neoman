@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Services\DataTableService;
@@ -52,9 +51,32 @@ class ProductController extends Controller
         return (new SchemaFormBuilder)('Product', 'post', 'admin.products.store');
     }
 
-    public function store(Request $request, ProductRequest $productRequest)
+    public function store(Request $request)
     {
-        (new ProductService())->create($request, $productRequest->all());
+        if ($request->hasFile('image')) {
+            $data = $request->validate([
+                'name_ro' => 'required|min:3',
+                'name_ru' => 'required|min:3',
+                'description_ro' => 'required',
+                'description_ru' => 'required',
+                'brand_id' => 'required',
+                'sub_sub_category_id' => 'required',
+                'price' => 'required|decimal:2',
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+            ]);
+        } else {
+            $data = $request->validate([
+                'name ro' => 'required|min:3',
+                'name ru' => 'required|min:3',
+                'description ro' => 'required|min:15',
+                'description ru' => 'required|min:15',
+                'brand_id' => 'required',
+                'sub_sub_category_id' => 'required',
+                'price' => 'required|decimal:2',
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+            ]);
+        }
+        (new ProductService())->create($request, $data);
     }
 
     public function show(Product $product)
@@ -62,7 +84,9 @@ class ProductController extends Controller
         $attributesArray = [];
 
         foreach ($product->attributes as $attribute) {
-            $attributesArray[$attribute->name] = $attribute->pivot->value;
+            foreach ($attribute->attributeValues as $attributeValue) {
+                $attributesArray[$attribute->name] = $attributeValue->translate(app()->currentLocale())->value;
+            }
         }
         $product['attributes'] = $attributesArray;
         return $product->loadAggregate(['brand', 'subSubCategory'], 'name');

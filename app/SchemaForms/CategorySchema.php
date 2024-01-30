@@ -6,12 +6,24 @@ class CategorySchema
 {
     public function __invoke()
     {
+        $currentLocale = app()->currentLocale();
+        $reserveLanguage = $currentLocale == 'ru' ? 'ro' : 'ru';
         return [
             [
-                'name' => 'name',
+                'name' => "name $currentLocale",
                 'value' => '',
                 'type' => 'text',
-                'placeholder' => 'name',
+                'placeholder' => "name $currentLocale",
+                'options' => [],
+                'rules' => [
+                    'required'
+                ],
+            ],
+            [
+                'name' => "name $reserveLanguage",
+                'value' => '',
+                'type' => 'text',
+                'placeholder' => "name $reserveLanguage",
                 'options' => [],
                 'rules' => [
                     'required'

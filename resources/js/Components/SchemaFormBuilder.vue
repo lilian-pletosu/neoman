@@ -85,6 +85,7 @@ async function fetchResourceData() {
         await fetch(route(`${props.resourceRoute}.show`, props.resource.id))
             .then(response => response.json())
             .then(data => {
+
                 resourceModal.value = data;
             })
     }
@@ -129,6 +130,7 @@ function submit() {
     if (props.type == 'create') {
         formCreate.post(route(`${props.resourceRoute}.store`), {
             onSuccess: params => {
+                console.log(params);
                 closeCreateForm()
                 emit('showNotify', props.type)
             }
@@ -152,6 +154,11 @@ const deleteResource = (resId) => {
         onSuccess: () => closeModalWithNotify('delete'),
         onError: (err) => console.log(err)
     })
+}
+
+const handleFileUpload = (event, field) => {
+    const file = event.target.files[0];
+    this.formCreate[field.name] = file;
 }
 
 </script>
@@ -224,7 +231,7 @@ const deleteResource = (resId) => {
                                                class="block mb-2 text-sm font-medium text-gray-900 ">{{
                                                 __('image')
                                             }}</label>
-                                        <input @change="formEdit.image = $event.target.files[0]"
+                                        <input @change="handleFileUpload(event, field)"
                                                class="block text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                                :id="field.name" :type="field.type">
                                     </div>
@@ -273,6 +280,10 @@ const deleteResource = (resId) => {
                                                 <input @input="formCreate.image = $event.target.files[0]"
                                                        class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                                        :id="field.name" type="file">
+                                                <progress v-if="formCreate.progress"
+                                                          :value="formCreate.progress.percentage" max="100">
+                                                    {{ formCreate.progress.percentage }}%
+                                                </progress>
                                             </div>
                                         </template>
                                     </template>

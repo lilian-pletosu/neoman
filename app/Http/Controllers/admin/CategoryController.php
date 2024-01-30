@@ -55,9 +55,9 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required'
+            'name ro' => 'required|min:3',
+            'name ru' => 'required|min:3',
         ]);
-
         (new CategoryService())->create($request, $data);
     }
 
