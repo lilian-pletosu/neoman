@@ -17,58 +17,34 @@ return new class extends Migration {
             $table->float('price', 8, 2);
             $table->string('product_code');
             $table->string('slug');
-            $table->foreignId('brand_id')->unsigned();
-            $table->foreignId('sub_sub_category_id')->unsigned();
+            $table->foreignId('brand_id')->constrained('brands');
+            $table->foreignId('sub_sub_category_id')->constrained('sub_subcategories');
             $table->timestamps();
 
 
             $table->unique(['product_code', 'slug']);
-            $table->foreign('brand_id')->references('id')->on('brands');
-            $table->foreign('sub_sub_category_id')->references('id')->on('sub_subcategories');
         });
 
         Schema::create('product_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->string('description', 1500);
             $table->string('locale')->index();
-            $table->foreignId('product_id')->unsigned();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
 
             $table->unique(['product_id', 'locale']);
-            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
         });
 
-
-        Schema::create('product_specifications', function (Blueprint $table) {
-            $table->id();
-            $table->string('destination')->nullable();
-            $table->string('volume')->nullable();
-            $table->string('type')->nullable();
-            $table->string('scope_of_use')->nullable();
-            $table->string('base')->nullable();
-            $table->string('standard_consumption')->nullable();
-            $table->string('dimensions')->nullable();
-            $table->string('material')->nullable();
-            $table->string('noise_level')->nullable();
-            $table->string('season')->nullable();
-            $table->string('thickness')->nullable();
-            $table->string('number_of_tanks')->nullable();
-            $table->string('drain_panel')->nullable();
-            $table->string('mounting_type')->nullable();
-            $table->string('field_of_use')->nullable();
-            $table->json('colors')->nullable();
-        });
 
         Schema::create('product_images', function (Blueprint $table) {
             $table->id();
-            $table->string('image1');
-            $table->string('image2');
-            $table->string('image3');
-            $table->string('image4');
-            $table->foreignId('product_id')->unsigned();
+            $table->string('image1')->nullable();
+            $table->string('image2')->nullable();
+            $table->string('image3')->nullable();
+            $table->string('image4')->nullable();
+            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
 
             $table->unique(['product_id']);
-            $table->foreign('product_id')->references('id')->on('products')->cascadeOnDelete();
         });
 
     }

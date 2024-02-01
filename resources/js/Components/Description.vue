@@ -38,12 +38,12 @@ const applyFormat = (columnName, columnValue) => {
                  :class="{'bg-green-400 font-semibold ' : resourceModal[column] === 1,'bg-red-400 font-semibold' : resourceModal[column] === 0}">
                 <template v-if="['description'].includes(column)">
                     <div>
-                        <p class="p" v-if="!readActivated">
+                        <p class="" v-if="!readActivated">
                             {{ resourceModal[column] ? resourceModal[column].slice(0, 50) : '-' }}
-                            <span class="read font-bold" v-if="!readActivated"
+                            <span class="read font-extrabold" v-if="!readActivated"
                                   @click="readActivated = !readActivated">..read more</span>
                         </p>
-                        <p class="p" v-if="readActivated">{{ applyFormat(column, resourceModal[column]) }}</p>
+                        <p class="font-bold" v-if="readActivated">{{ applyFormat(column, resourceModal[column]) }}</p>
                     </div>
                 </template>
                 <template v-else-if="['attributes'].includes(column)">
@@ -60,7 +60,8 @@ const applyFormat = (columnName, columnValue) => {
                 </template>
                 <template v-else>
                     <div class="flex">
-                        <p class="text-sm ">{{ __(applyFormat(column, resourceModal[column] ?? resource[column])) }}</p>
+                        <p class="text-sm font-bold">
+                            {{ __(applyFormat(column, resourceModal[column] ?? resource[column])) }}</p>
 
                     </div>
                 </template>

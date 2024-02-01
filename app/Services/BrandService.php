@@ -76,7 +76,9 @@ class BrandService
             'image' => $data['image'] = '/img/no_image.svg'
         ]);
 
+
         foreach (config('app.available_locales') as $locale) {
+            $data["description $locale"] = $data['brand'];
             foreach ($this->translatedAttributes as $translatedAttribute) {
                 $xlsxKey = $translatedAttribute . ' ' . $locale;
                 if (isset($data[$xlsxKey])) {

@@ -28,6 +28,6 @@ class SubCategory extends Model implements TranslatableContract
 
     public function subSubcategory()
     {
-        return $this->hasMany(SubSubCategory::class, 'subcategory_id');
+        return $this->hasMany(SubSubCategory::class, 'sub_sub_category_id');
     }
 }

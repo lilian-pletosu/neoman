@@ -12,5 +12,5 @@ class SubCategoryTranslation extends Model
     public $timestamps = false;
 
     protected $table = 'subcategory_translations';
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'sub_category_id'];
 }

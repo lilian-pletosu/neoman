@@ -10,7 +10,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('sub_subcategory_translations', function (Blueprint $table) {
+        Schema::create('sub_subcategories_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->foreignId('sub_sub_category_id')->unsigned();
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('sub_subcategory_translations');
+        Schema::dropIfExists('sub_subcategories_translations');
     }
 };
