@@ -46,6 +46,19 @@ const applyFormat = (columnName, columnValue) => {
                         <p class="font-bold" v-if="readActivated">{{ applyFormat(column, resourceModal[column]) }}</p>
                     </div>
                 </template>
+                <template v-else-if="['price', 'mu'].includes(column)">
+                    <div>
+
+                        <table>
+                            <tr>
+                                <td class="font-bold">{{
+                                        resourceModal['price'] + ' MDL ' + ' / ' + resourceModal['mu']
+                                    }}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </template>
                 <template v-else-if="['attributes'].includes(column)">
                     <div>
                         <template v-for="attribute in resourceModal[column]">

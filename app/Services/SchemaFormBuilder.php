@@ -39,7 +39,7 @@ class SchemaFormBuilder
                     return $s;
                 }, $schemaClass());
             } // --------------------------------
-            else if ($hasTranslate) {
+            else {
 
                 $schema = array_map(function ($s) use ($resource) {
                     if (array_key_exists(1, explode(' ', $s['name']))) {

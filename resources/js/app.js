@@ -7,6 +7,7 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import vSelect from "vue-select";
 
+
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
 
 createInertiaApp({

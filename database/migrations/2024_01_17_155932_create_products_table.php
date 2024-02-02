@@ -10,6 +10,13 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        Schema::create('measurement_units', function (Blueprint $table) {
+            $table->id();
+            $table->string('slug')->unique();
+            $table->timestamps();
+
+        });
+
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
@@ -19,10 +26,20 @@ return new class extends Migration {
             $table->string('slug');
             $table->foreignId('brand_id')->constrained('brands');
             $table->foreignId('sub_sub_category_id')->constrained('sub_subcategories');
+            $table->foreignId('measurement_unit_id')->constrained('measurement_units');
+
             $table->timestamps();
 
 
             $table->unique(['product_code', 'slug']);
+        });
+
+        Schema::create('measurement_unit_translations', function (Blueprint $table) {
+            $table->id();
+            $table->string('symbol');
+            $table->string('locale')->index();
+            $table->foreignId('measurement_unit_id')->constrained()->cascadeOnDelete();
+            $table->timestamps();
         });
 
         Schema::create('product_translations', function (Blueprint $table) {
@@ -54,7 +71,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('measurement_units');
         Schema::dropIfExists('products');
+        Schema::dropIfExists('measurement_unit_translations');
         Schema::dropIfExists('product_translations');
         Schema::dropIfExists('product_specifications');
         Schema::dropIfExists('product_images');

@@ -6,6 +6,7 @@ use App\Models\Attribute;
 use App\Models\Product;
 use App\Services\BrandService;
 use App\Services\GenerateProductCode;
+use App\Services\MeasurementUnitService;
 use App\Services\SubSubcategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -170,9 +171,11 @@ class ProductsImport
 
                     $brand = (new BrandService)->createWithProduct($item);
                     $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
+                    $mu = (new MeasurementUnitService())->associateToProduct($item);
 
 
-                    //------------------------------>
+                    //------------------------------>d
+
                     $product = Product::firstOrCreate(['slug' => $item['name ro']], [
                         'price' => $item['price'],
                         'slug' => Str::slug($item['name ro'], '_'),
@@ -180,6 +183,7 @@ class ProductsImport
                         'specifications_id' => null,
                         'brand_id' => $brand->id,  // Asigură că ai deja $row['brand_id'] disponibil înainte
                         'sub_sub_category_id' => $subSubcategory->id,
+                        'measurement_unit_id' => $mu->id,
                     ]);
                     foreach (config('app.available_locales') as $locale) {
                         foreach ($this->translatedAttributes as $translatedAttribute) {

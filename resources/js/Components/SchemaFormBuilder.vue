@@ -9,6 +9,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Description from "@/Components/Description.vue";
 import ImageSlider from "@/Components/ImageSlider.vue";
 
+
 let formEdit = useForm({});
 let formCreate = useForm({});
 let formImport = useForm({});
@@ -335,6 +336,4 @@ const handleFileUpload = (event, field) => {
     </Modal>
 </template>
 
-<style scoped>
 
-</style>

@@ -74,7 +74,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return (new SchemaFormBuilder)('Category', 'put', 'admin.categories.update', $category->id);
+        return (new SchemaFormBuilder)('Category', 'put', 'admin.categories.update', $category->id, null, true);
 
     }
 

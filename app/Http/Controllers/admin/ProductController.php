@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductUpdateRequest;
+use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Services\DataTableService;
 use App\Services\ProductService;
@@ -88,7 +89,9 @@ class ProductController extends Controller
                 $attributesArray[$attribute->name] = $attributeValue->translate(app()->currentLocale())->value;
             }
         }
+        
         $product['attributes'] = $attributesArray;
+        $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
         return $product->loadAggregate(['brand', 'subSubCategory'], 'name');
     }
 
@@ -97,7 +100,7 @@ class ProductController extends Controller
      */
     public function edit(string $id): array
     {
-        return (new SchemaFormBuilder)('Product', 'put', 'admin.products.update', $id);
+        return (new SchemaFormBuilder)('Product', 'put', 'admin.products.update', $id, null, true);
     }
 
     /**

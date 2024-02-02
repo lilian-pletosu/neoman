@@ -79,7 +79,7 @@ class SubSubcategoryController extends Controller
 
     public function edit(string $id): array
     {
-        return (new SchemaFormBuilder)('SubSubCategory', 'put', 'admin.categories.subSubcategories.update', $id);
+        return (new SchemaFormBuilder)('SubSubCategory', 'put', 'admin.categories.subSubcategories.update', $id, null, true);
     }
 
     public function update(Request $request, string $id)
