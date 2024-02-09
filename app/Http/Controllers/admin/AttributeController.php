@@ -68,9 +68,7 @@ class AttributeController extends Controller
         ]);
         $data['slug'] = Str::slug($data['name ro'], '_');
 
-        $attribute = Attribute::firstOrCreate(['slug' => $data['slug']], [
-            'sub_sub_category_id' => $data['sub_sub_category_id']
-        ]);
+        $attribute = Attribute::firstOrCreate(['slug' => $data['slug'], 'sub_sub_category_id' => $data['sub_sub_category_id']], []);
 
         foreach (config('app.available_locales') as $locale) {
             foreach ($this->translatedAttributes as $translatedAttribute) {

@@ -13,31 +13,25 @@ return new class extends Migration {
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->string('slug')->unique();
-            $table->foreignId('sub_sub_category_id')->unsigned();
+            $table->string('slug');
+            $table->foreignId('sub_sub_category_id')->nullable()->constrained('sub_subcategories')->nullOnDelete();
             $table->timestamps();
-
-            $table->foreign('sub_sub_category_id')->references('id')->on('sub_subcategories')->cascadeOnDelete();
         });
 // -------------------------------------------------------------------------------------------------------------------------------------
         Schema::create('attribute_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('attribute_id')->unsigned();
+            $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
             $table->string('locale')->index();
-
             $table->unique(['attribute_id', 'locale']);
-            $table->foreign('attribute_id')->references('id')->on('attributes')->cascadeOnDelete();
         });
 
 // -------------------------------------------------------------------------------------------------------------------------------------
         Schema::create('attribute_values', function (Blueprint $table) {
             $table->id();
             $table->string('value')->nullable();
-            $table->string('slug')->unique();
-            $table->foreignId('attribute_id')->unsigned();
-
-            $table->foreign('attribute_id')->references('id')->on('attributes')->cascadeOnDelete();
+            $table->string('slug');
+            $table->foreignId('attribute_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -45,12 +39,9 @@ return new class extends Migration {
         Schema::create('attribute_value_translations', function (Blueprint $table) {
             $table->id();
             $table->string('locale')->index();
-            $table->foreignId('attribute_value_id')->unsigned();
-
+            $table->foreignId('attribute_value_id')->constrained('attribute_values')->cascadeOnDelete();
             $table->string('value');
-
             $table->unique(['locale', 'attribute_value_id']);
-            $table->foreign('attribute_value_id')->references('id')->on('attribute_values')->cascadeOnDelete();
         });
     }
 

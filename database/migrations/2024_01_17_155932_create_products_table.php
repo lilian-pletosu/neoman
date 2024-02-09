@@ -24,9 +24,9 @@ return new class extends Migration {
             $table->float('price', 8, 2);
             $table->string('product_code');
             $table->string('slug');
-            $table->foreignId('brand_id')->constrained('brands');
-            $table->foreignId('sub_sub_category_id')->constrained('sub_subcategories');
-            $table->foreignId('measurement_unit_id')->constrained('measurement_units');
+            $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
+            $table->foreignId('sub_sub_category_id')->nullable()->constrained('sub_subcategories')->onDelete('set null');
+            $table->foreignId('measurement_unit_id')->nullable()->constrained('measurement_units')->onDelete('set null');
 
             $table->timestamps();
 

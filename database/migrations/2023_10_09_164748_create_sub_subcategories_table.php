@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->nullable();
             $table->string('slug')->unique();
-            $table->unsignedBigInteger('subcategory_id');
+            $table->foreignId('subcategory_id')->nullable()->constrained('subcategories');
             $table->string('image');
             $table->timestamps();
         });

@@ -34,17 +34,17 @@ class SubcategoryService
         }
         $subcategory = SubCategory::create($data);
 
-        if (!$request->has('file')) {
+        if ($request->has('image')) {
             foreach ($this->translatableAttributes as $translatableAttribute) {
                 foreach (config('translatable.locales') as $locale) {
-                    $subcategory->translateOrNew($locale)->name = $data[$translatableAttribute . '_' . $locale];
+                    $subcategory->translateOrNew($locale)->$translatableAttribute = $data[$translatableAttribute . '_' . $locale];
                     $subcategory->save();
                 }
             }
         } else {
             foreach ($this->translatableAttributes as $translatableAttribute) {
                 foreach (config('translatable.locales') as $locale) {
-                    $subcategory->translateOrNew($locale)->name = $data["$translatableAttribute $locale"];
+                    $subcategory->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
                     $subcategory->save();
                 }
             }

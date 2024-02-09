@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name')->nullable();
             $table->string('slug')->unique();
-            $table->unsignedBigInteger('category_id');
+            $table->foreignId('category_id')->nullable()->constrained('categories');
             $table->string('image');
             $table->timestamps();
         });
