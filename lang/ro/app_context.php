@@ -77,6 +77,7 @@ return [
     'edit_attribute' => 'Editare atribut',
     'description ro' => 'Descriere în română',
     'description ru' => 'Descriere în rusă',
+    'not_set' => 'Nu este setat',
 
 
     //validation

@@ -62,10 +62,11 @@ const applyFormat = (columnName, columnValue) => {
                 <template v-else-if="['attributes'].includes(column)">
                     <div>
                         <template v-for="attribute in resourceModal[column]">
-                            <table>
-                                <tr>
+                            <table class="w-full">
+                                <tr class=" flex  border-b">
                                     <td class="font-bold">{{ attribute.name + ' - ' }}</td>
-                                    <td>{{ attribute.attribute_values[0].value }}</td>
+                                    <!--                                    <td>{{ attribute.attribute_values }}</td>-->
+                                    <td>{{ resourceModal.attribute_name[attribute.name] ?? __('not_set') }}</td>
                                 </tr>
                             </table>
                         </template>

@@ -45,7 +45,7 @@ return new class extends Migration {
         Schema::create('product_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description', 1500);
+            $table->longText('description', 10000);
             $table->string('locale')->index();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
 
