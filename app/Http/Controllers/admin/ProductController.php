@@ -86,13 +86,19 @@ class ProductController extends Controller
 
         foreach ($product->attributes as $attribute) {
             foreach ($attribute->attributeValues as $attributeValue) {
-                $attributesArray[$attribute->name] = $attributeValue->translate(app()->currentLocale())->value;
+                $translatedValue = $attributeValue->translate(app()->currentLocale());
+                if ($translatedValue) {
+                    // Adăugați valoarea tradusă a atributului în array-ul de atribute
+                    $attributesArray[$attribute->name] = $translatedValue->value;
+                }
             }
         }
-        
-        $product['attributes'] = $attributesArray;
+//        dd($attributesArray);
+
+        $product['attribute_name'] = $attributesArray;
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
-        return $product->loadAggregate(['brand', 'subSubCategory'], 'name');
+
+        return $product->loadAggregate(['brand', 'subSubCategory'], "name");
     }
 
     /**

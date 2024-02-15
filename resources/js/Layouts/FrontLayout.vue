@@ -11,7 +11,7 @@
             <front-header/>
         </div>
 
-        <div id="main-content" class="   flex-col justify-between h-screen ">
+        <div id="main-content" class="flex-col justify-between h-screen">
             <main class="">
                 <div class="">
                     <slot name="carousel"/>

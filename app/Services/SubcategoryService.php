@@ -34,7 +34,7 @@ class SubcategoryService
         }
         $subcategory = SubCategory::create($data);
 
-        if ($request->has('image')) {
+        if ($request->file('image')) {
             foreach ($this->translatableAttributes as $translatableAttribute) {
                 foreach (config('translatable.locales') as $locale) {
                     $subcategory->translateOrNew($locale)->$translatableAttribute = $data[$translatableAttribute . '_' . $locale];

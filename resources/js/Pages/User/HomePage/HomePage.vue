@@ -2,6 +2,7 @@
 
 import FrontLayout from "@/Layouts/FrontLayout.vue";
 import CarouselFront from "@/Components/CarouselFront.vue";
+import ProductSection from "@/Components/Front/ProductSection.vue";
 </script>
 
 <template>
@@ -9,7 +10,12 @@ import CarouselFront from "@/Components/CarouselFront.vue";
         <template v-slot:carousel>
             <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
         </template>
-        <p>Content</p>
+        <product-section title="Produse cu reduceri"/>
+        <product-section title="Produse cu sezoniere"/>
+        <carousel-front class="mt-20" :images="['/img/slider.png','/img/slider2.png']"/>
+        <product-section title="Produse cu TOP"/>
+        <product-section title="Recent adăugate"/>
+
     </front-layout>
 </template>
 

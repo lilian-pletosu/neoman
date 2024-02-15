@@ -45,7 +45,7 @@ return new class extends Migration {
         Schema::create('product_translations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description', 1500);
+            $table->longText('description', 10000);
             $table->string('locale')->index();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
 
@@ -75,7 +75,6 @@ return new class extends Migration {
         Schema::dropIfExists('products');
         Schema::dropIfExists('measurement_unit_translations');
         Schema::dropIfExists('product_translations');
-        Schema::dropIfExists('product_specifications');
         Schema::dropIfExists('product_images');
     }
 };
