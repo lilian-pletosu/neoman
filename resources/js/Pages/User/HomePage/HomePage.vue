@@ -3,6 +3,16 @@
 import FrontLayout from "@/Layouts/FrontLayout.vue";
 import CarouselFront from "@/Components/CarouselFront.vue";
 import ProductSection from "@/Components/Front/ProductSection.vue";
+
+
+const props = defineProps({
+    sales_products: {
+        type: Object,
+    },
+
+});
+
+
 </script>
 
 <template>
@@ -10,7 +20,7 @@ import ProductSection from "@/Components/Front/ProductSection.vue";
         <template v-slot:carousel>
             <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
         </template>
-        <product-section title="Produse cu reduceri"/>
+        <product-section title="Produse cu reduceri" :products="sales_products"/>
         <product-section title="Produse cu sezoniere"/>
         <carousel-front class="mt-20" :images="['/img/slider.png','/img/slider2.png']"/>
         <product-section title="Produse cu TOP"/>

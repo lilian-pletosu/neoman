@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\MeasurementUnit;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -95,5 +96,45 @@ class ProductService
 //        $product->translateOrNew($locale)->description = $data['description'];
 //        $product->save();
 
+    }
+
+
+    public function loadSalesProducts()
+    {
+        $productsArray = [];
+
+        foreach (Product::all() as $product) {
+            // Inițializează un array pentru atributele fiecărui produs
+            $attributesArray = [];
+
+            // Parcurge fiecare atribut al produsului
+            foreach ($product->attributes as $attribute) {
+                foreach ($attribute->attributeValues as $attributeValue) {
+                    // Obține valoarea tradusă a atributului
+                    $translatedValue = $attributeValue->translate(app()->currentLocale());
+                    if ($translatedValue) {
+                        // Adaugă valoarea tradusă a atributului în array-ul de atribute
+                        $attributesArray[$attribute->name] = $translatedValue->value;
+                    }
+                }
+            }
+
+            // Obține brandul produsului și adaugă numele său în array-ul produsului
+            $brandName = $product->brand->name;
+
+            // Adaugă array-urile de atribute și numele brandului în array-ul produsului
+            $productArray = [
+                'name' => $product->name,
+                'image' => $product->images()->first()->image1,
+                'brand' => $brandName,
+                'attributes' => $attributesArray,
+                'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol
+            ];
+
+            // Adaugă array-ul produsului în array-ul general de produse
+            $productsArray[] = $productArray;
+
+        }
+        return $productsArray;
     }
 }

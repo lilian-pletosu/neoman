@@ -4,34 +4,82 @@ const props = defineProps({
         type: String,
         required: true,
     },
+    products: {
+        type: Object,
+    },
 
 });
 </script>
 
 <template>
-    <div class="pt-4 space-y-8 ">
-        <div>
-            <p class="text-2xl text-2">{{ title }}</p>
-        </div>
+    <div class="bg-white">
+        <div class="py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8">
+            <div class="flex items-center justify-between px-4 sm:px-6 lg:px-0">
+                <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
+                <a href="#" class="hidden text-sm font-semibold text-blue-600 hover:text-cyan-500 sm:block">
+                    Search more
+                    <span aria-hidden="true"> &rarr;</span>
+                </a>
+            </div>
 
-        <div class="flex flex-row flex-nowrap space-x-2">
-            <div class="basis-1/2 border container-simple flex justify-center ">
-                <img class="bg-1" src="https://supraten.md/image/catalog/old/products/78095.jpg" alt="">
+            <div class="relative mt-8">
+                <div class="relative -mb-6 w-full overflow-x-auto pb-6">
+                    <ul role="list"
+                        class="mx-4 inline-flex space-x-8 sm:mx-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-x-8 lg:space-x-0">
+                        <li v-for="(product, index) in products"
+                            class="inline-flex w-64 flex-col text-center lg:w-auto">
+                            <div class="group relative">
+                                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200">
+                                    <img :src="asset(product.image)"
+                                         alt="Black machined steel pen with hexagonal grip and small white logo at top."
+                                         class="h-full w-full object-cover object-center group-hover:opacity-75">
+                                </div>
+                                <div class="mt-6">
+                                    <p class="text-sm text-gray-500">Black</p>
+                                    <h3 class="mt-1 font-semibold text-gray-900">
+                                        <a href="#">
+                                            <span class="absolute inset-0"></span>
+                                            {{ product.name }}
+                                        </a>
+                                    </h3>
+                                    <p class="mt-1 text-gray-900">$3</p>
+                                </div>
+                            </div>
+
+                            <h4 class="sr-only">Available colors</h4>
+                            <ul role="list" class="mt-auto flex items-center justify-center space-x-3 pt-6">
+                                <li class="h-4 w-4 rounded-full border border-black border-opacity-10"
+                                    style="background-color: #111827">
+                                    <span class="sr-only">Black</span>
+                                </li>
+                                <li class="h-4 w-4 rounded-full border border-black border-opacity-10"
+                                    style="background-color: #fde68a">
+                                    <span class="sr-only">Brass</span>
+                                </li>
+                                <li class="h-4 w-4 rounded-full border border-black border-opacity-10"
+                                    style="background-color: #e5e7eb">
+                                    <span class="sr-only">Chrome</span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="basis-1/4 border container-simple">
-                <img class="bg-1" src="https://supraten.md/image/catalog/old/products/78095.jpg" alt="">
-            </div>
-            <div class="basis-1/4 border container-simple">
-                <img class="bg-1" src="https://supraten.md/image/catalog/old/products/78095.jpg" alt="">
-            </div>
-            <div class="basis-1/4 border container-simple">
-                <img class="bg-1" src="https://supraten.md/image/catalog/old/products/78095.jpg" alt="">
-            </div>
-            <div class="basis-1/4 border container-simple">
-                <img class="bg-1" src="https://supraten.md/image/catalog/old/products/78095.jpg" alt="">
-            </div>
+
+
         </div>
     </div>
+    <!--        <div class="flex flex-row flex-nowrap space-x-2">-->
+    <!--            <div v-for="(product, index) in products" :key="index" class="bg-gray-100  items-start"-->
+    <!--                 :class="[index === 0 ? 'basis-1/3' : 'basis-1/4', 'border container-simple']">-->
+    <!--                <div class="p-6  ">-->
+    <!--                    <img class="bg-1" :src="product.images[0].image1" :alt="product.name">-->
+    <!--                </div>-->
+    <!--                <p class="text-1">{{ product.name }}</p>-->
+    <!--            </div>-->
+
+    <!--        </div>-->
+
 
 </template>
 

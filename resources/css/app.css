@@ -11,7 +11,7 @@
 }
 
 .container-simple {
-    @apply bg-white shadow  p-4 sm:p-6 xl:p-8  2xl:col-span-2;
+    @apply shadow     2xl:col-span-2;
 }
 
 .primary-text {

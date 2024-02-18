@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Category;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -47,6 +48,7 @@ class HandleInertiaRequests extends Middleware
             },
             'availableLanguages' => config('availableLanguages'),
             'categories' => Category::orderBy('name')->get(),
+            'sales_products' => (new ProductService())->loadSalesProducts(),
         ];
     }
 }
