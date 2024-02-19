@@ -93,6 +93,7 @@ class BrandService
 
     public function update(array $data, Brand $brand)
     {
+        dd($data);
         if ($data['image'] === null) {
             $data['image'] = $brand->image;
         } else {

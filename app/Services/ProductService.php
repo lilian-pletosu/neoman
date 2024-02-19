@@ -121,12 +121,14 @@ class ProductService
 
             // Obține brandul produsului și adaugă numele său în array-ul produsului
             $brandName = $product->brand->name;
+            $brandLogo = $product->brand->image;
 
             // Adaugă array-urile de atribute și numele brandului în array-ul produsului
             $productArray = [
                 'name' => $product->name,
                 'image' => $product->images()->first()->image1,
-                'brand' => $brandName,
+                'price' => $product->price,
+                'brand' => ['name' => $brandName, 'image' => $brandLogo],
                 'attributes' => $attributesArray,
                 'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol
             ];

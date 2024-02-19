@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BrandEditRequest;
 use App\Http\Requests\BrandStoreRequest;
 use App\Models\Brand;
 use App\Services\BrandService;
@@ -68,13 +67,12 @@ class BrandController extends Controller
     public function edit(string $id): array
     {
         return (new SchemaFormBuilder)("Brand", 'put', 'admin.brands.update', $id);
-
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand, BrandEditRequest $brandRequest)
+    public function update(Request $request, Brand $brand,)
     {
         return (new BrandService())->update($request->form, $brand);
     }
