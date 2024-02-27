@@ -79,10 +79,18 @@ class SubcategoryService
         if ($data['image'] === null) {
             $data['form']['image'] = $subcategory->image;
         } else {
-            $fileName = $data['image']->hashName();
-            $imageContents = $data['image']->getContent();
-            Storage::disk('subcategories')->put($fileName, $imageContents);
-            $data['form']['image'] = '/storage/subcategories/' . $fileName;
+            if (is_array($data['image'])) {
+                $fileName = $data['image']['_value']->hashName();
+                $imageContents = $data['image']['_value']->getContent();
+                Storage::disk('subcategories')->put($fileName, $imageContents);
+                $data['form']['image'] = '/storage/subcategories/' . $fileName;
+            } else {
+                $fileName = $data['image']->hashName();
+                $imageContents = $data['image']->getContent();
+                Storage::disk('subcategories')->put($fileName, $imageContents);
+                $data['form']['image'] = '/storage/subcategories/' . $fileName;
+            }
+
         }
 
         $subcategory->update($data['form']);

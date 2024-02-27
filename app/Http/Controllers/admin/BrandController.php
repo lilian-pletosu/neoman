@@ -50,6 +50,15 @@ class BrandController extends Controller
      */
     public function store(Request $request, BrandStoreRequest $brandRequest)
     {
+
+        $data = $request->validate([
+            'name' => 'required|min:3|String',
+            "description_ro" => 'required|min:5|String',
+            "description_ru" => 'required|min:5|String',
+            'website' => 'required',
+            'is_enabled' => 'required',
+            'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
+
         (new BrandService($request))->create($brandRequest->all(), true);
     }
 

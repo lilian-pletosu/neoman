@@ -94,13 +94,23 @@ class BrandService
 
     public function update(array $data, Brand $brand)
     {
+
+
         if ($data['image'] === null) {
             $data['image'] = $brand->image;
         } else {
-            $fileName = $data['image']->hashName();
-            $imageContents = $data['image']->getContent();
-            Storage::disk('brands')->put($fileName, $imageContents);
-            $data['image'] = '/storage/brands/' . $fileName;
+            if (is_uploaded_file($data['image']['_value'])) {
+                $fileName = $data['image']['_value']->hashName();
+                $imageContents = $data['image']['_value']->getContent();
+                Storage::disk('brands')->put($fileName, $imageContents);
+                $data['image'] = '/storage/brands/' . $fileName;
+            } else {
+                $fileName = $data['image']->hashName();
+                $imageContents = $data['image']->getContent();
+                Storage::disk('brands')->put($fileName, $imageContents);
+                $data['image'] = '/storage/brands/' . $fileName;
+            }
+
         }
         $data['form']['slug'] = Str::slug($data['form']['name'], '_');
         $brand->update([
