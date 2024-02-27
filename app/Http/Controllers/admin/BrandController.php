@@ -66,15 +66,36 @@ class BrandController extends Controller
      */
     public function edit(string $id): array
     {
-        return (new SchemaFormBuilder)("Brand", 'put', 'admin.brands.update', $id);
+        return (new SchemaFormBuilder)("Brand", 'put', 'admin.brands.update', $id, null, true);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Brand $brand,)
+    public function update(Request $request, Brand $brand)
     {
-        return (new BrandService())->update($request->form, $brand);
+        if ($request->hasFile('image')) {
+            $data = $request->validate([
+                'form.name' => 'required|min:3',
+                'form.description ro' => 'required|min:3',
+                'form.description ru' => 'required|min:3',
+                'form.website' => 'required',
+                'form.is_enabled' => 'required',
+                'image._value' => 'nullable|image'
+            ]);
+            $data['image'] = $request->file('image');
+        } else {
+            $data = $request->validate([
+                'form.name' => 'required|min:3',
+                'form.description ro' => 'required|min:3',
+                'form.description ru' => 'required|min:3',
+                'form.website' => 'required',
+                'form.is_enabled' => 'required',
+            ]);
+            $data['image'] = null;
+
+        }
+        return (new BrandService())->update($data, $brand);
     }
 
     /**

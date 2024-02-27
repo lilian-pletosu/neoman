@@ -29,9 +29,13 @@ const props = defineProps({
             <div class="flex">
                 <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
             </div>
-            <div class="flex">
-                <arrow-left-icon/>
-                <arrow-right-icon/>
+            <div class="w-16 flex space-x-2">
+                <div class="rounded-3xl flex items-center justify-center border border-slate-600 w-full h-auto">
+                    <arrow-left-icon class="w-4"/>
+                </div>
+                <div class="rounded-3xl flex  justify-center border border-slate-600 w-full h-auto">
+                    <arrow-right-icon class="w-4"/>
+                </div>
             </div>
         </div>
         <carousel :items-to-show="4">

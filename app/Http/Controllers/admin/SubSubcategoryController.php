@@ -84,8 +84,24 @@ class SubSubcategoryController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if ($request->hasFile('image')) {
+            $data = $request->validate([
+                'form.name ro' => 'required|min:3',
+                'form.name ru' => 'required|min:3',
+                'form.subcategory_id' => 'required',
+                'image._value' => 'nullable|image'
+            ]);
+            $data['image'] = $request->file('image');
+        } else {
+            $data = $request->validate([
+                'form.name ro' => 'required|min:3',
+                'form.name ru' => 'required|min:3',
+                'form.subcategory_id' => 'required',
+            ]);
+            $data['image'] = null;
+        }
         $subSubCategory = SubSubcategory::find($id);
-        (new SubSubcategoryService())->update($request->form, $subSubCategory);
+        (new SubSubcategoryService())->update($data, $subSubCategory);
     }
 
     /**

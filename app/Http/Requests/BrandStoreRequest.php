@@ -21,9 +21,12 @@ class BrandStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $currentLocale = app()->currentLocale();
+        $reserveLanguage = $currentLocale == 'ro' ? 'ru' : 'ro';
         return [
             'name' => 'required|min:3|String',
-            'description' => 'required|min:5|String',
+            "description_$currentLocale" => 'required|min:5|String',
+            "description_$reserveLanguage" => 'required|min:5|String',
             'website' => 'required',
             'is_enabled' => 'required',
             'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'

@@ -40,7 +40,6 @@ class SchemaFormBuilder
                 }, $schemaClass());
             } // --------------------------------
             else {
-
                 $schema = array_map(function ($s) use ($resource) {
                     if (array_key_exists(1, explode(' ', $s['name']))) {
                         $s['value'] = $resource->translate(explode(' ', $s['name'])[1])->{explode(' ', $s['name'])[0]}; //read from model or empty

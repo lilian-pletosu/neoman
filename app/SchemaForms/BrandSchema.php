@@ -6,6 +6,8 @@ class BrandSchema
 {
     public function __invoke()
     {
+        $currentLocale = app()->currentLocale();
+        $reserveLanguage = $currentLocale == 'ro' ? 'ru' : 'ro';
         return [
             [
                 'name' => 'name',
@@ -18,10 +20,19 @@ class BrandSchema
                 ],
             ],
             [
-                'name' => 'description',
+                'name' => "description $currentLocale",
                 'value' => '',
                 'type' => 'textarea',
-                'placeholder' => 'description',
+                'placeholder' => "description $currentLocale",
+                'options' => [],
+                'rules' => [
+                    'required'
+                ],
+            ], [
+                'name' => "description $reserveLanguage",
+                'value' => '',
+                'type' => 'textarea',
+                'placeholder' => "description $reserveLanguage",
                 'options' => [],
                 'rules' => [
                     'required'

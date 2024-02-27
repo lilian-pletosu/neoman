@@ -39,7 +39,8 @@ class BrandService
 
         foreach (config('app.available_locales') as $locale) {
             foreach ($this->translatedAttributes as $translatedAttribute) {
-                $xlsxKey = $translatedAttribute . ' ' . $locale;
+                array_key_exists("$translatedAttribute $locale", $data) ?
+                    $xlsxKey = $translatedAttribute . ' ' . $locale : $xlsxKey = $translatedAttribute . '_' . $locale;
                 if (isset($data[$xlsxKey])) {
                     $brand->translateOrNew($locale)->$translatedAttribute = $data[$xlsxKey];
                 }
@@ -93,15 +94,31 @@ class BrandService
 
     public function update(array $data, Brand $brand)
     {
-        dd($data);
         if ($data['image'] === null) {
             $data['image'] = $brand->image;
         } else {
             $fileName = $data['image']->hashName();
-            $data['image']->move(public_path('brands'), $fileName);
-            $data['image'] = '/brands/' . $fileName;//
+            $imageContents = $data['image']->getContent();
+            Storage::disk('brands')->put($fileName, $imageContents);
+            $data['image'] = '/storage/brands/' . $fileName;
         }
-        $data['slug'] = Str::slug($data['name'], '_');
-        $brand->update($data);
+        $data['form']['slug'] = Str::slug($data['form']['name'], '_');
+        $brand->update([
+            'name' => $data['form']['name'],
+            'slug' => Str::slug($data['form']['name'], '_'),
+            'website' => Str::lower('www' . '.' . $data['form']['name'] . '.' . 'com',),
+            'seo_title' => $data['form']['name'],
+            'seo_description' => $data['form']['description ro'],
+            'is_enabled' => $data['form']['is_enabled'],
+            'image' => $data['image']
+        ]);
+//
+        foreach ($this->translatedAttributes as $translatableAttribute) {
+            foreach (config('translatable.locales') as $locale) {
+                $brand->translateOrNew($locale)->$translatableAttribute = $data['form']["$translatableAttribute $locale"];
+
+            }
+        }
+        $brand->save();
     }
 }

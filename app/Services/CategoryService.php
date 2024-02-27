@@ -11,10 +11,13 @@ class CategoryService
     private $currentLocale;
     private $rereserveLanguage;
 
+    public $translatedAttributes;
+
     public function __construct()
     {
         $currentLocale = app()->currentLocale();
         $reserveLanguage = $currentLocale == 'ru' ? 'ro' : 'ru';
+        $this->translatedAttributes = (new Category())->translatedAttributes;
     }
 
     public function create(Request $request, $data)
@@ -39,25 +42,16 @@ class CategoryService
 
     public function update($data, Category $category, Request $request)
     {
-        if (app()->currentLocale() == 'ro') {
-            $data['slug'] = Str::slug($data['name'], '_');
-        }
-//        if (!$request->file('form.image')) {
-//            $data['image'] = $category->image;
-//        } else {
-//            $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('form.image')->extension();
-//
-//            $data['image'] = '/storage/categories/' . $fileName;
-//            $imageContents = $request->file('form.image')->getContent();
-//            Storage::disk('categories')->put($fileName, $imageContents);
-//        }
+
+        $data['slug'] = Str::slug($data['name ro'], '_');
 
         $category->update($data);
-//
-//        $locale = app()->currentLocale();
-//        $product->translateOrNew($locale)->name = $data['name'];
-//        $product->translateOrNew($locale)->description = $data['description'];
-//        $product->save();
+        foreach ($this->translatedAttributes as $translatableAttribute) {
+            foreach (config('translatable.locales') as $locale) {
+                $category->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
+            }
+        }
+        $category->save();
 
     }
 }

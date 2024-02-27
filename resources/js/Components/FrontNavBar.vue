@@ -6,7 +6,7 @@ const props = defineProps({
 
 <template>
     <div
-        class="flex justify-center sm:px-4  md:justify-end md:px-2 items-center border-b dark:border-slate-500 h-10 xl:px-60 2xl:px-60">
+        class="flex justify-center sm:px-4 border-b   md:justify-end md:px-2 items-center  h-10 xl:px-60 2xl:px-60">
         <div class="hidden md:flex justify-end">
             <label class="mx-4 relative cursor-pointer">
                 <input type="checkbox" value="" class="sr-only peer">

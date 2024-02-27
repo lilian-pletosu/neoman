@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProductUpdateRequest;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Services\DataTableService;
@@ -112,9 +111,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product, ProductUpdateRequest $productUpdateRequest)
+    public function update(Request $request, Product $product)
     {
-        (new ProductService())->update($productUpdateRequest->form, $product, $request);
+        $data = $request->validate([
+            'form.name ro' => 'required|min:3|String',
+            'form.name ru' => 'required|min:3|String',
+            'form.description ro' => 'required',
+            'form.description ru' => 'required',
+            'form.brand_id' => 'required',
+            'form.sub_sub_category_id' => 'required',
+            'form.price' => 'required|numeric',
+        ]);
+        (new ProductService())->update($data, $product, $request);
     }
 
     /**

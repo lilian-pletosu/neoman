@@ -75,23 +75,24 @@ class SubcategoryService
     public function update($data, SubCategory $subcategory)
     {
 
-        if (app()->currentLocale() == 'ru') {
-            $data['slug'] = $subcategory->slug;
-        } else {
-            $data['slug'] = Str::slug($data['name'], '_');
-        }
-
+        $data['form']['slug'] = Str::slug($data['form']['name ro'], '_');
         if ($data['image'] === null) {
-            $data['image'] = $subcategory->image;
+            $data['form']['image'] = $subcategory->image;
         } else {
             $fileName = $data['image']->hashName();
             $imageContents = $data['image']->getContent();
             Storage::disk('subcategories')->put($fileName, $imageContents);
-            $data['image'] = '/storage/subcategories/' . $fileName;
+            $data['form']['image'] = '/storage/subcategories/' . $fileName;
         }
 
-        $subcategory->update($data);
+        $subcategory->update($data['form']);
 
+        foreach ($this->translatableAttributes as $translatableAttribute) {
+            foreach (config('translatable.locales') as $locale) {
+                $subcategory->translateOrNew($locale)->$translatableAttribute = $data['form']["$translatableAttribute $locale"];
+            }
+        }
+        $subcategory->save();
 
     }
 }

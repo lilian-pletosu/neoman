@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductService
@@ -70,31 +69,16 @@ class ProductService
 
     public function update($data, Product $product, Request $request)
     {
-        if (app()->currentLocale() == 'ru') {
-            $data['slug'] = $product->slug;
-        } else {
-            $data['slug'] = Str::slug($data['name'], '_');
+        $data['slug'] = Str::slug($data['form']['name ro'], '_');
+
+
+        $product->update($data['form']);
+        foreach ($this->translatedAttributes as $translatableAttribute) {
+            foreach (config('translatable.locales') as $locale) {
+                $product->translateOrNew($locale)->$translatableAttribute = $data['form']["$translatableAttribute $locale"];
+            }
         }
-        if (!$request->file('form.image')) {
-            $data['image'] = $product->image;
-        } else {
-            $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('form.image')->extension();
-
-            $data['image'] = '/storage/products/' . $fileName;
-            $imageContents = $request->file('form.image')->getContent();
-            Storage::disk('products')->put($fileName, $imageContents);
-        }
-
-        $product->attributes()->syncWithoutDetaching([21 => ['value' => '1 Tb']]);
-        $product->attributes()->syncWithoutDetaching([19 => ['value' => '16 inch']]);
-
-
-        $product->update($data);
-//
-//        $locale = app()->currentLocale();
-//        $product->translateOrNew($locale)->name = $data['name'];
-//        $product->translateOrNew($locale)->description = $data['description'];
-//        $product->save();
+        $product->save();
 
     }
 
@@ -120,8 +104,8 @@ class ProductService
             }
 
             // Obține brandul produsului și adaugă numele său în array-ul produsului
-            $brandName = $product->brand->name;
-            $brandLogo = $product->brand->image;
+            $brandName = $product->brand->name ?? null;
+            $brandLogo = $product->brand->image ?? null;
 
             // Adaugă array-urile de atribute și numele brandului în array-ul produsului
             $productArray = [

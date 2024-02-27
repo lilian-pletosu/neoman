@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SubcategoryUpdateRequest;
 use App\Models\SubCategory;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
@@ -83,11 +82,28 @@ class SubcategoryController extends Controller
         return (new SchemaFormBuilder)('SubCategory', 'put', 'admin.categories.subcategories.update', $id, null, true);
     }
 
-    public function update(Request $request, string $id, SubcategoryUpdateRequest $subcategoryUpdateRequest)
+    public function update(Request $request, string $id)
     {
 
+        if ($request->hasFile('image')) {
+            $data = $request->validate([
+                'form.name ro' => 'required|min:3',
+                'form.name ru' => 'required|min:3',
+                'form.category_id' => 'required',
+                'image._value' => 'nullable|image'
+            ]);
+            $data['image'] = $request->file('image');
+        } else {
+            $data = $request->validate([
+                'form.name ro' => 'required|min:3',
+                'form.name ru' => 'required|min:3',
+                'form.category_id' => 'required',
+                'image._value' => 'nullable|image'
+            ]);
+            $data['image'] = null;
+        }
         $subCategory = SubCategory::find($id);
-        (new SubcategoryService())->update($subcategoryUpdateRequest->form, $subCategory);
+        (new SubcategoryService())->update($data, $subCategory);
     }
 
     /**

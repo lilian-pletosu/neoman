@@ -22,9 +22,9 @@ class SubcategoryUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'form.name' => 'required|min:3|String',
-            'form.category_id' => 'required',
-            'form.image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+//            'form.name' => 'required|min:3|String',
+//            'form.category_id' => 'required',
+//            'form.image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
 
         ];
     }

@@ -17,6 +17,7 @@ const app = getCurrentInstance();
 const emit = defineEmits(['close-modal', 'showNotify'])
 const errors = ref({});
 let importFile = ref({});
+let image = ref({});
 
 const cloneFields = ref();
 const schemaForm = ref({});
@@ -68,7 +69,7 @@ onMounted(() => {
 })
 
 
-async function fetchModalData() {
+async function fetchEditFormData() {
     if (['edit'].includes(props.type) && props.resource) {
         await fetch(route(`${props.resourceRoute}.edit`, props.resource.id))
             .then(response => response.json())
@@ -104,7 +105,7 @@ async function fetchFieldsCreate() {
 }
 
 onUpdated(() => {
-    fetchModalData();
+    fetchEditFormData();
     fetchResourceData();
 })
 
@@ -122,10 +123,14 @@ function submit() {
     if (props.type == 'edit') {
         router.post(route(`${props.resourceRoute}.update`, props.resource.id), {
             _method: 'put',
+            image: image,
             form: formEdit,
         }, {
             only: ['errors', 'resources'],
-            onSuccess: params => closeCreateForm()
+            onSuccess: params => {
+                closeCreateForm();
+                image = {}
+            }
         })
     }
     if (props.type == 'create') {
@@ -159,7 +164,7 @@ const deleteResource = (resId) => {
 
 const handleFileUpload = (event, field) => {
     const file = event.target.files[0];
-    this.formCreate[field.name] = file;
+    this.formEdit[field.name] = file;
 }
 
 </script>
@@ -232,9 +237,12 @@ const handleFileUpload = (event, field) => {
                                                class="block mb-2 text-sm font-medium text-gray-900 ">{{
                                                 __('image')
                                             }}</label>
-                                        <input @change="handleFileUpload(event, field)"
-                                               class="block text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                               :id="field.name" :type="field.type">
+                                        <!--                                        <input @change="handleFileUpload(event, field)"-->
+                                        <!--                                               class="block text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"-->
+                                        <!--                                               :id="field.name" :type="field.type">-->
+                                        <input @input="image = $event.target.files[0]"
+                                               class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                               :id="field.name" type="file">
                                     </div>
                                 </template>
                             </template>

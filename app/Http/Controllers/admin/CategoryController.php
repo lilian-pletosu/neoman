@@ -83,8 +83,10 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+
         $data = $request->validate([
-            'form.name' => 'required'
+            'form.name ro' => 'required|min:3',
+            'form.name ru' => 'required|min:3'
         ]);
         (new CategoryService())->update($data['form'], $category, $request);
     }
