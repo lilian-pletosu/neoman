@@ -133,7 +133,7 @@ onMounted(() => {
                                     <template v-if="column === columnInOrder">
                                         <td
                                             class="py-2 px-6 text-sm text-gray-900 whitespace-wrap"
-                                            :class="{ 'hidden xl:block': columnInOrder === 'description' }">
+                                            :class="{'hidden xl:block': columnInOrder === 'description' }">
                                             <!--                    image                        -->
                                             <template v-if="columnInOrder === 'image'">
                                                 <img
@@ -167,7 +167,7 @@ onMounted(() => {
                                             </template>
                                             <!--                    else                        -->
                                             <template v-else>
-                                                <div class="rounded text-center">
+                                                <div class=" flex items-center justify-center">
                                                     {{ __(applyFormat(column, resource[columnInOrder])) ?? '---' }}
                                                 </div>
                                             </template>

@@ -99,7 +99,7 @@ class BrandService
         if ($data['image'] === null) {
             $data['image'] = $brand->image;
         } else {
-            if (is_uploaded_file($data['image']['_value'])) {
+            if (is_array($data['image'])) {
                 $fileName = $data['image']['_value']->hashName();
                 $imageContents = $data['image']['_value']->getContent();
                 Storage::disk('brands')->put($fileName, $imageContents);
