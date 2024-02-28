@@ -9,9 +9,11 @@ import vSelect from "vue-select";
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
+const appDescription = "Alături la fiecare etapă în viață";
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    title: (title) => `${appName}.md - ${appDescription}`,
+    description: (description) => description,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({el, App, props, plugin}) {
         const app = createApp({render: () => h(App, props)});

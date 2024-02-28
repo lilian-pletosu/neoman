@@ -1,7 +1,7 @@
 <script setup>
 
 import 'vue3-carousel/dist/carousel.css'
-import {Carousel, Navigation, Slide} from 'vue3-carousel'
+import {Carousel, Slide} from 'vue3-carousel'
 
 const props = defineProps({
     images: {
@@ -17,9 +17,7 @@ const props = defineProps({
             <img class="object-cover  block w-full flex"
                  :src="slide">
         </slide>
-        <template #addons>
-            <navigation/>
-        </template>
+
     </carousel>
 
 

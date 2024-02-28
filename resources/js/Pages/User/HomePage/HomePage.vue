@@ -16,7 +16,8 @@ const props = defineProps({
 </script>
 
 <template>
-    <front-layout>
+
+    <front-layout title="Pagina principală">
         <template v-slot:carousel>
             <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
         </template>

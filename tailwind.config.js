@@ -20,7 +20,21 @@ export default {
             },
             colors: {
                 dark: '#011212'
-            }
+            },
+            keyframes: {
+                rotateDown: {
+                    '0%': {transform: 'rotate(0deg)'},
+                    '100%': {transform: 'rotate(180deg)'},
+                },
+                rotateUp: {
+                    '0%': {transform: 'rotate(180deg)'},
+                    '100%': {transform: 'rotate(0deg)'},
+                },
+            },
+            animation: {
+                rotateDown: 'rotateDown 0.3s ease',
+                rotateUp: 'rotateUp 0.3s ease',
+            },
         },
     },
 

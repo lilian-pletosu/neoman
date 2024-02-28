@@ -76,22 +76,23 @@ const toggleSidebar = () => {
             </div>
 
         </div>
-        <div class="flex flex-row  h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60">
+        <div
+            class="flex hidden md:flex flex-row h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60">
             <div class="relative z-20
-             justify-center items-center md:w-3/12 md:border-x md:border-gray-500 dark:md:border-slate-500  dark:bg-dark"
+             justify-center items-center bg-[#043B3D] md:w-3/12   dark:bg-dark"
                  @click="toggleSidebar">
                 <div class="flex justify-center items-center space-x-3 py-5">
                     <bars3-icon class="w-[25px] h-[25px] text-black md:text-white dark:text-white"/>
                     <p class="text-2 flex items-center text-base text-black md:text-white dark:text-white uppercase">
                         Catalog</p>
-                    <chevron-down-icon v-if="menu" class="w-5 text-blue-800"/>
-                    <chevron-up-icon v-if="!menu" class="w-5 text-blue-800"/>
+                    <chevron-down-icon v-if="menu" class="w-5 animate-rotateUp text-blue-800"/>
+                    <chevron-up-icon v-if="!menu" class="w-5 animate-rotateUp text-blue-800"/>
                 </div>
                 <div class="">
                     <div ref="sidebar" v-show="menu"
-                         class="hidden md:block">
+                         class="hidden md:block shadow-lg">
                         <div
-                            class="static z-10 bg-2 h-[700px] hide-scrollbar overflow-y-scroll w-full -mt-0.5 shadow-xl dark:bg-dark">
+                            class="static z-10 bg-2 h-[700px] hide-scrollbar overflow-y-scroll w-full h-auto pb-4 -mt-0.5 shadow-xl dark:bg-dark">
                             <div class="space-y-1 text-2 text-lg bg-gray-200 px-2 font-semibold pt-1">
                                 <div
                                     class="flex flex-row space-x-2">
@@ -152,7 +153,6 @@ const toggleSidebar = () => {
                     </div>
                 </div>
             </div>
-
             <div class=" hidden md:flex flex-1 items-center justify-end pl-4 md:pr-2 xl:pr-0">
                 <div class="relative h-10  w-full ">
                     <div

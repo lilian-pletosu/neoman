@@ -6,8 +6,8 @@ const props = defineProps({
 
 <template>
     <div
-        class="flex justify-center sm:px-4 border-b   md:justify-end md:px-2 items-center  h-10 xl:px-60 2xl:px-60">
-        <div class="hidden md:flex justify-end">
+        class="flex justify-center sm:px-4    md:justify-end md:px-2 items-center  h-10 xl:px-60 2xl:px-60">
+        <div class="hidden md:flex w-full pb-1 border-b justify-end">
             <label class="mx-4 relative cursor-pointer">
                 <input type="checkbox" value="" class="sr-only peer">
                 <div
@@ -60,6 +60,8 @@ const props = defineProps({
             </div>
         </div>
     </div>
+
+
 </template>
 
 <style scoped>
