@@ -19,6 +19,7 @@ import SidebarMobile from "@/Components/SidebarMobile.vue";
 
 const menu = ref(false);
 const sidebar = ref(null)
+const callModal = ref(false);
 
 
 const toggleSidebar = () => {
@@ -39,7 +40,8 @@ const toggleSidebar = () => {
             </div>
             <div class="flex flex-1 flex-col text-center ">
                 <a href="tel:+37378107017"><p class="text-1 text-lg dark:text-white">078 107 017</p></a>
-                <p class="cursor-pointer underline text-b-link text-xs pointer md:text-sm">Revenim cu un apel?</p>
+                <p @click="$emit('call')" class="cursor-pointer underline text-b-link text-xs pointer md:text-sm">
+                    Revenim cu un apel?</p>
             </div>
             <div class="hidden md:flex flex-1 flex justify-center space-x-2">
                 <div class="flex flex-col text-3 text-[#868686]">

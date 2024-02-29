@@ -10,7 +10,7 @@
 
 
         <div class="">
-            <front-header/>
+            <front-header @call="openModal"/>
         </div>
 
         <div id="main-content" class="flex-col justify-between h-screen">
@@ -112,7 +112,7 @@
                 </div>
 
 
-                <div data-dial-init class="fixed end-6 bottom-6 group">
+                <div data-dial-init class="hidden  md:block fixed end-6 bottom-6 group">
                     <div id="speed-dial-menu-default" class="flex flex-col items-center hidden mb-4 space-y-2">
                         <button type="button" data-tooltip-target="tooltip-share" data-tooltip-placement="left"
                                 class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
@@ -178,11 +178,16 @@
                     </div>
                     <button type="button" data-dial-toggle="speed-dial-menu-default"
                             aria-controls="speed-dial-menu-default" aria-expanded="false"
-                            class="flex items-center justify-center text-white bg-blue-700 rounded-full  h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ring-4 ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+                            class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ring-4 ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
                         <phone-icon class="w-6 animate-pulse"/>
                         <span class="sr-only">Open actions menu</span>
                     </button>
                 </div>
+                <front-modal
+                    title="Revenim cu un apel"
+                    :visible="isModalVisible"
+                    @close="closeModal"
+                />
 
             </main>
         </div>
@@ -198,6 +203,7 @@ import {PhoneIcon} from "@heroicons/vue/24/solid/index.js";
 
 import {useDark, useToggle} from "@vueuse/core";
 import {ref} from "vue";
+import FrontModal from "@/Components/FrontModal.vue";
 
 
 const isDark = ref();
@@ -216,6 +222,14 @@ const props = defineProps({
     title: String
 });
 
+const isModalVisible = ref(false);
+
+const openModal = () => {
+    isModalVisible.value = true;
+};
+const closeModal = () => {
+    isModalVisible.value = false;
+};
 
 </script>
 
