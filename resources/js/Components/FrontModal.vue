@@ -16,17 +16,6 @@ function close() {
     emit('close')
 }
 
-// watch(
-//     () => props.visible,
-//     () => {
-//         if (props.visible) {
-//             document.body.style.overflow = 'hidden';
-//         } else {
-//             document.body.style.overflow = null;
-//         }
-//     }
-// );
-
 onMounted(() => document.addEventListener('keydown', close));
 onMounted(() => document.addEventListener('handleClick', close));
 

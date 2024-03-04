@@ -106,26 +106,26 @@ const props = defineProps({
             <!-- Card -->
             <div v-for="product in products">
                 <div
-                    class=" group flex-shrink-0 w-64 border relative transition-transform group-hover:-translate-x-1:ease-in-out border-gray-200 rounded-lg overflow-hidden">
+                    class="group flex-shrink-0 w-64 h-96 border relative transition-transform group-hover:-translate-x-1:ease-in-out border-gray-200 rounded-lg overflow-hidden">
                     <div v-if="sale"
                          class="text-[#A41313] flex items-center absolute border border-[#A41313] rounded-full px-2 py-0.5 shadow-xs bg-[#FFDCDC] left-1.5 top-1.5">
                         <p>-20%</p>
                     </div>
                     <img :src="product.image" alt="Product Image" class="w-full h-48 object-cover">
                     <div class="p-4">
-                        <p class="text-lg font-semibold">{{ product.name }}</p>
+                        <p class=" text-1-secondary ">{{ product.name }}</p>
                         <div class="flex justify-between ">
                             <div class="w-12">
-                                <img :src="product.brand.image" :alt="product.brand.name">
+                                <img class="mix-blend-multiply" :src="product.brand.image" :alt="product.brand.name">
                             </div>
                             <heart-icon class="w-4"/>
                         </div>
                         <p class="text-md text-slate-500 line-through">{{ product.price }} MDL</p>
-                        <div class="flex ">
-                            <p class="text-xl text-slate-900 font-bold mt-2 -translate-x-1 transition-transform delay-150 ease-linear group-hover:-translate-x-64">
+                        <div class="flex">
+                            <p class="text-xl text-slate-900 font-medium -translate-x-1 transition-transform delay-150 ease-linear group-hover:-translate-x-64  e:hidden">
                                 {{
                                     (product.price - (product.price * 20 / 100)).toFixed(2)
-                                }} MDL</p>
+                                }} lei</p>
                             <button
                                 class="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded translate-x-64 transition-transform delay-150 ease-linear group-hover:-translate-x-1/4">
                                 Cumpără acum
