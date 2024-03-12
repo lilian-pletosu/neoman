@@ -14,7 +14,7 @@
                     </div>
                 </main>
                 <footer
-                    class=" hover:content-around items-center bg-white items-center md:justify-between lg:content-end shadow rounded-lg p-4 md:p-6 xl:p-8 my-6 mx-4">
+                    class=" hover:content-around  bg-white items-center md:justify-between lg:content-end shadow rounded-lg p-4 md:p-6 xl:p-8 my-6 mx-4">
                     <div class="flex items-center sm:justify-center space-x-6">
                         <p class="text-center text-sm text-gray-500 ">
                             &copy; {{ currentYear }} <a href="https://itsimple.online" class="hover:underline"

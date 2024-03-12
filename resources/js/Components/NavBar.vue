@@ -20,8 +20,8 @@
                         </svg>
 
                     </button>
-                    <a href="#" class="text-2xl font-bold flex items-center lg:ml-2.5">
-                        <img src="/img/neo.svg" class="h-6 mr-2" alt="Neoman Logo">
+                    <a href="/admin/dashboard" class="text-2xl font-bold flex items-center lg:ml-2.5">
+                        <short-logo w="w-7" class="mr-2"/>
                         <span class="self-center whitespace-nowrap">Neoman</span>
                     </a>
                     <form action="#" method="GET" class="hidden lg:block lg:pl-32">
@@ -93,10 +93,12 @@
 <script>
 import Dropdown from "@/Components/Dropdown.vue";
 import {defineComponent} from "vue";
+import ShortLogo from "@/Components/ShortLogo.vue";
 
 export default defineComponent({
 
     components: {
+        ShortLogo,
         Dropdown
     },
 

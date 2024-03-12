@@ -1,7 +1,8 @@
 <script setup>
 // If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
 import 'vue3-carousel/dist/carousel.css'
-import {ArrowLeftIcon, ArrowRightIcon, HeartIcon} from "@heroicons/vue/24/outline/index.js";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/24/outline/index.js";
+import {HeartIcon} from "@heroicons/vue/24/solid";
 import {ref} from "vue";
 
 const currentSlide = ref(1);
@@ -104,32 +105,54 @@ const props = defineProps({
         </div>
         <div class="flex  overflow-x-auto  hide-scrollbar   space-x-2">
             <!-- Card -->
-            <div v-for="product in products">
+            <div v-for="(product, key) in  products">
                 <div
-                    class="group flex-shrink-0 w-64 h-96 border relative transition-transform group-hover:-translate-x-1:ease-in-out border-gray-200 rounded-lg overflow-hidden">
-                    <div v-if="sale"
-                         class="text-[#A41313] flex items-center absolute border border-[#A41313] rounded-full px-2 py-0.5 shadow-xs bg-[#FFDCDC] left-1.5 top-1.5">
-                        <p>-20%</p>
-                    </div>
-                    <img :src="product.image" alt="Product Image" class="w-full h-48 object-cover">
-                    <div class="p-4">
-                        <p class=" text-1-secondary ">{{ product.name }}</p>
-                        <div class="flex justify-between ">
-                            <div class="w-12">
+                    class="container-rounded w-96 h-[430px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative group/card">
+                    <div>
+                        <div class="static">
+
+                            <div
+                                class="absolute flex flex-row items-center shadow-sm left-2 top-2 rounded-lg bg-pink-500  z-20 p-1 bg-opacity-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="auto" fill="currentColor"
+                                     class="bi bi-tag-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                                </svg>
+                                <p class="font-mulish px-1 font-medium text-sm text-black">Sale</p>
+                            </div>
+                            <div class="w-12 absolute left-2 top-2 z-10">
                                 <img class="mix-blend-multiply" :src="product.brand.image" :alt="product.brand.name">
                             </div>
-                            <heart-icon class="w-4"/>
+                            <div
+                                class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">
+                                <heart-icon class="w-4 group-hover:text-red-700"/>
+                            </div>
                         </div>
-                        <p class="text-md text-slate-500 line-through">{{ product.price }} MDL</p>
-                        <div class="flex">
-                            <p class="text-xl text-slate-900 font-medium -translate-x-1 transition-transform delay-150 ease-linear group-hover:-translate-x-64  e:hidden">
-                                {{
-                                    (product.price - (product.price * 20 / 100)).toFixed(2)
-                                }} lei</p>
-                            <button
-                                class="mt-4 w-full bg-blue-500 text-white px-4 py-2 rounded translate-x-64 transition-transform delay-150 ease-linear group-hover:-translate-x-1/4">
-                                Cumpără acum
-                            </button>
+                    </div>
+                    <div>
+                        <div class="mt-2">
+                            <img :src="product.image" alt="Product Image"
+                                 class="w-full h-48 object-cover mix-blend-multiply -rotate-12">
+                        </div>
+                    </div>
+                    <div class="relative mt-12">
+                        <p class="font-mulish font-extrabold text-shadow-lg text-xl text-white ">{{ product.name }}</p>
+                    </div>
+
+                </div>
+                <div class="relative flex justify-between w-auto bottom-10 px-2">
+                    <p class="font-mulish font-bold text-white text-2xl">{{ product.price }} lei</p>
+                    <div
+                        class="">
+                        <div
+                            class="rounded cursor-pointer container bg-gray-100   shadow-sm  static p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-cart-plus" viewBox="0 0 16 16">
+                                <path
+                                    d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
+                                <path
+                                    d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                            </svg>
                         </div>
                     </div>
                 </div>
