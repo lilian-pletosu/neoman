@@ -34,7 +34,7 @@ const toggleSidebar = () => {
     <div id="header">
         <div class="px-2 py-2 flex justify-center  items-center space-x-1 xl:px-60">
             <div class="flex-1 flex justify-center">
-                <a href="/home">
+                <a href="/front">
                     <application-logo class="flex w-56 "/>
                 </a>
             </div>
@@ -43,7 +43,7 @@ const toggleSidebar = () => {
                 <p @click="$emit('call')" class="cursor-pointer underline text-b-link text-xs pointer md:text-sm">
                     Revenim cu un apel?</p>
             </div>
-            <div class="hidden md:flex flex-1 flex justify-center space-x-2">
+            <div class="hidden md:flex flex-1  justify-center space-x-2">
                 <div class="flex flex-col text-3 text-[#868686]">
                     <p>Lu - Vi</p>
                     <p>Sâmbătă</p>

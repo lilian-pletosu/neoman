@@ -1,9 +1,11 @@
 <script setup>
 // If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
-import 'vue3-carousel/dist/carousel.css'
-import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/24/outline/index.js";
-import {HeartIcon} from "@heroicons/vue/24/solid";
+import {ArrowLeftIcon, ArrowRightIcon, HeartIcon} from "@heroicons/vue/24/outline/index.js";
 import {ref} from "vue";
+import {Swiper, SwiperSlide} from "swiper/vue";
+import 'swiper/css';
+import {Link} from "@inertiajs/vue3";
+
 
 const currentSlide = ref(1);
 
@@ -43,8 +45,32 @@ const props = defineProps({
 });
 </script>
 
+<style>
+.swiper {
+    width: 100%;
+    height: 100%;
+}
 
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+</style>
 <template>
+
     <div class="mb-6 py-12  space-y-10">
         <div class="flex  items-center justify-between px-4 sm:px-6 lg:px-0">
             <div class="flex items-center space-x-2">
@@ -103,64 +129,122 @@ const props = defineProps({
                 </div>
             </div>
         </div>
-        <div class="flex  overflow-x-auto  hide-scrollbar   space-x-2">
-            <!-- Card -->
-            <div v-for="(product, key) in  products">
+        <swiper
+            :slidesPerView="1"
+            :spaceBetween="20"
+            direction="horizontal"
+            :breakpoints="{
+                  '450': {
+                    slidesPerView: 2,
+                    spaceBetween: 20,
+                  },
+                  '640': {
+                    slidesPerView: 3,
+                    spaceBetween: 20,
+                  },
+                  '768': {
+                    slidesPerView: 4,
+                    spaceBetween: 20,
+                  },
+                  '1024': {
+                    slidesPerView: 5,
+                    spaceBetween: 10,
+                  },
+                }"
+
+            class="mySwiper">
+            <swiper-slide v-for="product in products">
+
                 <div
-                    class="container-rounded w-96 h-[430px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 relative group/card">
-                    <div>
-                        <div class="static">
-
-                            <div
-                                class="absolute flex flex-row items-center shadow-sm left-2 top-2 rounded-lg bg-pink-500  z-20 p-1 bg-opacity-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="auto" fill="currentColor"
-                                     class="bi bi-tag-fill" viewBox="0 0 16 16">
-                                    <path
-                                        d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                                </svg>
-                                <p class="font-mulish px-1 font-medium text-sm text-black">Sale</p>
-                            </div>
-                            <div class="w-12 absolute left-2 top-2 z-10">
-                                <img class="mix-blend-multiply" :src="product.brand.image" :alt="product.brand.name">
-                            </div>
-                            <div
-                                class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">
-                                <heart-icon class="w-4 group-hover:text-red-700"/>
+                    class="container-rounded w-96 h-[430px] bg-3 relative group/card">
+                    <div class="hover:cursor-pointer">
+                        <div>
+                            <div class="static">
+                                <div class="w-12 absolute left-2 top-2 z-10">
+                                    <img class="mix-blend-multiply" :src="product.brand.image"
+                                         :alt="product.brand.name">
+                                </div>
+                                <div
+                                    class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">
+                                    <heart-icon class="w-4   group-hover:text-red-500 group-hover:fill-red-500 "/>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <div class="mt-2">
-                            <img :src="product.image" alt="Product Image"
-                                 class="w-full h-48 object-cover mix-blend-multiply -rotate-12">
-                        </div>
-                    </div>
-                    <div class="relative mt-12">
-                        <p class="font-mulish font-extrabold text-shadow-lg text-xl text-white ">{{ product.name }}</p>
+                        <Link :href="route('product_page', {slug: product.slug})">
+                            <div>
+                                <div class="mt-2 ">
+                                    <img :src="product.image" alt="Product Image"
+                                         class="transition  hover:scale-110  w-full h-48 object-cover opacity-100 mix-blend-multiply -rotate-12">
+                                </div>
+                            </div>
+                            <div class="relative mt-12">
+                                <p class="font-mulish font-bold text-shadow-lg text-xs md:text-lg text-black ">{{
+                                        product.name.slice(0, 42) + '...'
+                                    }}</p>
+                            </div>
+                        </Link>
                     </div>
 
-                </div>
-                <div class="relative flex justify-between w-auto bottom-10 px-2">
-                    <p class="font-mulish font-bold text-white text-2xl">{{ product.price }} lei</p>
-                    <div
-                        class="">
+                    <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center">
+                        <div class="flex flex-col items-start">
+                            <div class="flex flex-row space-x-1">
+                                <p class="font-mulish text-sm line-through font-medium">{{ product.price }} lei</p>
+                                <div
+                                    class="shadow rounded-xl px-1 font-medium text-xs flex items-center text-white bg-red-500">
+                                    -1500 lei
+                                </div>
+                            </div>
+                            <p class="font-mulish text-xl font-medium">{{ product.price }} lei</p>
+                        </div>
                         <div
-                            class="rounded cursor-pointer container bg-gray-100   shadow-sm  static p-2">
+                            class="shadow rounded-lg p-3 transition  hover:scale-110 bg-2 hover:bg-pink-400 cursor-pointer ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-cart-plus" viewBox="0 0 16 16">
+                                 class="bi bi-cart2">
                                 <path
-                                    d="M9 5.5a.5.5 0 0 0-1 0V7H6.5a.5.5 0 0 0 0 1H8v1.5a.5.5 0 0 0 1 0V8h1.5a.5.5 0 0 0 0-1H9z"/>
-                                <path
-                                    d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                                    d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                             </svg>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-
+            </swiper-slide>
+        </swiper>
     </div>
 </template>
 
 
+<!--<div-->
+<!--    class="container-rounded w-96 h-[430px] bg-gradient-to-r from-[#1FC8F3]  to-pink-500 relative group/card">-->
+<!--<div>-->
+<!--    <div class="static">-->
+
+<!--        <div-->
+<!--            class="absolute flex flex-row items-center shadow-sm left-2 top-2 rounded-lg bg-pink-500  z-20 p-1 bg-opacity-50">-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="auto" fill="currentColor"-->
+<!--                 class="bi bi-tag-fill" viewBox="0 0 16 16">-->
+<!--                <path-->
+<!--                    d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>-->
+<!--            </svg>-->
+<!--            <p class="font-mulish px-1 font-medium text-sm text-black">Sale</p>-->
+<!--        </div>-->
+<!--        <div class="w-12 absolute left-2 top-2 z-10">-->
+<!--            <img class="mix-blend-multiply" :src="product.brand.image"-->
+<!--                 :alt="product.brand.name">-->
+<!--        </div>-->
+<!--        <div-->
+<!--            class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">-->
+<!--            <heart-icon class="w-4 group-hover:text-red-700"/>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div>-->
+<!--    <div class="mt-2">-->
+<!--        <img :src="product.image" alt="Product Image"-->
+<!--             class="w-full h-48 object-cover mix-blend-multiply -rotate-12">-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div class="relative mt-12">-->
+<!--    <p class="font-mulish font-extrabold text-shadow-lg text-xl text-white ">-->
+<!--        {{ product.name }}</p>-->
+<!--</div>-->
+
+<!--</div>-->

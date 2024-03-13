@@ -6,6 +6,10 @@
 @tailwind utilities;
 
 
+.container-custom {
+    @apply shadow rounded-lg;
+}
+
 .container-rounded {
     @apply bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8  2xl:col-span-2;
 }
@@ -59,6 +63,10 @@
 
 .bg-3 {
     background-color: #eaeaea;
+}
+
+.bg-4 {
+    background-color: #EFFA0A;
 }
 
 .primary-text-white {

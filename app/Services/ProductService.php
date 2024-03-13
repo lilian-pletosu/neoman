@@ -109,6 +109,8 @@ class ProductService
 
             // Adaugă array-urile de atribute și numele brandului în array-ul produsului
             $productArray = [
+                'id' => $product->id,
+                'slug' => $product->slug,
                 'name' => $product->name,
                 'image' => $product->images()->first()->image1,
                 'price' => $product->price,

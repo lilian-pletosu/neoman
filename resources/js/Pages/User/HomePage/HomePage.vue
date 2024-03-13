@@ -19,13 +19,18 @@ const props = defineProps({
 
 </script>
 
+
 <template>
 
     <front-layout title="Pagina principală">
         <template v-slot:carousel>
             <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
         </template>
+
+
         <product-section title="Produse cu reduceri" :products="sales_products" :sale="true" :sale-percents="20"/>
+
+
         <product-section title="Produse cu sezoniere" :products="sales_products"/>
         <carousel-front class="mt-20" :images="['/img/slider.png','/img/slider2.png']"/>
         <product-section title="Produse cu TOP" :products="sales_products"/>
