@@ -134,19 +134,23 @@ const props = defineProps({
             :spaceBetween="20"
             direction="horizontal"
             :breakpoints="{
-                  '450': {
+                  '370': {
                     slidesPerView: 2,
                     spaceBetween: 20,
                   },
-                  '640': {
+                  '700': {
                     slidesPerView: 3,
                     spaceBetween: 20,
                   },
                   '768': {
-                    slidesPerView: 4,
+                    slidesPerView: 3,
                     spaceBetween: 20,
                   },
-                  '1024': {
+                  '1020':{
+                      slidesPerView: 4,
+                      spaceBetween: 20,
+                  },
+                  '1500': {
                     slidesPerView: 5,
                     spaceBetween: 10,
                   },
@@ -189,10 +193,9 @@ const props = defineProps({
                         <div class="flex flex-col items-start">
                             <div class="flex flex-row space-x-1">
                                 <p class="font-mulish text-sm line-through font-medium">{{ product.price }} lei</p>
-                                <div
-                                    class="shadow rounded-xl px-1 font-medium text-xs flex items-center text-white bg-red-500">
-                                    -1500 lei
-                                </div>
+                                <span
+                                    class="bg-red-400 text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">- 1500 lei</span>
+
                             </div>
                             <p class="font-mulish text-xl font-medium">{{ product.price }} lei</p>
                         </div>

@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function index($productSlug)
     {
-        $product = Product::where('slug', $productSlug)->first();
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand'])->first();
         return inertia('User/ProductPage', ['product' => $product]);
     }
 }
