@@ -36,4 +36,52 @@ class Product extends Model implements TranslatableContract
     {
         return $this->belongsToMany(Attribute::class, 'product_attributes')->withPivot('product_id');
     }
+
+    // Function to search products based on keywords and filters (replace with your implementation)
+    public static function search($keywords, $filters = [])
+    {
+        $query = self::query();
+
+        // Preprocesarea cuvintelor cheie
+        $relevantKeywords = ['vopsea', 'interior', 'latex', 'semi-mat', '10l'];
+        $synonyms = [
+            'latex' => ['latex', 'spektra latex'],
+        ];
+        $preprocessedKeywords = [];
+        foreach ($keywords as $keyword) {
+
+            if (in_array($keyword, $relevantKeywords)) {
+                $preprocessedKeywords[] = $keyword;
+            } else {
+                foreach ($synonyms as $synonymGroup => $synonymsList) {
+                    if (in_array($keyword, $synonymsList)) {
+                        $preprocessedKeywords[] = $synonymGroup;
+                        break;
+                    }
+                }
+            }
+        }
+
+//        // Căutare bazată pe cuvinte cheie
+//        $query->where(function ($query) use ($preprocessedKeywords) {
+//            foreach ($preprocessedKeywords as $keyword) {
+////                dd($keyword);
+//                $query->orWhere('slug', $keyword);
+//            }
+//        });
+
+        // Aplicarea filtrelor suplimentare
+        if ($filters) {
+            foreach ($filters as $field => $value) {
+                $query->where($field, $value);
+            }
+        }
+
+        // Ordonați după relevanță (bazat pe numărul de cuvinte cheie potrivite)
+//        $query->orderByRaw('COUNT(JSON_CONTAINS(attributes, ?)) DESC', [$preprocessedKeywords]);
+
+        // Returnarea rezultatelor
+        return $query->get();
+    }
+
 }

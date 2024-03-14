@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 
-.container-custom {
+.container-custom-rounded {
     @apply shadow rounded-lg;
 }
 
@@ -67,6 +67,10 @@
 
 .bg-4 {
     background-color: #EFFA0A;
+}
+
+.bg-primary-blue {
+    background-color: #1FC8F3;
 }
 
 .primary-text-white {

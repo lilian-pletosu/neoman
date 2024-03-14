@@ -15,6 +15,7 @@ import {
     StarIcon
 } from "@heroicons/vue/24/outline/index.js";
 import SidebarMobile from "@/Components/SidebarMobile.vue";
+import {Link} from "@inertiajs/vue3";
 
 
 const menu = ref(false);
@@ -34,9 +35,9 @@ const toggleSidebar = () => {
     <div id="header">
         <div class="px-2 py-2 flex justify-center  items-center space-x-1 xl:px-60">
             <div class="flex-1 flex justify-center">
-                <a href="/front">
+                <Link :href="route('home')">
                     <application-logo class="flex w-56 "/>
-                </a>
+                </Link>
             </div>
             <div class="flex flex-1 flex-col text-center ">
                 <a href="tel:+37378107017"><p class="text-1 text-lg dark:text-white">078 107 017</p></a>

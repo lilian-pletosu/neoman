@@ -30,6 +30,8 @@ const props = defineProps({
 
         <product-section title="Produse cu reduceri" :products="sales_products" :sale="true" :sale-percents="20"/>
 
+        <hr class="relative w-full">
+
 
         <product-section title="Produse cu sezoniere" :products="sales_products"/>
         <carousel-front class="mt-20" :images="['/img/slider.png','/img/slider2.png']"/>
