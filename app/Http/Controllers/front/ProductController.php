@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Models\MeasurementUnit;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -13,15 +14,25 @@ class ProductController extends Controller
 //            $query->orWhere($attribute, 'like', "%{$searchTerm}%");
 //        }
 
-        // Extrage automat cuvintele cheie din slug
-        $keywords = $this->extractKeywordsFromSlug($productSlug);
-        // Găsește produse similare
-        $productss = Product::search($keywords);
-//        dd($productss);
 
-//        $prodc = Product::where('slug', 'like', "%${productSlug}")->get();
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand'])->first();
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'attributes.attributeValues'])->first();
+
+        $attributesArray = [];
+
+        foreach ($product->attributes as $attribute) {
+            foreach ($attribute->attributeValues as $attributeValue) {
+                $translatedValue = $attributeValue->translate(app()->currentLocale());
+                if ($translatedValue) {
+                    // Adăugați valoarea tradusă a atributului în array-ul de atribute
+                    $attributesArray[$attribute->name] = $translatedValue->value;
+                }
+            }
+        }
+        $product['attributes'] = $attributesArray;
+        $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
+
+
         return inertia('User/ProductPage', ['product' => $product]);
     }
 

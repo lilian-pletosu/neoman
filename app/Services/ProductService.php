@@ -87,6 +87,7 @@ class ProductService
     {
         $productsArray = [];
 
+
         foreach (Product::all() as $product) {
             // Inițializează un array pentru atributele fiecărui produs
             $attributesArray = [];
@@ -95,7 +96,7 @@ class ProductService
             foreach ($product->attributes as $attribute) {
                 foreach ($attribute->attributeValues as $attributeValue) {
                     // Obține valoarea tradusă a atributului
-                    $translatedValue = $attributeValue->translate(app()->currentLocale());
+                    $translatedValue = $attributeValue->translate(session()->get('locale'));
                     if ($translatedValue) {
                         // Adaugă valoarea tradusă a atributului în array-ul de atribute
                         $attributesArray[$attribute->name] = $translatedValue->value;
@@ -111,12 +112,12 @@ class ProductService
             $productArray = [
                 'id' => $product->id,
                 'slug' => $product->slug,
-                'name' => $product->name,
+                'name' => $product->translate(session()->get('locale'))->name,
                 'image' => $product->images()->first()->image1,
                 'price' => $product->price,
                 'brand' => ['name' => $brandName, 'image' => $brandLogo],
                 'attributes' => $attributesArray,
-                'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol
+                'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
             ];
 
             // Adaugă array-ul produsului în array-ul general de produse

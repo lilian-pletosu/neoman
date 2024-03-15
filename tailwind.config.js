@@ -15,6 +15,13 @@ export default {
     ],
 
     theme: {
+        screens: {
+            'xs': '200px',
+            '1xs': '300px',
+            '2xs': '400px',
+            '3xs': '545px',
+            ...defaultTheme.screens,
+        },
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],

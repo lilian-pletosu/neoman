@@ -51,7 +51,7 @@ class HandleInertiaRequests extends Middleware
             'categories' => Category::orderBy('name')->get(),
             'sales_products' => (new ProductService())->loadSalesProducts(),
             'brands' => Brand::where('is_enabled', 1)->get(),
-            
+
         ];
     }
 }

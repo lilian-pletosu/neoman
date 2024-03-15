@@ -4,9 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\URL;
 use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
@@ -18,14 +16,15 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Session::get('locale') != null) {
-            App::setLocale(Session::get('locale'));
-//            dump(\session()->get('locale'));
-        } else{
-            Session::put('locale', 'ro');
-            App::setLocale(Session::get('locale'));
-        }
 
+        if (Session::get('locale') != null) {
+            app()->setLocale(Session::get('locale'));
+//            App::setLocale(Session::get('locale'));
+//            dump(\session()->get('locale'));
+        } else {
+            Session::put('locale', 'ro');
+            app()->setLocale(Session::get('locale'));
+        }
 
 
         return $next($request);

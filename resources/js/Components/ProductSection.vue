@@ -10,7 +10,7 @@ import {Link} from "@inertiajs/vue3";
 const currentSlide = ref(1);
 
 const changeSlide = (direction) => {
-    if (direction == 'next') {
+    if (direction === 'next') {
         if (Object.keys(props.products).length - 3 < currentSlide.value) {
             currentSlide.value = 1
         } else {
@@ -40,7 +40,20 @@ const props = defineProps({
     salePercents: {
         type: Number,
         default: 0
-    }
+    },
+    seasons_products: {
+        type: Boolean,
+        default: false
+    },
+    top_products: {
+        type: Boolean,
+        default: false
+    },
+    new_products: {
+        type: Boolean,
+        default: false
+    },
+
 
 });
 </script>
@@ -71,49 +84,43 @@ const props = defineProps({
 </style>
 <template>
 
-    <div class="mb-6 py-12  space-y-10">
-        <div class="flex  items-center justify-between px-4 sm:px-6 lg:px-0">
+    <div class="mb-6 py-12  space-y-6">
+        <div class="flex  items-center justify-between px-0">
             <div class="flex items-center space-x-2">
                 <div v-if="sale">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" id="sale">
-                        <path fill="#e6e6dc"
-                              d="M64 32c0 17.673-14.327 32-32 32C14.325 64 0 49.673 0 32 0 14.327 14.325 0 32 0c17.673 0 32 14.327 32 32z"></path>
-                        <path fill="#d0cfbf"
-                              d="m6.483 51.258.018.02a32 32 0 0 0 1.546 1.853v.02l.135.134a32 32 0 0 0 .01.01 32 32 0 0 0 1.283 1.33 32 32 0 0 0 1.28 1.254 32 32 0 0 0 .01.01 32 32 0 0 0 .01.01 32 32 0 0 0 .101.088 32 32 0 0 0 .07.062l.127.127a32 32 0 0 0 .315.293l-.23-.232a32 32 0 0 0 .403.36 32 32 0 0 0 .303.23l-.246-.247a32 32 0 0 0 .674.541 32 32 0 0 0 .303.243l.096.096a32 32 0 0 0 1.244.945 32 32 0 0 0 2.726 1.672 32 32 0 0 0 2.881 1.392 32 32 0 0 0 3.004 1.096 32 32 0 0 0 3.1.791 32 32 0 0 0 3.162.479 32 32 0 0 0 3.192.16 32 32 0 0 0 2.264-.08 32 32 0 0 0 3.174-.386 32 32 0 0 0 3.12-.7 32 32 0 0 0 3.038-1.009 32 32 0 0 0 1.256-.562 32 32 0 0 0 2.668-1.322 32 32 0 0 0 .927-.532 32 32 0 0 0 .553-.326v.01a32 32 0 0 0 .29-.166 32 32 0 0 0 2.6-1.861 32 32 0 0 0 2.405-2.112 32 32 0 0 0 2.18-2.34 32 32 0 0 0 1.935-2.546 32 32 0 0 0 1.672-2.727 32 32 0 0 0 1.39-2.88 32 32 0 0 0 1.098-3.005 32 32 0 0 0 .791-3.1 32 32 0 0 0 .479-3.161 32 32 0 0 0 .16-3.196 32 32 0 0 0-.08-2.264 32 32 0 0 0-.156-1.277L61 25.69h-.01l.01-.012-10.88 2.916-1.577-1.574a1.696 1.696 0 0 0-.369-.303l-9.062-9.064a7.7 7.7 0 0 0-7.245-2.14 7.807 7.807 0 0 0-1.724-.198v.01c-4.27 0-7.707 3.417-7.707 7.662v3.487H14.713a1.71 1.71 0 0 0-1.678 1.369 1.692 1.692 0 0 0-.035.343v15.741l-4.953 1.328v5.563l-1.566.42z"></path>
-                        <path fill="#ff9300" d="m61 37.969-15.322 4.107V29.802L61 25.695l-4.556 8.659z"></path>
-                        <path fill="#ff7c00" d="m45.204 41.061 9.39 4.108V32.895l-9.39-4.108z"></path>
-                        <path fill="#ff9300" d="M16.322 48.62 6.48 51.257a32 32 0 0 0 9.842 8.62V48.618z"></path>
-                        <path fill="#ff7c00" d="M8.047 45.272v7.886a32 32 0 0 0 9.388 7.3V49.378l-9.388-4.107z"></path>
-                        <path
-                            style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;marker:none;-inkscape-font-specification:Sans"
-                            fill="#1a1a1a"
-                            d="M30.156 1002.938c-4.67 0-8.468 3.756-8.468 8.406v9.5a.75.75 0 1 0 1.5 0v-9.5c0-3.84 3.099-6.907 6.968-6.907 3.87 0 6.938 3.066 6.938 6.907v9.5a.75.75 0 1 0 1.5 0v-9.5c0-4.65-3.768-8.407-8.438-8.407z"
-                            color="#000" font-family="Sans" font-weight="400" overflow="visible"
-                            transform="translate(0 -988.362)"></path>
-                        <path fill="#e42c34"
-                              d="M19.857 26.48c-.95 0-1.715.767-1.715 1.718v32.601A32 32 0 0 0 32 64a32 32 0 0 0 17-4.906V28.198c0-.95-.765-1.717-1.715-1.717H19.857z"></path>
-                        <path fill="#e42c34"
-                              d="M18.238 26.48c-1.002 0-1.81.767-1.81 1.718v31.744A32 32 0 0 0 32 64a32 32 0 0 0 17-4.906V28.198c0-.95-.806-1.717-1.809-1.717H18.238z"></path>
-                        <path fill="#e6e6e6"
-                              d="M27.571 32.484a1.715 1.715 0 1 1-3.43.001 1.715 1.715 0 0 1 3.43 0zm15.429 0a1.715 1.715 0 1 1-3.43.001 1.715 1.715 0 0 1 3.43 0z"></path>
-                        <path
-                            style="text-indent:0;text-align:start;line-height:normal;text-transform:none;block-progression:tb;marker:none;-inkscape-font-specification:Sans"
-                            fill="#1a1a1a"
-                            d="M33.563 1002.938c-4.67 0-8.438 3.787-8.438 8.437v9.469a.75.75 0 1 0 1.5 0v-9.469a6.908 6.908 0 0 1 6.938-6.938c3.87 0 6.968 3.098 6.968 6.938v9.469a.75.75 0 1 0 1.5 0v-9.469c0-4.65-3.798-8.438-8.468-8.438z"
-                            color="#000" font-family="Sans" font-weight="400" overflow="visible"
-                            transform="translate(0 -988.362)"></path>
-                        <path fill="#bb2c34"
-                              d="M14.714 26.48c-.95 0-1.714.767-1.714 1.718V57.7a32 32 0 0 0 5.142 3.098V28.198c0-.95.765-1.717 1.715-1.717h-5.143z"></path>
-                        <path fill="#9a2c34"
-                              d="M14.714 26.481A1.71 1.71 0 0 0 13 28.197v.017a2.571 2.115 0 0 0 1.285 1.819 2.571 2.115 0 0 0 2.572 0 2.571 2.115 0 0 0 1.286-1.82 2.571 2.115 0 0 0 0-.016c0-.95.764-1.716 1.714-1.716h-5.143z"></path>
-                        <path fill="#333" fill-opacity=".423"
-                              d="m49 36.258-35.992 9.627v11.824a32 32 0 0 0 .236.178L49 48.262V36.258z"></path>
-                        <path fill="#ffb400"
-                              d="M54.593 32.791 8.047 45.27v7.888a32 32 0 0 0 3.507 3.446l43.04-11.537V32.79z"></path>
-                        <path style="line-height:125%;-inkscape-font-specification:Bebas Neue Bold" fill="#fff"
-                              d="M24.714 1033.582c.025.593.196 1.019.515 1.277s.638.487.956.688c.32.2.49.511.515.932-.001.228-.049.404-.142.525a.672.672 0 0 1-.384.244c-.164.044-.292.034-.385-.038-.093-.072-.14-.221-.142-.45v-.461l-.96.257v.398c0 .52.128.886.383 1.098.255.212.632.253 1.132.122.5-.134.876-.38 1.131-.728.255-.35.383-.784.383-1.305-.024-.593-.196-1.018-.514-1.276a9.915 9.915 0 0 0-.957-.688c-.318-.2-.49-.511-.515-.932.001-.229.046-.405.133-.528a.636.636 0 0 1 .375-.246c.163-.044.288-.03.376.045.087.075.132.228.133.457v.268l.96-.258v-.203c0-.52-.126-.887-.377-1.1-.252-.213-.624-.255-1.12-.125-.494.132-.867.377-1.118.725-.251.347-.377.782-.378 1.302zm5.83-3.115-1.488.399-1.034 6.746.933-.25.175-1.22 1.247-.335.176 1.127 1.025-.275zm-.795 1.36.49 3.14-.98.262zm2.293 4.707 2.688-.72v-.924l-1.672.448v-5.545l-1.016.272zm4.156-6.659 1.755-.47v-.924l-2.771.743v6.469l2.77-.743v-.924l-1.754.47v-1.894l1.394-.374v-.924l-1.394.374z"
-                              font-family="Bebas Neue Bold" font-size="9.24" font-weight="700" letter-spacing="0"
-                              transform="translate(0 -988.362)" word-spacing="0"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor">
+                            <path stroke-width="2"
+                                  d="M10.51 3.665a2 2 0 0 1 2.98 0l.7.782a2 2 0 0 0 1.601.663l1.05-.058a2 2 0 0 1 2.107 2.108l-.058 1.049a2 2 0 0 0 .663 1.6l.782.7a2 2 0 0 1 0 2.981l-.782.7a2 2 0 0 0-.663 1.601l.058 1.05a2 2 0 0 1-2.108 2.107l-1.049-.058a2 2 0 0 0-1.6.663l-.7.782a2 2 0 0 1-2.981 0l-.7-.782a2 2 0 0 0-1.601-.663l-1.05.058a2 2 0 0 1-2.107-2.108l.058-1.049a2 2 0 0 0-.663-1.6l-.782-.7a2 2 0 0 1 0-2.981l.782-.7a2 2 0 0 0 .663-1.601l-.058-1.05A2 2 0 0 1 7.16 5.053l1.049.058a2 2 0 0 0 1.6-.663z"/>
+                            <path stroke-linejoin="round" stroke-width="3" d="M9.5 9.5h.01v.01H9.5zm5 5h.01v.01h-.01z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 9l-6 6"/>
+                        </g>
+                    </svg>
+                </div>
+                <div v-if="seasons_products">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 20 20">
+                        <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+                            <path
+                                d="M2.624 7.954c.567 2.204 1.763 4.474 3.162 5.873c1.913 1.913 3.77 2.665 5.347 2.726c1.571.06 2.966-.564 3.988-1.588c.46-.462.756-1.13.88-1.96c.125-.827.075-1.78-.118-2.767c-.736-3.775-4.25-6.777-8.588-7.833c-1.924-.468-3.392-.391-4.194.413c-.448.45-.724 1.156-.803 2.07c-.077.908.043 1.967.326 3.066m-1.396-3.11c.086-1.012.4-1.947 1.064-2.614c1.272-1.275 3.37-1.186 5.32-.711c4.67 1.137 8.518 4.38 9.33 8.546c.205 1.05.266 2.095.124 3.035c-.14.936-.488 1.803-1.137 2.454a6.482 6.482 0 0 1-4.87 1.918c-1.955-.074-4.06-1.001-6.095-3.036c-1.538-1.538-2.795-3.956-3.389-6.263c-.298-1.157-.435-2.31-.347-3.33"/>
+                            <path
+                                d="M11.105 6.912c.293.043.49.28.439.53l-.511 2.538l2.41 2.758l1.517 2.024l2.007 3.01c.147.221.057.502-.201.627c-.258.126-.586.049-.733-.172l-1.993-2.99l-1.362-1.815l-4.002-.528c-.293-.039-.494-.274-.449-.524c.045-.25.32-.423.613-.384l2.943.389l-1.727-1.978l-3.92-3.36a.414.414 0 0 1 .001-.65a.605.605 0 0 1 .76.002l3.213 2.754l.374-1.856c.05-.25.328-.418.621-.375"/>
+                        </g>
+                    </svg>
+                </div>
+                <div v-if="top_products">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5"
+                              d="m12 2l3.104 6.728l7.358.873l-5.44 5.03l1.444 7.268L12 18.28L5.534 21.9l1.444-7.268L1.538 9.6l7.359-.873z"/>
+                    </svg>
+                </div>
+                <div v-if="new_products">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 16 16">
+                        <g fill="currentColor">
+                            <path
+                                d="M7.001 11a1 1 0 1 1 2 0a1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z"/>
+                            <path
+                                d="m10.273 2.513l-.921-.944l.715-.698l.622.637l.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89l.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622l.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01l-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637l-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89l-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622l-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01l.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944l-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318l-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92l-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016l.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944l1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318l.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92l.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+                        </g>
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
@@ -134,33 +141,29 @@ const props = defineProps({
             :spaceBetween="20"
             direction="horizontal"
             :breakpoints="{
-                  '370': {
+                  '400': {
                     slidesPerView: 2,
-                    spaceBetween: 20,
+                    spaceBetween: 20
                   },
-                  '700': {
+                  '832': {
                     slidesPerView: 3,
-                    spaceBetween: 20,
-                  },
-                  '768': {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
+                    spaceBetween: 20
                   },
                   '1020':{
                       slidesPerView: 4,
-                      spaceBetween: 20,
+                      spaceBetween: 20
                   },
                   '1500': {
                     slidesPerView: 5,
-                    spaceBetween: 10,
-                  },
+                    spaceBetween: 10
+                  }
                 }"
 
             class="mySwiper">
             <swiper-slide v-for="product in products">
 
                 <div
-                    class="container-rounded w-96 h-[430px] bg-3 relative group/card">
+                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96    md:h-[440px] bg-3 relative group/card">
                     <div class="hover:cursor-pointer">
                         <div>
                             <div class="static">
@@ -176,12 +179,12 @@ const props = defineProps({
                         </div>
                         <Link :href="route('product_page', {slug: product.slug})">
                             <div>
-                                <div class="mt-2 ">
+                                <div class="mt-2">
                                     <img :src="product.image" alt="Product Image"
-                                         class="transition  hover:scale-110  w-full h-48 object-cover opacity-100 mix-blend-multiply ">
+                                         class="transition  hover:scale-110   object-cover opacity-100 mix-blend-multiply ">
                                 </div>
                             </div>
-                            <div class="relative mt-12">
+                            <div class="relative mt-3 ">
                                 <p class="font-mulish font-bold text-shadow-lg text-xs md:text-lg text-black ">{{
                                         product.name.slice(0, 42) + '...'
                                     }}</p>
@@ -192,17 +195,20 @@ const props = defineProps({
                     <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center">
                         <div class="flex flex-col items-start">
                             <div class="flex flex-row space-x-1">
-                                <p class="font-mulish text-sm line-through font-medium">{{ product.price }} lei</p>
+                                <p class="font-mulish text-sm line-through font-medium">{{ product.price }}
+                                    {{ __('lei') }}</p>
                                 <span
-                                    class="bg-red-400 text-white text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">- 1500 lei</span>
+                                    class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">- 1500  {{
+                                        __('lei')
+                                    }}</span>
 
                             </div>
-                            <p class="font-mulish text-xl font-medium">{{ product.price }} lei</p>
+                            <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
                         </div>
                         <div
-                            class="shadow rounded-lg p-3 transition  hover:scale-110 bg-2 hover:bg-pink-400 cursor-pointer ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                 class="bi bi-cart2">
+                            class="shadow    rounded-lg  transition p-4 sm:p-4   hover:scale-110 bg-2 hover:bg-pink-400 cursor-pointer ">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                 class="h-4 w-4 ">
                                 <path
                                     d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                             </svg>

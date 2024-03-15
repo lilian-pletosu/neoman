@@ -2,6 +2,7 @@
 
 return [
     'attributes' => 'Atribute',
+    'specifications' => 'Specificații',
     'no_attributes' => 'Nu sunt atribute',
     'here_is_list_of_attribute' => 'Aici este lista de atribute',
     'key' => 'test',
@@ -78,6 +79,12 @@ return [
     'description ro' => 'Descriere în română',
     'description ru' => 'Descriere în rusă',
     'not_set' => 'Nu este setat',
+    'free_delivery' => 'Livrare gratuită în Chișinău de la 1000 lei',
+    'for_another_cities' => 'pentru alte localități necesită concretizare',
+    'found_cheaper' => 'Ai găsit mai ieftin?',
+    'buy' => 'Cumpără',
+    'buy_1_click' => 'Cumpără cu 1 click',
+    'lei' => 'lei',
 
 
     //validation
