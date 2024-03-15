@@ -178,7 +178,7 @@ const props = defineProps({
                             <div>
                                 <div class="mt-2 ">
                                     <img :src="product.image" alt="Product Image"
-                                         class="transition  hover:scale-110  w-full h-48 object-cover opacity-100 mix-blend-multiply -rotate-12">
+                                         class="transition  hover:scale-110  w-full h-48 object-cover opacity-100 mix-blend-multiply ">
                                 </div>
                             </div>
                             <div class="relative mt-12">
