@@ -151,19 +151,17 @@ const props = defineProps({
                   },
                   '1020':{
                       slidesPerView: 4,
-                      spaceBetween: 20
+                      spaceBetween: 10
                   },
-                  '1500': {
-                    slidesPerView: 5,
-                    spaceBetween: 10
-                  }
+
                 }"
 
             class="mySwiper">
-            <swiper-slide v-for="product in products">
+            <swiper-slide v-for="(product, key) in products">
 
+                
                 <div
-                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96    md:h-[440px] bg-3 relative group/card">
+                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96     md:h-[440px] bg-3 relative group/card">
                     <div class="hover:cursor-pointer">
                         <div>
                             <div class="static">
