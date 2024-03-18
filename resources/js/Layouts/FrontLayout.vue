@@ -239,10 +239,7 @@ const closeModal = () => {
                     :visible="isModalVisible"
                     @close="closeModal"
                     :type="call"
-
                 />
-
-
                 <front-footer/>
 
             </main>

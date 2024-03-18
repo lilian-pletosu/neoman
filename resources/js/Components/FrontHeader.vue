@@ -40,7 +40,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div id="header">
+    <div id="header" class="px-2 md:px-0">
         <div class="px-2 py-2 flex justify-center  items-center space-x-1 xl:px-60">
             <div class="flex-1 flex justify-center">
                 <Link :href="route('home')">

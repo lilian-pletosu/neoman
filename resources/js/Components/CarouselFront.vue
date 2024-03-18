@@ -12,10 +12,10 @@ const props = defineProps({
 </script>
 
 <template>
-    <carousel :autoplay="5000" :wrap-around="true" :items-to-show="1" class="w-full" :transition="500">
+    <carousel :autoplay="5000" :wrap-around="true" :items-to-show="1" class="w-full " :transition="500">
         <slide v-for="(slide, index) in images" :key="index">
-            <img class="object-cover  block w-full flex"
-                 :src="slide">
+            <img class="object-cover w-full flex"
+                 :src="slide" alt="slide">
         </slide>
 
     </carousel>
