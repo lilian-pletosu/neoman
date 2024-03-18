@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'home' => 'Acasă',
     'attributes' => 'Atribute',
     'specifications' => 'Specificații',
     'no_attributes' => 'Nu sunt atribute',
@@ -50,7 +51,6 @@ return [
     'name' => 'Nume',
     'description' => "Descriere",
     'website' => 'Website',
-    'create_brand' => 'Crează un brand nou',
     'create' => 'Crează',
     'complete_all_fields' => 'Completează toate câmpurile',
     'select_status' => 'Selectează statusul',
@@ -85,7 +85,14 @@ return [
     'buy' => 'Cumpără',
     'buy_1_click' => 'Cumpără cu 1 click',
     'lei' => 'lei',
-
+    'your_name' => 'Numele și prenumele',
+    'phone' => 'Numărul de telefon',
+    'link_to_cheaper_product' => 'Link-ul unde ai găsit mai ieftin',
+    'cart_is_empty' => 'Coșul de cumpărături e gol!',
+    'new_product_added' => 'Produsul adăugat cu succes!',
+    'product_exist' => 'Produsul deja există',
+    'checkout' => 'Finalizare comandă',
+    'product_was_deleted' => 'Produs șters cu succes!',
 
     //validation
     'validation.url' => 'Introduce-ți un url valid',

@@ -15,7 +15,7 @@ class ProductController extends Controller
 //        }
 
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand'])->first();
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
 
 
         $attributesArray = [];

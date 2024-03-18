@@ -3,6 +3,10 @@ import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
+    optimizeDeps: {
+        exclude: ['js-big-decimal']
+    },
+
     plugins: [
         laravel(['resources/js/app.js']),
         vue({

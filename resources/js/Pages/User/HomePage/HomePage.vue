@@ -39,7 +39,6 @@ const props = defineProps({
         <product-section title="Recent adăugate" :new_products="true" :products="sales_products"/>
 
         <brands-list :brands="attrs.brands"/>
-
     </front-layout>
 </template>
 

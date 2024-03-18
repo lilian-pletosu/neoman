@@ -1,7 +1,13 @@
 <script setup>
 
 import FrontLayout from "@/Layouts/FrontLayout.vue";
-import {ref} from "vue";
+import {getCurrentInstance, ref} from "vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
+import FrontModal from "@/Components/FrontModal.vue";
+import {useCartStore} from "@/cartStore.js";
+
+const emit = defineEmits(['productCart'])
+const cartStore = useCartStore()
 
 const props = defineProps({
     product: {
@@ -14,6 +20,25 @@ const selectedColor = ref();
 const description = ref(false);
 const specifications = ref(true);
 const selectedImage = ref(props.product.images[0].image1);
+
+const isOpen = ref(false);
+const modalTitle = ref();
+const typeModal = ref();
+const app = getCurrentInstance();
+const countCart = ref(0);
+
+function openModal(type) {
+    if (type === 'cheaper') {
+        isOpen.value = !isOpen.value;
+        typeModal.value = type
+        modalTitle.value = app.appContext.config.globalProperties.__('found_cheaper')
+    }
+}
+
+
+function closeModal() {
+    isOpen.value = !isOpen.value
+}
 
 function selectImage(imageSource) {
     selectedImage.value = imageSource;
@@ -33,82 +58,9 @@ function setActiveTab(tabName) {
 </script>
 
 <template>
-    <front-layout title="Pagina principală">
+    <front-layout title="Pagina principală" :cart-item-count="countCart">
 
-
-        <div class="flex w-full">
-            <nav class="flex my-2  md:my-4" aria-label="Breadcrumb">
-                <ol class="flex flex-wrap space-x-1 md:space-x-2 rtl:space-x-reverse ">
-                    <li class="flex  items-center">
-                        <a href="#"
-                           class="inline-flex items-center text-xs font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
-                            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                 fill="currentColor" viewBox="0 0 20 20">
-                                <path
-                                    d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                            </svg>
-                            {{ __('home') }}
-                        </a>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <a href="#"
-                               class="ms-1 text-xs font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{
-                                    __('category1')
-                                }}</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <a href="#"
-                               class="ms-1 text-xs font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{
-                                    __('category2')
-                                }}</a>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <a href="#"
-                               class="ms-1 text-xs font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{
-                                    __('category3')
-                                }}</a>
-                        </div>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2"
-                                      d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <span
-                                class="ms-1 font-medium  text-xs text-blue-500  md:ms-2 dark:text-gray-400">
-                                {{ product.name }}
-                            </span>
-                        </div>
-                    </li>
-                </ol>
-            </nav>
-        </div>
+        <breadcrumb :product="product"/>
         <hr>
         <section class="py-12 mt-1 sm:py-16 ">
             <div class="container mx-auto px-4">
@@ -202,8 +154,8 @@ function setActiveTab(tabName) {
                         </div>
 
                         <div>
-                            <div
-                                class="container-custom-rounded flex items-center space-x-4 p-2 border border-[#1FC8F3] cursor-pointer">
+                            <div @click="openModal('cheaper')"
+                                 class="container-custom-rounded flex items-center space-x-4 p-2 border border-[#1FC8F3] cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                      class="bi bi-question-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
@@ -214,11 +166,11 @@ function setActiveTab(tabName) {
                             </div>
                         </div>
 
-                        <div
-                            class=" flex flex-col items-center space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
-                            <button type="button"
-                                    class=" w-full sm:w-1/4  inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200">
-
+                        <div @click="cartStore.addProductInCart(product.id)"
+                             class=" flex flex-col items-center space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
+                            <button
+                                class="w-full sm:w-1/4  inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200"
+                                type="button">
                                 {{ __('buy') }}
                             </button>
                             <button type="button"
@@ -285,6 +237,8 @@ function setActiveTab(tabName) {
 
                 </div>
             </div>
+            <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"/>
+
         </section>
 
 

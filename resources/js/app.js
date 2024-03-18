@@ -1,4 +1,3 @@
-import './bootstrap';
 import '../css/app.css';
 import "vue-select/dist/vue-select.css";
 import {createApp, h} from 'vue';
@@ -6,18 +5,20 @@ import {createInertiaApp} from '@inertiajs/vue3';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import vSelect from "vue-select";
-
+import {createPinia} from 'pinia'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
 const appDescription = "Alături la fiecare etapă în viață";
+const pinia = createPinia()
 
 createInertiaApp({
+
     title: (title) => `${appName}.md - ${appDescription}`,
     description: (description) => description,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
     setup({el, App, props, plugin}) {
-        const app = createApp({render: () => h(App, props)});
 
+        const app = createApp({render: () => h(App, props)});
         app.config.globalProperties.__ = (str, replace) => {
             str = props.initialPage.props.localization[str] ?? str;
             if (replace) {
@@ -32,7 +33,6 @@ createInertiaApp({
             }
             return str;
         };
-
 
         app.config.globalProperties.truncate = (str, length) => {
             if (str.length > length) {
@@ -67,6 +67,7 @@ createInertiaApp({
                     }
                 });
             };
+        app.use(pinia)
 
         return app
             .use(plugin)

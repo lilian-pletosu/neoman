@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'home' => 'Главная',
     'attributes' => 'Атрибуты',
     'specifications' => 'Спецификации',
     'no_attributes' => 'Нет атрибутов',
@@ -50,7 +51,6 @@ return [
     'name' => 'Имя',
     'description' => 'Описание',
     'website' => 'Веб-сайт',
-    'create_brand' => 'Создать новый бренд',
     'create' => 'Создать',
     'complete_all_fields' => 'Заполните все поля',
     'select_status' => 'Выберите статус',

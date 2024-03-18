@@ -1,3 +1,50 @@
+<script setup>
+import FrontHeader from "@/Components/FrontHeader.vue";
+import FrontNavBar from "@/Components/FrontNavBar.vue";
+import {Head} from '@inertiajs/vue3'
+import {PhoneIcon} from "@heroicons/vue/24/solid/index.js";
+
+import {useDark, useToggle} from "@vueuse/core";
+import {ref} from "vue";
+import FrontModal from "@/Components/FrontModal.vue";
+import FrontFooter from "@/Components/FrontFooter.vue";
+import Toaster from "@/Components/Toaster.vue";
+import {useCartStore} from "@/cartStore.js";
+
+const cartStore = useCartStore();
+
+const isDark = ref();
+const setDark = useDark();
+const changeTheme = useDark({
+    onChanged(dark) {
+        useToggle(setDark)
+        isDark.value = dark;
+    }
+})
+
+
+const toggleDark = useToggle(changeTheme);
+
+const props = defineProps({
+    currentRoute: String,
+    title: String,
+    cartItemCount: Number
+
+});
+
+
+const isModalVisible = ref(false);
+
+const openModal = () => {
+    isModalVisible.value = true;
+};
+const closeModal = () => {
+    isModalVisible.value = false;
+}
+
+
+</script>
+
 <template>
     <body class=" dark:bg-dark">
     <Head :title="title">
@@ -13,8 +60,12 @@
             <front-header @call="openModal"/>
         </div>
 
+
         <div id="main-content" class="flex-col justify-between h-screen">
             <main class="">
+                <Toaster title="Succes" :message="cartStore.message" :show="true"
+                         :success="cartStore.success"/>
+
                 <div class="">
                     <slot name="carousel"/>
                 </div>
@@ -187,6 +238,8 @@
                     title="Revenim cu un apel"
                     :visible="isModalVisible"
                     @close="closeModal"
+                    :type="call"
+
                 />
 
 
@@ -202,44 +255,7 @@
 
 </template>
 
-<script setup>
-import FrontHeader from "@/Components/FrontHeader.vue";
-import FrontNavBar from "@/Components/FrontNavBar.vue";
-import {Head} from '@inertiajs/vue3'
-import {PhoneIcon} from "@heroicons/vue/24/solid/index.js";
 
-import {useDark, useToggle} from "@vueuse/core";
-import {ref} from "vue";
-import FrontModal from "@/Components/FrontModal.vue";
-import FrontFooter from "@/Components/FrontFooter.vue";
-
-
-const isDark = ref();
-const setDark = useDark();
-const changeTheme = useDark({
-    onChanged(dark) {
-        useToggle(setDark)
-        isDark.value = dark;
-    }
-})
-
-const toggleDark = useToggle(changeTheme);
-
-const props = defineProps({
-    currentRoute: String,
-    title: String
-});
-
-const isModalVisible = ref(false);
-
-const openModal = () => {
-    isModalVisible.value = true;
-};
-const closeModal = () => {
-    isModalVisible.value = false;
-};
-
-</script>
 
 
 

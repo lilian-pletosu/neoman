@@ -5,6 +5,9 @@ import {ref} from "vue";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import 'swiper/css';
 import {Link} from "@inertiajs/vue3";
+import {useCartStore} from "@/cartStore.js";
+
+const cartStore = useCartStore()
 
 
 const currentSlide = ref(1);
@@ -159,7 +162,7 @@ const props = defineProps({
             class="mySwiper">
             <swiper-slide v-for="(product, key) in products">
 
-                
+
                 <div
                     class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96     md:h-[440px] bg-3 relative group/card">
                     <div class="hover:cursor-pointer">
@@ -203,8 +206,11 @@ const props = defineProps({
                             </div>
                             <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
                         </div>
-                        <div
-                            class="shadow    rounded-lg  transition p-4 sm:p-4   hover:scale-110 bg-2 hover:bg-pink-400 cursor-pointer ">
+                        <div @click="cartStore.addProductInCart(product.id)"
+                             class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-pink-400 cursor-pointer "
+                             :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-pink-400' : 'bg-white'"
+
+                        >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                  class="h-4 w-4 ">
                                 <path
@@ -212,6 +218,7 @@ const props = defineProps({
                             </svg>
                         </div>
                     </div>
+
                 </div>
             </swiper-slide>
         </swiper>
