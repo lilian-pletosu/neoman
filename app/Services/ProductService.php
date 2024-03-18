@@ -126,4 +126,100 @@ class ProductService
         }
         return $productsArray;
     }
+
+    public function loadLatestProducts()
+    {
+        $productsArray = [];
+
+        foreach (Product::latest()->take(10)->get() as $product) {
+
+            // Inițializează un array pentru atributele fiecărui produs
+            $attributesArray = [];
+
+            // Parcurge fiecare atribut al produsului
+            foreach ($product->attributes as $attribute) {
+                foreach ($attribute->attributeValues as $attributeValue) {
+                    // Obține valoarea tradusă a atributului
+                    $translatedValue = $attributeValue->translate(session()->get('locale'));
+                    if ($translatedValue) {
+                        // Adaugă valoarea tradusă a atributului în array-ul de atribute
+                        $attributesArray[$attribute->name] = $translatedValue->value;
+                    }
+                }
+            }
+
+            // Obține brandul produsului și adaugă numele său în array-ul produsului
+            $brandName = $product->brand->name ?? null;
+            $brandLogo = $product->brand->image ?? null;
+
+            // Adaugă array-urile de atribute și numele brandului în array-ul produsului
+            $productArray = [
+                'id' => $product->id,
+                'slug' => $product->slug,
+                'name' => $product->translate(session()->get('locale'))->name,
+                'image' => $product->images()->first()->image1,
+                'price' => $product->price,
+                'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                'attributes' => $attributesArray,
+                'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
+            ];
+
+            // Adaugă array-ul produsului în array-ul general de produse
+            $productsArray[] = $productArray;
+
+        }
+        return $productsArray;
+    }
+
+
+    public function loadLastVisitedProduct($array)
+    {
+        $productsArray = [];
+
+        if (!empty(request()->session()->get('last'))) {
+            foreach ($array as $id) {
+                foreach (Product::where('id', $id)->get() as $product) {
+
+                    // Inițializează un array pentru atributele fiecărui produs
+                    $attributesArray = [];
+
+                    // Parcurge fiecare atribut al produsului
+                    foreach ($product->attributes as $attribute) {
+                        foreach ($attribute->attributeValues as $attributeValue) {
+                            // Obține valoarea tradusă a atributului
+                            $translatedValue = $attributeValue->translate(session()->get('locale'));
+                            if ($translatedValue) {
+                                // Adaugă valoarea tradusă a atributului în array-ul de atribute
+                                $attributesArray[$attribute->name] = $translatedValue->value;
+                            }
+                        }
+                    }
+
+                    // Obține brandul produsului și adaugă numele său în array-ul produsului
+                    $brandName = $product->brand->name ?? null;
+                    $brandLogo = $product->brand->image ?? null;
+
+                    // Adaugă array-urile de atribute și numele brandului în array-ul produsului
+                    $productArray = [
+                        'id' => $product->id,
+                        'slug' => $product->slug,
+                        'name' => $product->translate(session()->get('locale'))->name,
+                        'image' => $product->images()->first()->image1,
+                        'price' => $product->price,
+                        'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                        'attributes' => $attributesArray,
+                        'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
+                    ];
+
+                    // Adaugă array-ul produsului în array-ul general de produse
+                    $productsArray[] = $productArray;
+
+                }
+            }
+
+        }
+
+
+        return $productsArray;
+    }
 }

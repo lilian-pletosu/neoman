@@ -5,18 +5,16 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
+use App\Services\SessionService;
 
 class ProductController extends Controller
 {
     public function index($productSlug)
     {
-//        foreach (($attributes) as $attribute) {
-//            $query->orWhere($attribute, 'like', "%{$searchTerm}%");
-//        }
-
 
         $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
 
+        (new SessionService())->AddVisitedProductInSession($product);
 
         $attributesArray = [];
 

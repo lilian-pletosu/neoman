@@ -88,11 +88,19 @@ return [
     'your_name' => 'Numele și prenumele',
     'phone' => 'Numărul de telefon',
     'link_to_cheaper_product' => 'Link-ul unde ai găsit mai ieftin',
-    'cart_is_empty' => 'Coșul de cumpărături e gol!',
+    'empty_cart' => 'Coșul de cumpărături e gol!',
     'new_product_added' => 'Produsul adăugat cu succes!',
     'product_exist' => 'Produsul deja există',
     'checkout' => 'Finalizare comandă',
     'product_was_deleted' => 'Produs șters cu succes!',
+    'visited_products' => 'Produse vizualizate',
+    'qty' => 'Cantitate',
+    'cart' => 'Coșul de cumpărături',
+    'shipping_message' => 'Livrarea va fi calculată de managerul nostru',
+    'continue_shopping' => 'Continuă cumpărăturile',
+    'or' => 'sau',
+    'subtotal' => 'Subtotal',
+
 
     //validation
     'validation.url' => 'Introduce-ți un url valid',

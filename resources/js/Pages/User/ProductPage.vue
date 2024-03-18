@@ -1,10 +1,14 @@
 <script setup>
 
 import FrontLayout from "@/Layouts/FrontLayout.vue";
-import {getCurrentInstance, ref} from "vue";
+import {getCurrentInstance, ref, useAttrs} from "vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import FrontModal from "@/Components/FrontModal.vue";
 import {useCartStore} from "@/cartStore.js";
+import ProductSection from "@/Components/ProductSection.vue";
+
+
+const attrs = useAttrs()
 
 const emit = defineEmits(['productCart'])
 const cartStore = useCartStore()
@@ -124,9 +128,9 @@ function setActiveTab(tabName) {
 
 
                         <div v-for="attribute in product.attributes" class="border-t">
-                            <div
-                                v-if="['Culoare', 'culoare'].includes(attribute.name) || ['Culoare', 'culoare'].includes(attribute.slug)">
-                                <h2 class="my-6 text-base text-gray-900">{{ __(attribute.name) }}</h2>
+                            <div class="flex flex-row space-x-6"
+                                 v-if="['Culoare', 'culoare'].includes(attribute.name) || ['Culoare', 'culoare'].includes(attribute.slug)">
+                                <h2 class="my-6 text-base text-gray-900">{{ __(attribute.name) }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
                                     <template v-for="value in attribute.attribute_values" :key="value.id">
                                         <label class="cursor-pointer" for="color">
@@ -136,9 +140,8 @@ function setActiveTab(tabName) {
                                             <div
                                                 class="flex flex-col items-center">
                                                 <span :style="'background-color: ' + value.value"
-                                                      :class="{'border-2 border-black': value.id === selectedColor}"
-                                                      class="flex rounded-full border border-slate-300 peer-checked:border-black p-4"></span>
-                                                <span class="capitalize-first">{{ value.value }}</span>
+                                                      class="p-3 rounded-full border-2 "
+                                                      :class="value.id === selectedColor ? 'border-black' : 'border-slate-200'"></span>
                                             </div>
                                         </label>
                                     </template>
@@ -162,15 +165,15 @@ function setActiveTab(tabName) {
                                     <path
                                         d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
                                 </svg>
-                                <p class="text-lg flex font-medium ">{{ __('found_cheaper') }}</p>
+                                <p class="text-lg flex font-light ">{{ __('found_cheaper') }}</p>
                             </div>
                         </div>
 
-                        <div @click="cartStore.addProductInCart(product.id)"
-                             class=" flex flex-col items-center space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
-                            <button
-                                class="w-full sm:w-1/4  inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200"
-                                type="button">
+                        <div
+                            class=" flex flex-col items-center space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
+                            <button @click="cartStore.addProductInCart(product.id)"
+                                    class="w-full sm:w-1/4  inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200"
+                                    type="button">
                                 {{ __('buy') }}
                             </button>
                             <button type="button"
@@ -238,8 +241,11 @@ function setActiveTab(tabName) {
                 </div>
             </div>
             <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"/>
-
         </section>
+        <hr>
+        <product-section title="Recent adăugate" :new_products="true" :products="attrs.latest_products"/>
+        <product-section :title="__('visited_products')" :new_products="true"
+                         :products="attrs.last_visited"/>
 
 
     </front-layout>

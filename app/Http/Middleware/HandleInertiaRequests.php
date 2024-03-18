@@ -6,7 +6,6 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -34,6 +33,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+
         return [
             ...parent::share($request),
             'auth' => [
@@ -52,7 +52,8 @@ class HandleInertiaRequests extends Middleware
             'categories' => Category::orderBy('name')->get(),
             'sales_products' => (new ProductService())->loadSalesProducts(),
             'brands' => Brand::where('is_enabled', 1)->get(),
-            'counts' => Session::get('cart')
+            'latest_products' => (new ProductService())->loadLatestProducts(),
+            'last_visited' => (new ProductService())->loadLastVisitedProduct(request()->session()->get('last'))
 
         ];
     }
