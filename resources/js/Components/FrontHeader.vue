@@ -88,7 +88,7 @@ onMounted(async () => {
                         <div class="fixed inset-0 overflow-hidden">
                             <div class="absolute inset-0 overflow-hidden">
                                 <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full ">
-                                    <div class="pointer-events-auto  w-full sm:w-[500px] md:w-[700px]">
+                                    <div class="pointer-events-auto  w-screen sm:w-[500px] md:w-[700px]">
                                         <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
                                             <div class="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                                                 <div class="flex items-start justify-between">
@@ -303,7 +303,7 @@ onMounted(async () => {
 
         </div>
         <div
-            class="hidden md:flex flex-row h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60">
+            class="relative hidden md:flex flex-row h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60 ">
             <div class="relative
              justify-center items-center bg-[#043B3D] md:w-3/12   dark:bg-dark"
                  @click="toggleSidebar">
@@ -315,9 +315,9 @@ onMounted(async () => {
                     <chevron-up-icon v-if="!menu" class="w-5 animate-rotateUp text-blue-800"/>
                 </div>
                 <div ref="sidebar" v-show="menu"
-                     class="hidden md:block shadow-lg">
-                    <div id=" mega-menu-icons-dropdown"
-                         class="absolute  w-full  text-sm bg-white border border-gray-100 rounded-lg shadow-md dark:border-gray-700 md:grid-cols-3 dark:bg-gray-700">
+                     class="relative hidden   sm:block shadow-lg">
+                    <div id="mega-menu-icons-dropdown"
+                         class="bg-white z-20 absolute   w-full  text-sm  border border-gray-100 rounded-lg shadow-md dark:border-gray-700 md:grid-cols-3 dark:bg-gray-700">
                         <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
                             <ul class="space-y-4" aria-labelledby="mega-menu-icons-dropdown-button">
                                 <li v-for="category in  $page.props.categories"
