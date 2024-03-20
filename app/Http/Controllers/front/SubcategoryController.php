@@ -3,18 +3,18 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
+use App\Models\SubCategory;
 
-class CategoryController extends Controller
+class SubcategoryController extends Controller
 {
-    public function index($categorySlug)
+    public function index($subcategorySlug)
     {
 
-        $category = Category::where('slug', $categorySlug)->with(['subcategory'])->first();
+        $subcategory = SubCategory::where('slug', $subcategorySlug)->with(['subSubcategory'])->first();
 
 //        dd($category);
 
-        return inertia('User/CategoryPage', ['category' => $category]);
+        return inertia('User/SubcategoryPage', ['subcategory' => $subcategory]);
     }
 
     private function extractKeywordsFromSlug($slug): array

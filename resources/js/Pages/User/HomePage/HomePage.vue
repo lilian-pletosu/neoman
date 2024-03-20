@@ -5,9 +5,11 @@ import CarouselFront from "@/Components/CarouselFront.vue";
 import ProductSection from "@/Components/ProductSection.vue";
 import BrandsList from "@/Components/BrandsList.vue";
 import {useAttrs} from "vue";
+import {useLanguageStore} from "@/stores/language.js";
 
 
 const attrs = useAttrs()
+const useLang = useLanguageStore();
 
 const props = defineProps({
     sales_products: {
@@ -22,7 +24,7 @@ const props = defineProps({
 
 <template>
 
-    <front-layout title="Pagina principală">
+    <front-layout title="Pagina principală" :current-language="attrs.current_locale">
         <template v-slot:carousel>
             <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
         </template>

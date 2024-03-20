@@ -1,7 +1,32 @@
 <script setup>
+
+import {useLanguageStore} from "@/stores/language.js";
+import {onMounted, ref} from "vue";
+
+const useLanguage = useLanguageStore();
+
 const props = defineProps({
-    isDark: Boolean
+    isDark: Boolean,
+    currentLocale: String
 })
+const val = ref();
+
+function changeLanguage() {
+    if (val.value) {
+        console.log('true')
+        useLanguage.changeLanguage('ru')
+    } else {
+        console.log('false')
+
+        useLanguage.changeLanguage('ro')
+    }
+}
+
+onMounted(() => {
+    props.currentLocale === 'ro' ? val.value = false : val.value = true;
+})
+
+
 </script>
 
 <template>
@@ -9,7 +34,8 @@ const props = defineProps({
         class="flex justify-center sm:px-4    md:justify-end md:px-2 items-center  h-10 xl:px-60 2xl:px-60">
         <div class="hidden md:flex w-full pb-1 border-b justify-end">
             <label class="mx-4 relative cursor-pointer">
-                <input type="checkbox" value="" class="sr-only peer">
+                <input type="checkbox" :checked="val" :value="currentlang" class="sr-only peer"
+                       @change="changeLanguage">
                 <div
                     class="w-11 h-6  rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-gray-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] border  after:bg-white after:border after:border-gray-500  after:rounded-full after:w-5 after:h-5 after:transition-all bg-none border  border-gray-500">
                     <div class="flex flex-row items-center justify-between px-1">

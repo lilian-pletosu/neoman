@@ -15,7 +15,7 @@ class SessionService
                 // Adăugăm ID-ul produsului curent la începutul listei de produse vizitate recent
                 array_unshift($visitedProducts, $product->id);
                 // Verificăm dacă lista depășește 10 produse
-                if (count($visitedProducts) > 3) {
+                if (count($visitedProducts) > 10) {
                     // Eliminăm cel mai vechi produs din lista
                     array_pop($visitedProducts);
                 }

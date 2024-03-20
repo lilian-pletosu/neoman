@@ -100,6 +100,7 @@ return [
     'continue_shopping' => 'Continuă cumpărăturile',
     'or' => 'sau',
     'subtotal' => 'Subtotal',
+    'wishlist' => 'Favorite',
 
 
     //validation

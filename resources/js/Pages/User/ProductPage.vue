@@ -4,7 +4,7 @@ import FrontLayout from "@/Layouts/FrontLayout.vue";
 import {getCurrentInstance, ref, useAttrs} from "vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import FrontModal from "@/Components/FrontModal.vue";
-import {useCartStore} from "@/cartStore.js";
+import {useCartStore} from "@/stores/cartStore.js";
 import ProductSection from "@/Components/ProductSection.vue";
 
 
@@ -62,7 +62,7 @@ function setActiveTab(tabName) {
 </script>
 
 <template>
-    <front-layout title="Pagina principală" :cart-item-count="countCart">
+    <front-layout title="Pagina principală">
 
         <breadcrumb :product="product"/>
         <hr>
@@ -244,7 +244,7 @@ function setActiveTab(tabName) {
         </section>
         <hr>
         <product-section title="Recent adăugate" :new_products="true" :products="attrs.latest_products"/>
-        <product-section :title="__('visited_products')" :new_products="true"
+        <product-section v-if="attrs.last_visited.length !== 0" :title="__('visited_products')" :new_products="true"
                          :products="attrs.last_visited"/>
 
 

@@ -1,7 +1,7 @@
 <script setup>
 import {ref, watchEffect} from 'vue'
 import {ToastDescription, ToastProvider, ToastRoot, ToastViewport} from 'radix-vue'
-import {useCartStore} from "@/cartStore.js";
+import {useCartStore} from "@/stores/cartStore.js";
 
 const cartStore = useCartStore()
 

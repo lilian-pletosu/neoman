@@ -9,9 +9,11 @@ import {ref} from "vue";
 import FrontModal from "@/Components/FrontModal.vue";
 import FrontFooter from "@/Components/FrontFooter.vue";
 import Toaster from "@/Components/Toaster.vue";
-import {useCartStore} from "@/cartStore.js";
+import {useCartStore} from "@/stores/cartStore.js";
+
 
 const cartStore = useCartStore();
+
 
 const isDark = ref();
 const setDark = useDark();
@@ -22,14 +24,12 @@ const changeTheme = useDark({
     }
 })
 
-
 const toggleDark = useToggle(changeTheme);
 
 const props = defineProps({
     currentRoute: String,
     title: String,
-    cartItemCount: Number
-
+    currentLanguage: String,
 });
 
 
@@ -51,7 +51,7 @@ const closeModal = () => {
         <meta name="description" content="Alături la fiecare etapă în viață!">
     </Head>
 
-    <FrontNavBar :is-dark="isDark" @darkMode="toggleDark"/>
+    <FrontNavBar :is-dark="isDark" @darkMode="toggleDark" :current-locale="currentLanguage"/>
 
     <div class="w-full ">
 

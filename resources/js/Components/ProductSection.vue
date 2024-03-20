@@ -5,9 +5,11 @@ import {ref} from "vue";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import 'swiper/css';
 import {Link} from "@inertiajs/vue3";
-import {useCartStore} from "@/cartStore.js";
+import {useCartStore} from "@/stores/cartStore.js";
+import {useWishlistStore} from "@/stores/wishlistStore.js";
 
 const cartStore = useCartStore()
+const wishlistStore = useWishlistStore()
 
 
 const currentSlide = ref(1);
@@ -172,9 +174,10 @@ const props = defineProps({
                                     <img class="mix-blend-multiply" :src="product.brand.image"
                                          :alt="product.brand.name">
                                 </div>
-                                <div
-                                    class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">
-                                    <heart-icon class="w-4   group-hover:text-red-500 group-hover:fill-red-500 "/>
+                                <div @click="wishlistStore.addProductInWishlist(product.id)"
+                                     class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">
+                                    <heart-icon class="w-4 group-hover:text-red-500 group-hover:fill-red-500"
+                                                :class="{'text-red-500 fill-red-500': wishlistStore.checkIfProductExistInWishlist(product.id)}"/>
                                 </div>
                             </div>
                         </div>
@@ -207,12 +210,11 @@ const props = defineProps({
                             <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
                         </div>
                         <div @click="cartStore.addProductInCart(product.id)"
-                             class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-pink-400 cursor-pointer "
-                             :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-pink-400' : 'bg-white'"
-
-                        >
+                             class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-[#1FC8F3]  cursor-pointer group/cart"
+                             :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                 class="h-4 w-4 ">
+                                 class="h-4 w-4  group-hover/cart:text-white"
+                                 :class="cartStore.checkIfProductExistInCart(product.id) ? 'text-white' : 'text-black'">
                                 <path
                                     d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                             </svg>
