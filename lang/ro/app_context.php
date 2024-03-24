@@ -101,6 +101,7 @@ return [
     'or' => 'sau',
     'subtotal' => 'Subtotal',
     'wishlist' => 'Favorite',
+    'sort' => 'Sortare',
 
 
     //validation

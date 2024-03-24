@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
+                'query' => $request->query()
             ],
             'current_locale' => fn() => app()->currentLocale(),
             'currentYear' => today()->year,

@@ -3,6 +3,7 @@
 import FrontLayout from "@/Layouts/FrontLayout.vue";
 import ProductSection from "@/Components/ProductSection.vue";
 import {useAttrs} from "vue";
+import {Link} from '@inertiajs/vue3';
 
 const attrs = useAttrs();
 const props = defineProps({
@@ -28,7 +29,7 @@ const props = defineProps({
                 <div class="grid grid-cols-1 pt-12 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-28 lg:gap-y-16">
                     <div v-for="subSubcategory in subcategory.sub_subcategory"
                          class="relative group h-48 flex   flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-                        <a href="#" class="block">
+                        <Link :href="route('products_page', {subSubcategory: subSubcategory.slug})" class="block">
                             <div class="h-28">
                                 <div
                                     class="absolute bg-cover -top-20 lg:top-[-10%] left-[5%]  group-hover:top-[-40%] group-hover:opacity-[0.9]   duration-300 w-[90%] h-48 rounded-xl justify-items-center align-middle">
@@ -46,7 +47,7 @@ const props = defineProps({
                                     {{ subSubcategory.name }}
                                 </p>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

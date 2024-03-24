@@ -3,13 +3,67 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Attribute;
+use App\Models\Brand;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
+use App\Models\SubSubCategory;
 use App\Services\SessionService;
 
 class ProductController extends Controller
 {
-    public function index($productSlug)
+    public function index($subSubcategorySlug)
+    {
+        $filters = [];
+
+        $subSubcategory = SubSubCategory::where('slug', $subSubcategorySlug)->first();
+        $brands = Brand::all();
+        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->with('attributeValues')->get();
+
+        $filters[] = [
+            'id' => 'brand',
+            'name' => 'Brand',
+            'options' => $brands->map(function ($brand) {
+                return [
+                    'id' => $brand->id,
+                    'value' => $brand->name];
+            })->toArray(),
+        ];
+        
+
+        $attributes->each(function ($attribute) use (&$filters) {
+            $filters[] = [
+                'id' => $attribute->id,
+                'name' => $attribute->translate($attribute->value)->name,
+                'options' => $attribute->attributeValues->map(function ($item) {
+                    return ['id' => $item->id, 'value' => $item->translate()->value];
+                })->toArray()
+            ];
+        });
+
+        $products = Product::where('sub_sub_category_id', $subSubcategory->id)
+            ->with('brand', 'images');
+        if (in_array(request('sort'), ['asc', 'desc'])) {
+            $products->orderBy('price', request('sort'));
+        } else {
+            $products->orderBy('created_at', 'desc');
+        }
+
+        if (request('filter')) {
+            dd(request('filter'));
+        }
+        $products = $products->paginate(9)->withQueryString();
+
+        return inertia('User/ProductsPage', [
+            'products' => $products,
+            'subSubcategory' => $subSubcategory,
+            'filters' => $filters
+        ]);
+
+    }
+
+
+    public function show($productSlug)
     {
 
         $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
