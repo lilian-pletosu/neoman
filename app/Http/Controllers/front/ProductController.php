@@ -29,7 +29,7 @@ class ProductController extends Controller
                     'value' => $brand->name];
             })->toArray(),
         ];
-        
+
 
         $attributes->each(function ($attribute) use (&$filters) {
             $filters[] = [

@@ -1,5 +1,5 @@
 <script setup>
-import {reactive, ref, useAttrs, watch} from 'vue'
+import {onMounted, reactive, ref, useAttrs, watch} from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -21,7 +21,7 @@ import {useCartStore} from "@/stores/cartStore.js";
 import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
 import {Link, router} from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
-import {debounce} from "chart.js/helpers";
+import {debounce, each} from "chart.js/helpers";
 
 
 const cartStore = useCartStore();
@@ -32,7 +32,7 @@ const sortOptions = [
     {name: 'Price: Low to High', value: 'asc', current: false},
     {name: 'Price: High to Low', value: 'desc', current: false},
 ]
-
+const range = ref([0, 20])
 
 const props = defineProps({
     products: Object,
@@ -41,6 +41,7 @@ const props = defineProps({
 });
 
 const priceRange = ref(0);
+const priceRef = ref();
 
 const mobileFiltersOpen = ref(false)
 const attrs = useAttrs();
@@ -56,7 +57,6 @@ let queryParams = attrs.ziggy.query;
 watch(
     params,
     debounce(() => {
-        console.log(queryParams);
         router.visit(route('products_page', {subSubcategory: props.subSubcategory.slug, ...queryParams, ...params})),
             {
                 preserveScroll: true,
@@ -66,12 +66,28 @@ watch(
     }, 300)
 );
 
-watch(() => priceRange, (newValue) => {
+watch(() => priceRange.value, (newValue) => {
     console.log(newValue)
 });
+const maxPrice = ref(0)
+const minPrice = ref(0)
+
+function calculateMaxPrice() {
+    let prices = [];
+    each(props.products.data, function (key) {
+        prices.push(key.price);
+        maxPrice.value = Math.max(...prices);
+        minPrice.value = Math.min(...prices);
+    });
+    // Calculate max and min price
+
+}
+
+onMounted(() => {
+    calculateMaxPrice();
+})
 
 </script>
-
 
 <template>
     <FrontLayout>
@@ -247,17 +263,16 @@ watch(() => priceRange, (newValue) => {
                                     </h3>
                                     <DisclosurePanel :unmount="true" class="pt-6">
 
-                                        <div class="relative mb-6">
-                                            <input id="labels-range-input" type="range" min="0"
-                                                   v-model="priceRange"
-                                                   max="20000"
-                                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
-                                            <span
-                                                class="text-sm text-gray-500 dark:text-gray-400 absolute start-0 -bottom-6">0</span>
+                                        <div class=" ">
+                                            <div class="flex justify-around space-x-2 ">
+                                                <input placeholder="min" type="number" :min="0"
+                                                       class="w-full rounded-sm h-8 ">
+                                                <input placeholder="max" type="number" :min="0" :max="maxPrice"
+                                                       class="w-full rounded-sm h-8 ">
+                                            </div>
 
-                                            <span
-                                                class="text-sm text-gray-500 dark:text-gray-400 absolute end-0 -bottom-6">20000</span>
                                         </div>
+
 
                                     </DisclosurePanel>
                                 </Disclosure>
