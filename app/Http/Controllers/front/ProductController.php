@@ -14,50 +14,49 @@ class ProductController extends Controller
 {
     public function index($subSubcategorySlug)
     {
-        $filters = [];
 
         $subSubcategory = SubSubCategory::where('slug', $subSubcategorySlug)->first();
-        $brands = Brand::all();
-        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->with('attributeValues')->get();
+        $brandQuery = Brand::all();
+        $attributesQuery = Attribute::where('sub_sub_category_id', $subSubcategory->id)->with('attributeValues')->get();
 
-        $filters[] = [
-            'id' => 'brand',
+        $brands[] = [
+            'key' => 'brand',
             'name' => 'Brand',
-            'options' => $brands->map(function ($brand) {
+            'options' => $brandQuery->map(function ($brand) {
                 return [
                     'id' => $brand->id,
                     'value' => $brand->name];
             })->toArray(),
         ];
 
-
-        $attributes->each(function ($attribute) use (&$filters) {
-            $filters[] = [
-                'id' => $attribute->id,
-                'name' => $attribute->translate($attribute->value)->name,
+        $attributes = $attributesQuery->map(function ($attribute) {
+            return [
+                'key' => $attribute->slug,
+                'name' => $attribute->translate()->name,
                 'options' => $attribute->attributeValues->map(function ($item) {
-                    return ['id' => $item->id, 'value' => $item->translate()->value];
-                })->toArray()
+                    return [
+                        'id' => $item->id,
+                        'value' => $item->translate()->value
+                    ];
+                })->all()
             ];
-        });
+        })->all();
 
         $products = Product::where('sub_sub_category_id', $subSubcategory->id)
             ->with('brand', 'images');
-        if (in_array(request('sort'), ['asc', 'desc'])) {
-            $products->orderBy('price', request('sort'));
-        } else {
-            $products->orderBy('created_at', 'desc');
+
+        $attributesForFilter = [];
+        foreach ($attributes as $item) {
+            $attributesForFilter[] = $item['key'];
         }
 
-        if (request('filter')) {
-            dd(request('filter'));
-        }
-        $products = $products->paginate(9)->withQueryString();
+        $products = $products->filtered($attributesForFilter)->paginate(9)->withQueryString();
 
         return inertia('User/ProductsPage', [
             'products' => $products,
             'subSubcategory' => $subSubcategory,
-            'filters' => $filters
+            'brands' => $brands,
+            'attributes' => $attributes,
         ]);
 
     }
@@ -66,22 +65,14 @@ class ProductController extends Controller
     public function show($productSlug)
     {
 
+
         $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
+
 
         (new SessionService())->AddVisitedProductInSession($product);
 
-        $attributesArray = [];
 
-        foreach ($product->attributes as $attribute) {
-            foreach ($attribute->attributeValues as $attributeValue) {
-                $translatedValue = $attributeValue->translate(app()->currentLocale());
-                if ($translatedValue) {
-                    // Adăugați valoarea tradusă a atributului în array-ul de atribute
-                    $attributesArray[$attribute->name] = $translatedValue->value;
-                }
-            }
-        }
-        $product['attributes'] = $attributesArray;
+        $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.name');
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
 
 

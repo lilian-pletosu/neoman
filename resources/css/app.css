@@ -85,6 +85,16 @@
     @apply font-mulish font-extrabold
 }
 
+@layer base {
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number'] {
+        -webkit-appearance: none;
+        margin: 0;
+        -moz-appearance: textfield !important;
+    }
+}
+
 .text-1-secondary {
     @apply font-mulish text-base font-medium
 }

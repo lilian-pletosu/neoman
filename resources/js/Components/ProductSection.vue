@@ -198,15 +198,17 @@ const props = defineProps({
 
                     <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center">
                         <div class="flex flex-col items-start">
-                            <div class="flex flex-row space-x-1">
-                                <p class="font-mulish text-sm line-through font-medium">{{ product.price }}
-                                    {{ __('lei') }}</p>
-                                <span
-                                    class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">- 1500  {{
-                                        __('lei')
-                                    }}</span>
+                            <template v-if="sale">
+                                <div class="flex flex-row space-x-1">
+                                    <p class="font-mulish text-sm line-through font-medium">{{ product.price }}
+                                        {{ __('lei') }}</p>
+                                    <span
+                                        class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">- 1500  {{
+                                            __('lei')
+                                        }}</span>
 
-                            </div>
+                                </div>
+                            </template>
                             <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
                         </div>
                         <div @click="cartStore.addProductInCart(product.id)"

@@ -2,8 +2,10 @@
 import {ref, watchEffect} from 'vue'
 import {ToastDescription, ToastProvider, ToastRoot, ToastViewport} from 'radix-vue'
 import {useCartStore} from "@/stores/cartStore.js";
+import {useWishlistStore} from "@/stores/wishlistStore.js";
 
 const cartStore = useCartStore()
+const wishlistStore = useWishlistStore()
 
 
 const show = ref(cartStore.notification);

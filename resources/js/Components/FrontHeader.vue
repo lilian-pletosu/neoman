@@ -41,14 +41,14 @@ onMounted(async () => {
 
 <template>
     <div id="header" class="px-2 md:px-0">
-        <div class="px-2 py-2 flex justify-center  items-center space-x-1 xl:px-60">
-            <div class="flex-1 flex justify-center">
+        <div class="px-2 md:px-0 py-2 flex justify-center  items-center space-x-1 xl:px-60">
+            <div class="flex md:w-3/12 justify-center">
                 <Link :href="route('home')">
                     <application-logo class="flex w-56 "/>
                 </Link>
             </div>
-            <div class="flex flex-1 flex-col text-center ">
-                <a href="tel:+37378107017"><p class="text-1 text-lg dark:text-white">078 107 017</p></a>
+            <div class=" hidden 3xs:flex flex-1 flex-col text-center ">
+                <a href="tel:+37378107017"><p class="text-1 text-sm 3xs:text-lg dark:text-white">078 107 017</p></a>
                 <p @click="$emit('call')" class="cursor-pointer underline text-b-link text-xs pointer md:text-sm">
                     Revenim cu un apel?</p>
             </div>
@@ -69,7 +69,7 @@ onMounted(async () => {
                     Alături la fiecare etapă în viață</p>
                 <p class="text-2 text-sm ">Confortul tău - prioritatea noastră!</p>
             </div>
-            <div class="flex  w-1/6  lg:w-1/12  justify-end space-x-6 dark:text-white">
+            <div class="flex   px-2.5 lg:w-1/12  justify-end space-x-6 dark:text-white">
                 <div class="relative select-none">
                     <div @click="openWishlist = !openWishlist">
                         <span

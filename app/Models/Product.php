@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,51 +38,50 @@ class Product extends Model implements TranslatableContract
         return $this->belongsToMany(Attribute::class, 'product_attributes')->withPivot('product_id');
     }
 
-    // Function to search products based on keywords and filters (replace with your implementation)
-    public static function search($keywords, $filters = [])
+    public function attributeValues()
     {
-        $query = self::query();
-
-        // Preprocesarea cuvintelor cheie
-        $relevantKeywords = ['vopsea', 'interior', 'latex', 'semi-mat', '10l'];
-        $synonyms = [
-            'latex' => ['latex', 'spektra latex'],
-        ];
-        $preprocessedKeywords = [];
-        foreach ($keywords as $keyword) {
-
-            if (in_array($keyword, $relevantKeywords)) {
-                $preprocessedKeywords[] = $keyword;
-            } else {
-                foreach ($synonyms as $synonymGroup => $synonymsList) {
-                    if (in_array($keyword, $synonymsList)) {
-                        $preprocessedKeywords[] = $synonymGroup;
-                        break;
-                    }
-                }
-            }
-        }
-
-//        // Căutare bazată pe cuvinte cheie
-//        $query->where(function ($query) use ($preprocessedKeywords) {
-//            foreach ($preprocessedKeywords as $keyword) {
-////                dd($keyword);
-//                $query->orWhere('slug', $keyword);
-//            }
-//        });
-
-        // Aplicarea filtrelor suplimentare
-        if ($filters) {
-            foreach ($filters as $field => $value) {
-                $query->where($field, $value);
-            }
-        }
-
-        // Ordonați după relevanță (bazat pe numărul de cuvinte cheie potrivite)
-//        $query->orderByRaw('COUNT(JSON_CONTAINS(attributes, ?)) DESC', [$preprocessedKeywords]);
-
-        // Returnarea rezultatelor
-        return $query->get();
+        return $this->belongsToMany(AttributeValue::class, 'product_attributes')->withPivot('product_id')->with('attribute');
     }
 
+
+    public function scopeFiltered(Builder $query, $attributes)
+    {
+        $queryBy = [];
+        foreach (request()->toArray() as $key => $value) {
+
+            if (in_array($key, $attributes)) {
+                array_push($queryBy, $key);
+            }
+        }
+        $query->when(request('sorts'), function (Builder $q) {
+            if (request('sorts') == 'new') {
+                $q->orderBy('created_at', 'desc');
+            }
+            if (request('sorts') == 'asc') {
+                $q->orderBy('price');
+            }
+            if (request('sorts') == 'desc') {
+                $q->orderBy('price', 'desc');
+            }
+        })->when(request('price'), function (Builder $q) {
+            $q->whereBetween('price', [
+                request('price.from', 0),
+                request('price.to', 10000)
+            ]);
+        })->when(request('brands'), function (Builder $q) {
+            $q->whereIn('brand_id', request('brands'));
+
+        })->when(request(), function (Builder $q) use ($queryBy) {
+            foreach ($queryBy as $attributeName) {
+                $attributeValues = request($attributeName);
+                if ($attributeValues) {
+                    $q->whereHas('attributes', function ($query) use ($attributeValues) {
+                        $query->whereIn('attribute_value_id', $attributeValues);
+                    });
+                }
+            }
+        });
+
+
+    }
 }

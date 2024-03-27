@@ -19,7 +19,7 @@ const props = defineProps({
     },
 });
 
-const selectedColor = ref();
+const selectedColor = ref({});
 
 const description = ref(false);
 const specifications = ref(true);
@@ -127,23 +127,15 @@ function setActiveTab(tabName) {
                         </div>
 
 
-                        <div v-for="attribute in product.attributes" class="border-t">
-                            <div class="flex flex-row space-x-6"
-                                 v-if="['Culoare', 'culoare'].includes(attribute.name) || ['Culoare', 'culoare'].includes(attribute.slug)">
-                                <h2 class="my-6 text-base text-gray-900">{{ __(attribute.name) }}:</h2>
+                        <div v-for="(attribute, key) in product.attributes" class="border-t">
+                            <div class="flex flex-row space-x-6" v-if="['Culoare', 'culoare'].includes(key)">
+                                <h2 class="my-6 text-base text-gray-900">{{ key }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
-                                    <template v-for="value in attribute.attribute_values" :key="value.id">
-                                        <label class="cursor-pointer" for="color">
-                                            <input id="color" type="radio" v-model="selectedColor"
-                                                   name="color" :value="value.id"
-                                                   class="peer sr-only rounded-3xl"/>
-                                            <div
-                                                class="flex flex-col items-center">
-                                                <span :style="'background-color: ' + value.value"
-                                                      class="p-3 rounded-full border-2 "
-                                                      :class="value.id === selectedColor ? 'border-black' : 'border-slate-200'"></span>
-                                            </div>
-                                        </label>
+                                    <template v-for="value in attribute" :key="value.id">
+                                        <span @click="selectedColor = value.id"
+                                              class="bg-red-100 p-3.5 rounded-full"
+                                              :class="selectedColor === value.id ? 'border-2 border-black' : ''"
+                                              :style="'background-color: ' + __(value.slug)"></span>
                                     </template>
                                 </div>
                             </div>
@@ -220,16 +212,21 @@ function setActiveTab(tabName) {
                         </div>
                         <div v-show="specifications" class="mt-8 flow-root sm:mt-2">
                             <div class="relative overflow-x-auto my-4">
-                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                <table
+                                    class="w-full border text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                     <tbody>
-                                    <tr v-for="(attribute, index) in product.attributes" :key="index"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <tr v-for="(attribute, key) in product.attributes" :key="key"
+                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-slate-100">
                                         <td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium ">
-                                            {{ attribute.name }}
+                                            {{ key }}:
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap capitalize-first">{{
-                                                attribute.attribute_values[0].value
-                                            }}
+                                        <td
+                                            class="px-6 py-4 whitespace-nowrap capitalize-first">
+                                            <div class=" flex space-x-2">
+                                                <p class="capitalize-first" v-for="value in attribute">{{
+                                                        value.value
+                                                    }}</p>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>

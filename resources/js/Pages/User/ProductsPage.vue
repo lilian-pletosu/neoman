@@ -21,7 +21,6 @@ import {useCartStore} from "@/stores/cartStore.js";
 import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
 import {Link, router} from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
-import {debounce, each} from "chart.js/helpers";
 
 
 const cartStore = useCartStore();
@@ -33,60 +32,76 @@ const sortOptions = [
     {name: 'Price: High to Low', value: 'desc', current: false},
 ]
 const range = ref([0, 20])
+const STORAGE_KEY = 'filterParams';
 
 const props = defineProps({
     products: Object,
     subSubcategory: Object,
-    filters: Object
+    brands: Array,
+    attributes: Array
 });
-
-const priceRange = ref(0);
-const priceRef = ref();
 
 const mobileFiltersOpen = ref(false)
 const attrs = useAttrs();
 
+const brandsFilter = ref([]);
+const attributesFilter = reactive({});
+const sortProducts = ref('');
+const priceRange = reactive(['', ''])
 
-const param = ref(null);
 
-let params = reactive({
-    sort: param,
-});
+watch([brandsFilter, sortProducts, attributesFilter, priceRange], () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        brands: brandsFilter.value,
+        sorts: sortProducts.value,
+        attributes: attributesFilter,
+        priceRange: priceRange
+    }));
+    updateFilteredProducts();
+})
 
-let queryParams = attrs.ziggy.query;
-watch(
-    params,
-    debounce(() => {
-        router.visit(route('products_page', {subSubcategory: props.subSubcategory.slug, ...queryParams, ...params})),
-            {
-                preserveScroll: true,
-                preserveState: true,
-                replace: true,
-            };
-    }, 300)
-);
+function updateFilteredProducts() {
+    router.get(route('products_page', {subSubcategory: props.subSubcategory.slug}), {
+        brands: brandsFilter.value,
+        sorts: sortProducts.value,
+        ...attributesFilter,
+        price: {
+            from: priceRange[0],
+            to: priceRange[1]
+        }
+    }, {
+        preserveState: true,
+        preserveScroll: true
+    })
+}
 
-watch(() => priceRange.value, (newValue) => {
-    console.log(newValue)
-});
-const maxPrice = ref(0)
-const minPrice = ref(0)
-
-function calculateMaxPrice() {
-    let prices = [];
-    each(props.products.data, function (key) {
-        prices.push(key.price);
-        maxPrice.value = Math.max(...prices);
-        minPrice.value = Math.min(...prices);
-    });
-    // Calculate max and min price
+function addVariable(name, value) {
+    if (attributesFilter[name]) {
+        if (attributesFilter[name].includes(value)) {
+            attributesFilter[name] = attributesFilter[name].filter(item => item !== value);
+        } else {
+            attributesFilter[name].push(value);
+        }
+    } else {
+        attributesFilter[name] = [value]
+    }
 
 }
 
-onMounted(() => {
-    calculateMaxPrice();
-})
+function isOptionSelected(attribute, value) {
+    return attributesFilter[attribute] && attributesFilter[attribute].includes(value);
+}
 
+onMounted(() => {
+    // Încărcăm datele stocate din localStorage la încărcarea componentei
+    const storedParams = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (storedParams) {
+        brandsFilter.value = storedParams.brands || [];
+        sortProducts.value = storedParams.sorts || '';
+        Object.assign(attributesFilter, storedParams.attributes || {});
+        Object.assign(priceRange, storedParams.priceRange || ['', '']);
+    }
+});
 </script>
 
 <template>
@@ -134,9 +149,11 @@ onMounted(() => {
                                             <h3 class="-mx-2 -my-3 flow-root">
                                                 <DisclosureButton
                                                     class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                                                    <span class="font-medium text-gray-900">{{ section.name }}</span>
+                                                    <span class="font-medium text-gray-900">{{
+                                                            section.name
+                                                        }} {{ filterParams }}</span>
                                                     <span class="ml-6 flex items-center">
-                          <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
+                          <PlusIcon v-if="!open " class="h-5 w-5" aria-hidden="true"/>
                           <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
                         </span>
                                                 </DisclosureButton>
@@ -169,7 +186,6 @@ onMounted(() => {
                     <div class="flex items-center justify-between border-b border-gray-200 pb-2 pt-4">
                         <h1 class="font-mulish font-bold text-lg md:text-xl lg:text-2xl  ">
                             {{ subSubcategory.name }}</h1>
-
                         <div class="flex items-center">
                             <Menu as="div" class="relative inline-block text-left">
                                 <div>
@@ -194,7 +210,7 @@ onMounted(() => {
                                             <MenuItem v-for="option in sortOptions" :key="option.name"
                                                       v-slot="{ active }">
                                                 <span class="cursor-pointer"
-                                                      @click="param = option.value"
+                                                      @click="sortProducts = option.value"
                                                       :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
                                                         option.name
                                                     }}</span>
@@ -221,12 +237,12 @@ onMounted(() => {
                             <!-- Filters -->
                             <form class="hidden lg:block">
 
-                                <Disclosure as="div" v-for="section in filters" :key="section.id"
+                                <Disclosure as="div" v-for="brand in brands"
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                            <span class="font-medium text-gray-900">{{ section.name }}</span>
+                                            <span class="font-medium text-gray-900">{{ brand.name }}</span>
                                             <span class="ml-6 flex items-center">
                                   <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
                                   <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
@@ -235,13 +251,44 @@ onMounted(() => {
                                     </h3>
                                     <DisclosurePanel class="pt-6">
                                         <div class="space-y-4">
-                                            <div v-for="(option, optionIdx) in section.options" :key="option.value"
+                                            <div v-for="(option, optionIdx) in brand.options"
                                                  class="flex items-center">
-                                                <input :id="`filter-${section.id}-${optionIdx}`"
-                                                       :name="`${section.value}[]`"
-                                                       :value="option.id" type="checkbox" :checked="option.checked"
+                                                <input :name="option.value"
+                                                       :value="option.id"
+                                                       v-model="brandsFilter"
+                                                       type="checkbox"
                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-                                                <label :for="`filter-${section.id}-${optionIdx}`"
+                                                <label :for="option.value"
+                                                       class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
+                                                        option.value
+                                                    }}</label>
+                                            </div>
+                                        </div>
+                                    </DisclosurePanel>
+                                </Disclosure>
+                                <Disclosure as="div" v-for="attribute in attributes"
+                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                    <h3 class="-my-3 flow-root">
+                                        <DisclosureButton
+                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                            <span class="font-medium text-gray-900">{{ attribute.name }}</span>
+                                            <span class="ml-6 flex items-center">
+                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
+                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                        </DisclosureButton>
+                                    </h3>
+                                    <DisclosurePanel class="pt-6">
+                                        <div class="space-y-4">
+                                            <div v-for="(option) in attribute.options"
+                                                 class="flex items-center">
+                                                <input :name="option.value"
+                                                       :value="option.id"
+                                                       @change="addVariable(attribute.key, option.id)"
+                                                       type="checkbox"
+                                                       :checked="isOptionSelected(attribute.key, option.id)"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                <label :for="option.value"
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
                                                         option.value
                                                     }}</label>
@@ -265,15 +312,17 @@ onMounted(() => {
 
                                         <div class=" ">
                                             <div class="flex justify-around space-x-2 ">
-                                                <input placeholder="min" type="number" :min="0"
+                                                <input placeholder="min"
+                                                       type="number"
+                                                       :min="0"
+                                                       v-model="priceRange[0]"
                                                        class="w-full rounded-sm h-8 ">
-                                                <input placeholder="max" type="number" :min="0" :max="maxPrice"
+                                                <input placeholder="max" type="number"
+                                                       :min="0"
+                                                       v-model="priceRange[1]"
                                                        class="w-full rounded-sm h-8 ">
                                             </div>
-
                                         </div>
-
-
                                     </DisclosurePanel>
                                 </Disclosure>
                             </form>

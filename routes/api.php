@@ -35,6 +35,7 @@ Route::get('/cartCount', function () {
     if (request()->cookie('cart')) {
         foreach (unserialize(\request()->cookie('cart')) as $id) {
             $product = Product::where('id', $id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
+            $product['qty'] = 1;
             $totalPrice += $product->price;
             $products[] = $product;
         }

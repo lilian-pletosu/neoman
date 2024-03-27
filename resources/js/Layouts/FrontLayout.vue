@@ -10,9 +10,11 @@ import FrontModal from "@/Components/FrontModal.vue";
 import FrontFooter from "@/Components/FrontFooter.vue";
 import Toaster from "@/Components/Toaster.vue";
 import {useCartStore} from "@/stores/cartStore.js";
+import {useWishlistStore} from "@/stores/wishlistStore.js";
 
 
 const cartStore = useCartStore();
+const wishlistStore = useWishlistStore();
 
 
 const isDark = ref();
