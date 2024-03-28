@@ -6,12 +6,15 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import FrontModal from "@/Components/FrontModal.vue";
 import {useCartStore} from "@/stores/cartStore.js";
 import ProductSection from "@/Components/ProductSection.vue";
+import {useWishlistStore} from "@/stores/wishlistStore.js";
+import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
 
 
 const attrs = useAttrs()
 
 const emit = defineEmits(['productCart'])
 const cartStore = useCartStore()
+const wishlistStore = useWishlistStore();
 
 const props = defineProps({
     product: {
@@ -19,7 +22,8 @@ const props = defineProps({
     },
 });
 
-const selectedColor = ref({});
+const selectedColor = ref();
+const error = ref({});
 
 const description = ref(false);
 const specifications = ref(true);
@@ -57,6 +61,24 @@ function setActiveTab(tabName) {
     if (tabName === 'specifications') {
         specifications.value = true;
         description.value = !description;
+    }
+}
+
+function clear(object) {
+    Object.keys(object).forEach(key => {
+        delete object[key];
+    });
+}
+
+
+function buyProduct(productId) {
+    if (selectedColor.value === {}) {
+        error.value['color'] = 'select_color'
+    } else {
+
+        cartStore.addProductInCart(productId).then(() => {
+            clear(error)
+        });
     }
 }
 </script>
@@ -113,7 +135,16 @@ function setActiveTab(tabName) {
                     </div>
 
                     <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
-                        <h1 class=" text-2xl font-bold text-gray-900 sm:text-3xl">{{ product.name }}</h1>
+                        <div class="flex items-start">
+                            <h1 class=" text-2xl font-bold text-gray-900 sm:text-3xl">{{ product.name }}</h1>
+                            <button type="button"
+                                    @click="wishlistStore.addProductInWishlist(product.id)"
+                                    class="rounded-md border border-slate-500  bg-none px-2  py-2 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow">
+
+                                <heart-icon class="w-6 "
+                                            :class="wishlistStore.checkIfProductExistInWishlist(product.id) ? 'text-red-500 fill-red-500' : 'text-slate-700'"/>
+                            </button>
+                        </div>
 
                         <div class="mt-2 flex justify-between items-center">
                             <img class="w-16 object-cover" :src="product.brand.image"
@@ -128,17 +159,25 @@ function setActiveTab(tabName) {
 
 
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
+
                             <div class="flex flex-row space-x-6" v-if="['Culoare', 'culoare'].includes(key)">
-                                <h2 class="my-6 text-base text-gray-900">{{ key }}:</h2>
+                                <h2 class="my-6 text-base text-gray-900">{{ attribute[0].attribute.name }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
-                                    <template v-for="value in attribute" :key="value.id">
-                                        <span @click="selectedColor = value.id"
-                                              class="bg-red-100 p-3.5 rounded-full"
-                                              :class="selectedColor === value.id ? 'border-2 border-black' : ''"
-                                              :style="'background-color: ' + __(value.slug)"></span>
-                                    </template>
+
+                                    <select
+                                        v-model="selectedColor"
+                                        class="border border-slate-300 rounded-md focus:border-none focus:outline-none">
+                                        <option selected disabled value="">{{ __('select_color') }}</option>
+                                        <option v-for="(value, index) in attribute"
+                                                :key="index"
+                                                :value="value.id">
+                                            {{ value.value }}
+                                        </option>
+                                    </select>
+
                                 </div>
                             </div>
+                            <span class="text-red-500" v-if="error.color">{{ __(error.color) }}</span>
                         </div>
 
 
@@ -162,8 +201,8 @@ function setActiveTab(tabName) {
                         </div>
 
                         <div
-                            class=" flex flex-col items-center space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
-                            <button @click="cartStore.addProductInCart(product.id)"
+                            class=" flex flex-col  space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
+                            <button @click="buyProduct(product.id)"
                                     class="w-full sm:w-1/4  inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200"
                                     type="button">
                                 {{ __('buy') }}
@@ -218,7 +257,7 @@ function setActiveTab(tabName) {
                                     <tr v-for="(attribute, key) in product.attributes" :key="key"
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-slate-100">
                                         <td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium ">
-                                            {{ key }}:
+                                            {{ attribute[0].attribute.name }}:
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap capitalize-first">
@@ -240,7 +279,7 @@ function setActiveTab(tabName) {
             <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"/>
         </section>
         <hr>
-        <product-section title="Recent adăugate" :new_products="true" :products="attrs.latest_products"/>
+        <product-section :title="__('latest_products')" :new_products="true" :products="attrs.latest_products"/>
         <product-section v-if="attrs.last_visited.length !== 0" :title="__('visited_products')" :new_products="true"
                          :products="attrs.last_visited"/>
 

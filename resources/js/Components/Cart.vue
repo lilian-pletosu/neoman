@@ -86,7 +86,6 @@ onClickOutside(target, () => {
                                                         class="flex flex-1 items-center justify-between text-sm">
                                                         <div class="flex space-x-2 items-center">
                                                             <p class="text-gray-500">{{ __('qty') }}:
-                                                                {{ product.qty }}
                                                             </p>
                                                             <div
                                                                 class="space-x-2 border flex items-center  px-4 rounded">
@@ -94,7 +93,7 @@ onClickOutside(target, () => {
                                                                     @click="product.qty > 1 ? product.qty-- : product.qty = 1"
                                                                     class="text-sm sm:text-xl">-</span>
                                                                 <input
-                                                                    class="w-12 sm:w-20 h-8 border-none "
+                                                                    class="w-12 sm:w-20 h-8 border-none"
                                                                     min="1"
                                                                     style="text-align:center;"
                                                                     @input.self="product.qty = $event.target.value"

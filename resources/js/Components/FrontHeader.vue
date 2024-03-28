@@ -72,8 +72,8 @@ onMounted(async () => {
             <div class="flex   px-2.5 lg:w-1/12  justify-end space-x-6 dark:text-white">
                 <div class="relative select-none">
                     <div @click="openWishlist = !openWishlist">
-                        <span
-                            class="absolute inline-flex items-center justify-center w-3 h-3 p-2.5 -right-2 -top-2 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200">{{
+                        <span v-if="wishlistStore.wishlistCount !== 0"
+                              class="absolute inline-flex items-center justify-center w-3 h-3 p-2.5 -right-2 -top-2 text-sm font-medium text-white bg-[#DB4444] rounded-full dark:bg-blue-900 dark:text-blue-200">{{
                                 wishlistStore.wishlistCount
                             }}
                     </span>
@@ -85,8 +85,8 @@ onMounted(async () => {
                 <div class="relative select-none">
 
                     <div @click="openCart = !openCart" @focusout="openCart = !openCart">
-                        <span
-                            class="absolute cursor-pointer inline-flex items-center justify-center w-3 h-3 p-2.5 -right-2 -top-2 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200">{{
+                        <span v-if="cartStore.countCart !== 0"
+                              class="absolute cursor-pointer inline-flex items-center justify-center w-3 h-3 p-2.5 -right-2 -top-2 text-sm font-medium text-white bg-[#DB4444] rounded-full dark:bg-blue-900 dark:text-blue-200">{{
                                 cartStore.countCart
                             }}
                         </span>

@@ -10,7 +10,6 @@ export const useLanguageStore = defineStore('lang', () => {
         router.visit(route('language', {locale: locale}))
     }
 
-
     return {
         changeLanguage,
         currentLang,

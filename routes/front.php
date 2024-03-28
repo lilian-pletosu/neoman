@@ -14,5 +14,6 @@ Route::prefix('front')->group(function () {
     Route::get('category/{slug}', [\App\Http\Controllers\front\CategoryController::class, 'index'])->name('category_page');
     Route::get('subcategory/{slug}', [\App\Http\Controllers\front\SubcategoryController::class, 'index'])->name('subcategory_page');
     Route::get('products/{subSubcategory}', [\App\Http\Controllers\front\ProductController::class, 'index'])->name('products_page');
+    Route::get('cart', [\App\Http\Controllers\front\CartController::class, 'index'])->name('cart');
 });
 

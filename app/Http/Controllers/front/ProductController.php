@@ -50,6 +50,7 @@ class ProductController extends Controller
             $attributesForFilter[] = $item['key'];
         }
 
+
         $products = $products->filtered($attributesForFilter)->paginate(9)->withQueryString();
 
         return inertia('User/ProductsPage', [
@@ -72,7 +73,7 @@ class ProductController extends Controller
         (new SessionService())->AddVisitedProductInSession($product);
 
 
-        $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.name');
+        $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.slug');
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
 
 

@@ -54,19 +54,7 @@ createInertiaApp({
             form.image = null
             return form;
         };
-
-        app.config.globalProperties.clearObject =
-            function (obj, val = '') {
-                Object.keys(obj).forEach(k => {
-                    if (Array.isArray(obj[k])) {
-                        obj[k] = [];
-                    } else if (typeof obj[k] === 'object' && obj[k] !== null) {
-                        this.clearObject(obj[k]);
-                    } else {
-                        obj[k] = val
-                    }
-                });
-            };
+        
         app.use(pinia)
 
         return app

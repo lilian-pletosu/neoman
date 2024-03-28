@@ -102,6 +102,7 @@ return [
     'subtotal' => 'Subtotal',
     'wishlist' => 'Favorite',
     'sort' => 'Sortare',
+    'select_color' => 'Selectează culoarea',
 
 
     //colors

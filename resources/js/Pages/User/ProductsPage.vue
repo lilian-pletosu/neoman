@@ -56,7 +56,7 @@ watch([brandsFilter, sortProducts, attributesFilter, priceRange], () => {
         sorts: sortProducts.value,
         attributes: attributesFilter,
         priceRange: priceRange
-    }));
+    }),);
     updateFilteredProducts();
 })
 

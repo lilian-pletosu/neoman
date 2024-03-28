@@ -1,15 +1,15 @@
 export default {
     methods: {
-        $queryParams(...args) {
-
-            let queryString = this.$page.url;
-
-            if (queryString.indexOf("?") === -1) {
-                return {};
-            }
-
-            queryString = queryString.substring(queryString.indexOf("?") + 1);
-            return Object.assign(Object.fromEntries(new URLSearchParams(queryString)), ...args);
+        clearObject: function (obj, val = '') {
+            Object.keys(obj).forEach(k => {
+                if (Array.isArray(obj[k])) {
+                    obj[k] = [];
+                } else if (typeof obj[k] === 'object' && obj[k] !== null) {
+                    this.clearObject(obj[k]);
+                } else {
+                    obj[k] = val
+                }
+            });
         },
     },
 };

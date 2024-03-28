@@ -92,7 +92,6 @@ class ProductController extends Controller
                 }
             }
         }
-//        dd($attributesArray);
 
         $product['attribute_name'] = $attributesArray;
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;

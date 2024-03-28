@@ -30,12 +30,12 @@ const props = defineProps({
         </template>
 
 
-        <product-section title="Produse cu reduceri" :products="sales_products" :sale="true" :sale-percents="20"/>
+        <product-section :title="__('sales_products')" :products="sales_products" :sale="true" :sale-percents="20"/>
 
-        <product-section title="Produse cu sezoniere" :seasons_products="true" :products="sales_products"/>
+        <product-section :title="__('season_products')" :seasons_products="true" :products="sales_products"/>
         <carousel-front class="mt-20" :images="['/img/slider.png','/img/slider2.png']"/>
-        <product-section title="Produse cu TOP" :top_products="true" :products="sales_products"/>
-        <product-section title="Recent adăugate" :new_products="true" :products="attrs.latest_products"/>
+        <product-section :title="__('top_products')" :top_products="true" :products="sales_products"/>
+        <product-section :title="__('latest_products')" :new_products="true" :products="attrs.latest_products"/>
 
         <brands-list :brands="attrs.brands"/>
     </front-layout>
