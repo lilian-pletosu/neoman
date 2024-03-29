@@ -22,27 +22,38 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Cart
-Route::get('/cart/{productCode}', function ($productCode) {
-    return (new CookieService())->addIncart($productCode);
+Route::get('/cart/{productId}/{colorId}', function ($productCode, $colorId) {
+    return (new CookieService())->addIncart($productCode, $colorId);
 })->name('api.cartAdd');
+
+Route::get('/updateCart/{productId}/{qty}', function ($productId, $qty) {
+    return (new CookieService())->updateQtyOfProductFromCart($productId, $qty);
+})->name('api.cart.updateQtyOfProduct');
+
 Route::delete('/cart/{productCode}', function ($productCode) {
     return (new CookieService())->removeProductFromCart($productCode);
 })->name('api.cartRemove');
-Route::get('/cartCount', function () {
+
+
+Route::get('/getCart', function () {
     $products = [];
-    $totalPrice = 0;
 
     if (request()->cookie('cart')) {
-        foreach (unserialize(\request()->cookie('cart')) as $id) {
-            $product = Product::where('id', $id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
-            $product['qty'] = 1;
-            $totalPrice += $product->price;
-            $products[] = $product;
+        $products = unserialize(\request()->cookie('cart'));
+    }
+    $totalPrice = 0;
+
+    foreach ($products as $product) {
+        // Asigură-te că fiecare produs are o cheie 'total_price' în array-ul său
+        if (isset($product['total_price'])) {
+            // Adaugă prețul total al produsului la suma totală
+            $totalPrice += $product['total_price'];
         }
     }
     $count = request()->cookie('cart') ? count(unserialize(request()->cookie('cart'))) : 0;
-    return response()->json(['count' => $count, 'products' => $products, 'totalPrice' => $totalPrice]);
-})->name('api.cartCount');
+    return response()->json(['count' => $count, 'products' => $products, 'total_price' => $totalPrice]);
+})->name('api.getCart');
+
 
 //Wishlist
 Route::get('/wishlist/{productCode}', function ($productCode) {

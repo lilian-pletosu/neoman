@@ -11,26 +11,27 @@ export const useCartStore = defineStore('cart', () => {
     const shipping = ref(50)
     const notification = ref(false);
 
-    async function addProductInCart(productId) {
-        if (checkIfProductExistInCart(productId)) {
-            await removeProductInCart(productId).finally(() => {
-                notification.value = true;
-                success.value = true
-            }).then(() => notification.value = false);
-        } else {
+    async function addProductInCart(productId, colorId) {
+        // if (checkIfProductExistInCart(productId)) {
+        //     await removeProductInCart(productId).finally(() => {
+        //         notification.value = true;
+        //         success.value = true
+        //     }).then(() => notification.value = false);
+        // } else {
+        notification.value = true;
+        axios.get(route('api.cartAdd', {productId: productId, colorId: colorId})).then(async (response) => {
+            message.value = response.data
+            success.value = true
+            notification.value = false;
+        });
+        // }
 
-            notification.value = true;
-            axios.get(route('api.cartAdd', {productCode: productId})).then(async (response) => {
-                message.value = response.data
-                success.value = true
-                notification.value = false;
-            }).finally(() => fetchCount()).catch((error) => {
-                success.value = false
-                message.value = error.response.data
-                notification.value = false;
-            });
-        }
+    }
 
+
+    async function updateQtyOfProduct(productId, qty) {
+        axios.get(route('api.cart.updateQtyOfProduct', {productId: productId, qty: qty})).then((res) => {
+        }).finally(() => fetchCount());
     }
 
     async function removeProductInCart(productId) {
@@ -39,13 +40,14 @@ export const useCartStore = defineStore('cart', () => {
 
     async function fetchCount() {
         try {
-            const response = await fetch(route('api.cartCount'));
+            const response = await fetch(route('api.getCart'));
             const data = await response.json(); // Obțineți conținutul răspunsului ca obiect JSON
+            console.log(data);
             countCart.value = data.count // Afisează obiectul JSON în consolă
             products.value = data.products
-            totalPrice.value = data.totalPrice
+            totalPrice.value = data.total_price
 
-            return data;
+            // return data;
         } catch (error) {
             console.error('A apărut o eroare în timpul solicitării pentru numărul de produse din coș:', error);
         }
@@ -73,6 +75,7 @@ export const useCartStore = defineStore('cart', () => {
         success,
         totalPrice,
         shipping,
-        notification
+        notification,
+        updateQtyOfProduct
     }
 })

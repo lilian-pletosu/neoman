@@ -4,23 +4,22 @@ import ShortLogo from "@/Components/ShortLogo.vue";
 </script>
 
 <template>
-    <footer class="bg-1 dark:bg-1 ove">
-        <div class="container p-6 mx-auto">
-            <div class="lg:flex">
-                <div class="w-full -mx-6 lg:w-2/5">
-                    <div class="px-6">
-                        <a href="/">
-                            <!--                            <application-logo class="flex w-4 "/>-->
+    <footer class=" bg-1 dark:bg-1 ove">
+        <div class=" px-6 pt-24 md:pt-6 ">
+            <div class="flex lg:flex">
+                <div class="w-full   lg:w-2/5">
+                    <div class="pr-4">
+                        <a class="flex justify-center lg:max-w-xl" href="/">
                             <short-logo/>
                         </a>
 
-                        <p class="max-w-sm font-mulish mt-2 text-gray-500 dark:text-gray-400">Neoman -
+                        <p class=" lg:max-w-xl text-center font-mulish mt-2 text-gray-500 dark:text-gray-400">Neoman -
                             destinația ta
                             online pentru o gamă variată de produse de cea mai înaltă calitate! Suntem
                             mândri să îți oferim o selecție extinsă de articole, acoperind nevoile atât ale
                             celor mici, cât și ale adulților, din diverse categorii. </p>
 
-                        <div class="flex mt-6 -mx-2">
+                        <div class="flex justify-center mt-6 -mx-2 lg:max-w-xl">
                             <a href="#"
                                class="mx-2 text-gray-600 transition-colors duration-300 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                                aria-label="Instagram">

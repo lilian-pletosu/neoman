@@ -76,14 +76,13 @@ onMounted(() => {
         </Head>
 
         <FrontNavBar @darkMode="toggleDark" :current-locale="null"/>
-        <div class="w-full ">
+        <div class="w-full min-h-screen flex flex-col">
 
             <div class="">
                 <front-header @call="openModal"/>
             </div>
 
-
-            <div id="main-content" class="flex-col justify-between h-screen">
+            <div id="main-content" class=" flex-1  justify-between ">
                 <main class="">
                     <Toaster title="Succes" :message="cartStore.message" :show="true"
                              :success="cartStore.success"/>
@@ -94,8 +93,9 @@ onMounted(() => {
                     <div class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60  ">
                         <slot/>
                     </div>
+                    <!--                    // mobile-->
                     <div
-                        class="fixed md:hidden  z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
+                        class="hidden  z-50 w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600">
                         <div class="grid h-full max-w-lg grid-cols-5 mx-auto">
                             <button data-tooltip-target="tooltip-home" type="button"
                                     class="inline-flex flex-col items-center justify-center px-5 rounded-s-full hover:bg-gray-50 dark:hover:bg-gray-800 group">
@@ -264,10 +264,13 @@ onMounted(() => {
                         @close="closeModal"
                         :type="call"
                     />
-                    <front-footer/>
+
 
                 </main>
             </div>
+            <section>
+                <front-footer/>
+            </section>
 
         </div>
 

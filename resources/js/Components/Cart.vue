@@ -4,6 +4,7 @@
 import {useCartStore} from "@/stores/cartStore.js";
 import {ref} from "vue";
 import {onClickOutside} from "@vueuse/core";
+import {Link} from "@inertiajs/vue3";
 
 const cartStore = useCartStore();
 const emits = defineEmits(["close"])
@@ -60,11 +61,11 @@ onClickOutside(target, () => {
                                 <div class="mt-8" v-if="cartStore.products.length !== 0">
                                     <div class="flow-root">
                                         <ul role="list" class="-my-6 divide-y divide-gray-200">
-                                            <li v-for="product in cartStore.products" class="flex py-6">
+                                            <li v-for="product in cartStore.products" :key="product" class="flex py-6">
                                                 <div
                                                     class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                     <img
-                                                        :src="product.images[0].image1"
+                                                        :src="product.image"
                                                         :alt="product.name"
                                                         class="h-full w-full object-cover object-center">
                                                 </div>
@@ -77,7 +78,7 @@ onClickOutside(target, () => {
                                                                 <a href="#">{{ product.name }}</a>
                                                             </h3>
                                                             <p class="ml-4">
-                                                                {{ product.price.toFixed(2) }}</p>
+                                                                {{ product.price.toFixed(2) * product.qty }}</p>
                                                         </div>
                                                         <p class="mt-1 text-sm text-gray-500">
                                                             {{ product.brand.name }}</p>
@@ -227,15 +228,15 @@ onClickOutside(target, () => {
                                 <div
                                     class="flex justify-between text-base font-medium text-gray-900 ">
                                     <p>{{ __('subtotal') }}</p>
-                                    <p>{{ cartStore.totalPrice.toFixed(2) }} {{ __('lei') }}</p>
+                                    <p>{{ cartStore.totalPrice }} {{ __('lei') }}</p>
                                 </div>
                                 <p class="mt-0.5 text-sm text-gray-500">{{ __('shipping_message') }}</p>
                                 <div class="mt-6">
-                                    <a href="#"
-                                       class="flex items-center justify-center rounded-md border border-transparent
+                                    <Link :href="route('cart')"
+                                          class="flex items-center justify-center rounded-md border border-transparent
                                         bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                                         {{ __('checkout') }}
-                                    </a>
+                                    </Link>
                                 </div>
                                 <div class="mt-6 flex justify-center text-center text-sm text-gray-500">
                                     <p>

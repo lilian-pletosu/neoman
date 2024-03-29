@@ -22,7 +22,7 @@ const props = defineProps({
     },
 });
 
-const selectedColor = ref();
+const selectedColor = ref('default');
 const error = ref({});
 
 const description = ref(false);
@@ -76,7 +76,7 @@ function buyProduct(productId) {
         error.value['color'] = 'select_color'
     } else {
 
-        cartStore.addProductInCart(productId).then(() => {
+        cartStore.addProductInCart(productId, selectedColor.value).then(() => {
             clear(error)
         });
     }
@@ -163,13 +163,16 @@ function buyProduct(productId) {
                             <div class="flex flex-row space-x-6" v-if="['Culoare', 'culoare'].includes(key)">
                                 <h2 class="my-6 text-base text-gray-900">{{ attribute[0].attribute.name }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
-
                                     <select
+                                        id="color"
                                         v-model="selectedColor"
+                                        @change="(e) => console.log(e)"
                                         class="border border-slate-300 rounded-md focus:border-none focus:outline-none">
-                                        <option selected disabled value="">{{ __('select_color') }}</option>
+                                        <option disabled value="default">{{ __('select_color') }}</option>
                                         <option v-for="(value, index) in attribute"
                                                 :key="index"
+                                                selected
+
                                                 :value="value.id">
                                             {{ value.value }}
                                         </option>

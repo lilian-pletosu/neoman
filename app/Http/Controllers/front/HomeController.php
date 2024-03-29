@@ -9,6 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
+        
         $categories = Category::all();
         return inertia('User/HomePage/HomePage', ['categories' => $categories]);
     }

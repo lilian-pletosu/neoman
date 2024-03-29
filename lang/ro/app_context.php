@@ -88,14 +88,15 @@ return [
     'your_name' => 'Numele și prenumele',
     'phone' => 'Numărul de telefon',
     'link_to_cheaper_product' => 'Link-ul unde ai găsit mai ieftin',
-    'empty_cart' => 'Coșul de cumpărături e gol!',
+    'empty_cart' => 'Coșul tău este gol!',
+    'youre_not_added_product' => 'Nu ai introdus niciun produs în coșul tău!',
     'new_product_added' => 'Produsul adăugat cu succes!',
     'product_exist' => 'Produsul deja există',
     'checkout' => 'Finalizare comandă',
     'product_was_deleted' => 'Produs șters cu succes!',
     'visited_products' => 'Produse vizualizate',
     'qty' => 'Cantitate',
-    'cart' => 'Coșul de cumpărături',
+    'cart' => 'Coș de cumpărături',
     'shipping_message' => 'Livrarea va fi calculată de managerul nostru',
     'continue_shopping' => 'Continuă cumpărăturile',
     'or' => 'sau',
@@ -103,7 +104,11 @@ return [
     'wishlist' => 'Favorite',
     'sort' => 'Sortare',
     'select_color' => 'Selectează culoarea',
-
+    'first_name' => 'Nume',
+    'last_name' => 'Prenume',
+    'order_details' => 'Detaliile comenzei',
+    'shipping' => 'Livrare',
+    'total' => 'Total',
 
     //colors
     'rosu' => 'red',
@@ -141,6 +146,9 @@ return [
     //validation
     'validation.url' => 'Introduce-ți un url valid',
     'validation.min.string' => 'Prea puține caractere',
-    'validation.decimal' => 'Numărul trebuie sa fie decimal'
+    'validation.decimal' => 'Numărul trebuie sa fie decimal',
+    'validation.first_name' => 'Completați numele',
+    'validation.last_name' => 'Completați prenumele',
+    'validation.phone' => 'Completați numărul de telefon',
 
 ];
