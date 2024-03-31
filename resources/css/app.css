@@ -19,19 +19,23 @@
 }
 
 .status-pending {
-    @apply bg-[#ADD8E6] font-semibold border border-slate-400;
+    @apply bg-[#8da9c4] font-semibold border border-slate-400;
 }
 
 .status-confirmed {
-    @apply bg-[#00FF00] font-semibold border border-slate-400;
+    @apply bg-[#1446a0] font-semibold border border-slate-400;
 }
 
 .status-shipped {
-    @apply bg-[#0000FF] font-semibold border border-slate-400;
+    @apply bg-[#A8CDDA] font-semibold border border-slate-400;
 }
 
 .status-delivered {
-    @apply bg-[#008000] font-semibold border border-slate-400;
+    @apply bg-[#2cda9d] font-semibold border border-slate-400;
+}
+
+.status-canceled {
+    @apply bg-[#3C3C3B] font-semibold border border-slate-400;
 }
 
 .primary-text {

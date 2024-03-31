@@ -84,3 +84,6 @@ Route::get('/currentLocale', function () {
     $locale = app()->currentLocale();
     return response($locale);
 })->name('api.currentLocale');
+
+
+Route::get('/fetchOrder/{orderNumber}', [\App\Http\Controllers\admin\OrderController::class, 'show'])->name('api.fetchOrder');

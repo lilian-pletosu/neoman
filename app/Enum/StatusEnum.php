@@ -7,4 +7,5 @@ enum StatusEnum: string
     case CONFIRMED = 'confirmed';
     case SHIPPED = 'shipped';
     case DELIVERED = 'delivered';
+    case CANCELED = 'canceled';
 }

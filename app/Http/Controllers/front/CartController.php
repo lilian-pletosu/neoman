@@ -20,9 +20,12 @@ class CartController extends Controller
     public function checkout(Request $request)
     {
         $data = $request->validate([
-            'first_name' => 'required|String',
-            'last_name' => 'required|String',
+            'full_name' => 'required|string',
             'phone' => 'required|numeric',
+            'email' => 'required|email',
+            'city' => 'required|string',
+            'address' => 'required|string',
+            'message' => 'nullable|string',
             'products' => 'required',
             'total_price' => 'required|numeric'
         ]);

@@ -14,10 +14,13 @@ const cartProducts = ref();
 
 
 const form = useForm({
-    first_name: '',
-    last_name: '',
+    full_name: '',
     phone: '',
+    email: '',
+    city: '',
+    address: '',
     products: {},
+    message: '',
     total_price: cartStore.totalPrice
 });
 
@@ -42,9 +45,10 @@ onMounted(() => {
     cartStore.fetchCount();
     form.products = cartStore.products;
 })
-watch(form, async (newQuestion, oldQuestion) => {
-    console.log('ceva');
-})
+watch(cartStore, () => {
+    // cartStore.fetchCount();
+    form.products = cartStore.products;
+}, {deep: true, immediate: true})
 </script>
 
 <template>
@@ -113,23 +117,13 @@ watch(form, async (newQuestion, oldQuestion) => {
 
 
                             <div>
-                                <input-label :value="__('first_name')"/>
+                                <input-label :value="__('full_name')"/>
                                 <input class="rounded-md w-full" type="text"
                                        name="first_name"
-                                       v-model="form.first_name"
+                                       v-model="form.full_name"
                                        id="first_name">
                                 <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.first_name">{{ __(form.errors.first_name) }}</span>
-                            </div>
-                            <div>
-                                <input-label :value="__('last_name')"/>
-                                <input class="rounded-md  w-full" type="text"
-                                       name="last_name"
-                                       v-model="form.last_name"
-                                       id="last_name">
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.last_name">{{ __(form.errors.last_name) }}</span>
-
+                                      v-if="form.errors.full_name">{{ __(form.errors.full_name) }}</span>
                             </div>
                             <div>
                                 <input-label :value="__('phone')"/>
@@ -139,7 +133,42 @@ watch(form, async (newQuestion, oldQuestion) => {
                                        id="phone">
                                 <span class="font-light text-xs text-red-500"
                                       v-if="form.errors.phone">{{ __(form.errors.phone) }}</span>
-
+                            </div>
+                            <div>
+                                <input-label :value="__('email')"/>
+                                <input class="rounded-md w-full" type="email"
+                                       v-model="form.email"
+                                       name="email"
+                                       id="email">
+                                <span class="font-light text-xs text-red-500"
+                                      v-if="form.errors.email">{{ __(form.errors.email) }}</span>
+                            </div>
+                            <div>
+                                <input-label :value="__('city')"/>
+                                <input class="rounded-md w-full" type="text"
+                                       v-model="form.city"
+                                       name="city"
+                                       id="city">
+                                <span class="font-light text-xs text-red-500"
+                                      v-if="form.errors.city">{{ __(form.errors.city) }}</span>
+                            </div>
+                            <div>
+                                <input-label :value="__('address')"/>
+                                <input class="rounded-md w-full" type="search"
+                                       v-model="form.address"
+                                       name="address"
+                                       id="address">
+                                <span class="font-light text-xs text-red-500"
+                                      v-if="form.errors.city">{{ __(form.errors.address) }}</span>
+                            </div>
+                            <div>
+                                <input-label :value="__('comments')"/>
+                                <textarea class="rounded-md w-full"
+                                          v-model="form.message"
+                                          name="message"
+                                          id="message"/>
+                                <span class="font-light text-xs text-red-500"
+                                      v-if="form.errors.message">{{ __(form.errors.message) }}</span>
                             </div>
 
                             <hr class="mt-2">

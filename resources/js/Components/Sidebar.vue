@@ -36,8 +36,10 @@
                                 <truck-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
                                             :class="checkRoute(route('admin.orders.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
                                 <span class="ml-3 flex-1 whitespace-nowrap">{{ __('orders') }}</span>
-                                <span
-                                    class="animate-pulse inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200">3</span>
+                                <span v-show="app.appContext.config.globalProperties.$page.props.order_count > 0"
+                                      class="animate-pulse inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200">{{
+                                        app.appContext.config.globalProperties.$page.props.order_count
+                                    }}</span>
 
                             </Link>
                         </li>

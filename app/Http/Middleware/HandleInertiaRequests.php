@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Enum\StatusEnum;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Order;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -54,6 +56,7 @@ class HandleInertiaRequests extends Middleware
             'sales_products' => (new ProductService())->loadSalesProducts(),
             'brands' => Brand::where('is_enabled', 1)->get(),
             'latest_products' => (new ProductService())->loadLatestProducts(),
+            'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct(request()->session()->get('last'))
 
         ];

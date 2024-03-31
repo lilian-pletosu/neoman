@@ -181,6 +181,7 @@ onMounted(() => {
                                                         'status-confirmed': resource[columnInOrder] === 'confirmed',
                                                         'status-shipped': resource[columnInOrder] === 'shipped',
                                                         'status-delivered': resource[columnInOrder] === 'delivered',
+                                                        'status-canceled': resource[columnInOrder] === 'canceled',
                                                      }">
                                                     <p>{{
                                                             __(applyFormat(column, resource[columnInOrder])) ?? '--'
