@@ -23,7 +23,7 @@ export const useCartStore = defineStore('cart', () => {
             message.value = response.data
             success.value = true
             notification.value = false;
-        });
+        }).finally(() => fetchCount());
         // }
 
     }
@@ -63,6 +63,10 @@ export const useCartStore = defineStore('cart', () => {
         return false;
     }
 
+    function cartForget() {
+        axios.get(route('api.cartForget')).finally(() => fetchCount());
+    }
+
 
     return {
         checkIfProductExistInCart,
@@ -76,6 +80,7 @@ export const useCartStore = defineStore('cart', () => {
         totalPrice,
         shipping,
         notification,
-        updateQtyOfProduct
+        updateQtyOfProduct,
+        cartForget
     }
 })

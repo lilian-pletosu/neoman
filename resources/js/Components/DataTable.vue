@@ -4,6 +4,7 @@ import Pagination from "@/Components/Pagination.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {XCircleIcon} from "@heroicons/vue/20/solid/index.js";
+import {useDateFormat} from "@vueuse/core";
 
 
 defineProps({
@@ -66,8 +67,16 @@ const applyFormat = (columnName, columnValue) => {
         return columnValue.slice(0, 23) + '...'
         // return app.appContext.config.globalProperties.truncate(columnValue, 50);
     }
+
+    if (columnName === 'created_at') {
+        if (columnValue === null) {
+            return '---;'
+        }
+        return useDateFormat(columnValue, "dddd, D MMMM", {locales: 'rum'}).value;
+    }
     return columnValue;
 }
+
 
 function applyTypeInput(columnName) {
     if (columnName === 'image' || columnName === 'file') {
@@ -165,10 +174,25 @@ onMounted(() => {
                                                     {{ __(applyFormat(column, resource[columnInOrder])) ?? '--' }}
                                                 </div>
                                             </template>
+                                            <template v-else-if="column === 'status'">
+                                                <div class="rounded  p-1 text-center text-white  shadow mx-auto"
+                                                     :class="{
+                                                        'status-pending': resource[columnInOrder] === 'pending',
+                                                        'status-confirmed': resource[columnInOrder] === 'confirmed',
+                                                        'status-shipped': resource[columnInOrder] === 'shipped',
+                                                        'status-delivered': resource[columnInOrder] === 'delivered',
+                                                     }">
+                                                    <p>{{
+                                                            __(applyFormat(column, resource[columnInOrder])) ?? '--'
+                                                        }}</p>
+                                                </div>
+                                            </template>
                                             <!--                    else                        -->
                                             <template v-else>
-                                                <div class=" flex items-center justify-center">
-                                                    {{ __(applyFormat(column, resource[columnInOrder])) ?? '---' }}
+                                                <div class=" flex items-center justify-center first-letter:uppercase">
+                                                    <p class="first-letter:uppercase"> {{
+                                                            __(applyFormat(column, resource[columnInOrder])) ?? '---'
+                                                        }}</p>
                                                 </div>
                                             </template>
                                         </td>
@@ -176,7 +200,7 @@ onMounted(() => {
                                 </template>
                                 <template v-if="$page.props.relationColumns"
                                           v-for="relationColumn in $page.props.relationColumns">
-                                    <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover text-center"
+                                    <td class="py-2 px-6 text-sm text-gray-900 whitespace-nowrap hover text-center first-letter:uppercase"
                                         v-if="relationColumn.label === columnInOrder">
                                         {{ resource[relationColumn.relation]?.name ?? '---' }}
                                     </td>

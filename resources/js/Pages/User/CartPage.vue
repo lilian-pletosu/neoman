@@ -4,16 +4,20 @@ import {useWishlistStore} from "@/stores/wishlistStore.js";
 import {useCartStore} from "@/stores/cartStore.js";
 import InputLabel from "@/Components/InputLabel.vue";
 import {useForm} from "@inertiajs/vue3";
+import {onMounted, ref, watch} from "vue";
 
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 
+const cartProducts = ref();
+
+
 const form = useForm({
     first_name: '',
     last_name: '',
     phone: '',
-    products: cartStore.products,
+    products: {},
     total_price: cartStore.totalPrice
 });
 
@@ -22,27 +26,38 @@ const props = defineProps({
     products: Object
 })
 
+
 const checkout = () => {
     form.post(route('set_order'), {
         preserveScroll: true,
-        onSuccess: () => form.errors = {}
+        onSuccess: () => {
+            form.errors = {};
+            cartStore.cartForget()
+        }
     })
 }
 
+
+onMounted(() => {
+    cartStore.fetchCount();
+    form.products = cartStore.products;
+})
+watch(form, async (newQuestion, oldQuestion) => {
+    console.log('ceva');
+})
 </script>
 
 <template>
     <FrontLayout>
         <div class="py-4">
             <h1 class="text-2xl font-bold font-mulish dark:text-white">{{ __('cart') }}</h1>
-
-
             <section class="pt-4">
-                <p v-if="cartStore.products" class="font-bold text-sm dark:text-slate-300">
+                <p v-if="cartStore.products.length >= 0" class="font-bold text-sm dark:text-slate-300">
                     {{
                         cartStore.countCart > 2 ? cartStore.countCart + " " + __('products') : cartStore.countCart + " " + __('product')
                     }}</p>
-                <div v-if="cartStore.products" class="relative grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-4">
+                <div v-if="cartStore.products.length >= 0"
+                     class="relative grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-4">
                     <div class="absolute right-2 top-2 lg:hidden">
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="1em" height="1em"

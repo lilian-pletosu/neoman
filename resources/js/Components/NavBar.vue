@@ -46,7 +46,7 @@
 
                     <div class="flex items-center">
                         <div class="hidden lg:flex items-center">
-                            <span class="text-base font-normal text-gray-500 mr-5">Hello, {{
+                            <span class="text-base font-normal text-gray-500 mr-5">{{ __('hi') }}, {{
                                     $page.props.auth.user.name
                                 }} ❤️</span>
                         </div>
@@ -58,7 +58,7 @@
                                                     type="button"
                                                     class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                                 >
-                                                    <img :src="'/flags/' + $page.props.currentLocale + '_64.png'"
+                                                    <img :src="'/flags/' + $page.props.current_locale + '_64.png'"
                                                          class="w-5 inline mr-2">
 
                                                     <svg

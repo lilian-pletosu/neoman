@@ -46,6 +46,7 @@ createInertiaApp({
             return base_path + path;
         }
 
+
         app.config.globalProperties.fetchedSchemaFormBuild = (schema) => {
             let form = {};
             schema.fields.forEach((f) => form[f.name] = f.value)
@@ -54,7 +55,7 @@ createInertiaApp({
             form.image = null
             return form;
         };
-        
+
         app.use(pinia)
 
         return app

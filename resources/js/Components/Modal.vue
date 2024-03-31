@@ -19,6 +19,10 @@ const props = defineProps({
     modalType: {
         type: String,
         default: 'modal'
+    },
+    actions: {
+        type: Boolean,
+        default: true
     }
 });
 
@@ -61,6 +65,8 @@ const maxWidthClass = computed(() => {
         lg: 'sm:max-w-lg',
         xl: 'sm:max-w-xl',
         '2xl': 'sm:max-w-2xl',
+        '3xl': 'sm:max-w-3xl',
+        '4xl': 'sm:max-w-4xl',
     }[props.maxWidth];
 });
 </script>
@@ -95,8 +101,8 @@ const maxWidthClass = computed(() => {
                          class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
                          :class="maxWidthClass">
                         <div class="flex absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer">
-                            <template v-if="['edit', 'modal'].includes(modalType)">
-                                <Dropdown>
+                            <template v-if="actions">
+                                <Dropdown v-if="['edit', 'modal'].includes(modalType)">
                                     <template #trigger>
                                             <span class="">
                                               <ellipsis-vertical-icon class="h-6 w-6"/>

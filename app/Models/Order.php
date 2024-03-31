@@ -18,11 +18,30 @@ class Order extends Model
         'phone',
         'products',
         'total_price',
-        'status'
+        'status',
+        'order_number'
     ];
 
     protected $casts = [
         'products' => 'json',
         'status' => StatusEnum::class
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($order) {
+            do {
+                $orderNumber = mt_rand(10000, 999999);
+            } while (Order::where('order_number', $orderNumber)->exists());
+            $order->order_number = "#$orderNumber";
+        });
+
+//        static::updating(function ($post) {
+//            $post->slug = Str::slug($post->title);
+//            // add other column as well
+//        });
+
+    }
 }

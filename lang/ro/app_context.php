@@ -109,6 +109,16 @@ return [
     'order_details' => 'Detaliile comenzei',
     'shipping' => 'Livrare',
     'total' => 'Total',
+    'order_number' => 'Numărul comenzii',
+    'date' => 'Data',
+
+
+    //statuses
+
+    'pending' => 'Procesare',
+    'confirmed' => 'Confirmat',
+    'shipped' => 'Trimis',
+    'delivered' => 'Livrat',
 
     //colors
     'rosu' => 'red',

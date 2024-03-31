@@ -3,6 +3,7 @@
 use App\Models\Product;
 use App\Services\CookieService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,6 +35,10 @@ Route::delete('/cart/{productCode}', function ($productCode) {
     return (new CookieService())->removeProductFromCart($productCode);
 })->name('api.cartRemove');
 
+Route::get('/cart/forget', function () {
+    Cookie::queue(Cookie::forget('cart'));
+})->name('api.cartForget');
+
 
 Route::get('/getCart', function () {
     $products = [];
@@ -44,9 +49,7 @@ Route::get('/getCart', function () {
     $totalPrice = 0;
 
     foreach ($products as $product) {
-        // Asigură-te că fiecare produs are o cheie 'total_price' în array-ul său
         if (isset($product['total_price'])) {
-            // Adaugă prețul total al produsului la suma totală
             $totalPrice += $product['total_price'];
         }
     }

@@ -14,7 +14,7 @@ class OrderController extends Controller
     private DataTableService $dataTableService;
 
 
-    public function __construct(DataTableService  $dataTableService)
+    public function __construct(DataTableService $dataTableService)
 
 
     {
@@ -26,8 +26,17 @@ class OrderController extends Controller
      */
     public function index()
     {
+        $builder = $this->dataTableService
+            ->setResource('Order')
+            ->setResourceColumns(['order_number', 'first_name', 'last_name', 'products', 'total_price', 'status', 'created_at'])
+            ->paginate(10)
+            ->sortBy('created_at', 'desc')
+            ->setSearchRoute('admin.orders');
 
-        return inertia('Admin/Orders');
+        return inertia('Admin/Orders', [
+            'initialRoute' => 'admin.orders',
+            'resourceType' => 'orders'
+        ])->loadData($builder);
     }
 
     /**

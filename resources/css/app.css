@@ -18,6 +18,22 @@
     @apply shadow     2xl:col-span-2;
 }
 
+.status-pending {
+    @apply bg-[#ADD8E6] font-semibold border border-slate-400;
+}
+
+.status-confirmed {
+    @apply bg-[#00FF00] font-semibold border border-slate-400;
+}
+
+.status-shipped {
+    @apply bg-[#0000FF] font-semibold border border-slate-400;
+}
+
+.status-delivered {
+    @apply bg-[#008000] font-semibold border border-slate-400;
+}
+
 .primary-text {
     @apply text-xl font-bold text-gray-900 mb-2;
 }

@@ -12,15 +12,20 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_number')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone');
+            $table->string('email');
+            $table->string('city');
+            $table->string('address');
+            $table->text('message');
             $table->json('products');
             $table->string('total_price');
             $table->string('status')->default(\App\Enum\StatusEnum::PENDING);
             $table->timestamps();
 
-            $table->index(['id']);
+            $table->index(['id', 'order_number']);
         });
     }
 

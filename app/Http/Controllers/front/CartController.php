@@ -4,7 +4,6 @@ namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Models\Product;
 use Illuminate\Http\Request;
 
 
@@ -12,23 +11,13 @@ class CartController extends Controller
 {
     public function index()
     {
-        $products = [];
-        if (request()->cookie('cart')) {
-            foreach (unserialize(\request()->cookie('cart')) as $id) {
-                $product = Product::where('id', $id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
-                $product['qty'] = 1;
-                $products[] = $product;
-            }
-        }
 
-        return inertia('User/CartPage', [
-            'products' => $products,
-        ]);
+        return inertia('User/CartPage');
 
     }
 
 
-    public function checkout(Request $request): void
+    public function checkout(Request $request)
     {
         $data = $request->validate([
             'first_name' => 'required|String',

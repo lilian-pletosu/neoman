@@ -21,8 +21,8 @@
                             }}
                         </secondary-button>
                     </div>
-
                 </div>
+
                 <div class="flex flex-col mt-8">
                     <div class="overflow-x-auto rounded-lg">
                         <data-table
@@ -49,7 +49,6 @@
                                      :columns="['name', 'website', 'is_enabled', 'description',  'image']"
                                      :resource-route="$page.props.resourceRoute"
                                      :fields="$page.props.columnsOrder"/>
-
             </div>
 
         </div>
