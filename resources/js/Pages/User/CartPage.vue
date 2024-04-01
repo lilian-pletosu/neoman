@@ -5,6 +5,7 @@ import {useCartStore} from "@/stores/cartStore.js";
 import InputLabel from "@/Components/InputLabel.vue";
 import {useForm} from "@inertiajs/vue3";
 import {onMounted, ref, watch} from "vue";
+import {refreshPage} from "@/helpers/helper";
 
 
 const cartStore = useCartStore();
@@ -36,6 +37,7 @@ const checkout = () => {
         onSuccess: () => {
             form.errors = {};
             cartStore.cartForget()
+            refreshPage();
         }
     })
 }
@@ -44,10 +46,12 @@ const checkout = () => {
 onMounted(() => {
     cartStore.fetchCount();
     form.products = cartStore.products;
+    form.total_price = cartStore.totalPrice
 })
 watch(cartStore, () => {
     // cartStore.fetchCount();
     form.products = cartStore.products;
+    form.total_price = cartStore.totalPrice;
 }, {deep: true, immediate: true})
 </script>
 
@@ -56,11 +60,12 @@ watch(cartStore, () => {
         <div class="py-4">
             <h1 class="text-2xl font-bold font-mulish dark:text-white">{{ __('cart') }}</h1>
             <section class="pt-4">
-                <p v-if="cartStore.products.length >= 0" class="font-bold text-sm dark:text-slate-300">
+                <p v-if="cartStore.products.length > 0" class="font-bold text-sm dark:text-slate-300">
+
                     {{
                         cartStore.countCart > 2 ? cartStore.countCart + " " + __('products') : cartStore.countCart + " " + __('product')
                     }}</p>
-                <div v-if="cartStore.products.length >= 0"
+                <div v-if="cartStore.products.length > 0"
                      class="relative grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-4">
                     <div class="absolute right-2 top-2 lg:hidden">
                         <svg xmlns="http://www.w3.org/2000/svg"

@@ -36,7 +36,8 @@ Route::delete('/cart/{productCode}', function ($productCode) {
 })->name('api.cartRemove');
 
 Route::get('/cart/forget', function () {
-    Cookie::queue(Cookie::forget('cart'));
+    $cookie = Cookie::forget('cart');
+    return response(trans('app_context.product_updated'))->withCookie($cookie);
 })->name('api.cartForget');
 
 

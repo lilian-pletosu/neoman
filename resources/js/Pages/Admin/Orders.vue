@@ -36,7 +36,7 @@
                                     <p class="font-bold sm:text-xl font-mulish">{{ __('order_number') }}: {{
                                             orderLoad.order_number
                                         }}</p>
-                                    <div v-if="!showSelectStatus" @click="showSelectStatus = !showSelectStatus"
+                                    <div v-if="!showSelectStatus"
                                          class="rounded p-0.5 text-center  shadow "
                                          :class="{
                                                                                                         'status-pending': orderLoad.status === 'pending',
@@ -49,26 +49,29 @@
                                             class="text-white flex gap-2 items-center"
                                             :class="{'text-white': orderLoad.status === 'canceled'}">
                                             {{ __(orderLoad.status) }}
-                                            <pencil-square-icon class="w-4"/>
+
                                         </p>
                                     </div>
                                     <div v-if="showSelectStatus">
                                         <select @change="event => updateOrderStatus(event.target.value)">
                                             <option :selected="orderLoad.status === 'pending'" value="pending">
-                                                Procesare
+                                                {{ __('pending') }}
                                             </option>
                                             <option :selected="orderLoad.status === 'confirmed'" value="confirmed">
-                                                Confirmata
+                                                {{ __('confirmed') }}
                                             </option>
-                                            <option :selected="orderLoad.status === 'shipped'" value="shipped">Trimisă
+                                            <option :selected="orderLoad.status === 'shipped'" value="shipped">
+                                                {{ __('shipped') }}
                                             </option>
                                             <option :selected="orderLoad.status === 'delivered'" value="delivered">
-                                                Primită
+                                                {{ __('delivered') }}
                                             </option>
-                                            <option :selected="orderLoad.status === 'canceled'" value="canceled">Anulat
+                                            <option :selected="orderLoad.status === 'canceled'" value="canceled">
+                                                {{ __('canceled') }}
                                             </option>
                                         </select>
                                     </div>
+                                    <pencil-square-icon class="w-6" @click="showSelectStatus = !showSelectStatus"/>
                                 </div>
                                 <div>
                                     <p class="text-sm text-slate-500">{{ __('date') }}:
@@ -132,6 +135,10 @@
                                                     </th>
                                                     <th scope="col"
                                                         class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                                        {{ __('unit_price') }}
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                                         {{ __('color') }}
                                                     </th>
                                                     <th scope="col"
@@ -152,16 +159,19 @@
                                                         {{ ++index }}
                                                     </td>
                                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-wrap">
-                                                        {{ product.name }}
+                                                        {{ product.name ?? '---' }}
                                                     </td>
                                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                        {{ product.qty }}
+                                                        {{ product.qty ?? '---' }}
                                                     </td>
                                                     <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                        {{ product.color_value }}
+                                                        {{ product.price ?? '---' }}
+                                                    </td>
+                                                    <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                                        {{ product.color_value ?? '---' }}
                                                     </td>
                                                     <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                        {{ product.brand }}
+                                                        {{ product.brand ?? '---' }}
                                                     </td>
                                                     <td class=" text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                                                         <trash-icon
@@ -171,7 +181,7 @@
                                                 </tr>
                                                 </tbody>
                                             </table>
-                                            <div class="grid grid-cols-6 border">
+                                            <div class="grid grid-cols-6 border p-4">
                                                 <div class="col-span-5  text-end">
                                                     <p class="text-lg font-semibold">{{ __('subtotal') }}:</p>
                                                     <p class="text-lg font-semibold">{{ __('shipping') }}:</p>

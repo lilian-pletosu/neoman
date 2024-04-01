@@ -5,10 +5,13 @@ namespace App\Models;
 use App\Enum\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Order extends Model
 {
     use HasFactory;
+    use Notifiable;
+
 
     protected $table = 'orders';
 
@@ -29,6 +32,8 @@ class Order extends Model
         'products' => 'json',
         'status' => StatusEnum::class
     ];
+
+    protected $dispatchesEvents = ['created' => \App\Events\NewOrder::class];
 
     protected static function boot()
     {

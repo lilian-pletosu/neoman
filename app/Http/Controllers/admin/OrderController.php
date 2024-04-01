@@ -67,8 +67,14 @@ class OrderController extends Controller
         $products = $order->products;
 
         foreach ($products as $key => $product) {
-            $product['color_value'] = AttributeValue::findOrFail($product['color_value'])->translate()->value;
-            $products[$key] = $product;
+            if (AttributeValue::find($product['color_value'])) {
+                $product['color_value'] = AttributeValue::find($product['color_value'])->translate()->value;
+                $products[$key] = $product;
+            } else {
+                $product['color_value'] = null;
+                $products[$key] = $product;
+            }
+
         }
 
         $order->products = $products;
@@ -99,6 +105,7 @@ class OrderController extends Controller
             foreach ($products as $key => $product) {
                 if ($product['id'] == $request->product_id) {
                     $index = $key;
+                    $order['total_price'] -= $product['total_price'];
                     break;
                 }
             }

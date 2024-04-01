@@ -123,6 +123,7 @@ return [
     'are_you_sure_delete' => 'Ești sigur că vrei să ștergi?',
     'no_orders' => 'Nu sunt comenzi',
     'here_is_all_orders' => 'Aici găsești toate comenzile',
+    'unit_price' => 'Preț unitar',
 
     //statuses
 
