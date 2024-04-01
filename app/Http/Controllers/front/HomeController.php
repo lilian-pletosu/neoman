@@ -11,6 +11,6 @@ class HomeController extends Controller
     {
         
         $categories = Category::all();
-        return inertia('User/HomePage/HomePage', ['categories' => $categories]);
+        return inertia('User/HomePage', ['categories' => $categories]);
     }
 }
