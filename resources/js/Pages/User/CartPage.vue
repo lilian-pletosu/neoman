@@ -5,13 +5,17 @@ import {useCartStore} from "@/stores/cartStore.js";
 import InputLabel from "@/Components/InputLabel.vue";
 import {useForm} from "@inertiajs/vue3";
 import {onMounted, ref, watch} from "vue";
-import {refreshPage} from "@/helpers/helper";
+import AlertMessage from "@/Components/AlertMessage.vue";
+import {SweetModal} from "sweet-modal-vue-3";
+import {refreshPage} from "@/helpers/helper.js";
 
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
 
 const cartProducts = ref();
+
+const modal = ref('modal');
 
 
 const form = useForm({
@@ -29,6 +33,17 @@ const form = useForm({
 const props = defineProps({
     products: Object
 })
+let orderSuccess = ref(false); // Add this line at the top of your script
+const sweetMessage = ref('sweetMessage');
+
+const showSuccessOrderSent = () => {
+    cartStore.cartForget();
+    orderSuccess.value = true; // Show success message
+    setTimeout(() => {
+        orderSuccess.value = false; // Hide success message
+        refreshPage();
+    }, 3000);
+}
 
 
 const checkout = () => {
@@ -37,7 +52,8 @@ const checkout = () => {
         onSuccess: () => {
             form.errors = {};
             cartStore.cartForget()
-            refreshPage();
+            // showSuccessOrderSent()
+            refreshPage()
         }
     })
 }
@@ -47,6 +63,7 @@ onMounted(() => {
     cartStore.fetchCount();
     form.products = cartStore.products;
     form.total_price = cartStore.totalPrice
+    // sweetMessage.
 })
 watch(cartStore, () => {
     // cartStore.fetchCount();
@@ -217,6 +234,11 @@ watch(cartStore, () => {
                         {{ __('youre_not_added_product') }}</p>
                 </div>
             </section>
+
+            <AlertMessage :show="orderSuccess"/>
+            <sweet-modal :ref="sweetMessage" icon="success">
+                This is a success!
+            </sweet-modal>
 
         </div>
 

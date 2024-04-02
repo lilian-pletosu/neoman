@@ -1,13 +1,6 @@
 # Utilizați o imagine PHP mai recentă
 FROM php:8.2-fpm-alpine
 
-# Setarea unei variabile de argument (uuid)
-ARG uid
-# Exponați portul specificat prin variabila uuid
-EXPOSE $uid
-
-USER 1000:1000
-
 # Instalarea Composer
 RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
     php composer-setup.php --install-dir=/var/www/html --filename=composer && \

@@ -40,6 +40,7 @@ services:
         build:
             context: ./docker-settings
             dockerfile: php.dockerfile
+        user: "1000:1000"
         volumes:
             - .:/var/www/html
         networks:

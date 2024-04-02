@@ -4,16 +4,36 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Promotion;
+use App\Services\DataTableService;
 use Illuminate\Http\Request;
 
 class PromotionController extends Controller
 {
+
+    private DataTableService $dataTableService;
+
+
+    public function __construct(DataTableService $dataTableService)
+
+
+    {
+        $this->dataTableService = $dataTableService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return inertia('Admin/Promotions');
+        $this->dataTableService
+            ->setResource('Promotion')
+            ->setResourceColumns(['id', 'name', 'description', 'start_date', 'end_date', 'discount', 'status'])
+            ->paginate(10)
+            ->sortBy('created_at', 'desc')
+            ->setSearchRoute('admin.promotions');
+
+
+        return inertia('Admin/Promotions')->loadData($this->dataTableService);
     }
 
     /**
@@ -21,7 +41,7 @@ class PromotionController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -29,7 +49,39 @@ class PromotionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        // 1. Validează datele
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'discount' => 'required|numeric|min:0|max:100',
+            'status' => 'required|boolean',
+            'products' => 'nullable|array',
+            'brands' => 'nullable|array',
+            'sub_subcategories' => 'nullable|array',
+        ]);
+
+        // 2. Creează o nouă instanță de Promotion
+        $promotion = new Promotion($validatedData);
+
+        // 3. Salvează instanța în baza de date
+        $promotion->save();
+
+        // 4. Atașează produsele, brandurile și subsubcategoriile la promoție, dacă există
+        if (isset($validatedData['products'])) {
+            $promotion->products()->attach($validatedData['products']);
+        }
+        if (isset($validatedData['brands'])) {
+            $promotion->brands()->attach($validatedData['brands']);
+        }
+        if (isset($validatedData['sub_subcategories'])) {
+            $promotion->sub_subcategories()->attach($validatedData['sub_subcategories']);
+        }
+
+        // 5. Redirecționează utilizatorul înapoi la pagina de listă a promoțiilor cu un mesaj de succes
+        return redirect()->route('admin.promotions.index')->with('success', 'Promoția a fost creată cu succes.');
     }
 
     /**

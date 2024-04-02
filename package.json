@@ -33,6 +33,7 @@
         "notiwind": "^2.0.2",
         "pinia": "^2.1.7",
         "radix-vue": "^1.5.2",
+        "sweet-modal-vue-3": "^0.3.0",
         "swiper": "^11.0.7",
         "tw-elements": "^1.0.0",
         "vue": "^3.4.21",

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Events\NewOrder;
+use App\Events\OrderStatusUpdated;
+use App\Listeners\SendEmailNotificationAboutChangeOrderStatus;
 use App\Listeners\SendEmailNotificationAboutNewOrder;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,7 +23,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewOrder::class => [
             SendEmailNotificationAboutNewOrder::class,
-        ]
+        ],
+        OrderStatusUpdated::class => [
+            SendEmailNotificationAboutChangeOrderStatus::class,
+        ],
     ];
 
     /**

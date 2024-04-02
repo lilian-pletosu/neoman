@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Enum\StatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\Order;
@@ -123,20 +122,8 @@ class OrderController extends Controller
         if ($request->type == 'updateStatus') {
             $order = Order::findOrFail($id);
             $newStatus = $request->status;
-            switch ($newStatus) {
-                case StatusEnum::PENDING:
-                case StatusEnum::CONFIRMED:
-                case StatusEnum::SHIPPED:
-                case StatusEnum::DELIVERED:
-                case StatusEnum::CANCELED:
-                    $order->status = $newStatus;
-                    $order->save();
-                    break;
-                default:
-                    $order->status = $newStatus;
-                    $order->save();
-                    break;
-            }
+            $order->status = $newStatus;
+            $order->save();
         }
     }
 

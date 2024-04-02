@@ -29,9 +29,7 @@ class SendEmailNotificationAboutNewOrder implements ShouldQueue
     public function handle(NewOrder $event): void
     {
         $email = $event->order->email;
-//        dd($event->order);
         Mail::to($email)->send(new NewOrderNotifyEmail($event->order));
-
 
     }
 }

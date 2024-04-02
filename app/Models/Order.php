@@ -32,8 +32,26 @@ class Order extends Model
         'products' => 'json',
         'status' => StatusEnum::class
     ];
+    /**
+     * The $dispatchesEvents property is an array that maps Eloquent event names to their corresponding event classes.
+     * Eloquent events are dispatched when certain actions are performed on the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        /**
+         * The 'created' event is dispatched when a new model is saved for the first time using the `save` method or the `create` method.
+         * The \App\Events\NewOrder::class event class is dispatched for this event.
+         */
+        'created' => \App\Events\NewOrder::class,
 
-    protected $dispatchesEvents = ['created' => \App\Events\NewOrder::class];
+        /**
+         * The 'updated' event is dispatched when an existing model is saved using the `save` method.
+         * This event is only dispatched if at least one of the model's attributes has been changed.
+         * The \App\Events\OrderStatusUpdated::class event class is dispatched for this event.
+         */
+        'updated' => \App\Events\OrderStatusUpdated::class
+    ];
 
     protected static function boot()
     {
@@ -45,11 +63,6 @@ class Order extends Model
             } while (Order::where('order_number', $orderNumber)->exists());
             $order->order_number = "#$orderNumber";
         });
-
-//        static::updating(function ($post) {
-//            $post->slug = Str::slug($post->title);
-//            // add other column as well
-//        });
 
     }
 }
