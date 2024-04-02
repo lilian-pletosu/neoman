@@ -26,6 +26,12 @@ onClickOutside(target, () => {
     if (props.isOpen) emits('close')
 })
 
+const deleteProductFromCart = (id) => {
+    cartStore.removeProductInCart(id).then(() => {
+        emits('close');
+    })
+}
+
 </script>
 
 <template>
@@ -91,7 +97,7 @@ onClickOutside(target, () => {
                                                             <div
                                                                 class="space-x-2 border flex items-center  px-4 rounded">
                                                                 <span
-                                                                    @click="product.qty > 1 ? product.qty-- : product.qty = 1"
+                                                                    @click="cartStore.updateQtyOfProduct(product.id,  --product.qty)"
                                                                     class="text-sm sm:text-xl">-</span>
                                                                 <input
                                                                     class="w-12 sm:w-20 h-8 border-none"
@@ -103,14 +109,14 @@ onClickOutside(target, () => {
                                                                     name=""
                                                                     id="">
                                                                 <span
-                                                                    @click="product.qty++"
+                                                                    @click="cartStore.updateQtyOfProduct(product.id,  ++product.qty)"
                                                                     class="text-sm sm:text-xl">+</span>
                                                             </div>
                                                         </div>
 
                                                         <div class="flex">
                                                             <button type="button"
-                                                                    @click="cartStore.removeProductInCart(product.id)"
+                                                                    @click="deleteProductFromCart(product.id)"
                                                                     class="font-medium text-indigo-600 hover:text-indigo-500">
                                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                                      width="2em" height="2em"

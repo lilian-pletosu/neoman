@@ -106,11 +106,13 @@ class CookieService
         $items = $itemsCart ? unserialize($itemsCart) : [];
 
         if ($itemsCart) {
-            if (($key = array_search($productId, $items)) !== false) {
-                unset($items[$key]);
+            foreach ($items as $index => $product) {
+                if ($product['id'] == $productId) {
+                    unset($items[$index]);
+                    $cookie = cookie($storageName, serialize($items), 262656);
+                    return response(trans('app_context.product_was_deleted'))->cookie($cookie);
+                }
             }
-            $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-            return response(trans('app_context.product_was_deleted'))->cookie($cookie);
         }
         return response();
     }

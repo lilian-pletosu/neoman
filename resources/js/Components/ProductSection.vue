@@ -1,12 +1,13 @@
 <script setup>
 // If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
-import {ArrowLeftIcon, ArrowRightIcon, HeartIcon} from "@heroicons/vue/24/outline/index.js";
+import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
 import {ref} from "vue";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import 'swiper/css';
 import {Link} from "@inertiajs/vue3";
 import {useCartStore} from "@/stores/cartStore.js";
-import {useWishlistStore} from "@/stores/wishlistStore.js";
+import {useWishlistStore} from "@/stores/wishlistStore.js"
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/16/solid/index.js";
 
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
@@ -14,24 +15,6 @@ const wishlistStore = useWishlistStore()
 
 const currentSlide = ref(1);
 
-const changeSlide = (direction) => {
-    if (direction === 'next') {
-        if (Object.keys(props.products).length - 3 < currentSlide.value) {
-            currentSlide.value = 1
-        } else {
-            currentSlide.value++;
-
-        }
-
-    } else {
-        if (currentSlide === 1) {
-            currentSlide.value--;
-        } else {
-            currentSlide.value = 1;
-
-        }
-    }
-}
 
 const props = defineProps({
     products: {
@@ -41,10 +24,6 @@ const props = defineProps({
     sale: {
         type: Boolean,
         default: false,
-    },
-    salePercents: {
-        type: Number,
-        default: 0
     },
     seasons_products: {
         type: Boolean,
@@ -61,6 +40,14 @@ const props = defineProps({
 
 
 });
+
+function onSwiper() {
+    console.log("onSwiper called");
+}
+
+function onSlideChange() {
+    console.log("Slide change");
+}
 </script>
 
 <style>
@@ -131,12 +118,12 @@ const props = defineProps({
                 <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
             </div>
             <div class="w-16 flex space-x-2">
-                <div @click="changeSlide('back')"
-                     class="rounded-3xl flex items-center justify-center border border-slate-600 w-full h-auto">
+                <div id="swiper-button-prev"
+                     class="swiper-button-prev rounded-3xl flex items-center justify-center border border-slate-600 w-full h-auto">
                     <arrow-left-icon class="w-4"/>
                 </div>
-                <div @click="changeSlide('next')"
-                     class="rounded-3xl flex  justify-center border border-slate-600 w-full h-auto">
+                <div id="swiper-button-next"
+                     class="swiper-button-next rounded-3xl flex  justify-center border border-slate-600 w-full h-auto">
                     <arrow-right-icon class="w-4"/>
                 </div>
             </div>
@@ -144,6 +131,9 @@ const props = defineProps({
         <swiper
             :slidesPerView="1"
             :spaceBetween="20"
+            :navigation="true"
+            @swiper="onSwiper"
+            @slideChange="onSlideChange"
             direction="horizontal"
             :breakpoints="{
                   '400': {
@@ -158,6 +148,10 @@ const props = defineProps({
                       slidesPerView: 4,
                       spaceBetween: 10
                   },
+                  '1090':{
+                        slidesPerView: 5,
+                        spaceBetween: 10
+                  }
 
                 }"
 
@@ -166,7 +160,7 @@ const props = defineProps({
 
 
                 <div
-                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96     md:h-[440px] bg-3 relative group/card">
+                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96     md:h-[380px] bg-3 relative group/card">
                     <div class="hover:cursor-pointer">
                         <div>
                             <div class="static">
@@ -203,24 +197,28 @@ const props = defineProps({
                                     <p class="font-mulish text-sm line-through font-medium">{{ product.price }}
                                         {{ __('lei') }}</p>
                                     <span
-                                        class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">- 1500  {{
-                                            __('lei')
-                                        }}</span>
+                                        class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">-15%</span>
 
                                 </div>
                             </template>
-                            <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
+                            <template v-if="product.final_price">
+                                <p class="font-mulish text-xl font-medium">{{ product.final_price }} {{ __('lei') }}</p>
+                            </template>
+                            <template v-else>
+                                <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
+                            </template>
                         </div>
-                        <div @click="cartStore.addProductInCart(product.id)"
-                             class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-[#1FC8F3]  cursor-pointer group/cart"
-                             :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
+                        <Link :href="route('product_page', {slug: product.slug})"
+                              class="shadow rounded-lg transition p-4 sm:p-4 hover:scale-110 hover:bg-[#1FC8F3]
+                            cursor-pointer group/cart"
+                              :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                  class="h-4 w-4  group-hover/cart:text-white"
                                  :class="cartStore.checkIfProductExistInCart(product.id) ? 'text-white' : 'text-black'">
                                 <path
                                     d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                             </svg>
-                        </div>
+                        </Link>
                     </div>
 
                 </div>
@@ -229,40 +227,3 @@ const props = defineProps({
     </div>
 </template>
 
-
-<!--<div-->
-<!--    class="container-rounded w-96 h-[430px] bg-gradient-to-r from-[#1FC8F3]  to-pink-500 relative group/card">-->
-<!--<div>-->
-<!--    <div class="static">-->
-
-<!--        <div-->
-<!--            class="absolute flex flex-row items-center shadow-sm left-2 top-2 rounded-lg bg-pink-500  z-20 p-1 bg-opacity-50">-->
-<!--            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="auto" fill="currentColor"-->
-<!--                 class="bi bi-tag-fill" viewBox="0 0 16 16">-->
-<!--                <path-->
-<!--                    d="M2 1a1 1 0 0 0-1 1v4.586a1 1 0 0 0 .293.707l7 7a1 1 0 0 0 1.414 0l4.586-4.586a1 1 0 0 0 0-1.414l-7-7A1 1 0 0 0 6.586 1zm4 3.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>-->
-<!--            </svg>-->
-<!--            <p class="font-mulish px-1 font-medium text-sm text-black">Sale</p>-->
-<!--        </div>-->
-<!--        <div class="w-12 absolute left-2 top-2 z-10">-->
-<!--            <img class="mix-blend-multiply" :src="product.brand.image"-->
-<!--                 :alt="product.brand.name">-->
-<!--        </div>-->
-<!--        <div-->
-<!--            class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">-->
-<!--            <heart-icon class="w-4 group-hover:text-red-700"/>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--<div>-->
-<!--    <div class="mt-2">-->
-<!--        <img :src="product.image" alt="Product Image"-->
-<!--             class="w-full h-48 object-cover mix-blend-multiply -rotate-12">-->
-<!--    </div>-->
-<!--</div>-->
-<!--<div class="relative mt-12">-->
-<!--    <p class="font-mulish font-extrabold text-shadow-lg text-xl text-white ">-->
-<!--        {{ product.name }}</p>-->
-<!--</div>-->
-
-<!--</div>-->

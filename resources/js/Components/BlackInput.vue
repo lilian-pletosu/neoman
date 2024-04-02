@@ -54,6 +54,7 @@ defineExpose({focus: () => input.value.focus()});
                 :value="modelValue"
                 :min="min"
                 :max="max"
+                :placeholder="label"
                 @input="$emit('update:modelValue', $event.target.value)" ref="input">
         </template>
 

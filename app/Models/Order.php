@@ -50,7 +50,8 @@ class Order extends Model
          * This event is only dispatched if at least one of the model's attributes has been changed.
          * The \App\Events\OrderStatusUpdated::class event class is dispatched for this event.
          */
-        'updated' => \App\Events\OrderStatusUpdated::class
+        'updated' => \App\Events\OrderStatusUpdated::class,
+
     ];
 
     protected static function boot()

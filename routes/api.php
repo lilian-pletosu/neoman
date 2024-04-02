@@ -31,8 +31,8 @@ Route::get('/updateCart/{productId}/{qty}', function ($productId, $qty) {
     return (new CookieService())->updateQtyOfProductFromCart($productId, $qty);
 })->name('api.cart.updateQtyOfProduct');
 
-Route::delete('/cart/{productCode}', function ($productCode) {
-    return (new CookieService())->removeProductFromCart($productCode);
+Route::delete('/cart/{productID}', function ($productID) {
+    return (new CookieService())->removeProductFromCart($productID);
 })->name('api.cartRemove');
 
 Route::get('/cart/forget', function () {

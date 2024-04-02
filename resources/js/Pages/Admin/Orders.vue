@@ -30,14 +30,15 @@
                                     __('no_orders')
                                 }}...</h2>
                         </div>
-                        <Modal :show="modalIsOpen" :actions="false" @close="modal" max-width="6xl">
+                        <Modal :show="modalIsOpen" :actions="false" @close="modal" max-width="6xl"
+                        >
                             <div class="grid grid-cols-1 p-4 pt-10 gap-4">
                                 <div class="flex rounded items-center space-x-3">
                                     <p class="font-bold sm:text-xl font-mulish">{{ __('order_number') }}: {{
                                             orderLoad.order_number
                                         }}</p>
                                     <div v-if="!showSelectStatus"
-                                         class="rounded p-0.5 text-center  shadow "
+                                         class="rounded py-0.5 px-2 text-center  shadow "
                                          :class="{
                                                                                                         'status-pending': orderLoad.status === 'pending',
                                                                                                         'status-confirmed': orderLoad.status === 'confirmed',

@@ -21,7 +21,7 @@ class Brand extends Model implements TranslatableContract
     ];
 
 
-    public function product()
+    public function products()
     {
         return $this->hasMany(Product::class, 'brand_id');
     }

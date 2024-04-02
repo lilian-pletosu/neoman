@@ -6,6 +6,8 @@ use App\Enum\StatusEnum;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\SubCategory;
+use App\Models\SubSubCategory;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -53,6 +55,8 @@ class HandleInertiaRequests extends Middleware
             },
             'availableLanguages' => config('availableLanguages'),
             'categories' => Category::orderBy('name')->get(),
+            'subcategories' => SubCategory::orderBy('name')->get(),
+            'sub_subcategories' => SubSubCategory::orderBy('name')->get(),
             'sales_products' => (new ProductService())->loadSalesProducts(),
             'brands' => Brand::where('is_enabled', 1)->get(),
             'latest_products' => (new ProductService())->loadLatestProducts(),

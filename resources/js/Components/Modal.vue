@@ -12,7 +12,15 @@ const props = defineProps({
         type: String,
         default: '2xl',
     },
+    marginTop: {
+        type: String,
+        default: 'mt-0',
+    },
     closeable: {
+        type: Boolean,
+        default: true,
+    },
+    showClose: {
         type: Boolean,
         default: true,
     },
@@ -70,6 +78,12 @@ const maxWidthClass = computed(() => {
         '6xl': 'sm:max-w-6xl',
     }[props.maxWidth];
 });
+
+const marginTopClass = computed(() => {
+    return {
+        'mt-60': 'mt-60',
+    }[props.marginTop];
+});
 </script>
 
 <template>
@@ -100,7 +114,7 @@ const maxWidthClass = computed(() => {
                 >
                     <div v-show="show"
                          class="mb-6 bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full sm:mx-auto"
-                         :class="maxWidthClass">
+                         :class="[marginTopClass, maxWidthClass]">
                         <div class="flex absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer">
                             <template v-if="actions">
                                 <Dropdown v-if="['edit', 'modal'].includes(modalType)">
@@ -121,7 +135,7 @@ const maxWidthClass = computed(() => {
                                     </template>
                                 </Dropdown>
                             </template>
-                            <button @click="close">
+                            <button v-show="showClose" @click="close">
                                 <x-mark-icon class="h-6 w-6"/>
                             </button>
                         </div>

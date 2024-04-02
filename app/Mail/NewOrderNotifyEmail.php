@@ -28,7 +28,7 @@ class NewOrderNotifyEmail extends Mailable
     {
         return new Envelope(
             from: new Address('lilianpletosu7@gmail.com', 'Neoman'),
-            subject: 'Neoman - comadă recepționată',
+            subject: 'Neoman - comandă recepționată',
         );
     }
 

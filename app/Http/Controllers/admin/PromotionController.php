@@ -58,9 +58,10 @@ class PromotionController extends Controller
             'end_date' => 'required|date|after:start_date',
             'discount' => 'required|numeric|min:0|max:100',
             'status' => 'required|boolean',
-            'products' => 'nullable|array',
-            'brands' => 'nullable|array',
-            'sub_subcategories' => 'nullable|array',
+            'brand' => 'nullable',
+            'sub_subcategory' => 'nullable',
+            'category' => 'nullable',
+            'subcategory' => 'nullable',
         ]);
 
         // 2. Creează o nouă instanță de Promotion
@@ -69,14 +70,17 @@ class PromotionController extends Controller
         // 3. Salvează instanța în baza de date
         $promotion->save();
 
-        // 4. Atașează produsele, brandurile și subsubcategoriile la promoție, dacă există
-        if (isset($validatedData['products'])) {
-            $promotion->products()->attach($validatedData['products']);
+
+        if (isset($validatedData['brand'])) {
+            $promotion->brands()->attach($validatedData['brand']);
         }
-        if (isset($validatedData['brands'])) {
-            $promotion->brands()->attach($validatedData['brands']);
-        }
-        if (isset($validatedData['sub_subcategories'])) {
+//        if (isset($validatedData['subcategory'])) {
+//            $promotion->brands()->attach($validatedData['brands']);
+//        }
+//        if (isset($validatedData['brand'])) {
+//            $promotion->brands()->attach($validatedData['brands']);
+//        }
+        if (isset($validatedData['sub_subcategory'])) {
             $promotion->sub_subcategories()->attach($validatedData['sub_subcategories']);
         }
 

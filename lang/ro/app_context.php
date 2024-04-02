@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'hi' => 'Salut',
     'home' => 'Acasă',
     'attributes' => 'Atribute',
     'specifications' => 'Specificații',
@@ -124,6 +125,30 @@ return [
     'no_orders' => 'Nu sunt comenzi',
     'here_is_all_orders' => 'Aici găsești toate comenzile',
     'unit_price' => 'Preț unitar',
+    'order_placed' => 'Comanda plasată',
+    'thanks_order' => 'Comanda dvs. a fost plasată cu succes!',
+    'order_success_message' => 'Vă vom contacta în cel mai scurt timp posibil.',
+    'back_to_shop' => 'Înapoi la cumpăraturi',
+    'sales_products' => 'Produse cu reducere',
+    'season_products' => 'Produse de sezon',
+    'top_products' => 'Cele mai vândute produse',
+    'latest_products' => 'Ultimele produse vizualizate',
+    'here_is_all_promotions' => 'Aici găsești toate promoțiile',
+    'start_date' => 'Data de început',
+    'end_date' => 'Data de sfârșit',
+    'discount' => 'Discount',
+    'sub_subcategory' => 'Sub-subcategorie',
+    'no_promotions' => 'Nu sunt promoții',
+    'create_promotion' => 'Crează promoție',
+    'view_promotion' => 'Detalii promoție',
+    'edit_promotion' => 'Editare promoție',
+    'no_banners' => 'Nu sunt banere',
+    'create_banner' => 'Crează banner',
+    'select_brand' => 'Selectează brand',
+    'select_subcategory' => 'Selectează subcategorie',
+    'select_sub_subcategory' => 'Selectează sub-subcategorie',
+    'select_category' => 'Selectează categorie',
+    'comments' => 'Comentarii',
 
     //statuses
 

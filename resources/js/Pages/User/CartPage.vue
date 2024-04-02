@@ -3,12 +3,9 @@ import FrontLayout from "@/Layouts/FrontLayout.vue";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import {useCartStore} from "@/stores/cartStore.js";
 import InputLabel from "@/Components/InputLabel.vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 import {onMounted, ref, watch} from "vue";
-import AlertMessage from "@/Components/AlertMessage.vue";
-import {SweetModal} from "sweet-modal-vue-3";
-import {refreshPage} from "@/helpers/helper.js";
-
+import Modal from "@/Components/Modal.vue";
 
 const cartStore = useCartStore();
 const wishlistStore = useWishlistStore();
@@ -33,29 +30,28 @@ const form = useForm({
 const props = defineProps({
     products: Object
 })
-let orderSuccess = ref(false); // Add this line at the top of your script
-const sweetMessage = ref('sweetMessage');
 
-const showSuccessOrderSent = () => {
-    cartStore.cartForget();
-    orderSuccess.value = true; // Show success message
-    setTimeout(() => {
-        orderSuccess.value = false; // Hide success message
-        refreshPage();
-    }, 3000);
-}
-
+const showModal = ref(false)
+const loading = ref(false)
 
 const checkout = () => {
     form.post(route('set_order'), {
         preserveScroll: true,
-        onSuccess: () => {
+        onStart: () => {
+            loading.value = true;
+            showModal.value = true;
+        },
+        onSuccess: async () => {
             form.errors = {};
-            cartStore.cartForget()
-            // showSuccessOrderSent()
-            refreshPage()
+            await cartStore.cartForget()
+            loading.value = false;
         }
     })
+}
+
+const closeModalAndRedirect = () => {
+    showModal.value = false;
+    router.get(route('home'));
 }
 
 
@@ -98,7 +94,7 @@ watch(cartStore, () => {
                     </div>
                     <div class="lg:col-span-2 space-y-4">
                         <div v-for="product in cartStore.products" :key="product.id"
-                             class="grid grid-cols-2 sm:grid-cols-6 gap-4    container-simple border bg-white dark:bg-1 rounded-md items-start p-4">
+                             class="grid grid-cols-2 sm:grid-cols-6 gap-4    container-simple border bg-white  dark:bg-1 rounded-md items-start p-4">
                             <div class="col-span-2 sm:col-span-1    mx-auto ">
                                 <img class="w-24 " :src="product.image" alt="">
                             </div>
@@ -235,10 +231,47 @@ watch(cartStore, () => {
                 </div>
             </section>
 
-            <AlertMessage :show="orderSuccess"/>
-            <sweet-modal :ref="sweetMessage" icon="success">
-                This is a success!
-            </sweet-modal>
+            <Modal :show="showModal" :actions="false" :show-close="false">
+                <div class="bg-gray-100 h-auto ">
+                    <div v-if="!loading" class="bg-white p-6  md:mx-auto">
+                        <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
+                            <path fill="currentColor"
+                                  d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z">
+                            </path>
+                        </svg>
+                        <div class="text-center">
+                            <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
+                                {{ __('order_placed') }}!</h3>
+                            <p class="text-gray-600 my-2">{{ __('thanks_order') }}</p>
+                            <p>{{ __('order_success_message') }}</p>
+                            <div class="py-10 text-center">
+                                <p @click="closeModalAndRedirect"
+                                   class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 cursor-pointer rounded-md">
+                                    {{ __('back_to_shop') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="loading" class="bg-white p-6  md:mx-auto">
+                        <svg aria-hidden="true"
+                             class="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600 mx-auto mt-6 mb-6"
+                             viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                                fill="currentColor"/>
+                            <path
+                                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                                fill="currentFill"/>
+                        </svg>
+                        <div class="text-center">
+                            <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
+                                {{ __('pending') }}...</h3>
+
+                        </div>
+                    </div>
+                </div>
+            </Modal>
 
         </div>
 

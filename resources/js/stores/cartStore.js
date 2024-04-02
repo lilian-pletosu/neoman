@@ -35,7 +35,8 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     async function removeProductInCart(productId) {
-        axios.delete(route('api.cartRemove', {productCode: productId})).then(async (response) => message.value = response.data).finally(() => fetchCount());
+
+        axios.delete(route('api.cartRemove', {productID: productId})).then(async (response) => message.value = response.data).finally(() => fetchCount());
     }
 
     async function fetchCount() {
