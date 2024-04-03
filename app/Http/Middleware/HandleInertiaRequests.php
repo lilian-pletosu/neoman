@@ -61,7 +61,8 @@ class HandleInertiaRequests extends Middleware
             'brands' => Brand::where('is_enabled', 1)->get(),
             'latest_products' => (new ProductService())->loadLatestProducts(),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
-            'last_visited' => (new ProductService())->loadLastVisitedProduct(request()->session()->get('last'))
+            'last_visited' => (new ProductService())->loadLastVisitedProduct(request()->session()->get('last')),
+            'all_products' => (new ProductService())->loadAllProducts()
 
         ];
     }

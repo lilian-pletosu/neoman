@@ -1,5 +1,7 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import Component from 'unplugin-vue-components/vite'
+import RadixVueResolver from 'radix-vue/resolver'
 
 const {blackA, green, mauve, slate} = require('@radix-ui/colors')
 
@@ -17,6 +19,7 @@ export default {
         './resources/js/**/*/*/*/.vue',
     ],
     mode: 'jit',
+    components: [],
     theme: {
         screens: {
             'xs': '200px',
@@ -86,5 +89,15 @@ export default {
                 {values: theme('textShadow')}
             )
         }),
-    ]
+        Component({
+            dts: true,
+            resolvers: [
+                RadixVueResolver()
+
+                // RadixVueResolver({
+                //   prefix: '' // use the prefix option to add Prefix to the imported components
+                // })
+            ],
+        }),
+    ],
 };

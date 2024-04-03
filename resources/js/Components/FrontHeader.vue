@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import {getCurrentInstance, onMounted, ref} from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
     Bars3Icon,
@@ -15,11 +15,16 @@ import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import Cart from "@/Components/Cart.vue";
 import Wishlist from "@/Components/Wishlist.vue";
+import {onClickOutside} from "@vueuse/core";
 
+const app = getCurrentInstance();
 
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore();
 
+const openSearch = ref(false);
+const searchElement = ref(null);
+const searchedProducts = ref([]);
 
 const menu = ref(false);
 const sidebar = ref(null)
@@ -27,14 +32,48 @@ const callModal = ref(false);
 const openCart = ref(false);
 const openWishlist = ref(false);
 
+const searchProduct = (value) => {
+    if (value.length > 1) {
+        searchedProducts.value = app.appContext.config.globalProperties.$page.props.all_products.filter(category => category.name.toLowerCase().includes(value.toLowerCase()))
+    } else {
+        searchedProducts.value = app.appContext.config.globalProperties.$page.props.all_products;
+    }
+}
+
+onClickOutside(searchElement, () => {
+    openSearch.value = false;
+})
+
 
 const toggleSidebar = () => {
     menu.value = !menu.value
 }
 
+const randomColorClass = () => {
+    const colorClasses = [
+        'bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400',
+        'bg-gradient-to-r from-blue-500 via-blue-400 to-indigo-400',
+        'bg-gradient-to-r from-green-500 via-green-400 to-teal-400',
+        'bg-gradient-to-r from-pink-500 via-pink-400 to-purple-400',
+        'bg-gradient-to-r from-red-500 via-red-400 to-pink-400',
+        'bg-gradient-to-r from-yellow-500 via-yellow-400 to-green-400',
+        'bg-gradient-to-r from-indigo-500 via-indigo-400 to-blue-400',
+        'bg-gradient-to-r from-purple-500 via-purple-400 to-pink-400',
+        'bg-gradient-to-r from-teal-500 via-teal-400 to-green-400',
+        'bg-gradient-to-r from-gray-500 via-gray-400 to-gray-400',
+        'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-400',
+        'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-400',
+        // Adăugați aici mai multe clase de culori
+    ];
+
+    const randomIndex = Math.floor(Math.random() * colorClasses.length);
+    return colorClasses[randomIndex];
+}
+
 onMounted(async () => {
     await cartStore.fetchCount()
     await wishlistStore.fetchCount();
+
 })
 
 </script>
@@ -80,6 +119,7 @@ onMounted(async () => {
                         <heart-icon class="w-7"/>
                     </div>
                     <Wishlist :is-open="openWishlist"
+                              @fetchCart="cartStore.fetchCount()"
                               @close="openWishlist = !openWishlist"/>
                 </div>
                 <div class="relative select-none">
@@ -149,15 +189,89 @@ onMounted(async () => {
                 </div>
             </div>
             <div class=" hidden md:flex flex-1 items-center justify-end pl-4 md:pr-2 xl:pr-0">
-                <div class="relative h-10  w-full ">
+                <div class="relative h-10  w-full " ref="searchElement">
                     <div
                         class="absolute top-2/4 right-3 grid h-5 w-5 -translate-y-2/4 place-items-center text-blue-gray-500">
                         <magnifying-glass-icon class="w-6 dark:text-white"/>
                     </div>
                     <input
+                        @focus="openSearch = true"
+                        @change="openSearch = true"
+                        @input="searchProduct($event.target.value)"
                         class=" h-full w-full rounded-md dark:border-slate-500 dark:bg-dark dark:text-white  px-3 py-2.5 !pr-9 font-mulish text-sm font-normal  focus:border-none focus:outline-none"
-                        placeholder="Caută un produs..."
+                        :placeholder="__('search_product') + '...'"
                     />
+                    <div v-show="openSearch"
+                         class="absolute w-full  max-h-[500px] overflow-y-scroll z-50 shadow bg-white border rounded-b-lg ">
+                        <div class="flex flex-col space-y-2 p-4">
+                            <div v-if="searchedProducts.length >= 0" v-for="product in searchedProducts"
+                                 class="flex items-center space-x-2 ">
+
+                                <div
+                                    class="w-full flex rounded-xl border border-gray-100 p-4 text-left text-gray-600 shadow-lg sm:p-8">
+                                    <img class="mr-5 block h-8 w-8 max-w-full text-left align-middle sm:h-16 sm:w-16"
+                                         :src="product.image"
+                                         alt="Profile Picture"/>
+                                    <div class="w-full text-left">
+                                        <div class="mb-2 flex flex-col justify-between text-gray-600 sm:flex-row">
+                                            <h3 class="font-medium">{{ product.name }}</h3>
+                                            <time class="text-xs" datetime="2022-11-13T20:00Z">
+                                                {{ product.brand.name }}
+                                            </time>
+                                        </div>
+                                        <p class="text-sm">{{ product.description.slice(0, 80) }}</p>
+                                        <div class="mt-5 flex items-center justify-between text-gray-600">
+                                            <Link :href="route('product_page', {slug: product.slug})"
+                                                  class="cursor-pointer border py-2 px-8 text-center text-xs leading-tight transition-colors duration-150 ease-in-out hover:border-gray-500 rounded-lg">
+                                                {{ __('buy') }}
+                                            </Link>
+                                            <a title="Likes" href="#"
+                                               class="group flex cursor-pointer items-center justify-around">
+                                                {{ product.price }} {{ __('lei') }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div v-if="searchedProducts.length <= 0"
+                                 class="flex items-center space-x-2 ">
+
+                                <section class="bg-white py-6">
+                                    <div class="mx-auto max-w-screen-xl px-4 md:px-8">
+                                        <!-- Heading -->
+                                        <div class="relative mb-10  md:mb-16">
+                                            <h2 class="mb-4 text-center font-serif text-3xl font-bold text-gray-800 md:mb-6 md:text-4xl">
+                                                {{ __('popular_sub_subcategories') }}</h2>
+                                        </div>
+                                        <!-- /Heading -->
+                                        <div
+                                            class="grid gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-3 xl:grid-cols-4 xl:gap-16">
+                                            <!-- Article -->
+                                            <article
+                                                v-for="sub_subcategory in app.appContext.config.globalProperties.$page.props.sub_subcategories.slice(0,4)"
+                                                class="">
+                                                <Link
+                                                    :class="randomColorClass() + ' block rounded-lg p-2 transition hover:scale-105 '"
+                                                    :href="route('products_page', {subSubcategory: sub_subcategory.slug})">
+                                                    <h2 class="mx-4 h-16 mt-4 mb-10 font-serif text-2xl font-semibold text-white">
+                                                        {{ sub_subcategory.name }}</h2>
+                                                    <div class="flex items-center rounded-md px-4 py-3">
+                                                        <img class="h-10 w-10 rounded-full object-cover"
+                                                             :src="sub_subcategory.image" alt="Simon Lewis"/>
+                                                    </div>
+                                                </Link>
+                                            </article>
+
+
+                                            <!-- /Article -->
+                                        </div>
+                                    </div>
+                                </section>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

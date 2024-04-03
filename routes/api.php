@@ -88,3 +88,18 @@ Route::get('/currentLocale', function () {
 
 
 Route::get('/fetchOrder/{orderNumber}', [\App\Http\Controllers\admin\OrderController::class, 'show'])->name('api.fetchOrder');
+
+
+Route::get('/wishlistToCart', function () {
+    return (new CookieService())->wishlistToCart();
+})->name('api.transferProducts');
+
+Route::get('forget_wishlist', function () {
+    return (new CookieService())->forgetCookie('wishlist');
+})->name('api.forget_wishlist');
+
+//-------------------------------------------------------------------------------
+//Route::get('/searchProducts/{search}', function ($search) {
+//    $products = (new \App\Services\ProductService())->searchProducts($search);
+//    return response()->json($products);
+//})->name('api.searchProducts');

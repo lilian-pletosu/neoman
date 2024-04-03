@@ -148,7 +148,7 @@ function onSlideChange() {
                       slidesPerView: 4,
                       spaceBetween: 10
                   },
-                  '1090':{
+                  '1900':{
                         slidesPerView: 5,
                         spaceBetween: 10
                   }
@@ -160,7 +160,7 @@ function onSlideChange() {
 
 
                 <div
-                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96     md:h-[380px] bg-3 relative group/card">
+                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px] bg-3 relative group/card">
                     <div class="hover:cursor-pointer">
                         <div>
                             <div class="static">
@@ -197,7 +197,9 @@ function onSlideChange() {
                                     <p class="font-mulish text-sm line-through font-medium">{{ product.price }}
                                         {{ __('lei') }}</p>
                                     <span
-                                        class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">-15%</span>
+                                        class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{{
+                                            product.sale
+                                        }}</span>
 
                                 </div>
                             </template>

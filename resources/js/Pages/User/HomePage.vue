@@ -27,7 +27,6 @@ const props = defineProps({
             <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
         </template>
 
-
         <product-section :products="sales_products" :sale="true"
                          :title="__('sales_products')" @addProductInCart="args => addProductIncart(args)"/>
         <product-section :products="sales_products" :seasons_products="true" :title="__('season_products')"/>

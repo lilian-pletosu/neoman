@@ -148,7 +148,10 @@ return [
     'select_subcategory' => 'Selectează subcategorie',
     'select_sub_subcategory' => 'Selectează sub-subcategorie',
     'select_category' => 'Selectează categorie',
-    'comments' => 'Comentarii',
+    'notices' => 'Detalii',
+    'empty_wishlist' => 'Lista de favorite este goală',
+    'search_product' => 'Caută produs',
+    'popular_sub_subcategories' => 'Cele mai populare sub-subcategorii',
 
     //statuses
 

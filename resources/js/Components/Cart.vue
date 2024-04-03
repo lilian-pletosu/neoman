@@ -27,9 +27,7 @@ onClickOutside(target, () => {
 })
 
 const deleteProductFromCart = (id) => {
-    cartStore.removeProductInCart(id).then(() => {
-        emits('close');
-    })
+    cartStore.removeProductInCart(id);
 }
 
 </script>

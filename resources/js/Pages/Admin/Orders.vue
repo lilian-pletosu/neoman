@@ -111,6 +111,12 @@
                                             <p>{{ orderLoad.address }}</p>
                                         </div>
                                     </div>
+                                    <div class="sm:col-span-2">
+                                        <span class="text-sm text-slate-500">{{ __('notices') }}</span>
+                                        <div class="p-1 border container-custom-rounded">
+                                            <p>{{ orderLoad.message }}</p>
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div>

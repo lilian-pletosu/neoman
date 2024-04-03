@@ -6,7 +6,6 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import vSelect from "vue-select";
 import {createPinia} from 'pinia'
-import SweetModal from 'sweet-modal-vue-3';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
@@ -62,7 +61,6 @@ createInertiaApp({
 
         return app
             .use(plugin)
-            .use(SweetModal)
             .component("v-select", vSelect)
             .use(ZiggyVue)
             .mount(el);

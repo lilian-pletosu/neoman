@@ -3,24 +3,44 @@
 namespace App\Services;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Cookie;
 
 class CookieService
 {
     public function addInCart($productId, $colorId)
     {
-        return $this->addInCookie($productId, $colorId, 'cart');
+        return $this->addInCookie($productId, 'cart', $colorId);
+    }
+
+    public function forgetWishlist()
+    {
+        $cookie = $this->forgetCookie('wishlist');
+        return response('success')->cookie($cookie);
+    }
+
+
+    public function wishlistToCart(): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
+    {
+        $itemsCart = request()->cookie('cart');
+        $itemsWishlist = request()->cookie('wishlist');
+
+        $itemsCart = $itemsCart ? unserialize($itemsCart) : [];
+        $itemsWishlist = $itemsWishlist ? unserialize($itemsWishlist) : [];
+
+        if ($itemsWishlist) {
+            foreach ($itemsWishlist as $product) {
+                $itemsCart[] = $product;
+            }
+            $cookie = cookie('cart', serialize($itemsCart), 262656);
+        } else {
+            $cookie = cookie('cart', serialize($itemsCart), 262656);
+        }
+        return response('success')->cookie($cookie);
     }
 
     public function removeProductFromCart($productId)
     {
         return $this->deleteProductFromCookie($productId, 'cart');
-    }
-
-    public function fetchAllProductsFromCart()
-    {
-        foreach ($this->getProducts('cart') as $product) {
-
-        }
     }
 
     public function updateQtyOfProductFromCart($productId, $qty)
@@ -34,7 +54,6 @@ class CookieService
                     break;
                 }
             }
-
             $cookie = cookie('cart', serialize($items), 262656);
             return response(trans('app_context.product_updated'))->cookie($cookie);
         }
@@ -43,7 +62,7 @@ class CookieService
 
     public function addInWishlist($productId)
     {
-        return $this->addInCookie($productId, '', 'wishlist');
+        return $this->addInCookie($productId, 'wishlist');
     }
 
     public function removeProductFromWishlist($productId)
@@ -63,15 +82,12 @@ class CookieService
     }
 
 
-    public function addInCookie($productId, $colorId, string $storageName)
+    public function addInCookie($productId, string $storageName, $colorId = null)
     {
-
         $itemsCart = request()->cookie($storageName);
-
         $items = $itemsCart ? unserialize($itemsCart) : [];
 
         $productDb = Product::where('id', $productId)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
-
         $product = [
             'id' => $productDb->id,
             'name' => $productDb->name,
@@ -80,24 +96,28 @@ class CookieService
             'price' => $productDb->price,
             'total_price' => $productDb->price,
             'qty' => 1,
-            'color_value' => $colorId
+            'color_value' => $colorId ?? null
         ];
 
         if (!$itemsCart) {
             $items[] = $product;
             $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-            return response(trans('app_context.new_product_added'))->cookie($cookie);
-
+            return response('primul')->cookie($cookie);
         } else {
-            if (in_array($product, unserialize($itemsCart))) {
-                return response(trans('app_context.product_exist'), 400);
-            } else {
-                $items[] = $product;
-                $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-                return response(trans('app_context.new_product_added'))->cookie($cookie);
+            foreach ($items as &$item) {
+                if ($item['id'] == $product['id'] && $item['color_value'] == $product['color_value']) {
+                    $item['qty'] += 1;
+                    $item['total_price'] = $item['price'] * $item['qty'];
+                    $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
+                    return response('product_qty_updated')->cookie($cookie);
+                }
             }
+            $items[] = $product;
+            $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
+            return response('al treilea')->cookie($cookie);
         }
     }
+
 
     public function deleteProductFromCookie($productId, string $storageName)
     {
@@ -115,6 +135,12 @@ class CookieService
             }
         }
         return response();
+    }
+
+    public function forgetCookie($storageName)
+    {
+        $cookie = Cookie::forget($storageName);
+        return response('success')->withCookie($cookie);
     }
 
 

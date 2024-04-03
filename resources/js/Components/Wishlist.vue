@@ -2,11 +2,12 @@
 
 import {ref} from "vue";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
-import {Link} from "@inertiajs/vue3";
 import {onClickOutside} from '@vueuse/core'
+import {useCartStore} from "@/stores/cartStore.js";
 
 const wishlistStore = useWishlistStore();
-const emits = defineEmits(["close"])
+const cartStore = useCartStore();
+const emits = defineEmits(["close", "fetchCart"])
 
 const props = defineProps({
     isOpen: {
@@ -22,18 +23,25 @@ onClickOutside(target, () => {
     if (props.isOpen) emits('close')
 })
 
+const transferProductsToCart = () => {
+    wishlistStore.transferProductsToCart().then(() => {
+        cartStore.fetchCount().then(() => {
+            emits('fetchCart')
+        });
+    });
+
+}
+
 </script>
 
 
 <template>
-    <div v-if="isOpen" class="relative z-10  "
-         aria-labelledby="slide-over-title"
-         role="dialog"
-         aria-modal="false">
-
+    <div v-show="isOpen" class="relative z-10" aria-labelledby="slide-over-title" role="dialog"
+         aria-modal="true">
         <div class="fixed inset-0 bg-slate-500 bg-opacity-35">
             <div class="absolute inset-0 ease-in-out duration-700 delay-500"
-                 :class="isOpen ? 'translate-x-0' : 'translate-x-full'">
+                 :class="isOpen ? 'translate-x-0' : 'translate-x-full'"
+            >
                 <div class="pointer-events-none fixed inset-y-0 right-0 flex" ref="target">
                     <div class="pointer-events-auto  w">
                         <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
@@ -56,12 +64,12 @@ onClickOutside(target, () => {
                                         </button>
                                     </div>
                                 </div>
-                                <hr class="w-full">
 
                                 <div class="mt-8" v-if="wishlistStore.products.length !== 0">
                                     <div class="flow-root">
                                         <ul role="list" class="-my-6 divide-y divide-gray-200">
-                                            <li v-for="product in wishlistStore.products" class="flex py-6">
+                                            <li v-for="product in wishlistStore.products" :key="product"
+                                                class="flex py-6">
                                                 <div
                                                     class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                                     <img
@@ -75,24 +83,18 @@ onClickOutside(target, () => {
                                                         <div
                                                             class="flex justify-between font-medium text-sm md:text-base text-gray-900">
                                                             <h3>
-                                                                <Link
-                                                                    :href="route('product_page', {slug: product.slug})">
-                                                                    {{ product.name }}
-                                                                </Link>
+                                                                <a href="#">{{ product.name }}</a>
                                                             </h3>
                                                             <p class="ml-4">
-                                                                {{ product.price.toFixed(2) }}</p>
+                                                                {{ product.price.toFixed(2) }} {{ __('lei') }}</p>
                                                         </div>
                                                         <p class="mt-1 text-sm text-gray-500">
                                                             {{ product.brand.name }}</p>
                                                     </div>
-                                                    <div
-                                                        class="flex flex-1 items-end justify-between text-sm">
-                                                        <span></span>
-
+                                                    <div class="flex flex-1 items-center justify-between text-sm">
                                                         <div class="flex">
                                                             <button type="button"
-                                                                    @click="wishlistStore.removeProductInCart(product.id)"
+                                                                    @click="wishlistStore.removeProductFromWishlist(product.id)"
                                                                     class="font-medium text-indigo-600 hover:text-indigo-500">
                                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                                      width="2em" height="2em"
@@ -112,7 +114,7 @@ onClickOutside(target, () => {
                                         </ul>
                                     </div>
                                 </div>
-                                <div v-else class="">
+                                <div v-else class="mt-8">
                                     <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"
                                          viewBox="0 0 650 512" id="empty-cart">
                                         <circle cx="337.969" cy="243.395" r="167.695"
@@ -200,9 +202,21 @@ onClickOutside(target, () => {
                                         <circle cx="340.677" cy="179.6" r="2.7" fill="#f9ae2b"></circle>
                                     </svg>
                                     <span class="flex justify-center font-mulish font-medium text-xl">{{
-                                            __('empty_cart')
+                                            __('empty_wishlist')
                                         }}</span>
                                 </div>
+                            </div>
+
+                            <div v-if="wishlistStore.products.length !== 0"
+                                 class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                                <div class="mt-6">
+                                    <p @click="transferProductsToCart"
+                                       class="flex items-center cursor-pointer flex mx-auto
+                                        bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
+                                        {{ __('add_all_products_in_cart') }}
+                                    </p>
+                                </div>
+
                             </div>
                         </div>
                     </div>
