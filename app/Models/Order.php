@@ -24,6 +24,7 @@ class Order extends Model
         'message',
         'products',
         'total_price',
+        'delivery_price',
         'status',
         'order_number'
     ];
@@ -50,7 +51,7 @@ class Order extends Model
          * This event is only dispatched if at least one of the model's attributes has been changed.
          * The \App\Events\OrderStatusUpdated::class event class is dispatched for this event.
          */
-        'updated' => \App\Events\OrderStatusUpdated::class,
+//        'updated' => \App\Events\OrderStatusUpdated::class,
 
     ];
 
@@ -63,6 +64,11 @@ class Order extends Model
                 $orderNumber = mt_rand(10000, 999999);
             } while (Order::where('order_number', $orderNumber)->exists());
             $order->order_number = "#$orderNumber";
+        });
+        static::updating(function ($order) {
+            if ($order->isDirty('status')) {
+                event(new \App\Events\OrderStatusUpdated($order));
+            }
         });
 
     }

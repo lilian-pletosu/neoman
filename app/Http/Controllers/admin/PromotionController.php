@@ -74,12 +74,12 @@ class PromotionController extends Controller
         if (isset($validatedData['brand'])) {
             $promotion->brands()->attach($validatedData['brand']);
         }
-//        if (isset($validatedData['subcategory'])) {
-//            $promotion->brands()->attach($validatedData['brands']);
-//        }
-//        if (isset($validatedData['brand'])) {
-//            $promotion->brands()->attach($validatedData['brands']);
-//        }
+        if (isset($validatedData['subcategory'])) {
+            $promotion->brands()->attach($validatedData['subcategory']);
+        }
+        if (isset($validatedData['category'])) {
+            $promotion->brands()->attach($validatedData['category']);
+        }
         if (isset($validatedData['sub_subcategory'])) {
             $promotion->sub_subcategories()->attach($validatedData['sub_subcategories']);
         }

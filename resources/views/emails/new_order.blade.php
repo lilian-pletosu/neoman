@@ -11,19 +11,39 @@
 <body class="bg-gray-100 p-4">
 <div class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
     <h2 class="text-2xl font-semibold mb-4">Comandă recepționată</h2>
-    <p class="mb-4">Bună {{ $order->full_name }},</p>
+    <p class="mb-4">Bună ziua, {{ $order->full_name }}!</p>
 
-    <p>Comanda ta a fost recepționată cu succes. Iată detaliile comenzii:</p>
+    <p>Vă mulțumim pentru comandă! Cererea dvs. este acceptată. Vă vom contacta în curând pentru confirmare. Vom fi
+        bucuroși să vă răspundem la întrebări.</p>
 
-    <ul class="mb-4">
+    <p>Ora comenzii: {{ $order->created_at->format('d.m.Y / H:i') }}</p>
+    <p>Telefon: {{ $order->phone }}</p>
+    <p>Email: {{ $order->email }}</p>
+    <p>Adresă: {{$order->city}},{{$order->address}}</p>
+    @if($order->commment)
+        <p>Comentariu: {{ $order->comment}}</p>
+    @endif
+    <hr>
+
+    <table>
+        <tr>
+            <th>Denumirea</th>
+            <th>Cantitate</th>
+            <th>Preț</th>
+        </tr>
         @foreach($order->products as $product)
-            <li>{{ $product['name'] }} - {{ $product['qty'] }} bucăți x {{ $product['price'] }} lei</li>
+            <tr>
+                <td>{{$product['name']}}</td>
+                <td>{{$product['qty']}}</td>
+                <td>{{$product['price']}}</td>
+            </tr>
         @endforeach
-    </ul>
+    </table>
+  
 
     <p>Total de plată: {{ $order->total_price }} lei</p>
 
-    <p class="mt-4">Cu drag,<br>Neoman!</p>
+    <p class="mt-4">Cu drag,<br>Echipa Neoman!</p>
 </div>
 </body>
 </html>

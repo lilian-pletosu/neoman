@@ -62,7 +62,7 @@ class ProductService
 
             return $product;
         } catch (\Exception $exception) {
-            dd($exception);
+            return $exception;
         }
 
 
@@ -104,11 +104,13 @@ class ProductService
                         }
                         $brandName = $product->brand->name ?? null;
                         $brandLogo = $product->brand->image ?? null;
+                        $image = $product->images()->first()->image1 ?? null;
+
                         $productArray = [
                             'id' => $product->id,
                             'slug' => $product->slug,
                             'name' => $product->translate(session()->get('locale'))->name,
-                            'image' => $product->images()->first()->image1,
+                            'image' => $image,
                             'price' => $product->price,
                             'final_price' => $product->price - ($product->price * $promotion->discount / 100), // 'discount' => $promotion->discount . '%',
                             'sale' => $promotion->discount . '%',
@@ -150,13 +152,14 @@ class ProductService
             // Obține brandul produsului și adaugă numele său în array-ul produsului
             $brandName = $product->brand->name ?? null;
             $brandLogo = $product->brand->image ?? null;
+            $image = $product->images()->first()->image1 ?? null;
 
             // Adaugă array-urile de atribute și numele brandului în array-ul produsului
             $productArray = [
                 'id' => $product->id,
                 'slug' => $product->slug,
                 'name' => $product->translate(session()->get('locale'))->name,
-                'image' => $product->images()->first()->image1,
+                'image' => $image,
                 'price' => $product->price,
                 'brand' => ['name' => $brandName, 'image' => $brandLogo],
                 'attributes' => $attributesArray,
@@ -197,13 +200,15 @@ class ProductService
                     // Obține brandul produsului și adaugă numele său în array-ul produsului
                     $brandName = $product->brand->name ?? null;
                     $brandLogo = $product->brand->image ?? null;
+                    $image = $product->images()->first()->image1 ?? null;
+
 
                     // Adaugă array-urile de atribute și numele brandului în array-ul produsului
                     $productArray = [
                         'id' => $product->id,
                         'slug' => $product->slug,
                         'name' => $product->translate(session()->get('locale'))->name,
-                        'image' => $product->images()->first()->image1,
+                        'image' => $image,
                         'price' => $product->price,
                         'brand' => ['name' => $brandName, 'image' => $brandLogo],
                         'attributes' => $attributesArray,
@@ -249,6 +254,7 @@ class ProductService
             // Obține brandul produsului și adaugă numele său în array-ul produsului
             $brandName = $product->brand->name ?? null;
             $brandLogo = $product->brand->image ?? null;
+            $image = $product->images()->first()->image1 ?? null;
 
             // Adaugă array-urile de atribute și numele brandului în array-ul produsului
             $productArray = [
@@ -256,7 +262,7 @@ class ProductService
                 'slug' => $product->slug,
                 'name' => $product->translate(session()->get('locale'))->name,
                 'description' => $product->translate(session()->get('locale'))->description,
-                'image' => $product->images()->first()->image1,
+                'image' => $image,
                 'price' => $product->price,
                 'brand' => ['name' => $brandName, 'image' => $brandLogo],
                 'attributes' => $attributesArray,

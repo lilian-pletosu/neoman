@@ -39,10 +39,12 @@ services:
     neoman-php:
         build:
             context: ./docker-settings
+            args:
+                uuid: '${UID:-1000}'
             dockerfile: php.dockerfile
-        user: "1000:1000"
         volumes:
             - .:/var/www/html
+        restart: unless-stopped
         networks:
             - neoman
 

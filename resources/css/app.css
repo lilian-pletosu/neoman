@@ -38,6 +38,14 @@
     @apply bg-[#3C3C3B] font-semibold border border-slate-400;
 }
 
+.status-inactive {
+    @apply bg-red-400 font-semibold border border-slate-400;
+}
+
+.status-active {
+    @apply bg-green-400 font-semibold border border-slate-400;
+}
+
 .primary-text {
     @apply text-xl font-bold text-gray-900 mb-2;
 }

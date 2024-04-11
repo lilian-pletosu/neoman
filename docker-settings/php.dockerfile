@@ -1,44 +1,51 @@
+
 # Utilizați o imagine PHP mai recentă
 FROM php:8.2-fpm-alpine
 
-# Instalarea Composer
-RUN curl -sS https://getcomposer.org/installer -o composer-setup.php && \
-    php composer-setup.php --install-dir=/var/www/html --filename=composer && \
-    rm -rf composer-setup.php
+#setting an argument
+ARG uuid
+EXPOSE $uuid
 
-# Creați directorul pentru site
+# Installing composer
+RUN curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+RUN rm -rf composer-setup.php
+
+
 RUN mkdir -p /var/www/html
 
-RUN chown -R www-data:www-data /usr/local/bin
+#using the argument
+RUN apk --no-cache add shadow && usermod -u $uuid www-data
+
+RUN docker-php-ext-install pdo pdo_mysql
+
+# using gd lib and zip lib
+RUN apk update  && apk add  libpng-dev
+RUN apk update && \
+    apk add \
+        libzip-dev
+
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install zip
+RUN docker-php-ext-install exif
+
+# Comment out the xdebug section
+# it looks like it is important this comes before docker-php-source redis the next command
+# RUN apk add --no-cache $PHPIZE_DEPS \
+#    && pecl install xdebug \
+#    && docker-php-ext-enable xdebug\
+#    && echo "xdebug.mode=develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo "xdebug.discover_client_host=0" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 
-
-# Instalarea extensiilor PHP (pdo, pdo_mysql si exif)
-# Instalarea extensiilor PHP (pdo, pdo_mysql si exif)
-RUN apk --no-cache add shadow && \
-    docker-php-ext-install pdo pdo_mysql exif && \
-    usermod -s /bin/bash www-data && \
-    apk update && apk add libpng-dev libzip-dev && \
-    docker-php-ext-install gd zip
-
-
-
-# Instalarea extensiilor PHP (gd și zip)
-RUN apk update && apk add libpng-dev libzip-dev && \
-    docker-php-ext-install gd zip
-
-# Comentați secțiunea xdebug (dacă nu este necesară)
-# Acest lucru trebuie să apară înaintea următoarei comenzi docker-php-source
-#RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
-#    echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
-# Instalarea extensiei Redis
 ENV EXT_REDIS_VERSION=5.3.4
-RUN mkdir -p /usr/src/php/ext/redis && \
-    curl -fsSL https://github.com/phpredis/phpredis/archive/$EXT_REDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 && \
-    docker-php-ext-configure redis && \
-    docker-php-ext-install redis
-
-# Curățați resursele după instalare
-RUN docker-php-source delete
-
+RUN docker-php-source extract \
+    # redis
+    && mkdir -p /usr/src/php/ext/redis \
+    && curl -fsSL https://github.com/phpredis/phpredis/archive/$EXT_REDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 \
+    && docker-php-ext-configure redis \
+    && docker-php-ext-install redis \
+    # cleanup
+    && docker-php-source delete \

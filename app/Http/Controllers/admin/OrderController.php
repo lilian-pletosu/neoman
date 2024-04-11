@@ -125,6 +125,12 @@ class OrderController extends Controller
             $order->status = $newStatus;
             $order->save();
         }
+        if ($request->type == 'updateDeliveryPrice') {
+            $order = Order::findOrFail($id);
+            $new_delivery_price = $request->delivery_price;
+            $order->delivery_price = $new_delivery_price;
+            $order->save();
+        }
     }
 
     /**

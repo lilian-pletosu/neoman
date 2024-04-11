@@ -13,7 +13,8 @@
     <h2 class="text-2xl font-semibold mb-4">Statusul comenzii a fost actualizat</h2>
     <p class="mb-4">Bună {{ $order->full_name }},</p>
 
-    <p>Comanda ta a fost {{ trans("app_context" . "." .$order->status->value) }} cu succes. Iată detaliile comenzii:</p>
+    <p>Comanda ta a fost <b>{{ trans("app_context" . "." .$order->status->value) }}</b> cu succes. Iată detaliile
+        comenzii:</p>
 
     <ul class="mb-4">
         @foreach($order->products as $product)
@@ -21,7 +22,11 @@
         @endforeach
     </ul>
 
-    <p>Total de plată: {{ $order->total_price }} lei</p>
+    <p>Subtotal de plată: {{ $order->total_price }} lei</p>
+    @if($order->delivery_price)
+        <p>Livrarea: {{ $order->delivery_price ?? 0 }} lei</p>
+    @endif
+    <p>Total de plată: {{ $order->total_price +  $order->delivery_price ?? 0 }} lei</p>
 
     <p class="mt-4">Cu drag,<br>Neoman!</p>
 </div>

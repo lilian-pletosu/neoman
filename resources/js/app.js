@@ -3,10 +3,9 @@ import "vue-select/dist/vue-select.css";
 import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
-import {ZiggyVue} from '../../vendor/tightenco/ziggy/dist/vue.m';
 import vSelect from "vue-select";
 import {createPinia} from 'pinia'
-
+import {ZiggyVue} from 'ziggy-js'
 
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
 const appDescription = "Alături la fiecare etapă în viață";

@@ -175,13 +175,15 @@ onMounted(() => {
                                                 </div>
                                             </template>
                                             <template v-else-if="column === 'status'">
-                                                <div class="rounded  p-1 text-center text-white  shadow mx-auto"
+                                                <div class="rounded  p-1 text-center text-black  shadow mx-auto"
                                                      :class="{
-                                                        'status-pending': resource[columnInOrder] === 'pending',
-                                                        'status-confirmed': resource[columnInOrder] === 'confirmed',
-                                                        'status-shipped': resource[columnInOrder] === 'shipped',
-                                                        'status-delivered': resource[columnInOrder] === 'delivered',
-                                                        'status-canceled': resource[columnInOrder] === 'canceled',
+                                                        'status-pending text-white': resource[columnInOrder] === 'pending',
+                                                        'status-confirmed text-white': resource[columnInOrder] === 'confirmed',
+                                                        'status-shipped text-white': resource[columnInOrder] === 'shipped',
+                                                        'status-delivered text-white': resource[columnInOrder] === 'delivered',
+                                                        'status-canceled text-white': resource[columnInOrder] === 'canceled',
+                                                        'status-inactive text-white': resource[columnInOrder] === 'inactive',
+                                                        'status-active text-white': resource[columnInOrder] === 'active',
                                                      }">
                                                     <p>{{
                                                             __(applyFormat(column, resource[columnInOrder])) ?? '--'

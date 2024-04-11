@@ -43,7 +43,6 @@ export const useCartStore = defineStore('cart', () => {
         try {
             const response = await fetch(route('api.getCart'));
             const data = await response.json(); // Obțineți conținutul răspunsului ca obiect JSON
-            console.log(data);
             countCart.value = data.count // Afisează obiectul JSON în consolă
             products.value = data.products
             totalPrice.value = data.total_price

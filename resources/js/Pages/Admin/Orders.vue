@@ -77,7 +77,7 @@
                                 <div>
                                     <p class="text-sm text-slate-500">{{ __('date') }}:
                                         {{
-                                            useDateFormat(orderLoad.created_at, "DD.MM.YYYY", {locales: 'rum'}).value
+                                            useDateFormat(orderLoad.created_at, "DD.MM.YYYY, HH:mm", {locales: 'rum'}).value
                                         }}</p>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 ">
@@ -111,7 +111,7 @@
                                             <p>{{ orderLoad.address }}</p>
                                         </div>
                                     </div>
-                                    <div class="sm:col-span-2">
+                                    <div v-if="orderLoad.message" class="sm:col-span-2">
                                         <span class="text-sm text-slate-500">{{ __('notices') }}</span>
                                         <div class="p-1 border container-custom-rounded">
                                             <p>{{ orderLoad.message }}</p>
@@ -197,9 +197,25 @@
                                                 <div class="col-span-1  text-end">
                                                     <p class="text-lg font-semibold">{{ orderLoad.total_price }}
                                                         {{ __('lei') }}</p>
-                                                    <p class="text-lg font-semibold">100 {{ __('lei') }}</p>
+                                                    <p @click="showDeliveryPriceInput = !showDeliveryPriceInput"
+                                                       v-show="!showDeliveryPriceInput"
+                                                       class="text-lg font-semibold text-red-400 cursor-pointer">
+                                                        {{ orderLoad.delivery_price ?? 0 }}
+                                                        {{ __('lei') }}</p>
+                                                    <div ref="target" class="flex justify-end space-x-2"
+                                                         v-show="showDeliveryPriceInput">
+                                                        <input v-model="orderLoad.delivery_price" type="number"
+                                                               class="border rounded p-1 w-20"
+                                                        >
+
+                                                        <arrow-path-icon
+                                                            @click="updateOrderDeliveryPrice(orderLoad.delivery_price)"
+                                                            class="w-4 cursor-pointer"/>
+                                                    </div>
                                                     <p class="text-lg font-semibold">
-                                                        {{ parseFloat(orderLoad.total_price) + 100 }}
+                                                        {{
+                                                            parseFloat(orderLoad.total_price) + parseFloat(orderLoad.delivery_price ?? 0)
+                                                        }}
                                                         {{ __('lei') }}</p>
                                                 </div>
 
@@ -239,9 +255,9 @@ import {Link, router} from "@inertiajs/vue3";
 import vSelect from 'vue-select'
 import DataTable from "@/Components/DataTable.vue";
 import axios from "axios";
-import {useDateFormat} from "@vueuse/core";
+import {onClickOutside, useDateFormat} from "@vueuse/core";
 import Modal from "@/Components/Modal.vue";
-import {PencilSquareIcon, TrashIcon} from "@heroicons/vue/16/solid/index.js";
+import {ArrowPathIcon, PencilSquareIcon, TrashIcon} from "@heroicons/vue/16/solid/index.js";
 
 const app = getCurrentInstance();
 
@@ -274,6 +290,7 @@ defineComponent({
     }
 
 })
+
 const notification = ref(false);
 const type = ref('modal');
 const method = ref('POST');
@@ -282,7 +299,15 @@ const modalIsOpen = ref(false);
 const res = ref();
 const loadProducts = ref(false);
 const showSelectStatus = ref(false)
+const showDeliveryPriceInput = ref(false);
+const target = ref(null)
 
+
+onClickOutside(target, () => {
+    if (showDeliveryPriceInput.value) {
+        showDeliveryPriceInput.value = false;
+    }
+})
 const showNotify = (type) => {
     notifyType.value = type;
     notification.value = !notification.value;
@@ -320,7 +345,14 @@ const removeProductFromOrder = (productId, order) => {
     }
 
 }
-
+const updateOrderDeliveryPrice = (delivery_price) => {
+    const data = {
+        type: 'updateDeliveryPrice',
+        delivery_price: delivery_price
+    }
+    showDeliveryPriceInput.value = !showDeliveryPriceInput.value;
+    updateOrder(data)
+}
 const updateOrderStatus = (new_status) => {
     const data = {
         type: 'updateStatus',

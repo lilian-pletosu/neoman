@@ -27,7 +27,8 @@ class CartController extends Controller
             'address' => 'required|string',
             'message' => 'nullable|string',
             'products' => 'required',
-            'total_price' => 'required|numeric'
+            'total_price' => 'required|numeric',
+//            'delivery_price' => 'required|numeric',
         ]);
         Order::create($data);
     }

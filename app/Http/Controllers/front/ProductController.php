@@ -67,11 +67,10 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
 
 
         (new SessionService())->AddVisitedProductInSession($product);
-
 
         $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.slug');
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
