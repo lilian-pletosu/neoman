@@ -13,14 +13,13 @@ class BannerService
     {
         $data['image'] = $this->saveImage($request);
 
-        $banner = Banner::create([
+        Banner::create([
             'image' => $data['image'],
             'link' => $request->link,
             'title' => $request->title,
             'is_active' => $request->is_active,
             'page' => $request->page
         ]);
-        return $banner;
     }
 
     public function updateBanner(Request $request, Banner $banner)
