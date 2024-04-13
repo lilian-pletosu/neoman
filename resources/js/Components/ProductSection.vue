@@ -80,7 +80,8 @@ function onSlideChange() {
         <div class="flex  items-center justify-between px-0">
             <div class="flex items-center space-x-2">
                 <div v-if="sale">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"
+                         class="dark:text-white">
                         <g fill="none" stroke="currentColor">
                             <path stroke-width="2"
                                   d="M10.51 3.665a2 2 0 0 1 2.98 0l.7.782a2 2 0 0 0 1.601.663l1.05-.058a2 2 0 0 1 2.107 2.108l-.058 1.049a2 2 0 0 0 .663 1.6l.782.7a2 2 0 0 1 0 2.981l-.782.7a2 2 0 0 0-.663 1.601l.058 1.05a2 2 0 0 1-2.108 2.107l-1.049-.058a2 2 0 0 0-1.6.663l-.7.782a2 2 0 0 1-2.981 0l-.7-.782a2 2 0 0 0-1.601-.663l-1.05.058a2 2 0 0 1-2.107-2.108l.058-1.049a2 2 0 0 0-.663-1.6l-.782-.7a2 2 0 0 1 0-2.981l.782-.7a2 2 0 0 0 .663-1.601l-.058-1.05A2 2 0 0 1 7.16 5.053l1.049.058a2 2 0 0 0 1.6-.663z"/>
@@ -90,7 +91,8 @@ function onSlideChange() {
                     </svg>
                 </div>
                 <div v-if="seasons_products">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 20 20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 20 20"
+                         class="dark:text-white">
                         <g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
                             <path
                                 d="M2.624 7.954c.567 2.204 1.763 4.474 3.162 5.873c1.913 1.913 3.77 2.665 5.347 2.726c1.571.06 2.966-.564 3.988-1.588c.46-.462.756-1.13.88-1.96c.125-.827.075-1.78-.118-2.767c-.736-3.775-4.25-6.777-8.588-7.833c-1.924-.468-3.392-.391-4.194.413c-.448.45-.724 1.156-.803 2.07c-.077.908.043 1.967.326 3.066m-1.396-3.11c.086-1.012.4-1.947 1.064-2.614c1.272-1.275 3.37-1.186 5.32-.711c4.67 1.137 8.518 4.38 9.33 8.546c.205 1.05.266 2.095.124 3.035c-.14.936-.488 1.803-1.137 2.454a6.482 6.482 0 0 1-4.87 1.918c-1.955-.074-4.06-1.001-6.095-3.036c-1.538-1.538-2.795-3.956-3.389-6.263c-.298-1.157-.435-2.31-.347-3.33"/>
@@ -100,13 +102,15 @@ function onSlideChange() {
                     </svg>
                 </div>
                 <div v-if="top_products">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"
+                         class="dark:text-white">
                         <path fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.5"
                               d="m12 2l3.104 6.728l7.358.873l-5.44 5.03l1.444 7.268L12 18.28L5.534 21.9l1.444-7.268L1.538 9.6l7.359-.873z"/>
                     </svg>
                 </div>
                 <div v-if="new_products">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 16 16"
+                         class="dark:text-white">
                         <g fill="currentColor">
                             <path
                                 d="M7.001 11a1 1 0 1 1 2 0a1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.553.553 0 0 1-1.1 0z"/>
@@ -115,7 +119,7 @@ function onSlideChange() {
                         </g>
                     </svg>
                 </div>
-                <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ title }}</h2>
+                <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ title }}</h2>
             </div>
             <div class="w-16 flex space-x-2">
                 <div id="swiper-button-prev"
@@ -160,8 +164,8 @@ function onSlideChange() {
 
 
                 <div
-                    class="container-rounded w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px] bg-3 relative group/card">
-                    <div class="hover:cursor-pointer">
+                    class="container-rounded  w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px] bg-3 relative group/card">
+                    <div class="hover:cursor-pointer ">
                         <div>
                             <div class="static">
                                 <div class="w-12 absolute left-2 top-2 z-10">

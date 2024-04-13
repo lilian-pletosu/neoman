@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\SubCategory;
 use App\Models\SubSubCategory;
+use App\Services\BannerService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -62,7 +63,8 @@ class HandleInertiaRequests extends Middleware
             'latest_products' => (new ProductService())->loadLatestProducts(),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct(request()->session()->get('last')),
-            'all_products' => (new ProductService())->loadAllProducts()
+            'all_products' => (new ProductService())->loadAllProducts(),
+            'home_banners' => (new BannerService())->getHomeBanners(),
 
         ];
     }

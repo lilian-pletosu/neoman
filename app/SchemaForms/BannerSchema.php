@@ -2,15 +2,13 @@
 
 namespace App\SchemaForms;
 
-class BrandSchema
+class BannerSchema
 {
     public function __invoke()
     {
-        $currentLocale = app()->currentLocale();
-        $reserveLanguage = $currentLocale == 'ro' ? 'ru' : 'ro';
         return [
             [
-                'name' => 'name',
+                'name' => 'title',
                 'value' => '',
                 'type' => 'text',
                 'placeholder' => 'name',
@@ -20,41 +18,33 @@ class BrandSchema
                 ],
             ],
             [
-                'name' => "description $currentLocale",
-                'value' => '',
-                'type' => 'textarea',
-                'placeholder' => "description $currentLocale",
-                'options' => [],
-                'rules' => [
-                    'required'
-                ],
-            ], [
-                'name' => "description $reserveLanguage",
-                'value' => '',
-                'type' => 'textarea',
-                'placeholder' => "description $reserveLanguage",
-                'options' => [],
-                'rules' => [
-                    'required'
-                ],
-            ],
-            [
-                'name' => 'website',
+                'name' => 'link',
                 'value' => '',
                 'type' => 'text',
-                'placeholder' => 'website',
+                'placeholder' => 'link',
                 'options' => [],
                 'rules' => [
                     'required'
                 ],
             ],
+
             [
-                'name' => 'is_enabled',
+                'name' => 'is_active',
                 'value' => '',
                 'type' => 'select',
                 'label' => 'Status',
                 'placeholder' => 'status',
                 'options' => [['id' => 0, 'value' => 'inactive'], ['id' => 1, 'value' => 'active']],
+                'rules' => [
+                    'required'
+                ],
+            ], [
+                'name' => 'page',
+                'value' => '',
+                'type' => 'select',
+                'label' => 'Page',
+                'placeholder' => 'page',
+                'options' => array_map(fn($c) => ['id' => $c, 'value' => $c], config('pages')),
                 'rules' => [
                     'required'
                 ],
@@ -71,16 +61,6 @@ class BrandSchema
                 ],
             ],
 
-//            [
-//                'name' => 'currency',
-//                'value' => '',
-//                'type' => 'select',
-//                'placeholder' => 'currency',
-//                'options' => array_map(fn($c) => ['id' => $c, 'value' => $c], config('currencies')),
-//                'rules' => [
-//                    'required'
-//                ],
-//            ],
 
 //                [
 //                    'name' => 'type_id',

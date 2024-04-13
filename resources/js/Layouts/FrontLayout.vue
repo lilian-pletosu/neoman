@@ -68,6 +68,7 @@ onMounted(() => {
 
 </script>
 
+
 <template>
     <template v-if="!isLoading">
         <body class=" dark:bg-dark">
@@ -90,8 +91,9 @@ onMounted(() => {
                     <div class="">
                         <slot name="carousel"/>
                     </div>
-                    <div class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60  ">
+                    <div class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60">
                         <slot/>
+
                     </div>
                     <!--                    // mobile-->
                     <div

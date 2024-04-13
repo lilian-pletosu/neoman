@@ -57,6 +57,13 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'banners' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/banners'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         'subcategories' => [
             'driver' => 'local',
             'root' => storage_path('app/public/subcategories'),

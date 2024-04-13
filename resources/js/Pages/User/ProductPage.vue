@@ -136,7 +136,7 @@ function buyProduct(productId) {
 
                     <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
                         <div class="flex items-start">
-                            <h1 class=" text-2xl font-bold text-gray-900 sm:text-3xl">{{ product.name }}</h1>
+                            <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">{{ product.name }}</h1>
                             <button type="button"
                                     @click="wishlistStore.addProductInWishlist(product.id)"
                                     class="rounded-md border border-slate-500  bg-none px-2  py-2 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow">

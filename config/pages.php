@@ -1,5 +1,10 @@
 <?php
 return [
-  'ru',
-  'ro'
+    'home',
+    'categories',
+    'products',
+    'product',
+    'cart',
+    'subcategories',
+    'sub_subcategories',
 ];
