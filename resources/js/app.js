@@ -1,9 +1,7 @@
 import '../css/app.css';
-import "vue-select/dist/vue-select.css";
 import {createApp, h} from 'vue';
 import {createInertiaApp} from '@inertiajs/vue3';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
-import vSelect from "vue-select";
 import {createPinia} from 'pinia'
 import {ZiggyVue} from 'ziggy-js';
 
@@ -61,7 +59,6 @@ createInertiaApp({
         return app
             .use(plugin)
             .use(ZiggyVue, Ziggy)
-            .component("v-select", vSelect)
             .mount(el);
     },
     progress: {

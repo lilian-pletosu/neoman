@@ -55,7 +55,6 @@
 import {defineComponent, ref} from 'vue'
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link, useForm} from "@inertiajs/vue3";
-import vSelect from 'vue-select'
 import DataTable from "@/Components/DataTable.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import SchemaFormBuilder from "@/Components/SchemaFormBuilder.vue";
@@ -112,7 +111,6 @@ defineComponent({
     components: {
         AdminLayout,
         Link,
-        vSelect,
         useForm
 
     },

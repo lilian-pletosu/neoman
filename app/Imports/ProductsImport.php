@@ -190,7 +190,25 @@ class ProductsImport
     {
         $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get()->toArray();
 
+
         foreach ($attributes as $attribute) {
+            if ($attribute['slug'] == 'cantitate') {
+                $attributeObj = Attribute::find($attribute['id']);
+                $quantities = json_decode($item[$attribute['name']], true);
+
+                foreach ($quantities as $qty) {
+                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
+                    $valueAttribute->value = $qty;
+                    $valueAttribute->save();
+                    $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+
+
+//                    dd($valueAttribute);
+                }
+
+            }
+
+
             if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
                 $attributeObj = Attribute::find($attribute['id']);
 
@@ -198,8 +216,6 @@ class ProductsImport
                     $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute['name'] . ' ' . 'ro']]);
                     $valueAttribute->translateOrNew($locale)->value = $item[$attribute['name'] . ' ' . $locale];
                     $valueAttribute->save();
-
-
                 }
                 // Attach the attribute value to the product
                 $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);

@@ -72,14 +72,9 @@ function clear(object) {
 
 
 function buyProduct(productId) {
-    if (selectedColor.value === {}) {
-        error.value['color'] = 'select_color'
-    } else {
-
-        cartStore.addProductInCart(productId, selectedColor.value).then(() => {
-            clear(error)
-        });
-    }
+    cartStore.addProductInCart(productId, selectedColor.value).then(() => {
+        clear(error)
+    });
 }
 </script>
 
@@ -160,7 +155,7 @@ function buyProduct(productId) {
 
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
 
-                            <div class="flex flex-row space-x-6" v-if="['Culoare', 'culoare'].includes(key)">
+                            <div class="flex flex-row space-x-6" v-if="['cantitate', 'Cantitate\''].includes(key)">
                                 <h2 class="my-6 text-base text-gray-900">{{ attribute[0].attribute.name }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
                                     <select
@@ -168,7 +163,7 @@ function buyProduct(productId) {
                                         v-model="selectedColor"
                                         @change="(e) => console.log(e)"
                                         class="border border-slate-300 rounded-md focus:border-none focus:outline-none">
-                                        <option disabled value="default">{{ __('select_color') }}</option>
+                                        <option disabled value="default">{{ __('select_qty') }}</option>
                                         <option v-for="(value, index) in attribute"
                                                 :key="index"
                                                 selected

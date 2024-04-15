@@ -99,16 +99,32 @@ class BrandService
         if ($data['image'] === null) {
             $data['image'] = $brand->image;
         } else {
+            $removeBgService = new RemoveBGService();
+
             if (is_array($data['image'])) {
                 $fileName = $data['image']['_value']->hashName();
                 $imageContents = $data['image']['_value']->getContent();
+
+                // Salvează imaginea în storage
                 Storage::disk('brands')->put($fileName, $imageContents);
-                $data['image'] = '/storage/brands/' . $fileName;
+
+                // Apelarea serviciului RemoveBGService
+                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
+
+
+                $data['image'] = '/storage/brands/' . $imageContents;
             } else {
                 $fileName = $data['image']->hashName();
                 $imageContents = $data['image']->getContent();
+
+                // Salvează imaginea în storage
                 Storage::disk('brands')->put($fileName, $imageContents);
-                $data['image'] = '/storage/brands/' . $fileName;
+
+                // Apelarea serviciului RemoveBGService
+                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
+
+
+                $data['image'] = '/storage/brands/' . $imageContents;
             }
 
         }
@@ -131,4 +147,6 @@ class BrandService
         }
         $brand->save();
     }
+
+
 }

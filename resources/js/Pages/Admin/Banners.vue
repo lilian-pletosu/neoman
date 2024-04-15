@@ -13,7 +13,7 @@
                                 __('create')
                             }}
                         </primary-button>
-                        
+
 
                     </div>
                 </div>
@@ -54,7 +54,6 @@
 import {defineComponent, ref} from 'vue'
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link} from "@inertiajs/vue3";
-import vSelect from 'vue-select'
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DataTable from "@/Components/DataTable.vue";
 import SchemaFormBuilder from "@/Components/SchemaFormBuilder.vue";
@@ -104,7 +103,7 @@ defineComponent({
     components: {
         AdminLayout,
         Link,
-        vSelect,
+        
     },
 
     data() {
