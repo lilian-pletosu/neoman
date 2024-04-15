@@ -14,6 +14,8 @@ class CategoryController extends Controller
 
     private DataTableService $dataTableService;
 
+    private string $route = 'admin.categories.index';
+
     public function __construct(DataTableService $dataTableService)
     {
         $this->dataTableService = $dataTableService;
@@ -59,6 +61,8 @@ class CategoryController extends Controller
             'name ru' => 'required|min:3',
         ]);
         (new CategoryService())->create($request, $data);
+        return to_route($this->route);
+
     }
 
     /**
@@ -89,6 +93,8 @@ class CategoryController extends Controller
             'form.name ru' => 'required|min:3'
         ]);
         (new CategoryService())->update($data['form'], $category, $request);
+        return to_route($this->route);
+
     }
 
     /**
@@ -97,5 +103,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+        return to_route($this->route);
+
     }
 }

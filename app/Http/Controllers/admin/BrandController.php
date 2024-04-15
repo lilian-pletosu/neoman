@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class BrandController extends Controller
 {
     private DataTableService $dataTableService;
+    private string $route = 'admin.brands.index';
 
 
     public function __construct(DataTableService $dataTableService)
@@ -60,6 +61,7 @@ class BrandController extends Controller
             'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
 
         (new BrandService($request))->create($brandRequest->all(), true);
+        return to_route($this->route);
     }
 
     /**
@@ -104,7 +106,8 @@ class BrandController extends Controller
             $data['image'] = null;
 
         }
-        return (new BrandService())->update($data, $brand);
+        (new BrandService())->update($data, $brand);
+        return to_route($this->route);
     }
 
     /**
@@ -115,5 +118,6 @@ class BrandController extends Controller
         $imagePath = str_replace('/storage', 'public', $brand->image);
         Storage::delete($imagePath);
         $brand->delete();
+        return to_route($this->route);
     }
 }

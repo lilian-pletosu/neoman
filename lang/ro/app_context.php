@@ -152,6 +152,11 @@ return [
     'empty_wishlist' => 'Lista de favorite este goală',
     'search_product' => 'Caută produs',
     'popular_sub_subcategories' => 'Cele mai populare sub-subcategorii',
+    'success_delete' => 'Șters cu succes',
+    'success_update' => 'Actualizat cu succes',
+    'success_create' => 'Creat cu succes',
+    'success_import' => 'Importat cu succes',
+    
 
     //statuses
 

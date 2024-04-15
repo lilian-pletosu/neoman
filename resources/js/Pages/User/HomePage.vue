@@ -3,7 +3,6 @@
 import FrontLayout from "@/Layouts/FrontLayout.vue";
 import CarouselFront from "@/Components/CarouselFront.vue";
 import ProductSection from "@/Components/ProductSection.vue";
-import BrandsList from "@/Components/BrandsList.vue";
 import {getCurrentInstance, useAttrs} from "vue";
 import {useLanguageStore,} from "@/stores/language.js";
 import {Carousel, Slide} from "vue3-carousel";
@@ -51,7 +50,6 @@ const props = defineProps({
         <product-section :products="sales_products" :title="__('top_products')" :top_products="true"/>
         <product-section :new_products="true" :products="attrs.latest_products" :title="__('latest_products')"/>
 
-        <brands-list :brands="attrs.brands"/>
     </front-layout>
 </template>
 

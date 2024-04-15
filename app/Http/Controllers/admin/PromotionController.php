@@ -11,6 +11,7 @@ class PromotionController extends Controller
 {
 
     private DataTableService $dataTableService;
+    private string $route = 'admin.promotions.index';
 
 
     public function __construct(DataTableService $dataTableService)

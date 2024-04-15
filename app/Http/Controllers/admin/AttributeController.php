@@ -13,6 +13,8 @@ class AttributeController extends Controller
 {
     public DataTableService $dataTableService;
 
+    private $route = 'admin.attributes.index';
+
 
     private $currentLocale;
     private $reserveLanguage;
@@ -76,6 +78,8 @@ class AttributeController extends Controller
             }
         }
         $attribute->save();
+        return to_route($this->route);
+
 
     }
 
@@ -128,6 +132,8 @@ class AttributeController extends Controller
             }
         }
         $attribute->save();
+        return to_route($this->route);
+
 
     }
 
@@ -137,5 +143,7 @@ class AttributeController extends Controller
     public function destroy(Attribute $attribute)
     {
         $attribute->delete();
+        return to_route($this->route);
+
     }
 }

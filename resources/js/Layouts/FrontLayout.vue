@@ -5,12 +5,16 @@ import {Head} from '@inertiajs/vue3'
 import {PhoneIcon} from "@heroicons/vue/24/solid/index.js";
 
 import {useColorMode, useDark, useToggle} from "@vueuse/core";
-import {getCurrentInstance, onBeforeMount, onMounted, ref} from "vue";
+import {getCurrentInstance, onBeforeMount, onMounted, ref, useAttrs} from "vue";
 import FrontModal from "@/Components/FrontModal.vue";
 import FrontFooter from "@/Components/FrontFooter.vue";
 import Toaster from "@/Components/Toaster.vue";
 import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
+import BrandsList from "@/Components/BrandsList.vue";
+
+const attrs = useAttrs()
+const app = getCurrentInstance();
 
 
 const cartStore = useCartStore();
@@ -73,6 +77,11 @@ onMounted(() => {
     <template v-if="!isLoading">
         <body class=" dark:bg-dark">
         <Head :title="title">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="csrf-token" content="{{ csrf_token() }}">
+            <meta name="author" content="Neoman">
+
             <meta name="description" content="Alături la fiecare etapă în viață!">
         </Head>
 
@@ -91,9 +100,9 @@ onMounted(() => {
                     <div class="">
                         <slot name="carousel"/>
                     </div>
+                    <!--                    main content -->
                     <div class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60">
                         <slot/>
-
                     </div>
                     <!--                    // mobile-->
                     <div
@@ -270,6 +279,8 @@ onMounted(() => {
 
                 </main>
             </div>
+            <brands-list :brands="app.appContext.config.globalProperties.$page.props.brands"/>
+
             <section>
                 <front-footer/>
             </section>

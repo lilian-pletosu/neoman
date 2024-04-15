@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     private Product $product;
+    private string $route = 'admin.products.index';
 
     private DataTableService $dataTableService;
 
@@ -77,6 +78,7 @@ class ProductController extends Controller
             ]);
         }
         (new ProductService())->create($request, $data);
+        return to_route($this->route);
     }
 
     public function show(Product $product)
@@ -122,6 +124,8 @@ class ProductController extends Controller
             'form.price' => 'required|numeric',
         ]);
         (new ProductService())->update($data, $product, $request);
+        return to_route($this->route);
+
     }
 
     /**
@@ -131,6 +135,8 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
+        return to_route($this->route);
+
     }
 
 

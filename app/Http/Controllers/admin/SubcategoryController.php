@@ -16,6 +16,8 @@ class SubcategoryController extends Controller
 
     private DataTableService $dataTableService;
 
+    private string $route = 'admin.categories.subcategories.index';
+
     public function __construct(DataTableService $dataTableService)
     {
         $this->dataTableService = $dataTableService;
@@ -69,6 +71,8 @@ class SubcategoryController extends Controller
         }
 
         (new SubcategoryService())->create($request, $data);
+        return to_route($this->route);
+
     }
 
     public function show(SubCategory $subCategory)
@@ -104,6 +108,8 @@ class SubcategoryController extends Controller
         }
         $subCategory = SubCategory::find($id);
         (new SubcategoryService())->update($data, $subCategory);
+        return to_route($this->route);
+
     }
 
     /**
@@ -120,6 +126,9 @@ class SubcategoryController extends Controller
 
         // Ștergem subcategoria
         $subcategory->delete();
+
+        return to_route($this->route);
+
 
     }
 }

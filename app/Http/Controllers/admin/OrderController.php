@@ -14,6 +14,7 @@ class OrderController extends Controller
 
 
     private DataTableService $dataTableService;
+    private string $route = 'admin.orders.index';
 
 
     public function __construct(DataTableService $dataTableService)
@@ -131,6 +132,8 @@ class OrderController extends Controller
             $order->delivery_price = $new_delivery_price;
             $order->save();
         }
+        return to_route($this->route);
+
     }
 
     /**
@@ -138,7 +141,6 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        return Order::destroy($id);
-
+        Order::destroy($id);
     }
 }

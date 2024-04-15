@@ -94,12 +94,13 @@
 import Dropdown from "@/Components/Dropdown.vue";
 import {defineComponent} from "vue";
 import ShortLogo from "@/Components/ShortLogo.vue";
+import {route} from "ziggy-js";
 
 export default defineComponent({
 
     components: {
         ShortLogo,
-        Dropdown
+        Dropdown,
     },
 
     data() {
@@ -109,6 +110,7 @@ export default defineComponent({
     },
 
     methods: {
+        route,
         changeMenuIcon() {
             this.isOpen = !this.isOpen
         }

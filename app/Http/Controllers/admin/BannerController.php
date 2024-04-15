@@ -14,6 +14,8 @@ class BannerController extends Controller
 {
     public DataTableService $dataTableService;
 
+    private string $route = 'admin.banners.index';
+
     public function __construct(DataTableService $dataTableService)
     {
         $this->dataTableService = $dataTableService;
@@ -58,7 +60,9 @@ class BannerController extends Controller
             'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
         ]);
 
-        return (new BannerService)->createBanner($request);
+        (new BannerService)->createBanner($request);
+        return to_route($this->route);
+
     }
 
     /**
@@ -100,6 +104,8 @@ class BannerController extends Controller
             ]);
         }
         (new BannerService)->updateBanner($request, $banner);
+        return to_route($this->route);
+
     }
 
     /**
@@ -110,6 +116,8 @@ class BannerController extends Controller
         $imagePath = str_replace('/storage', 'public', $banner->image);
         Storage::delete($imagePath);
         $banner->delete();
+        return to_route($this->route);
+
 
     }
 }
