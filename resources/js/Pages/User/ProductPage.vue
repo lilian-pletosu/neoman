@@ -8,6 +8,7 @@ import {useCartStore} from "@/stores/cartStore.js";
 import ProductSection from "@/Components/ProductSection.vue";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
+import {router} from "@inertiajs/vue3";
 
 
 const attrs = useAttrs()
@@ -22,7 +23,7 @@ const props = defineProps({
     },
 });
 
-const selectedColor = ref('default');
+const selectedQty = ref('default');
 const error = ref({});
 
 const description = ref(false);
@@ -72,7 +73,7 @@ function clear(object) {
 
 
 function buyProduct(productId) {
-    cartStore.addProductInCart(productId, selectedColor.value).then(() => {
+    cartStore.addProductInCart(productId, selectedQty.value).then(() => {
         clear(error)
     });
 }
@@ -142,7 +143,7 @@ function buyProduct(productId) {
                         </div>
 
                         <div class="mt-2 flex justify-between items-center">
-                            <img class="w-16 object-cover" :src="product.brand.image"
+                            <img class="w-16" :src="product.brand.image"
                                  alt=""/>
                             <div class="mt-5 flex items-center">
                                 <div class="flex items-center">
@@ -156,20 +157,19 @@ function buyProduct(productId) {
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
 
                             <div class="flex flex-row space-x-6" v-if="['cantitate', 'Cantitate\''].includes(key)">
-                                <h2 class="my-6 text-base text-gray-900">{{ attribute[0].attribute.name }}:</h2>
+                                <h2 class="my-6 text-base text-gray-900">{{ attribute.name }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
                                     <select
                                         id="color"
-                                        v-model="selectedColor"
-                                        @change="(e) => console.log(e)"
+                                        v-model="selectedQty"
+                                        @change="router.get(route('product_page', {slug: selectedQty}))"
                                         class="border border-slate-300 rounded-md focus:border-none focus:outline-none">
                                         <option disabled value="default">{{ __('select_qty') }}</option>
-                                        <option v-for="(value, index) in attribute"
+                                        <option v-for="(value, index) in attribute.values"
                                                 :key="index"
                                                 selected
-
-                                                :value="value.id">
-                                            {{ value.value }}
+                                                :value="value.link">
+                                            {{ value.value }} L
                                         </option>
                                     </select>
 
@@ -255,12 +255,13 @@ function buyProduct(productId) {
                                     <tr v-for="(attribute, key) in product.attributes" :key="key"
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-slate-100">
                                         <td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium ">
-                                            {{ attribute[0].attribute.name }}:
+                                            {{ attribute.name }}:
                                         </td>
                                         <td
                                             class="px-6 py-4 whitespace-nowrap capitalize-first">
                                             <div class=" flex space-x-2">
-                                                <p class="capitalize-first" v-for="value in attribute">{{
+                                                <p class="capitalize-first" v-for="value in attribute.values">
+                                                    {{
                                                         value.value
                                                     }}</p>
                                             </div>

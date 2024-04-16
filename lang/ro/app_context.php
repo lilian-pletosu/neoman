@@ -105,6 +105,7 @@ return [
     'wishlist' => 'Favorite',
     'sort' => 'Sortare',
     'select_color' => 'Selectează culoarea',
+    'select_qty' => 'Selectează cantitatea',
     'full_name' => 'Nume/Prenume',
     'order_details' => 'Detaliile comenzei',
     'shipping' => 'Livrare',
@@ -156,7 +157,7 @@ return [
     'success_update' => 'Actualizat cu succes',
     'success_create' => 'Creat cu succes',
     'success_import' => 'Importat cu succes',
-    
+
 
     //statuses
 

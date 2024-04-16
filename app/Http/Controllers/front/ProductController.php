@@ -67,12 +67,30 @@ class ProductController extends Controller
     {
 
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
+//        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
 
+
+        $newSlug = explode('_', $productSlug);
+        array_pop($newSlug);
+        $res = implode('_', $newSlug);
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
 
         (new SessionService())->AddVisitedProductInSession($product);
 
         $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.slug');
+
+        $product['attributes'] = $product['attributes']->map(function ($item) use ($res) {
+            return [
+                'name' => $item[0]->attribute->translate()->name,
+                'values' => $item->map(function ($value) use ($res) {
+                    $value['link'] = $res . '_' . $value->translate()->value . 'l';
+                    $value->translate()->value;
+                    return $value;
+                })->toArray(),
+            ];
+        });
+
+
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
 
 

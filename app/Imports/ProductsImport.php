@@ -201,9 +201,6 @@ class ProductsImport
                     $valueAttribute->value = $qty;
                     $valueAttribute->save();
                     $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
-
-
-//                    dd($valueAttribute);
                 }
 
             }
