@@ -19,6 +19,8 @@ RUN apk --no-cache add shadow && usermod -u $uuid www-data
 
 RUN docker-php-ext-install pdo pdo_mysql
 
+COPY ./php.ini /usr/local/etc/php/php.ini
+
 # using gd lib and zip lib
 RUN apk update  && apk add  libpng-dev
 RUN apk update && \

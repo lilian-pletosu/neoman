@@ -31,7 +31,7 @@ const props = defineProps({
         <product-section :products="sales_products" :sale="true"
                          :title="__('sales_products')" @addProductInCart="args => addProductIncart(args)"/>
         <product-section :products="sales_products" :seasons_products="true" :title="__('season_products')"/>
-        <div class="static h-8 2xs:h-20 sm:h-44 lg:h-60 xl:h-72 2xl:h-80 ">
+        <div class="static h-8 2xs:h-20 sm:h-44 lg:h-60 xl:h-72 2xl:h-80 3xl:mb-24 4xl:mb-32">
             <div
                 class="bg-slate-100 dark:bg-white overflow-x-auto hide-scrollbar overflow-a absolute w-full left-0    whitespace-no-wrap ">
                 <div class="flex space-x-16 ">

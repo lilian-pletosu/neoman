@@ -40,7 +40,8 @@ class Kernel extends HttpKernel
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\RedirectToAdmin::class,
-            \App\Http\Middleware\CancelRegister::class
+            \App\Http\Middleware\CancelRegister::class,
+            \App\Http\Middleware\HandleInertiaRequests::class,
         ],
 
         'api' => [

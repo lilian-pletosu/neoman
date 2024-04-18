@@ -79,6 +79,8 @@ onMounted(async () => {
 </script>
 
 <template>
+
+    <Toast/>
     <div id="header" class="px-2 md:px-0">
         <div class="px-2 md:px-0 py-2 flex justify-center  items-center space-x-1 xl:px-60">
             <div class="flex md:w-3/12 justify-center">
@@ -86,16 +88,16 @@ onMounted(async () => {
                     <application-logo class="flex w-56 "/>
                 </Link>
             </div>
-            <div class=" hidden 3xs:flex flex-1 flex-col text-center ">
+            <div class="hidden 3xs:flex flex-1 flex-col text-center ">
                 <a href="tel:+37378107017"><p class="text-1 text-sm 3xs:text-lg dark:text-white">078 107 017</p></a>
                 <p @click="$emit('call')" class="cursor-pointer underline text-b-link text-xs pointer md:text-sm">
-                    Revenim cu un apel?</p>
+                    {{ __('return_with_call') }}?</p>
             </div>
             <div class="hidden md:flex flex-1  justify-center space-x-2">
                 <div class="flex flex-col text-3 text-[#868686]">
-                    <p>Lu - Vi</p>
-                    <p>Sâmbătă</p>
-                    <p>Duminică</p>
+                    <p>{{ __('monday_friday') }}</p>
+                    <p>{{ __('saturday') }}</p>
+                    <p>{{ __('sunday') }}</p>
                 </div>
                 <div class="grid grid-cols-1 items-center font-mulish font-normal text-xs dark:text-white">
                     <p class="">08.00 - 19.00</p>

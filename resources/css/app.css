@@ -10,7 +10,7 @@
 }
 
 .container-rounded {
-    @apply bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8  2xl:col-span-2;
+    @apply shadow rounded-lg p-4 sm:p-6 xl:p-8  2xl:col-span-2;
 }
 
 .container-simple {

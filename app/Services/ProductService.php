@@ -174,10 +174,11 @@ class ProductService
     }
 
 
-    public function loadLastVisitedProduct($array)
+    public function loadLastVisitedProduct($request)
     {
         $productsArray = [];
 
+        $array = request()->session()->get('last');
         if (!empty(request()->session()->get('last'))) {
             foreach ($array as $id) {
                 foreach (Product::where('id', $id)->get() as $product) {

@@ -17,16 +17,20 @@ use Tighten\Ziggy\Ziggy;
 class HandleInertiaRequests extends Middleware
 {
     /**
-     * The root template that is loaded on the first page visit.
+     * The root template that's loaded on the first page visit.
+     *
+     * @see https://inertiajs.com/server-side-setup#root-template
      *
      * @var string
      */
     protected $rootView = 'app';
 
     /**
-     * Determine the current asset version.
+     * Determines the current asset version.
+     *
+     * @see https://inertiajs.com/asset-versioning
      */
-    public function version(Request $request): string|null
+    public function version(Request $request): ?string
     {
         return parent::version($request);
     }
@@ -34,13 +38,13 @@ class HandleInertiaRequests extends Middleware
     /**
      * Define the props that are shared by default.
      *
+     * @see https://inertiajs.com/shared-data
+     *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
     {
-
-        return [
-            ...parent::share($request),
+        return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -62,10 +66,11 @@ class HandleInertiaRequests extends Middleware
             'brands' => Brand::where('is_enabled', 1)->get(),
             'latest_products' => (new ProductService())->loadLatestProducts(),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
-            'last_visited' => (new ProductService())->loadLastVisitedProduct(request()->session()->get('last')),
-            'all_products' => (new ProductService())->loadAllProducts(),
+            'last_visited' => (new ProductService())->loadLastVisitedProduct($request) ?? [],
+            'all_products' => [],
+//            'all_products' => (new ProductService())->loadAllProducts(),
             'home_banners' => (new BannerService())->getHomeBanners(),
 
-        ];
+        ]);
     }
 }

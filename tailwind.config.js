@@ -24,6 +24,8 @@ export default {
             '1xs': '300px',
             '2xs': '400px',
             '3xs': '545px',
+            '3xl': '1600px',
+            '4xl': '1900px',
             ...defaultTheme.screens,
         },
         extend: {

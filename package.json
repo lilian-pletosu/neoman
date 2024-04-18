@@ -32,6 +32,7 @@
         "motion": "^10.16.4",
         "notiwind": "^2.0.2",
         "pinia": "^2.1.7",
+        "primevue": "^3.51.0",
         "radix-vue": "^1.5.2",
         "sweet-modal-vue-3": "^0.3.0",
         "swiper": "^11.1.1",

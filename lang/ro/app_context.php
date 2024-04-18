@@ -80,8 +80,8 @@ return [
     'description ro' => 'Descriere în română',
     'description ru' => 'Descriere în rusă',
     'not_set' => 'Nu este setat',
-    'free_delivery' => 'Livrare gratuită în Chișinău de la 1000 lei',
-    'for_another_cities' => 'pentru alte localități necesită concretizare',
+    'delivery_info' => 'Livrarea poate fi gratuita sau contra cost în dependență de comandă și zona livrării.',
+    'delivery_aditional_info' => 'prețul livrării se va calcula de manager dupa plasarea comenzii',
     'found_cheaper' => 'Ai găsit mai ieftin?',
     'buy' => 'Cumpără',
     'buy_1_click' => 'Cumpără cu 1 click',
@@ -157,6 +157,10 @@ return [
     'success_update' => 'Actualizat cu succes',
     'success_create' => 'Creat cu succes',
     'success_import' => 'Importat cu succes',
+    'monday_friday' => 'Lu - Vi',
+    'saturday' => 'Sâmbătă',
+    'sunday' => 'Duminică',
+    'return_with_call' => 'Revenim cu un apel',
 
 
     //statuses

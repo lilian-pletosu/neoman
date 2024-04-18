@@ -9,17 +9,22 @@ class InertiaTableServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         //
     }
 
     /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
+
         Response::macro('loadData', function ($package) {
 
             //add this validation to avoid sorting by not allowed fields & exposing error
@@ -30,8 +35,8 @@ class InertiaTableServiceProvider extends ServiceProvider
 
             return $this
                 ->with('resources', $package->run())
-                ->with('filters', $package->filters)
                 ->with('editInModal', $package->editInModal)
+                ->with('filters', $package->filters)
                 ->with('columns', $package->resourceColumns)
                 ->with('relationColumns', $package->relations)
                 ->with('resourceRoute', $package->resourceRoute)

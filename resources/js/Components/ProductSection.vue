@@ -9,11 +9,16 @@ import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js"
 import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/16/solid/index.js";
 
+
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
 
 
 const currentSlide = ref(1);
+
+const showSuccess = () => {
+
+}
 
 
 const props = defineProps({
@@ -41,9 +46,6 @@ const props = defineProps({
 
 });
 
-function onSwiper() {
-    console.log("onSwiper called");
-}
 
 function onSlideChange() {
     console.log("Slide change");
@@ -59,7 +61,8 @@ function onSlideChange() {
 .swiper-slide {
     text-align: center;
     font-size: 18px;
-    background: #fff;
+    background: none;
+
 
     /* Center slide text vertically */
     display: flex;
@@ -123,6 +126,7 @@ function onSlideChange() {
             </div>
             <div class="w-16 flex space-x-2">
                 <div id="swiper-button-prev"
+                     @click="showSuccess"
                      class="swiper-button-prev rounded-3xl flex items-center justify-center border border-slate-600 w-full h-auto">
                     <arrow-left-icon class="w-4"/>
                 </div>
@@ -136,8 +140,6 @@ function onSlideChange() {
             :slidesPerView="1"
             :spaceBetween="20"
             :navigation="true"
-            @swiper="onSwiper"
-            @slideChange="onSlideChange"
             direction="horizontal"
             :breakpoints="{
                   '400': {
@@ -160,11 +162,9 @@ function onSlideChange() {
                 }"
 
             class="mySwiper">
-            <swiper-slide v-for="(product, key) in products">
-
-
+            <swiper-slide v-for="(product, key) in products" class="p-2">
                 <div
-                    class="container-rounded  w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px] bg-3 relative group/card">
+                    class="container-rounded bg-white border border-slate-100 dark:bg-slate-100  w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px]  relative group/card">
                     <div class="hover:cursor-pointer ">
                         <div>
                             <div class="static">

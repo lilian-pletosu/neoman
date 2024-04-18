@@ -132,24 +132,27 @@ function buyProduct(productId) {
 
                     <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
                         <div class="flex items-start">
-                            <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">{{ product.name }}</h1>
+                            <h1 class="dark:text-slate-300 text-2xl font-bold text-gray-900 sm:text-3xl">{{
+                                    product.name
+                                }}</h1>
                             <button type="button"
                                     @click="wishlistStore.addProductInWishlist(product.id)"
-                                    class="rounded-md border border-slate-500  bg-none px-2  py-2 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow">
+                                    class="rounded-md border border-slate-500   bg-none px-2  py-2 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow">
 
-                                <heart-icon class="w-6 "
-                                            :class="wishlistStore.checkIfProductExistInWishlist(product.id) ? 'text-red-500 fill-red-500' : 'text-slate-700'"/>
+                                <heart-icon class="w-6"
+                                            :class="wishlistStore.checkIfProductExistInWishlist(product.id) ? 'text-red-500 fill-red-500' : 'text-slate-700 dark:text-slate-300'"/>
                             </button>
                         </div>
 
                         <div class="mt-2 flex justify-between items-center">
                             <img class="w-16" :src="product.brand.image"
                                  alt=""/>
-                            <div class="mt-5 flex items-center">
+                            <div class="mt-5 flex items-center dark:text-slate-300">
                                 <div class="flex items-center">
                                     {{ __('product_code') }}:
                                 </div>
-                                <p class="ml-2 text-sm font-medium text-gray-500">{{ product.product_code }}</p>
+                                <p class=" ml-2 text-sm font-medium text-gray-500">
+                                    {{ product.product_code }}</p>
                             </div>
                         </div>
 
@@ -157,15 +160,18 @@ function buyProduct(productId) {
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
 
                             <div class="flex flex-row space-x-6" v-if="['cantitate', 'Cantitate\''].includes(key)">
-                                <h2 class="my-6 text-base text-gray-900">{{ attribute.name }}:</h2>
+                                <h2 class="dark:text-slate-300 my-6 text-base text-gray-900">{{ attribute.name }}:</h2>
                                 <div class="my-3 flex select-none flex-wrap items-center gap-1">
                                     <select
                                         id="color"
                                         v-model="selectedQty"
                                         @change="router.get(route('product_page', {slug: selectedQty}))"
-                                        class="border border-slate-300 rounded-md focus:border-none focus:outline-none">
-                                        <option disabled value="default">{{ __('select_qty') }}</option>
-                                        <option v-for="(value, index) in attribute.values"
+                                        class="dark:bg-transparent dark:text-slate-300 border border-slate-300 rounded-md focus:border-none focus:outline-none">
+                                        <option class="dark:bg-slate-600" disabled value="default">{{
+                                                __('select_qty')
+                                            }}
+                                        </option>
+                                        <option class="dark:bg-slate-600" v-for="(value, index) in attribute.values"
                                                 :key="index"
                                                 selected
                                                 :value="value.link">
@@ -175,31 +181,30 @@ function buyProduct(productId) {
 
                                 </div>
                             </div>
-                            <span class="text-red-500" v-if="error.color">{{ __(error.color) }}</span>
                         </div>
 
 
                         <div class="my-1 space-x-2 py-6 flex items-end ">
-                            <h1 class="text-3xl  font-bold">{{ product.price.toFixed(2) }} </h1>
-                            <h1 class="text-2xl  font-medium">{{ __('lei') }} </h1>
+                            <h1 class=" dark:text-slate-300 text-3xl  font-bold">{{ product.price.toFixed(2) }} </h1>
+                            <h1 class="dark:text-white text-2xl  font-medium">{{ __('lei') }} </h1>
                             <h1 class="text-xl text-slate-500  font-light"> / {{ product.mu }} </h1>
                         </div>
 
                         <div>
                             <div @click="openModal('cheaper')"
-                                 class="container-custom-rounded flex items-center space-x-4 p-2 border border-[#1FC8F3] cursor-pointer">
+                                 class="container-custom-rounded dark:bg-slate-800 mb-4 flex items-center space-x-4 p-2 border border-[#1FC8F3] cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                     class="bi bi-question-circle" viewBox="0 0 16 16">
+                                     class="dark:text-slate-300 bi bi-question-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                     <path
                                         d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
                                 </svg>
-                                <p class="text-lg flex font-light ">{{ __('found_cheaper') }}</p>
+                                <p class="dark:text-slate-300 text-lg flex font-light ">{{ __('found_cheaper') }}</p>
                             </div>
                         </div>
 
                         <div
-                            class=" flex flex-col  space-y-2   border-t border-b py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
+                            class=" flex flex-col  space-y-2 border-t border-b dark:border-y-slate-600 py-4 sm:flex-row sm:space-x-2 sm:space-y-0 ">
                             <button @click="buyProduct(product.id)"
                                     class="w-full sm:w-1/4  inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200"
                                     type="button">
@@ -214,46 +219,47 @@ function buyProduct(productId) {
 
 
                         <div
-                            class="container-custom-rounded  mt-4 flex items-center space-x-4 w-full p-3 border border-slate-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32">
+                            class="container-custom-rounded dark:bg-slate-800 mt-4 flex items-center space-x-4 w-full p-3 border border-slate-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 32 32"
+                                 class="dark:text-slate-300">
                                 <path fill="currentColor" d="M4 16h12v2H4zm-2-5h10v2H2z"/>
                                 <path fill="currentColor"
                                       d="m29.919 16.606l-3-7A.999.999 0 0 0 26 9h-3V7a1 1 0 0 0-1-1H6v2h15v12.556A3.992 3.992 0 0 0 19.142 23h-6.284a4 4 0 1 0 0 2h6.284a3.98 3.98 0 0 0 7.716 0H29a1 1 0 0 0 1-1v-7a.997.997 0 0 0-.081-.394M9 26a2 2 0 1 1 2-2a2.002 2.002 0 0 1-2 2m14-15h2.34l2.144 5H23Zm0 15a2 2 0 1 1 2-2a2.002 2.002 0 0 1-2 2m5-3h-1.142A3.995 3.995 0 0 0 23 20v-2h5Z"/>
                             </svg>
-                            <div class="flex-col">
-                                <p class="text-lg flex font-medium">{{ __('free_delivery') }}</p>
-                                <p class="text-sm underline flex font-light">{{ __('for_another_cities') }}</p>
+                            <div class="dark:text-slate-300 flex items-center flex-col text-center">
+                                <p class="text-lg flex  font-medium">{{ __('delivery_info') }}</p>
+                                <p class="text-sm underline flex font-light">{{ __('delivery_aditional_info') }}</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="lg:col-span-3">
-                        <div class="border-b border-gray-300">
+                        <div class="border-b border-gray-300 dark:border-slate-500">
                             <nav class="flex gap-4">
                                 <a href="#" title="specifications" @click.prevent="setActiveTab('specifications')"
-                                   :class="{'border-b-2 border-gray-900': specifications, 'border-transparent': !specifications}"
-                                   class="py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800">
+                                   :class="{'transition delay-150 border-b-2 border-gray-500': specifications, 'border-transparent': !specifications}"
+                                   class="dark:text-slate-300 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800">
                                     {{ __('specifications') }}
                                 </a>
                                 <a href="#" title="description" @click.prevent="setActiveTab('description')"
-                                   :class="{'border-b-2 border-gray-900': description, 'border-transparent': !description}"
-                                   class="py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800">
+                                   :class="{'transition delay-150 border-b-2 border-gray-500': description, 'border-transparent': !description}"
+                                   class="dark:text-slate-300 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800">
                                     {{ __('description') }}
                                 </a>
                             </nav>
                         </div>
 
                         <div v-show="description" id="description" class="mt-8 flow-root sm:mt-12">
-                            <h1 class="text-3xl font-bold">{{ product.name }}</h1>
-                            <p class="mt-4">{{ product.description }}</p>
+                            <h1 class="text-3xl font-bold dark:text-slate-300">{{ product.name }}</h1>
+                            <p class="mt-4 dark:text-slate-300">{{ product.description }}</p>
                         </div>
                         <div v-show="specifications" class="mt-8 flow-root sm:mt-2">
                             <div class="relative overflow-x-auto my-4">
                                 <table
-                                    class="w-full border text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                    class="w-full border dark:border-slate-600 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-red-200">
                                     <tbody>
                                     <tr v-for="(attribute, key) in product.attributes" :key="key"
-                                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-slate-100">
+                                        class="bg-white dark:bg-gray-800 da odd:bg-white even:bg-slate-100 dark:odd:bg-slate-700 dark:even:bg-slate-800 border dark:border-slate-600">
                                         <td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium ">
                                             {{ attribute.name }}:
                                         </td>

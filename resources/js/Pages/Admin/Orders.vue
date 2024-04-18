@@ -252,7 +252,6 @@
 import {defineComponent, getCurrentInstance, ref} from 'vue'
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {Link, router} from "@inertiajs/vue3";
-import vSelect from 'vue-select'
 import DataTable from "@/Components/DataTable.vue";
 import axios from "axios";
 import {onClickOutside, useDateFormat} from "@vueuse/core";
@@ -280,7 +279,6 @@ defineComponent({
     components: {
         AdminLayout,
         Link,
-        vSelect,
     },
 
     data() {

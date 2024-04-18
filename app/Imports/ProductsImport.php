@@ -27,7 +27,6 @@ class ProductsImport
 
     public function __invoke(Request $request)
     {
-
         $this->createProduct();
     }
 
@@ -194,13 +193,15 @@ class ProductsImport
         foreach ($attributes as $attribute) {
             if ($attribute['slug'] == 'cantitate') {
                 $attributeObj = Attribute::find($attribute['id']);
-                $quantities = json_decode($item[$attribute['name']], true);
+                if (array_key_exists($attribute['name'], $item)) {
+                    $quantities = json_decode($item[$attribute['name']], true);
 
-                foreach ($quantities as $qty) {
-                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
-                    $valueAttribute->value = $qty;
-                    $valueAttribute->save();
-                    $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+                    foreach ($quantities as $qty) {
+                        $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
+                        $valueAttribute->value = $qty;
+                        $valueAttribute->save();
+                        $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+                    }
                 }
 
             }

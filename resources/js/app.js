@@ -5,12 +5,12 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {createPinia} from 'pinia'
 import {ZiggyVue} from 'ziggy-js';
 
+
 const appName = import.meta.env.VITE_APP_NAME || 'Neoman';
 const appDescription = "Alături la fiecare etapă în viață";
 const pinia = createPinia()
 
 createInertiaApp({
-
     title: (title) => `${appName}.md - ${appDescription}`,
     description: (description) => description,
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),

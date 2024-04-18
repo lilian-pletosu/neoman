@@ -177,8 +177,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
-        App\Providers\InertiaTableServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\InertiaTableServiceProvider::class,
+        App\Providers\InertiaTableServiceProvider::class,
     ])->toArray(),
 
     /*

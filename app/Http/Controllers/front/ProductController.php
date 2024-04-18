@@ -65,11 +65,6 @@ class ProductController extends Controller
 
     public function show($productSlug)
     {
-
-
-//        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
-
-
         $newSlug = explode('_', $productSlug);
         array_pop($newSlug);
         $res = implode('_', $newSlug);
