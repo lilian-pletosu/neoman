@@ -171,7 +171,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         Illuminate\Pagination\PaginationServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
@@ -180,6 +180,14 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         App\Providers\InertiaTableServiceProvider::class,
         App\Providers\InertiaTableServiceProvider::class,
+        Illuminate\Session\SessionServiceProvider::class,
+        Illuminate\Validation\ValidationServiceProvider::class,
+        Illuminate\View\ViewServiceProvider::class,
+        Illuminate\Filesystem\FilesystemServiceProvider::class,
+        Illuminate\Cookie\CookieServiceProvider::class,
+        Illuminate\Cache\CacheServiceProvider::class,
+
+
     ])->toArray(),
 
     /*

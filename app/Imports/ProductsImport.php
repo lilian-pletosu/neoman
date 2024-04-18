@@ -138,30 +138,38 @@ class ProductsImport
                 $product = Product::firstOrNew(['slug' => Str::slug($item['name ro'], '_')]);
 
                 if (!$product->exists) {
-                    $brand = (new BrandService)->createWithProduct($item);
-                    $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
-                    $mu = (new MeasurementUnitService())->associateToProduct($item);
+                    try {
+                        $brand = (new BrandService)->createWithProduct($item);
+                        $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
+                        $mu = (new MeasurementUnitService())->associateToProduct($item);
 
-                    $product->fill([
-                        'price' => $item['price'],
-                        'slug' => Str::slug($item['name ro'], '_'),
-                        'product_code' => (new GenerateProductCode)((new Product())),
-                        'specifications_id' => null,
-                        'brand_id' => $brand->id,
-                        'sub_sub_category_id' => $subSubcategory->id,
-                        'measurement_unit_id' => $mu->id,
-                    ]);
+                        $product->fill([
+                            'price' => $item['price'],
+                            'slug' => Str::slug($item['name ro'], '_'),
+                            'product_code' => (new GenerateProductCode)((new Product())),
+                            'specifications_id' => null,
+                            'brand_id' => $brand->id,
+                            'sub_sub_category_id' => $subSubcategory->id,
+                            'measurement_unit_id' => $mu->id,
+                        ]);
 
-                    foreach (config('app.available_locales') as $locale) {
-                        foreach ($this->translatedAttributes as $translatedAttribute) {
-                            $xlsxKey = $translatedAttribute . ' ' . $locale;
-                            $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey] ?? $item['name ro'];
+                        foreach (config('app.available_locales') as $locale) {
+                            foreach ($this->translatedAttributes as $translatedAttribute) {
+                                $xlsxKey = $translatedAttribute . ' ' . $locale;
+                                $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey] ?? $item['name ro'];
+                            }
                         }
-                    }
 
-                    $product->save();
-                    $this->associateAttributes($product, $subSubcategory, $item);
-                    $this->associateImagesWithProduct($product, $item);
+                        $product->save();
+                        $this->associateAttributes($product, $subSubcategory, $item);
+                        $this->associateImagesWithProduct($product, $item);
+                    } catch (\Exception $e) {
+                        return redirect()->back()->withErrors([
+                            'import' => $e->getMessage()
+                        ]);
+
+
+                    }
                 }
             }
         }
@@ -193,7 +201,7 @@ class ProductsImport
         foreach ($attributes as $attribute) {
             if ($attribute['slug'] == 'cantitate') {
                 $attributeObj = Attribute::find($attribute['id']);
-                if (array_key_exists($attribute['name'], $item)) {
+                if (array_key_exists(trim($attribute['name']), $item)) {
                     $quantities = json_decode($item[$attribute['name']], true);
 
                     foreach ($quantities as $qty) {
@@ -205,8 +213,6 @@ class ProductsImport
                 }
 
             }
-
-
             if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
                 $attributeObj = Attribute::find($attribute['id']);
 

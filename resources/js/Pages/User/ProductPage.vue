@@ -84,14 +84,14 @@ function buyProduct(productId) {
 
         <breadcrumb :product="product"/>
         <hr>
-        <section class="py-12 mt-1 sm:py-16 ">
-            <div class="container mx-auto px-4">
-                <div class="lg:col-gap-12 xl:col-gap-16  grid grid-cols-1 gap-12 lg:-mt-12 lg:grid-cols-5 lg:gap-16">
+        <section class="py-12 mt-1 sm:py-16">
+            <div class="container">
+                <div class="lg:col-gap-12 xl:col-gap-16 grid grid-cols-1 gap-12 lg:-mt-12 lg:grid-cols-5 lg:gap-16">
                     <div class="lg:col-span-3 lg:row-end-1">
                         <div class="lg:flex lg:items-start">
                             <div class="lg:order-2 lg:ml-5">
-                                <div class="max-w-xl overflow-hidden rounded-lg">
-                                    <img class="h-full w-full max-w-full object-cover"
+                                <div class="max-w-xl overflow-hidden rounded-lg mx-auto">
+                                    <img class="w-full xl:h-96 object-scale-down"
                                          :src="selectedImage" alt=""/>
                                 </div>
                             </div>

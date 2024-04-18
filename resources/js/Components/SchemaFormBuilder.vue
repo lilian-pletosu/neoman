@@ -149,7 +149,8 @@ function submit() {
             onSuccess: params => {
                 closeCreateForm()
                 emit('showNotify', props.type)
-            }
+            },
+            onError: err => errors.value = err
         });
     }
 }
@@ -327,6 +328,8 @@ const handleFileUpload = (event, field) => {
                                            class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                            :id="formImport.file" type="file">
                                 </div>
+                                <span class="">{{ errors.import }}</span>
+
 
                             </div>
                             <div class="mt-6  flex justify-end">

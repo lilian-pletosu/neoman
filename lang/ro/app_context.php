@@ -133,7 +133,7 @@ return [
     'sales_products' => 'Produse cu reducere',
     'season_products' => 'Produse de sezon',
     'top_products' => 'Cele mai vândute produse',
-    'latest_products' => 'Ultimele produse vizualizate',
+    'latest_products' => 'Ultimele produse adăugate',
     'here_is_all_promotions' => 'Aici găsești toate promoțiile',
     'start_date' => 'Data de început',
     'end_date' => 'Data de sfârșit',

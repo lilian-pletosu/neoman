@@ -233,47 +233,48 @@ class ProductService
     {
         $productsArray = [];
 
-        $products = Product::all();
+        // Utilizăm metoda with() pentru a încărca în prealabil relațiile necesare
+        $productsChunks = Product::with(['attributes.attributeValues', 'brand', 'images', 'measurementUnit'])
+            ->select('id', 'slug', 'price', 'brand_id', 'measurement_unit_id') // Selectăm doar câmpurile necesare
+            ->limit(50) // Limităm numărul de produse la 50
+            ->get()
+            ->chunk(5);
 
-        foreach ($products as $product) {
 
-            // Inițializează un array pentru atributele fiecărui produs
-            $attributesArray = [];
+        foreach ($productsChunks as $products) {
 
-            // Parcurge fiecare atribut al produsului
-            foreach ($product->attributes as $attribute) {
-                foreach ($attribute->attributeValues as $attributeValue) {
-                    // Obține valoarea tradusă a atributului
-                    $translatedValue = $attributeValue->translate(session()->get('locale'));
-                    if ($translatedValue) {
-                        // Adaugă valoarea tradusă a atributului în array-ul de atribute
-                        $attributesArray[$attribute->name] = $translatedValue->value;
+            foreach ($products as $product) {
+                $attributesArray = [];
+
+                foreach ($product->attributes as $attribute) {
+                    foreach ($attribute->attributeValues as $attributeValue) {
+                        $translatedValue = $attributeValue->translate(session()->get('locale'));
+                        if ($translatedValue) {
+                            $attributesArray[$attribute->name] = $translatedValue->value;
+                        }
                     }
                 }
+
+                $brandName = $product->brand->name ?? null;
+                $brandLogo = $product->brand->image ?? null;
+                $image = $product->images()->first()->image1 ?? null;
+
+                $productArray = [
+                    'id' => $product->id,
+                    'slug' => $product->slug,
+                    'name' => $product->translate(session()->get('locale'))->name,
+                    'description' => $product->translate(session()->get('locale'))->description,
+                    'image' => $image,
+                    'price' => $product->price,
+                    'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                    'attributes' => $attributesArray,
+                    'mu' => $product->measurement_unit->symbol ?? ''
+                ];
+
+                $productsArray[] = $productArray;
             }
-
-            // Obține brandul produsului și adaugă numele său în array-ul produsului
-            $brandName = $product->brand->name ?? null;
-            $brandLogo = $product->brand->image ?? null;
-            $image = $product->images()->first()->image1 ?? null;
-
-            // Adaugă array-urile de atribute și numele brandului în array-ul produsului
-            $productArray = [
-                'id' => $product->id,
-                'slug' => $product->slug,
-                'name' => $product->translate(session()->get('locale'))->name,
-                'description' => $product->translate(session()->get('locale'))->description,
-                'image' => $image,
-                'price' => $product->price,
-                'brand' => ['name' => $brandName, 'image' => $brandLogo],
-                'attributes' => $attributesArray,
-                'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
-            ];
-
-            // Adaugă array-ul produsului în array-ul general de produse
-            $productsArray[] = $productArray;
-
         }
+
         return $productsArray;
     }
 }

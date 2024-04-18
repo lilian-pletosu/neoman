@@ -58,15 +58,14 @@ class SubSubcategoryService
 
     public function createWithProduct($data)
     {
-        if (!$data['sub_subcategory']) {
-            dd('sss');
-        }
-
         $data['image'] = '/img/no_image.svg';
+
+
         $subSubcategory = SubSubCategory::firstOrCreate(['slug' => Str::slug($data['sub_subcategory'], '_')], [
             'slug' => Str::slug($data['sub_subcategory'], '_'),
             'image' => $data['image']
         ]);
+
         foreach (config('app.available_locales') as $locale) {
             foreach ($this->translatedAttributes as $translatedAttribute) {
                 $xlsxKey = $translatedAttribute . ' ' . $locale;

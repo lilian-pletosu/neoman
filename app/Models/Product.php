@@ -23,6 +23,11 @@ class Product extends Model implements TranslatableContract
         return $this->belongsTo(SubSubCategory::class, 'sub_sub_category_id');
     }
 
+    public function measurementUnit()
+    {
+        return $this->belongsTo(MeasurementUnit::class, 'measurement_unit_id');
+    }
+
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
@@ -37,7 +42,7 @@ class Product extends Model implements TranslatableContract
     {
         return $this->belongsToMany(Attribute::class, 'product_attributes')->withPivot('product_id');
     }
-    
+
 
     public function attributeValues()
     {
