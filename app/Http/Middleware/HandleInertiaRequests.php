@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\SubCategory;
 use App\Models\SubSubCategory;
 use App\Services\BannerService;
+use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -60,6 +61,7 @@ class HandleInertiaRequests extends Middleware
             },
             'availableLanguages' => config('availableLanguages'),
             'categories' => Category::orderBy('name')->get(),
+            'menu' => Category::orderBy('name')->with('subcategory.subSubcategory')->get(),
             'subcategories' => SubCategory::orderBy('name')->get(),
             'sub_subcategories' => SubSubCategory::orderBy('name')->get(),
             'sales_products' => (new ProductService())->loadSalesProducts(),
@@ -67,10 +69,9 @@ class HandleInertiaRequests extends Middleware
             'latest_products' => (new ProductService())->loadLatestProducts(),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct($request) ?? [],
-//            'all_products' => [],
             'all_products' => (new ProductService())->loadAllProducts(),
             'home_banners' => (new BannerService())->getHomeBanners(),
-
+            'orders' => (new OrderService())->getOrders()
         ]);
     }
 }

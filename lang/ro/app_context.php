@@ -161,6 +161,8 @@ return [
     'saturday' => 'Sâmbătă',
     'sunday' => 'Duminică',
     'return_with_call' => 'Revenim cu un apel',
+    'import_product' => 'Importă produse',
+    'excel_file' => 'File excel',
 
 
     //statuses

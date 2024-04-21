@@ -83,6 +83,7 @@ function buyProduct(productId) {
     <front-layout title="Pagina principală">
 
         <breadcrumb :product="product"/>
+
         <hr>
         <section class="py-12 mt-1 sm:py-16">
             <div class="container">

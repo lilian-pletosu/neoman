@@ -39,9 +39,10 @@ class ProductsImport
 
         $columns = [];
         foreach ($rows as $rowIndex => $row) {
-            $columns[$rowIndex + 2] = array_combine($firstRowKeys, $row);
+            // Trim the keys
+            $trimmedKeys = array_map('trim', $firstRowKeys);
+            $columns[$rowIndex + 2] = array_combine($trimmedKeys, $row);
         }
-
         return $columns;
 
     }
@@ -197,13 +198,12 @@ class ProductsImport
     {
         $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get()->toArray();
 
-
         foreach ($attributes as $attribute) {
             if ($attribute['slug'] == 'cantitate') {
-                $attributeObj = Attribute::find($attribute['id']);
-                if (array_key_exists(trim($attribute['name']), $item)) {
-                    $quantities = json_decode($item[$attribute['name']], true);
 
+                $attributeObj = Attribute::find($attribute['id']);
+                if (array_key_exists($attribute['name'], $item)) {
+                    $quantities = json_decode($item[$attribute['name']], true);
                     foreach ($quantities as $qty) {
                         $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
                         $valueAttribute->value = $qty;

@@ -16,6 +16,7 @@ import {useWishlistStore} from "@/stores/wishlistStore.js";
 import Cart from "@/Components/Cart.vue";
 import Wishlist from "@/Components/Wishlist.vue";
 import {onClickOutside} from "@vueuse/core";
+import BigMenu from "@/Components/BigMenu.vue";
 
 const app = getCurrentInstance();
 
@@ -153,43 +154,19 @@ onMounted(async () => {
         </div>
         <div
             class="relative hidden md:flex flex-row h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60 ">
-            <div class="relative
-             justify-center items-center bg-[#043B3D] md:w-3/12   dark:bg-dark"
-                 @click="toggleSidebar">
-                <div class="flex justify-center items-center space-x-3 py-5">
-                    <bars3-icon class="w-[25px] h-[25px] text-black md:text-white dark:text-white"/>
-                    <p class="text-2 flex items-center text-base text-black md:text-white dark:text-white uppercase">
-                        Catalog</p>
-                    <chevron-down-icon v-if="menu" class="w-5 animate-rotateUp text-blue-800"/>
-                    <chevron-up-icon v-if="!menu" class="w-5 animate-rotateUp text-blue-800"/>
-                </div>
-                <div ref="sidebar" v-show="menu"
-                     class="relative hidden   sm:block shadow-lg">
-                    <div id="mega-menu-icons-dropdown"
-                         class="bg-white z-20 absolute   w-full  text-sm  border border-gray-100 rounded-lg shadow-md dark:border-gray-700 md:grid-cols-3 dark:bg-gray-700">
-                        <div class="p-4 pb-0 text-gray-900 md:pb-4 dark:text-white">
-                            <ul class="space-y-4" aria-labelledby="mega-menu-icons-dropdown-button">
-                                <li v-for="category in  $page.props.categories"
-                                    class="py-2 hover:cursor-pointer">
-                                    <Link :href="route('category_page', {slug: category.slug})"
-                                          class="flex items-center text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 group">
-                                        <span class="sr-only">{{ category.name }}</span>
-                                        <svg
-                                            class="w-3 h-3 me-2 text-gray-400 dark:text-gray-500 group-hover:text-blue-600 dark:group-hover:text-blue-500"
-                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                            fill="currentColor" viewBox="0 0 20 20">
-                                            <path
-                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
-                                        </svg>
-                                        {{ category.name }}
-                                    </Link>
-                                </li>
-                            </ul>
+            <BigMenu>
+                <template v-slot:children>
+                    <div class="">
+                        <div class="flex justify-center items-center space-x-3 py-5">
+                            <bars3-icon class="w-[25px] h-[25px] text-black md:text-white dark:text-white"/>
+                            <p class="text-2 flex items-center text-base text-black md:text-white dark:text-white uppercase">
+                                Catalog</p>
+                            <chevron-down-icon v-if="menu" class="w-5 animate-rotateUp text-blue-800"/>
+                            <chevron-up-icon v-if="!menu" class="w-5 animate-rotateUp text-blue-800"/>
                         </div>
-
                     </div>
-                </div>
-            </div>
+                </template>
+            </BigMenu>
             <div class=" hidden md:flex flex-1 items-center justify-end pl-4 md:pr-2 xl:pr-0">
                 <div class="relative h-10  w-full " ref="searchElement">
                     <div
