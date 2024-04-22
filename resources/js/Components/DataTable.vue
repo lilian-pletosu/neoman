@@ -68,6 +68,13 @@ const applyFormat = (columnName, columnValue) => {
         // return app.appContext.config.globalProperties.truncate(columnValue, 50);
     }
 
+    if (columnName === 'icon') {
+        if (columnValue === null) {
+            return '---';
+        }
+        return columnValue;
+    }
+
     if (columnName === 'created_at') {
         if (columnValue === null) {
             return '---;'
@@ -188,6 +195,11 @@ onMounted(() => {
                                                     <p>{{
                                                             __(applyFormat(column, resource[columnInOrder])) ?? '--'
                                                         }}</p>
+                                                </div>
+                                            </template>
+                                            <template v-else-if="column === 'icon'">
+                                                <div class=" flex items-center justify-center first-letter:uppercase">
+                                                    <p v-html="resource[columnInOrder]"/>
                                                 </div>
                                             </template>
                                             <!--                    else                        -->

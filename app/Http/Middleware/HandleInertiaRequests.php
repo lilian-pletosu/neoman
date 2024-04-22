@@ -69,7 +69,8 @@ class HandleInertiaRequests extends Middleware
             'latest_products' => (new ProductService())->loadLatestProducts(),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct($request) ?? [],
-            'all_products' => (new ProductService())->loadAllProducts(),
+//            'all_products' => (new ProductService())->loadAllProducts(),
+            'all_products' => [],
             'home_banners' => (new BannerService())->getHomeBanners(),
             'orders' => (new OrderService())->getOrders()
         ]);

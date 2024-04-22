@@ -29,6 +29,16 @@ class CategorySchema
                     'required'
                 ],
             ],
+            [
+                'name' => "icon",
+                'value' => '',
+                'type' => 'textarea',
+                'placeholder' => "svg_code",
+                'options' => [],
+                'rules' => [
+                    'required'
+                ],
+            ],
 
 //            [
 //                'name' => 'currency',

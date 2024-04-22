@@ -163,6 +163,8 @@ return [
     'return_with_call' => 'Revenim cu un apel',
     'import_product' => 'Importă produse',
     'excel_file' => 'File excel',
+    'icon' => 'Iconiță',
+    'svg_code' => 'Cod SVG',
 
 
     //statuses

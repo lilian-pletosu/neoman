@@ -85,7 +85,7 @@ function buyProduct(productId) {
         <breadcrumb :product="product"/>
 
         <hr>
-        <section class="py-12 mt-1 sm:py-16">
+        <section v-if="Object.keys(product)" class="py-12 mt-1 sm:py-16">
             <div class="container">
                 <div class="lg:col-gap-12 xl:col-gap-16 grid grid-cols-1 gap-12 lg:-mt-12 lg:grid-cols-5 lg:gap-16">
                     <div class="lg:col-span-3 lg:row-end-1">
@@ -284,6 +284,11 @@ function buyProduct(productId) {
             </div>
             <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"/>
         </section>
+        <!--        <section v-if="!Object.keys(products)" class="py-12 mt-1 sm:py-16">-->
+        <!--            <div class="container">-->
+        <!--                <h1 class="text-center text-3xl font-bold dark:text-slate-300">{{ __('no_products') }}</h1>-->
+        <!--            </div>-->
+        <!--        </section>-->
         <hr>
         <product-section :title="__('latest_products')" :new_products="true" :products="attrs.latest_products"/>
         <product-section v-if="attrs.last_visited.length !== 0" :title="__('visited_products')" :new_products="true"

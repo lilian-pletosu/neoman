@@ -6,13 +6,14 @@ import {
     DropdownMenuItem,
     DropdownMenuPortal,
     DropdownMenuRoot,
-    DropdownMenuSeparator,
     DropdownMenuSub,
     DropdownMenuSubContent,
     DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from 'radix-vue'
 import {Icon} from "@iconify/vue";
+import {route} from "ziggy-js";
+import {router} from "@inertiajs/vue3";
 
 const app = getCurrentInstance();
 
@@ -48,57 +49,96 @@ function handleClick() {
                 <!--                    {{ category.name }}-->
                 <!--                </DropdownMenuItem>-->
                 <DropdownMenuSub v-for="category in app.appContext.config.globalProperties.$page.props.menu">
-                    <DropdownMenuSubTrigger
-                        value="more toolsz"
-                        class="group w-full text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[state=open]:bg-green4 data-[state=open]:text-grass11 data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1 data-[highlighted]:data-[state=open]:bg-green9 data-[highlighted]:data-[state=open]:text-green1"
+
+                    <DropdownMenuItem
+                        v-if="category.subcategory.length <= 0"
+                        :value="category.slug"
+                        class=" py-6 cursor-pointer group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
+                        @click="router.get(route('category_page', {slug: category.slug}))"
                     >
-                        {{ category.name }}
                         <div
-                            class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8"
+                            class="mr-2 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8 "
                         >
+                            <p v-html="category.icon"/>
+                        </div>
+                        <p class="text-lg">{{ category.name }}</p>
+
+                    </DropdownMenuItem>
+                    <DropdownMenuSubTrigger
+                        v-if="category.subcategory.length > 0"
+                        @click="router.get(route('category_page', {slug: category.slug}))"
+                        value="more toolsz"
+                        class="py-6 cursor-pointer group w-full text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[state=open]:bg-green4 data-[state=open]:text-grass11 data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1 data-[highlighted]:data-[state=open]:bg-green9 data-[highlighted]:data-[state=open]:text-green1">
+
+                        <div
+                            class="mr-2 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8"
+                        >
+                            <p v-html="category.icon"/>
+                        </div>
+                        <p class="text-lg">{{ category.name }}</p>
+                        <div
+                            class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8">
                             <Icon icon="radix-icons:chevron-right"/>
                         </div>
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
                         <DropdownMenuSubContent
-                            class="min-w-[220px] outline-none bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+                            class=" cursor-pointer min-w-[220px] outline-none bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
                             :side-offset="2"
                             :align-offset="-5"
                         >
                             <DropdownMenuItem
-                                class="group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
+                                v-if="category.subcategory.length <= 0"
+                                v-for="subcategory in category.subcategory"
+                                @click="router.get(route('subcategory_page', {slug: subcategory.slug}))"
+                                class="py-4 group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px]  relative px-3 select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
                             >
-                                Save Page As…
+
+                                <p class="text-lg">{{ subcategory.name }}</p>
                                 <div
-                                    class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8"
-                                >
-                                    ⌘+S
+                                    class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8">
+                                    <Icon icon="radix-icons:chevron-right"/>
                                 </div>
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                                class="text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
-                            >
-                                Create Shortcut…
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                class="text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
-                            >
-                                Name Window…
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator class="h-[1px] bg-green6 m-[5px]"/>
-                            <DropdownMenuItem
-                                class="text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
-                            >
-                                Developer Tools
-                            </DropdownMenuItem>
+
+                            <DropdownMenuSub
+                                v-if="category.subcategory.length > 0"
+                                v-for="subcategory in category.subcategory">
+                                <DropdownMenuSubTrigger
+                                    value="more toolsz"
+                                    class="group w-full text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[state=open]:bg-green4 data-[state=open]:text-grass11 data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1 data-[highlighted]:data-[state=open]:bg-green9 data-[highlighted]:data-[state=open]:text-green1"
+                                    @click="router.get(route('subcategory_page', {slug: subcategory.slug}))"
+                                >
+                                    <p class="text-lg">{{ subcategory.name }}</p>
+                                    <div
+                                        class="ml-auto pl-[20px] text-mauve11 group-data-[highlighted]:text-white group-data-[disabled]:text-mauve8"
+                                    >
+                                        <Icon icon="radix-icons:chevron-right"/>
+                                    </div>
+                                </DropdownMenuSubTrigger>
+
+                                <DropdownMenuPortal>
+                                    <DropdownMenuSubContent
+                                        class="cursor-pointer min-w-[220px] outline-none bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+                                        :side-offset="2"
+                                        :align-offset="-5"
+                                    >
+                                        <DropdownMenuItem
+                                            v-for="sub_subcategory in subcategory.sub_subcategory"
+                                            class="group text-[13px] leading-none text-grass11 rounded-[3px] flex
+                                            items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none
+                                            data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none
+                                            data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
+                                            @click="router.get(route('products_page', {subSubcategory: sub_subcategory.slug}))"
+                                        >
+                                            <p class="text-base	">{{ sub_subcategory.name }}</p>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuSubContent>
+                                </DropdownMenuPortal>
+                            </DropdownMenuSub>
                         </DropdownMenuSubContent>
                     </DropdownMenuPortal>
                 </DropdownMenuSub>
-
-
-                <!--                <DropdownMenuSeparator class="h-[1px] bg-green6 m-[5px]"/>-->
-
-
                 <DropdownMenuArrow class="fill-white"/>
             </DropdownMenuContent>
         </DropdownMenuPortal>
