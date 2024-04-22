@@ -44,8 +44,10 @@ class CategoryService
     {
 
         $data['slug'] = Str::slug($data['name ro'], '_');
-
-        $category->update($data);
+        $category->update([
+            'slug' => $data['slug'],
+            'icon' => $data['icon'],
+        ]);
         foreach ($this->translatedAttributes as $translatableAttribute) {
             foreach (config('translatable.locales') as $locale) {
                 $category->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];

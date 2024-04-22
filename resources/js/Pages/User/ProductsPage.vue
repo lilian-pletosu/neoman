@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, reactive, ref, useAttrs, watch} from 'vue'
+import {onBeforeUnmount, onMounted, reactive, ref, useAttrs, watch} from 'vue'
 import {
     Dialog,
     DialogPanel,
@@ -93,7 +93,6 @@ function isOptionSelected(attribute, value) {
 }
 
 onMounted(() => {
-    // Încărcăm datele stocate din localStorage la încărcarea componentei
     const storedParams = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (storedParams) {
         brandsFilter.value = storedParams.brands || [];
@@ -101,6 +100,9 @@ onMounted(() => {
         Object.assign(attributesFilter, storedParams.attributes || {});
         Object.assign(priceRange, storedParams.priceRange || ['', '']);
     }
+});
+onBeforeUnmount(() => {
+    localStorage.removeItem(STORAGE_KEY);
 });
 </script>
 
@@ -328,7 +330,7 @@ onMounted(() => {
                             </form>
 
                             <!-- Product grid -->
-                            <div class="lg:col-span-3 ">
+                            <div v-if="products.data.length > 0" class="lg:col-span-3">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4">
                                     <div v-for="product in products.data" class="">
                                         <div
@@ -392,7 +394,9 @@ onMounted(() => {
                                                 :links="products.links"/>
                                 </div>
                             </div>
-
+                            <div v-if="products.data.length <= 0" class="lg:col-span-3 mx-auto ">
+                                <p class="text-2xl py-12 font-bold text-gray-500">{{ __('no_products') }}</p>
+                            </div>
                         </div>
                     </section>
                 </main>

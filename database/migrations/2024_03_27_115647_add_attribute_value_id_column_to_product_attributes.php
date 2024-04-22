@@ -12,7 +12,6 @@ return new class extends Migration {
     {
         Schema::table('product_attributes', function (Blueprint $table) {
             $table->foreignId('attribute_value_id')->nullable()->after('attribute_id')->unsigned()->constrained()->cascadeOnDelete();
-
         });
     }
 

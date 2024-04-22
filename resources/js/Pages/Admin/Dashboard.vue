@@ -433,6 +433,9 @@
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import {BarChart} from 'vue-chart-3';
 import {Chart, registerables} from "chart.js";
+import {getCurrentInstance} from "vue";
+
+const app = getCurrentInstance();
 
 Chart.register(...registerables);
 
@@ -440,14 +443,18 @@ const props = defineProps({
     'route': String
 });
 
-const testData = {
-    labels: ['Paris', 'Nîmes', 'Toulon', 'Perpignan', 'Autre'],
+
+let testData = {
+
+    labels: [app.appContext.config.globalProperties.__('pending'), app.appContext.config.globalProperties.__('confirmed'), app.appContext.config.globalProperties.__('shipped'), app.appContext.config.globalProperties.__('delivered'), app.appContext.config.globalProperties.__('canceled')],
     datasets: [
         {
-            data: [30, 40, 60, 70, 5],
+            label: app.appContext.config.globalProperties.__('comenzi'),
+            data: [app.appContext.config.globalProperties.$page.props.orders['pending'], app.appContext.config.globalProperties.$page.props.orders['confirmed'], app.appContext.config.globalProperties.$page.props.orders['shipped'], app.appContext.config.globalProperties.$page.props.orders['delivered'], app.appContext.config.globalProperties.$page.props.orders['canceled']],
             backgroundColor: ['#77CEFF', '#0079AF', '#123E6B', '#97B0C4', '#A5C8ED'],
         },
     ],
 };
+
 
 </script>

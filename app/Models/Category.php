@@ -14,7 +14,7 @@ class Category extends Model implements TranslatableContract
 
     protected $table = 'categories';
     protected $fillable = [
-        'name', 'slug'
+        'name', 'slug', 'icon'
     ];
 
     public $translatedAttributes = ['name'];

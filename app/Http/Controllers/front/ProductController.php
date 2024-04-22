@@ -9,6 +9,7 @@ use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\SubSubCategory;
 use App\Services\SessionService;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -68,17 +69,34 @@ class ProductController extends Controller
         $newSlug = explode('_', $productSlug);
         array_pop($newSlug);
         $res = implode('_', $newSlug);
+
+        // give last symbol of productSlug
+        $fullSlug = explode('_', $productSlug);
+        $mu_unit = array_pop($fullSlug);
+
+        // check if last symbol contains 'l' or 'kg' and return this symbol
+        if (strpos($mu_unit, 'l') !== false) {
+            $mu_unit = 'l';
+        } elseif (strpos($mu_unit, 'kg') !== false) {
+            $mu_unit = 'kg';
+        } else {
+            $mu_unit = '';
+        }
+
         $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
+
+//        dd($productSlug);
 
         (new SessionService())->AddVisitedProductInSession($product);
 
+
         $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.slug');
 
-        $product['attributes'] = $product['attributes']->map(function ($item) use ($res) {
+        $product['attributes'] = $product['attributes']->map(function ($item) use ($res, $mu_unit) {
             return [
                 'name' => $item[0]->attribute->translate()->name,
-                'values' => $item->map(function ($value) use ($res) {
-                    $value['link'] = $res . '_' . $value->translate()->value . 'l';
+                'values' => $item->map(function ($value) use ($res, $mu_unit) {
+                    $value['link'] = $res . '_' . Str::slug($value->translate()->value, '_') . $mu_unit;
                     $value->translate()->value;
                     return $value;
                 })->toArray(),

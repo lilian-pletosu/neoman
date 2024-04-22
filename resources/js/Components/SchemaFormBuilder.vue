@@ -8,11 +8,14 @@ import BlackSelector from "@/Components/BlackSelector.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Description from "@/Components/Description.vue";
 import ImageSlider from "@/Components/ImageSlider.vue";
+import ProgressCustom from "@/Components/ProgressCustom.vue";
 
 
 let formEdit = useForm({});
 let formCreate = useForm({});
-let formImport = useForm({});
+let formImport = useForm({
+    file: null,
+});
 const app = getCurrentInstance();
 const emit = defineEmits(['close-modal', 'showNotify'])
 const errors = ref({});
@@ -143,15 +146,15 @@ function submit() {
         })
     }
     if (['import'].includes(props.type)) {
-        router.post(route(`importResource`, props.resourceType), {
-            file: importFile.value
-        }, {
-            onSuccess: params => {
+        formImport.post(route(`importResource`, props.resourceType), {
+            onSuccess: () => {
                 closeCreateForm()
                 emit('showNotify', props.type)
             },
-            onError: err => errors.value = err
-        });
+            onProgress: (progress) => {
+                formImport.process = progress
+            }
+        })
     }
 }
 
@@ -321,12 +324,16 @@ const handleFileUpload = (event, field) => {
                                 <div class="my-5">
                                     <label for="image"
                                            class="block mb-2 text-sm font-medium text-gray-900 ">{{
-                                            __('excel')
+                                            __('excel_file')
                                         }}</label>
 
-                                    <input @input="importFile = $event.target.files[0]"
-                                           class="block  text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                           :id="formImport.file" type="file">
+                                    <input @input="formImport.file = $event.target.files[0]"
+                                           class="block  text-sm w-full text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                           type="file">
+
+                                </div>
+                                <div v-if="formImport.progress" class="w-full  py-1">
+                                    <ProgressCustom v-model="formImport.progress.percentage"/>
                                 </div>
                                 <span class="">{{ errors.import }}</span>
 

@@ -14,7 +14,6 @@ class ImportResources extends Controller
 {
     public function importExcelCSV(Request $request, string $resourceType)
     {
-
         //TODO: Make conditional case if resourceType is equal with product make productImport and the like
         switch (Str::lower($resourceType)) {
             case 'product':
