@@ -1,7 +1,5 @@
 <script setup>
-// If you are using PurgeCSS, make sure to whitelist the carousel CSS classes
 import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
-import {ref} from "vue";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import 'swiper/css';
 import {Link} from "@inertiajs/vue3";
@@ -12,14 +10,6 @@ import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/16/solid/index.js";
 
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
-
-
-const currentSlide = ref(1);
-
-const showSuccess = () => {
-
-}
-
 
 const props = defineProps({
     products: {
@@ -46,10 +36,6 @@ const props = defineProps({
 
 });
 
-
-function onSlideChange() {
-    console.log("Slide change");
-}
 </script>
 
 <style>

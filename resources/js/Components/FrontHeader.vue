@@ -1,7 +1,8 @@
 <script setup>
-import {getCurrentInstance, onMounted, ref} from "vue";
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import {
+    ArrowPathIcon,
     Bars3Icon,
     ChevronDownIcon,
     ChevronUpIcon,
@@ -17,6 +18,9 @@ import Cart from "@/Components/Cart.vue";
 import Wishlist from "@/Components/Wishlist.vue";
 import {onClickOutside} from "@vueuse/core";
 import BigMenu from "@/Components/BigMenu.vue";
+import axios from "axios";
+import {route} from "ziggy-js";
+import {debounce} from "chart.js/helpers";
 
 const app = getCurrentInstance();
 
@@ -25,7 +29,9 @@ const wishlistStore = useWishlistStore();
 
 const openSearch = ref(false);
 const searchElement = ref(null);
-const searchedProducts = ref([]);
+const searchedProducts = reactive({});
+
+const loadSearch = ref(false);
 
 const menu = ref(false);
 const sidebar = ref(null)
@@ -34,15 +40,27 @@ const openCart = ref(false);
 const openWishlist = ref(false);
 
 const searchProduct = (value) => {
-    if (value.length > 1) {
-        searchedProducts.value = app.appContext.config.globalProperties.$page.props.all_products.filter(category => category.name.toLowerCase().includes(value.toLowerCase()))
-    } else {
-        searchedProducts.value = app.appContext.config.globalProperties.$page.props.all_products;
-    }
+
+    debounce(() => {
+        if (value.length > 1) {
+            loadSearch.value = true;
+            axios.get(route('api.search_product', {query: value})).then((response) => {
+
+                searchedProducts.value = response.data;
+
+            }).finally(() => {
+                loadSearch.value = false;
+            })
+        } else {
+            searchedProducts.value = {};
+        }
+    }, 500)()
 }
 
 onClickOutside(searchElement, () => {
     openSearch.value = false;
+    loadSearch.value = false;
+
 })
 
 
@@ -74,7 +92,6 @@ const randomColorClass = () => {
 onMounted(async () => {
     await cartStore.fetchCount()
     await wishlistStore.fetchCount();
-
 })
 
 </script>
@@ -171,7 +188,8 @@ onMounted(async () => {
                 <div class="relative h-10  w-full " ref="searchElement">
                     <div
                         class="absolute top-2/4 right-3 grid h-5 w-5 -translate-y-2/4 place-items-center text-blue-gray-500">
-                        <magnifying-glass-icon class="w-6 dark:text-white"/>
+                        <magnifying-glass-icon v-if="!loadSearch" class="w-6 dark:text-white"/>
+                        <arrow-path-icon v-if="loadSearch" class="w-6 dark:text-white"/>
                     </div>
                     <input
                         @focus="openSearch = true"
@@ -183,17 +201,21 @@ onMounted(async () => {
                     <div v-show="openSearch"
                          class="absolute w-full  max-h-[500px] overflow-y-scroll z-50 shadow bg-white border rounded-b-lg ">
                         <div class="flex flex-col space-y-2 p-4">
-                            <div v-if="searchedProducts.length >= 0" v-for="product in searchedProducts"
+                            <div v-for="product in searchedProducts.value"
                                  class="flex items-center space-x-2 ">
 
                                 <div
                                     class="w-full flex rounded-xl border border-gray-100 p-4 text-left text-gray-600 shadow-lg sm:p-8">
-                                    <img class="mr-5 block h-8 w-8 max-w-full text-left align-middle sm:h-16 sm:w-16"
-                                         :src="product.image"
-                                         alt="Profile Picture"/>
+                                    <Link :href="route('product_page', {slug: product.slug})">
+                                        <img
+                                            class="mr-5 block h-8 w-8 max-w-full text-left align-middle sm:h-16 sm:w-16"
+                                            :src="product.image"
+                                            alt="Profile Picture"/></Link>
                                     <div class="w-full text-left">
                                         <div class="mb-2 flex flex-col justify-between text-gray-600 sm:flex-row">
-                                            <h3 class="font-medium">{{ product.name }}</h3>
+                                            <Link :href="route('product_page', {slug: product.slug})">
+                                                <h3 class="font-medium">{{ product.name }}</h3>
+                                            </Link>
                                             <time class="text-xs" datetime="2022-11-13T20:00Z">
                                                 {{ product.brand.name }}
                                             </time>
@@ -213,41 +235,19 @@ onMounted(async () => {
                                 </div>
 
                             </div>
-                            <div v-if="searchedProducts.length <= 0"
+
+                            <div v-if="loadSearch || searchProducts != {}"
                                  class="flex items-center space-x-2 ">
 
-                                <section class="bg-white py-6">
-                                    <div class="mx-auto max-w-screen-xl px-4 md:px-8">
-                                        <!-- Heading -->
-                                        <div class="relative mb-10  md:mb-16">
-                                            <h2 class="mb-4 text-center font-serif text-3xl font-bold text-gray-800 md:mb-6 md:text-4xl">
-                                                {{ __('popular_sub_subcategories') }}</h2>
-                                        </div>
-                                        <!-- /Heading -->
-                                        <div
-                                            class="grid gap-8 sm:grid-cols-2 sm:gap-12 lg:grid-cols-3 xl:grid-cols-4 xl:gap-16">
-                                            <!-- Article -->
-                                            <article
-                                                v-for="sub_subcategory in app.appContext.config.globalProperties.$page.props.sub_subcategories.slice(0,4)"
-                                                class="">
-                                                <Link
-                                                    :class="randomColorClass() + ' block rounded-lg p-2 transition hover:scale-105 '"
-                                                    :href="route('products_page', {subSubcategory: sub_subcategory.slug})">
-                                                    <h2 class="mx-4 h-16 mt-4 mb-10 font-serif text-2xl font-semibold text-white">
-                                                        {{ sub_subcategory.name }}</h2>
-                                                    <div class="flex items-center rounded-md px-4 py-3">
-                                                        <img class="h-10 w-10 rounded-full object-cover"
-                                                             :src="sub_subcategory.image" alt="Simon Lewis"/>
-                                                    </div>
-                                                </Link>
-                                            </article>
-
-
-                                            <!-- /Article -->
+                                <div class="mx-auto max-w-screen-xl px-4 md:px-8">
+                                    <!-- Heading -->
+                                    <div class="text-center">
+                                        <div class='flex flex-col  p-4'>
+                                          <span
+                                              class="w-8 h-8 border-t-blue-600 border-solid animate-spin rounded-full border-slate-300 border-4"/>
                                         </div>
                                     </div>
-                                </section>
-
+                                </div>
                             </div>
                         </div>
                     </div>

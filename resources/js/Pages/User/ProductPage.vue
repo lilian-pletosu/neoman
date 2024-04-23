@@ -21,6 +21,9 @@ const props = defineProps({
     product: {
         type: Object,
     },
+    latest_products: {
+        type: Object,
+    },
 });
 
 const selectedQty = ref('default');
@@ -290,7 +293,7 @@ function buyProduct(productId) {
         <!--            </div>-->
         <!--        </section>-->
         <hr>
-        <product-section :title="__('latest_products')" :new_products="true" :products="attrs.latest_products"/>
+        <product-section :title="__('latest_products')" :top_products="true" :products="latest_products"/>
         <product-section v-if="attrs.last_visited.length !== 0" :title="__('visited_products')" :new_products="true"
                          :products="attrs.last_visited"/>
 

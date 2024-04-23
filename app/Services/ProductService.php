@@ -94,7 +94,7 @@ class ProductService
                 foreach ($promotion->brands as $brand) {
                     foreach ($brand->products as $product) {
                         $attributesArray = [];
-                        foreach ($product->attributes as $attribute) {
+                        foreach ($product->attributes->take(15) as $attribute) {
                             foreach ($attribute->attributeValues as $attributeValue) {
                                 $translatedValue = $attributeValue->translate(session()->get('locale'));
                                 if ($translatedValue) {
@@ -273,6 +273,53 @@ class ProductService
 
                 $productsArray[] = $productArray;
             }
+        }
+
+        return $productsArray;
+    }
+
+
+    public function searchProduct($query)
+    {
+        $productsArray = [];
+
+        $products = Product::where('slug', 'like', '%' . $query . '%')
+            ->orWhereHas('translations', function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%');
+                $q->orWhere('description', 'like', '%' . $query . '%');
+            })
+            ->get();
+
+
+        foreach ($products as $product) {
+            $attributesArray = [];
+
+            foreach ($product->attributes as $attribute) {
+                foreach ($attribute->attributeValues as $attributeValue) {
+                    $translatedValue = $attributeValue->translate(session()->get('locale'));
+                    if ($translatedValue) {
+                        $attributesArray[$attribute->name] = $translatedValue->value;
+                    }
+                }
+            }
+
+            $brandName = $product->brand->name ?? null;
+            $brandLogo = $product->brand->image ?? null;
+            $image = $product->images()->first()->image1 ?? null;
+
+            $productArray = [
+                'id' => $product->id,
+                'slug' => $product->slug,
+                'name' => $product->translate(session()->get('locale'))->name,
+                'description' => $product->translate(session()->get('locale'))->description,
+                'image' => $image,
+                'price' => $product->price,
+                'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                'attributes' => $attributesArray,
+                'mu' => $product->measurement_unit->symbol ?? ''
+            ];
+
+            $productsArray[] = $productArray;
         }
 
         return $productsArray;
