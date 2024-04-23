@@ -165,7 +165,8 @@ return [
     'excel_file' => 'File excel',
     'icon' => 'Iconiță',
     'svg_code' => 'Cod SVG',
-
+    'get_started' => 'Începe',
+    'learn_more' => 'Află mai mult',
 
     //statuses
 

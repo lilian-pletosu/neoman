@@ -64,12 +64,9 @@ class HandleInertiaRequests extends Middleware
             'menu' => Category::orderBy('name')->with('subcategory.subSubcategory')->get(),
             'subcategories' => SubCategory::orderBy('name')->get(),
             'sub_subcategories' => SubSubCategory::orderBy('name')->get(),
-            'sales_products' => (new ProductService())->loadSalesProducts(),
             'brands' => Brand::where('is_enabled', 1)->get(),
-            'latest_products' => (new ProductService())->loadLatestProducts(),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
-            'last_visited' => (new ProductService())->loadLastVisitedProduct($request) ?? [],
-//            'all_products' => (new ProductService())->loadAllProducts(),
+            'last_visited' => (new ProductService())->loadLastVisitedProduct(request()) ?? [],
             'all_products' => [],
             'home_banners' => (new BannerService())->getHomeBanners(),
             'orders' => (new OrderService())->getOrders()

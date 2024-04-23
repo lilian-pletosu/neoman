@@ -30,7 +30,7 @@ class ProductsImport
         $this->createProduct();
     }
 
-    private function processString(): array
+    public function processString(): array
     {
         $worksheet = IOFactory::load(request()->file('file'))->getActiveSheet();
 
@@ -47,7 +47,7 @@ class ProductsImport
 
     }
 
-    private function _columnIndexToNumber($columnIndex)
+    public function _columnIndexToNumber($columnIndex)
     {
         $numericColumnIndex = 0;
         $base = ord('A') - 1;
@@ -60,7 +60,7 @@ class ProductsImport
     }
 
 
-    private function processImages()
+    public function processImages()
     {
         $spreadSheet = IOFactory::load(request()->file('file'));
         $productImages = [];
@@ -76,7 +76,7 @@ class ProductsImport
         return $productImages;
     }
 
-    private function combineImagesWithText(): array
+    public function combineImagesWithText(): array
     {
         $texts = $this->processString();
         $images = $this->processImages();

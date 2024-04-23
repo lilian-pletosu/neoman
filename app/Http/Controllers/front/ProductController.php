@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\SubSubCategory;
+use App\Services\ProductService;
 use App\Services\SessionService;
 use Illuminate\Support\Str;
 
@@ -103,11 +104,13 @@ class ProductController extends Controller
             ];
         });
 
+        $latest_products = (new ProductService())->loadLatestProducts();
+
 
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
 
 
-        return inertia('User/ProductPage', ['product' => $product]);
+        return inertia('User/ProductPage', ['product' => $product, 'latest_products' => $latest_products]);
     }
 
     private function extractKeywordsFromSlug($slug): array

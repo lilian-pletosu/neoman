@@ -42,6 +42,14 @@ class BannerService
 
     public function saveImage(Request $request)
     {
+        if (is_array($request->file('image'))) {
+            $fileName = $request->file('image')['_value']->getFilename() . "." . $request->file('image')['_value']->extension();
+            $data['image'] = '/storage/banners/' . $fileName;
+            $imageContents = $request->file('image')['_value']->getContent();
+            Storage::disk('banners')->put($fileName, $imageContents);
+            return $data['image'];
+        }
+
         if ($request->file('image')) {
             $fileName = $request->file('image')->getFilename() . "." . $request->file('image')->extension();
             $data['image'] = '/storage/banners/' . $fileName;
