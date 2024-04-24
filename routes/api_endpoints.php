@@ -8,4 +8,4 @@ Route::get('get_products', fn() => (new ProductService())->loadAllProducts())->n
 Route::get('last_visited', fn() => (new ProductService())->loadLastVisitedProduct(request()) ?? [])->name('api.get_last_visited_products');
 
 
-Route::get('search/{query}', fn($query) => (new ProductService())->searchProduct($query))->name('api.search_product');
+Route::get('search/{query?}', fn($query = null) => (new ProductService())->searchProduct($query))->name('api.search_product');

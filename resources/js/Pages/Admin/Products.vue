@@ -16,6 +16,7 @@
                         <secondary-button @click="schemaForm(null, 'import', 'POST')">{{
                                 __('import')
                             }}
+
                         </secondary-button>
                     </div>
                 </div>
