@@ -84,7 +84,7 @@ import ShortLogo from "@/Components/ShortLogo.vue";
                             <span
                                 class="block mt-2 text-sm text-gray-600 dark:text-gray-400 hover:underline">+1 526 654 8965</span>
                             <span
-                                class="block mt-2 text-sm text-gray-600 dark:text-gray-400 hover:underline">example@email.com</span>
+                                class="block mt-2 text-sm text-gray-600 dark:text-gray-400 hover:underline">emial</span>
                         </div>
                     </div>
                 </div>

@@ -167,6 +167,11 @@ return [
     'svg_code' => 'Cod SVG',
     'get_started' => 'Începe',
     'learn_more' => 'Află mai mult',
+    'no_product_meets_search_criteria' => 'Nu există produse care să corespundă criteriilor de căutare',
+    'search_in_all_products' => 'Caută în toate produsele',
+    'menu' => 'Meniu',
+    'add_all_products_in_cart' => 'Adaugă toate produsele în coș',
+    'wishlist_empty' => 'Lista de favorite este goală',
 
     //statuses
 
