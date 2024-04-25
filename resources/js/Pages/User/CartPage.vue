@@ -183,7 +183,7 @@ watch(cartStore, () => {
                                       v-if="form.errors.city">{{ __(form.errors.address) }}</span>
                             </div>
                             <div>
-                                <input-label :value="__('comments')"/>
+                                <input-label :value="__('message')"/>
                                 <textarea class="rounded-md w-full"
                                           v-model="form.message"
                                           name="message"
@@ -201,13 +201,8 @@ watch(cartStore, () => {
                             </div>
                             <div class="grid grid-cols-2 font-bold">
                                 <p class="justify-self-start">{{ __('shipping') }}:</p>
-                                <p class="justify-self-end ">
-                                    {{ 100 }} {{ __('lei') }}</p>
-                            </div>
-                            <div class="grid grid-cols-2 font-bold">
-                                <p class="justify-self-start">{{ __('total') }}:</p>
-                                <p class="justify-self-end ">
-                                    {{ 100 + cartStore.totalPrice }} {{ __('lei') }}</p>
+                                <p class="justify-self-end italic">
+                                    {{ __('will_be_calculated_by_manager') }}</p>
                             </div>
 
                             <button @click="checkout"

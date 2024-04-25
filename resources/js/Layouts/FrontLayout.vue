@@ -12,6 +12,7 @@ import Toaster from "@/Components/Toaster.vue";
 import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import BrandsList from "@/Components/BrandsList.vue";
+import AcceptCookie from "@/Components/AcceptCookie.vue";
 
 const attrs = useAttrs()
 const app = getCurrentInstance();
@@ -101,7 +102,8 @@ onMounted(() => {
                         <slot name="carousel"/>
                     </div>
                     <!--                    main content -->
-                    <div class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60">
+                    <div
+                        class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60 ">
                         <slot/>
                     </div>
                     <!--                    // mobile-->
@@ -277,6 +279,7 @@ onMounted(() => {
                     />
 
 
+                    <accept-cookie/>
                 </main>
             </div>
             <brands-list :brands="app.appContext.config.globalProperties.$page.props.brands"/>

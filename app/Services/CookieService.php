@@ -109,12 +109,12 @@ class CookieService
                     $item['qty'] += 1;
                     $item['total_price'] = $item['price'] * $item['qty'];
                     $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-                    return response('product_qty_updated')->cookie($cookie);
+                    return response(trans('app_context.product_qty_updated'))->cookie($cookie);
                 }
             }
             $items[] = $product;
             $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-            return response('al treilea')->cookie($cookie);
+            return response(trans('app_context.new_product_added'))->cookie($cookie);
         }
     }
 
