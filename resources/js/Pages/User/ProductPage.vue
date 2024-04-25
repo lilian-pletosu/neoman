@@ -9,7 +9,9 @@ import ProductSection from "@/Components/ProductSection.vue";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
 import {router} from "@inertiajs/vue3";
-
+import CustomModal from "@/Components/CustomModal.vue";
+import 'vue3-carousel/dist/carousel.css'
+import {Carousel, Navigation, Slide} from 'vue3-carousel'
 
 const attrs = useAttrs()
 
@@ -38,12 +40,31 @@ const modalTitle = ref();
 const typeModal = ref();
 const app = getCurrentInstance();
 const countCart = ref(0);
+const openModalSlider = ref(false);
+
+const images = ref({});
+const filteredImages = ref([]);
+
+function openImage() {
+    images.value = props.product.images[0];
+    openModalSlider.value = !openModalSlider.value;
+    filteredImages.value = Object.values(images.value).filter(image =>
+        typeof image === 'string' && image.startsWith('/storage/products/')
+    );
+
+}
+
 
 function openModal(type) {
     if (type === 'cheaper') {
         isOpen.value = !isOpen.value;
         typeModal.value = type
         modalTitle.value = app.appContext.config.globalProperties.__('found_cheaper')
+    }
+    if (type === 'buy_1_click') {
+        isOpen.value = !isOpen.value;
+        typeModal.value = type
+        modalTitle.value = app.appContext.config.globalProperties.__('buy_1_click')
     }
 }
 
@@ -89,13 +110,14 @@ function buyProduct(productId) {
 
         <hr>
         <section v-if="Object.keys(product)" class="py-12 mt-1 sm:py-16">
-            <div class="container">
+            <div class="">
                 <div class="lg:col-gap-12 xl:col-gap-16 grid grid-cols-1 gap-12 lg:-mt-12 lg:grid-cols-5 lg:gap-16">
                     <div class="lg:col-span-3 lg:row-end-1">
-                        <div class="lg:flex lg:items-start">
-                            <div class="lg:order-2 lg:ml-5">
-                                <div class="max-w-xl overflow-hidden rounded-lg mx-auto">
-                                    <img class="w-full xl:h-96 object-scale-down"
+                        <div class="lg:flex">
+                            <div class="lg:order-2  lg:ml-5 flex-1">
+                                <div class="overflow-hidden w-full  h-[300px]  md:h-[500px] rounded-lg ">
+                                    <img class="object-contain w-full  h-[300px]  md:h-[500px] cursor-pointer"
+                                         @click="openImage"
                                          :src="selectedImage" alt=""/>
                                 </div>
                             </div>
@@ -135,7 +157,7 @@ function buyProduct(productId) {
                     </div>
 
                     <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
-                        <div class="flex items-start">
+                        <div class="flex  items-start">
                             <h1 class="dark:text-slate-300 text-2xl font-bold text-gray-900 sm:text-3xl">{{
                                     product.name
                                 }}</h1>
@@ -151,7 +173,7 @@ function buyProduct(productId) {
                         <div class="mt-2 flex justify-between items-center">
                             <img class="w-16" :src="product.brand.image"
                                  alt=""/>
-                            <div class="mt-5 flex items-center dark:text-slate-300">
+                            <div class=" flex items-center dark:text-slate-300">
                                 <div class="flex items-center">
                                     {{ __('product_code') }}:
                                 </div>
@@ -163,9 +185,12 @@ function buyProduct(productId) {
 
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
 
-                            <div class="flex flex-row space-x-6" v-if="['cantitate', 'Cantitate\''].includes(key)">
-                                <h2 class="dark:text-slate-300 my-6 text-base text-gray-900">{{ attribute.name }}:</h2>
-                                <div class="my-3 flex select-none flex-wrap items-center gap-1">
+                            <div class="flex  flex-col 2xs:items-center 2xs:flex-row  2xs:space-x-6"
+                                 v-if="['cantitate', 'Cantitate\''].includes(key)">
+                                <h2 class="dark:text-slate-300 my-2 sm:my-6 text-base text-gray-900">{{
+                                        attribute.name
+                                    }}:</h2>
+                                <div class="2xs:my-3 flex select-none flex-wrap items-center gap-1">
                                     <select
                                         id="color"
                                         v-model="selectedQty"
@@ -214,9 +239,8 @@ function buyProduct(productId) {
                                     type="button">
                                 {{ __('buy') }}
                             </button>
-                            <button type="button"
+                            <button type="button" @click="openModal('buy_1_click')"
                                     class="w-full inline-flex items-center justify-center rounded-md border-2 border-transparent bg-1 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800">
-
                                 {{ __('buy_1_click') }}
                             </button>
                         </div>
@@ -285,18 +309,32 @@ function buyProduct(productId) {
 
                 </div>
             </div>
-            <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"/>
+            <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen" :product/>
         </section>
-        <!--        <section v-if="!Object.keys(products)" class="py-12 mt-1 sm:py-16">-->
-        <!--            <div class="container">-->
-        <!--                <h1 class="text-center text-3xl font-bold dark:text-slate-300">{{ __('no_products') }}</h1>-->
-        <!--            </div>-->
-        <!--        </section>-->
         <hr>
         <product-section :title="__('latest_products')" :top_products="true" :products="latest_products"/>
         <product-section v-if="attrs.last_visited.length !== 0" :title="__('visited_products')" :new_products="true"
                          :products="attrs.last_visited"/>
 
+
+        <custom-modal :is-open="openModalSlider" @close-modal="openImage">
+            <template v-slot:content>
+                <div class="w-full">
+                    <carousel :wrap-around="true" :items-to-show="1" class="w-full "
+                              :transition="500">
+                        <slide v-for="(slide, index) in filteredImages"
+                               :key="index">
+                            <img class="object-contain w-full  h-[120vw] sm:h-[40vw]"
+                                 :src="slide" :alt="index">
+                        </slide>
+                        <template #addons>
+                            <Navigation/>
+                            <Pagination/>
+                        </template>
+                    </carousel>
+                </div>
+            </template>
+        </custom-modal>
 
     </front-layout>
 </template>

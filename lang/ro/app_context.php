@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'accept' => 'Accept',
     'hi' => 'Salut',
     'home' => 'Acasă',
     'attributes' => 'Atribute',
@@ -92,6 +93,7 @@ return [
     'empty_cart' => 'Coșul tău este gol!',
     'youre_not_added_product' => 'Nu ai introdus niciun produs în coșul tău!',
     'new_product_added' => 'Produsul adăugat cu succes!',
+    'product_qty_updated' => 'Cantitatea produsului a fost actualizată!',
     'product_exist' => 'Produsul deja există',
     'checkout' => 'Finalizare comandă',
     'product_was_deleted' => 'Produs șters cu succes!',
@@ -172,9 +174,24 @@ return [
     'menu' => 'Meniu',
     'add_all_products_in_cart' => 'Adaugă toate produsele în coș',
     'wishlist_empty' => 'Lista de favorite este goală',
+    'for_fast_order_complete_phone_number' => 'Pentru o comandă rapidă, specificați numărul de telefon de contact. Vă vom contacta pentru a clarifica detaliile comenzii, adresa și termenul de livrare.',
+    'will_be_calculated_by_manager' => 'Prețul livrării se va calcula de managerul nostru după plasarea comenzii.',
+    'message' => 'Mesaj',
+    'about_us' => 'Despre noi',
+    'contact' => 'Contacte',
+    'terms' => 'Termeni și condiții',
+    'privacy' => 'Politica de confidențialitate',
+    'send_order' => 'Trimite comanda',
+    'use_cookies' => 'Acest site folosește cookie-uri pentru a vă oferi o experiență mai bună.',
+    'your_opinion_counts_for_us' => 'Părerea ta este importantă pentru noi și ne dorim să știm ce părere ai despre noi.',
+    'write_us' => 'Scrie-ne, laudă-ne sau fă o reclamație și noi vom încerca să te ajutăm.',
+    'send' => 'Trimite',
+    'all_rights_reserved' => 'Toate drepturile sunt rezervate',
+    'collaboration' => 'Colaborare',
+    'delivery' => 'Livrare',
+    'reclamation' => 'Reclamație',
 
     //statuses
-
     'pending' => 'Procesare',
     'confirmed' => 'Confirmată',
     'shipped' => 'Trimisă',
@@ -221,5 +238,10 @@ return [
     'validation.first_name' => 'Completați numele',
     'validation.last_name' => 'Completați prenumele',
     'validation.phone' => 'Completați numărul de telefon',
+
+
+    //mail
+    'you_have_new_message' => 'Ai primit un mesaj nou',
+    
 
 ];

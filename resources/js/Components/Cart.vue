@@ -62,7 +62,7 @@ const deleteProductFromCart = (id) => {
                                         <div class=" border flex items-center  px-4 rounded">
                                         <span
                                             @click="cartStore.updateQtyOfProduct(product.id,  --product.qty)"
-                                            class="text-sm sm:text-xl">-</span>
+                                            class="text-sm sm:text-xl cursor-default">-</span>
                                             <input
                                                 class="w-12 h-8 border-none"
                                                 min="1"
@@ -74,7 +74,7 @@ const deleteProductFromCart = (id) => {
                                                 id="">
                                             <span
                                                 @click="cartStore.updateQtyOfProduct(product.id,  ++product.qty)"
-                                                class="text-sm sm:text-xl">+</span>
+                                                class="text-sm sm:text-xl cursor-default">+</span>
                                         </div>
                                     </div>
                                 </div>

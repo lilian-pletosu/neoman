@@ -4,6 +4,7 @@ import FrontLayout from "@/Layouts/FrontLayout.vue";
 import CarouselFront from "@/Components/CarouselFront.vue";
 import ProductSection from "@/Components/ProductSection.vue";
 import {useAttrs} from "vue";
+import {Link} from "@inertiajs/vue3";
 
 
 const attrs = useAttrs()
@@ -45,19 +46,19 @@ const props = defineProps({
                     <span class="sm:block"> Alături la fiecare etapă în viață </span>
                 </h1>
                 <div class="mt-8 flex flex-wrap justify-center gap-4">
-                    <a
+                    <Link
                         class="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
                         href="#"
                     >
                         {{ __('get_started') }}
-                    </a>
+                    </Link>
 
-                    <a
+                    <Link
                         class="block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
-                        href="#"
+                        :href="route('about_page')"
                     >
                         {{ __('learn_more') }}
-                    </a>
+                    </Link>
                 </div>
             </div>
 
