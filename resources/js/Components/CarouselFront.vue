@@ -1,7 +1,7 @@
 <script setup>
 
 import 'vue3-carousel/dist/carousel.css'
-import {Carousel, Slide} from 'vue3-carousel'
+import {Carousel, Navigation, Slide} from 'vue3-carousel'
 import {getCurrentInstance} from "vue";
 import {Link} from "@inertiajs/vue3";
 
@@ -16,14 +16,18 @@ const props = defineProps({
 </script>
 
 <template>
-    <carousel :autoplay="5000" :wrap-around="true" :items-to-show="1" class="w-full z-0"
+    <carousel :autoplay="5000" :wrap-around="true" :items-to-show="1" class="w-screen z-0"
               :transition="500">
         <slide v-for="(slide, index) in app.appContext.config.globalProperties.$page.props.home_banners" :key="index">
             <Link :href="slide.link">
-                <img class="object-cover w-full flex"
+                <img class="object-cover w-screen flex"
                      :src="slide.image" :alt="index">
             </Link>
         </slide>
+        <template #addons>
+            <Navigation/>
+            <Pagination/>
+        </template>
 
     </carousel>
 

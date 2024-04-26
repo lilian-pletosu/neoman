@@ -29,6 +29,7 @@ Route::group([], function () {
             Route::resource('/brands', \App\Http\Controllers\admin\BrandController::class);
             Route::resource('/associations', \App\Http\Controllers\admin\AssociationController::class);
             Route::resource('/banners', \App\Http\Controllers\admin\BannerController::class);
+            Route::resource('/privacy', \App\Http\Controllers\admin\PrivacyController::class);
             Route::resource('/attributes', \App\Http\Controllers\admin\AttributeController::class);
             Route::resource('/promotions', \App\Http\Controllers\admin\PromotionController::class);
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->name('profile');

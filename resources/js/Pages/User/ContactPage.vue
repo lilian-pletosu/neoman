@@ -4,6 +4,7 @@ import FrontLayout from "@/Layouts/FrontLayout.vue";
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {ref} from "vue";
 
 
 const props = defineProps({
@@ -18,10 +19,13 @@ const form = useForm({
     option: ''
 });
 
+const showSuccess = ref(false);
+
 const submitForm = () => {
     form.post(route('contacts.store'), {
         preserveScroll: true,
         onSuccess: () => {
+            showSuccess.value = true;
             form.reset();
         }
     });
@@ -33,8 +37,9 @@ const submitForm = () => {
     <FrontLayout>
         <div class="py-4">
             <h1 class="text-2xl font-bold font-mulish dark:text-white">{{ __('contact') }}</h1>
-            <section class="pt-4">
-                <div class="mx-auto max-w-screen-xl px-4 pb-4 sm:px-6 lg:px-8">
+            <hr class="my-4">
+            <section class="">
+                <div class="mx-auto  px-4 pb-4 sm:px-6 lg:px-8">
                     <div class="grid grid-cols-1 gap-x-16 gap-y-8 lg:grid-cols-5">
                         <div class="lg:col-span-2 lg:py-12">
                             <p class="max-w-xl text-lg font-semibold font-mulish">
@@ -54,8 +59,9 @@ const submitForm = () => {
                             </div>
                         </div>
 
-                        <div class="rounded-lg bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
-                            <form @submit.prevent="submitForm" class="space-y-4">
+                        <div
+                            class="rounded-lg bg-white p-8 shadow lg:col-span-3 lg:p-12 border-1 border-slate-600">
+                            <form v-if="!showSuccess" @submit.prevent="submitForm" class="space-y-4">
                                 <div>
                                     <label class="sr-only" for="name">{{ __('name') }}</label>
                                     <input
@@ -172,13 +178,23 @@ const submitForm = () => {
                                     </PrimaryButton>
                                 </div>
                             </form>
+                            <div v-if="showSuccess" class="bg-white p-6  md:mx-auto">
+                                <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
+                                    <path fill="currentColor"
+                                          d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z">
+                                    </path>
+                                </svg>
+                                <div class="text-center">
+                                    <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
+                                        {{ __('message_was_send') }}!</h3>
+                                    <p>{{ __('success_message') }}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-
         </div>
-
     </FrontLayout>
 </template>
 

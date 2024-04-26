@@ -122,6 +122,7 @@ const props = defineProps({
                 </div>
             </div>
         </div>
+
         <swiper
             :slidesPerView="1"
             :spaceBetween="20"
@@ -151,6 +152,11 @@ const props = defineProps({
             <swiper-slide v-for="(product, key) in products" class="p-2">
                 <div
                     class="container-rounded bg-white border border-slate-100 dark:bg-slate-100  w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px]  relative group/card">
+
+                    <div
+                        class="absolute flex items-center rounded left-2 top-2 bg-gradient-to-r  from-pink-500 via-purple-500  to-indigo-500  w-auto px-2  h-auto shadow border-1 border-slate-600">
+                        <span class="text-xs text-white font-semibold">Credit 0%</span>
+                    </div>
                     <div class="hover:cursor-pointer ">
                         <div>
                             <div class="static">

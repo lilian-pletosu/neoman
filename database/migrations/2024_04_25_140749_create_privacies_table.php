@@ -12,12 +12,14 @@ return new class extends Migration {
     {
         Schema::create('privacy', function (Blueprint $table) {
             $table->id();
+            $table->string('title')->nullable();
+            $table->text('content')->nullable();
             $table->string('slug')->unique();
             $table->timestamps();
         });
         Schema::create('privacy_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('privacy_id')->constrained()->on('privacy')->onDelete('cascade');
+            $table->foreignId('privacy_id')->constrained()->on('privacy')->cascadeOnDelete();
             $table->string('locale')->index();
             $table->string('title');
             $table->text('content');
@@ -31,7 +33,10 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('privacy');
+
         Schema::dropIfExists('privacy_translations');
+        Schema::dropIfExists('privacy');
+
+
     }
 };
