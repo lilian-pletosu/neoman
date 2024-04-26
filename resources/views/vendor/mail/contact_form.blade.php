@@ -1,9 +1,4 @@
 @component('mail::message')
-    @component('mail::header', ['url' => config('app.url')])
-        {{ config('app.name') }}
-    @endcomponent
-
-
     {{ __('you_have_new_message') }}
 
 

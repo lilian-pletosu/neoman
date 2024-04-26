@@ -59,7 +59,7 @@ function updateFilteredProducts() {
         }
     }, {
         preserveState: true,
-        preserveScroll: true
+        preserveScroll: true,
     })
 }
 

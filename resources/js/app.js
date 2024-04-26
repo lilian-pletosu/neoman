@@ -61,7 +61,7 @@ createInertiaApp({
         return app
             .use(plugin)
             .use(PrimeVue)
-            .use(ZiggyVue, Ziggy)
+            .use(ZiggyVue, Ziggy, 'route')
             .mount(el);
     },
     progress: {

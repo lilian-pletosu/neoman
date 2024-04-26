@@ -13,7 +13,8 @@ class PrivacyController extends Controller
      */
     public function index()
     {
-        return inertia('User/PrivacyPage');
+        $privacy = Privacy::all();
+        return inertia('User/PrivacyPage', ['content' => $privacy]);
     }
 
     /**

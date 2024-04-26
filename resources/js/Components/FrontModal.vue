@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 
 const emit = defineEmits(['close'])
 
@@ -22,6 +22,8 @@ const props = defineProps({
 
     }
 })
+
+const selectedProduct = ref(null);
 
 function close() {
     emit('close')
@@ -152,6 +154,11 @@ onUnmounted(() => {
                             </button>
 
                         </form>
+                    </template>
+                    <template v-if="type === 'buy_in_credit'">
+                        <Table>
+                            
+                        </Table>
                     </template>
                 </div>
             </div>

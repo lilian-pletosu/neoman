@@ -190,6 +190,14 @@ return [
     'collaboration' => 'Colaborare',
     'delivery' => 'Livrare',
     'reclamation' => 'Reclamație',
+    'message_was_send' => 'Mesaj trimis',
+    'success_message' => 'Mesajul a fost trimis cu succes. Vă vom contacta în cel mai scurt timp posibil.',
+    'title ro' => 'Titlul în română',
+    'title ru' => 'Titlul în rusă',
+    'content ro' => 'Conținutul în română',
+    'content ru' => 'Conținutul în rusă',
+    'create_privacy' => 'Crează politică de confidențialitate',
+    'buy_in_credit' => 'Cumpără în credit',
 
     //statuses
     'pending' => 'Procesare',
@@ -242,6 +250,6 @@ return [
 
     //mail
     'you_have_new_message' => 'Ai primit un mesaj nou',
-    
+
 
 ];
