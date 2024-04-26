@@ -285,7 +285,7 @@ onMounted(async () => {
 
     <ReusableSidebar :title="__('menu')" :open="menu" @close="menu = false">
         <template v-slot:content>
-            <div class="h-screen flex flex-col justify-between">
+            <div class="h-screen flex flex-col ">
                 <ul class="space-y-1  border-y py-2">
                     <li v-for="category in app.appContext.config.globalProperties.$page.props.menu">
                         <Link v-if="category.subcategory <= 0" :href="route('category_page', {slug: category.slug})"
