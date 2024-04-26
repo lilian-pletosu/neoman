@@ -166,9 +166,9 @@ const submitForm = () => {
                                 </div>
 
                                 <div class="mt-4">
-                                    <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }"
+                                    <PrimaryButton :class="{ 'opacity-25': form.processing }"
                                                    :disabled="form.processing">
-                                        Log in
+                                        {{ __('send') }}
                                     </PrimaryButton>
                                 </div>
                             </form>

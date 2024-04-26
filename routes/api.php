@@ -105,3 +105,19 @@ Route::get('forget_wishlist', function () {
 //    $products = (new \App\Services\ProductService())->searchProducts($search);
 //    return response()->json($products);
 //})->name('api.searchProducts');
+
+
+Route::get('acceptCookies', function () {
+    $data = [
+        'message' => 'Cookies accepted',
+        'session' => session()->getId(),
+        'ip_address' => request()->ip()
+    ];
+    $cookie = cookie('cookies', json_encode($data), 262800);
+    return response()->json(['message' => 'Cookies accepted'])->withCookie($cookie);
+})->name('api.acceptCookies');
+
+Route::get('getCookies', function () {
+    $accepted = request()->cookie('cookies') ? true : false;
+    return response()->json($accepted);
+})->name('api.getCookies');
