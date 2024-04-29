@@ -13,6 +13,7 @@ import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import BrandsList from "@/Components/BrandsList.vue";
 import AcceptCookie from "@/Components/AcceptCookie.vue";
+import {route} from "ziggy-js";
 
 const attrs = useAttrs()
 const app = getCurrentInstance();
@@ -101,6 +102,8 @@ onMounted(() => {
                     <div class="">
                         <slot name="carousel"/>
                     </div>
+                    <brands-list v-if=" $page.props.ziggy.location === route('home')"
+                                 :brands="app.appContext.config.globalProperties.$page.props.brands"/>
                     <!--                    main content -->
                     <div
                         class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60 ">
@@ -272,7 +275,7 @@ onMounted(() => {
                         </button>
                     </div>
                     <front-modal
-                        title="Revenim cu un apel"
+                        :title="__('return_with_call')"
                         :visible="isModalVisible"
                         @close="closeModal"
                         :type="call"
@@ -282,7 +285,6 @@ onMounted(() => {
                     <accept-cookie/>
                 </main>
             </div>
-            <brands-list :brands="app.appContext.config.globalProperties.$page.props.brands"/>
 
             <section>
                 <front-footer/>

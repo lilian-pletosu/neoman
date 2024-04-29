@@ -46,6 +46,19 @@ class SubCategorySchema
                     'required'
                 ],
             ],
+
+            [
+                'name' => 'is_active',
+                'value' => '',
+                'type' => 'select',
+                'label' => 'Status',
+                'placeholder' => 'status',
+                'options' => [['id' => 0, 'value' => 'inactive'], ['id' => 1, 'value' => 'active']],
+                'rules' => [
+                    'required'
+                ],
+            ],
+
             [
                 'name' => 'image',
                 'value' => '',

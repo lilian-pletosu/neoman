@@ -17,7 +17,16 @@ class SubSubCategory extends Model implements TranslatableContract
     protected $table = 'sub_subcategories';
     public $translatedAttributes = ['name'];
 
-    protected $fillable = ['slug', 'image', 'subcategory_id'];
+    protected $fillable = ['slug', 'image', 'subcategory_id', 'is_active'];
+
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
 
     public function subcategory()
     {

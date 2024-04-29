@@ -16,10 +16,18 @@ class SubCategory extends Model implements TranslatableContract
 
 
     protected $fillable = [
-        'slug', 'category_id', 'image', 'name'
+        'slug', 'category_id', 'image', 'name', 'is_active'
     ];
     public $translatedAttributes = ['name'];
 
+    protected $casts = [
+        'is_active' => 'boolean'
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
 
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

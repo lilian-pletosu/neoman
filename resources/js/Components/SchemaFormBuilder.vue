@@ -1,7 +1,7 @@
 <script setup>
 import Modal from "@/Components/Modal.vue";
 import {router, useForm} from "@inertiajs/vue3";
-import {getCurrentInstance, onMounted, onUpdated, ref} from "vue";
+import {getCurrentInstance, onMounted, onUpdated, ref, useAttrs} from "vue";
 import BlackInput from "@/Components/BlackInput.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
@@ -25,6 +25,8 @@ let image = ref({});
 const cloneFields = ref();
 const schemaForm = ref({});
 const resourceModal = ref({});
+
+const attrs = useAttrs();
 
 const props = defineProps({
     type: {
@@ -230,7 +232,7 @@ const handleFileUpload = (event, field) => {
                                         @update:status="args => formEdit[field.name] = args"
                                         :value="formEdit[field.name]"
                                         :label="__(field.label)"
-                                        :error-message="__($page.props.errors[`form.${field.name}`])"
+                                        :error-message="__($page.props.errors[`form.${field.name}`] ?? $page.props.errors[`${field.name}`])"
                                         :options="field.options"
                                     />
                                 </template>
@@ -335,7 +337,7 @@ const handleFileUpload = (event, field) => {
                                 <div v-if="formImport.progress" class="w-full  py-1">
                                     <ProgressCustom v-model="formImport.progress.percentage"/>
                                 </div>
-                                <span class="">{{ errors.import }}</span>
+                                <span v-if="errors.import" class="">{{ errors.import }}</span>
 
 
                             </div>

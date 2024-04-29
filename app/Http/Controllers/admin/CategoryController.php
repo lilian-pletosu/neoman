@@ -28,7 +28,7 @@ class CategoryController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Category')
-            ->setResourceColumns(['id', 'name', 'slug', 'icon'])
+            ->setResourceColumns(['id', 'name', 'slug', 'icon', 'is_active'])
             ->setColumnsOrder(['id', 'name'])
             ->editInModal(true)
             ->paginate(10)
@@ -59,7 +59,8 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name ro' => 'required|min:3',
             'name ru' => 'required|min:3',
-            'icon' => 'required'
+            'icon' => 'required',
+            'is_active' => 'required|boolean'
         ]);
         (new CategoryService())->create($request, $data);
         return to_route($this->route);
@@ -88,11 +89,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-
         $data = $request->validate([
             'form.name ro' => 'required|min:3',
             'form.name ru' => 'required|min:3',
-            'form.icon' => 'required'
+            'form.icon' => 'required',
+            'form.is_active' => 'required'
         ]);
         (new CategoryService())->update($data['form'], $category, $request);
 

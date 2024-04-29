@@ -211,7 +211,7 @@ function buyProduct(productId) {
                                                 :key="index"
                                                 selected
                                                 :value="value.link">
-                                            {{ value.value }} L
+                                            {{ value.value }} {{ value.mu }}
                                         </option>
                                     </select>
 

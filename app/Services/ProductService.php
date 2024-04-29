@@ -109,7 +109,7 @@ class ProductService
                         $productArray = [
                             'id' => $product->id,
                             'slug' => $product->slug,
-                            'name' => $product->translate(session()->get('locale'))->name,
+                            'name' => $product->translateOrDefault('ro')->name,
                             'image' => $image,
                             'price' => $product->price,
                             'final_price' => $product->price - ($product->price * $promotion->discount / 100), // 'discount' => $promotion->discount . '%',
@@ -141,7 +141,7 @@ class ProductService
             foreach ($product->attributes as $attribute) {
                 foreach ($attribute->attributeValues as $attributeValue) {
                     // Obține valoarea tradusă a atributului
-                    $translatedValue = $attributeValue->translate(session()->get('locale'));
+                    $translatedValue = $attributeValue->translate();
                     if ($translatedValue) {
                         // Adaugă valoarea tradusă a atributului în array-ul de atribute
                         $attributesArray[$attribute->name] = $translatedValue->value;
@@ -158,7 +158,7 @@ class ProductService
             $productArray = [
                 'id' => $product->id,
                 'slug' => $product->slug,
-                'name' => $product->translate(session()->get('locale'))->name,
+                'name' => $product->translate()->name,
                 'image' => $image,
                 'price' => $product->price,
                 'brand' => ['name' => $brandName, 'image' => $brandLogo],
@@ -208,7 +208,7 @@ class ProductService
                     $productArray = [
                         'id' => $product->id,
                         'slug' => $product->slug,
-                        'name' => $product->translate(session()->get('locale'))->name,
+                        'name' => $product->translateOrDefault('ro')->name,
                         'image' => $image,
                         'price' => $product->price,
                         'brand' => ['name' => $brandName, 'image' => $brandLogo],

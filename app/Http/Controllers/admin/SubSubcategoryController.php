@@ -30,7 +30,7 @@ class SubSubcategoryController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('SubSubCategory')
-            ->setResourceColumns(['id', 'name', 'slug', 'image'])
+            ->setResourceColumns(['id', 'name', 'slug', 'image', 'is_active'])
             ->setColumnsOrder(['id', 'name', 'slug', 'image'])
             ->setRelationColumn('subcategory', 'subcategory', ['name'])
             ->editInModal(true)
@@ -60,14 +60,16 @@ class SubSubcategoryController extends Controller
                 'name_ro' => 'required|min:3|String',
                 'name_ru' => 'required|min:3|String',
                 'subcategory_id' => 'required',
-                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg',
+                'is_active' => 'required|boolean'
             ]);
         } else {
             $data = $request->validate([
                 'name ro' => 'required|min:3|String',
                 'name ru' => 'required|min:3|String',
                 'subcategory_id' => 'required',
-                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg',
+                'is_active' => 'required|boolean'
             ]);
         }
         (new SubSubcategoryService())->create($request, $data);
@@ -93,7 +95,8 @@ class SubSubcategoryController extends Controller
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
                 'form.subcategory_id' => 'required',
-                'image._value' => 'nullable|image'
+                'image._value' => 'nullable|image',
+                'form.is_active' => 'required|boolean'
             ]);
             $data['image'] = $request->file('image');
         } else {
@@ -101,6 +104,7 @@ class SubSubcategoryController extends Controller
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
                 'form.subcategory_id' => 'required',
+                'form.is_active' => 'required|boolean'
             ]);
             $data['image'] = null;
         }
