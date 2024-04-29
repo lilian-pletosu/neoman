@@ -52,7 +52,7 @@ const emitClick = (res) => {
 
 
 const applyFormat = (columnName, columnValue) => {
-    if (columnName === 'is_enabled') {
+    if (['is_enabled', 'is_active'].includes(columnName)) {
         if (columnValue === 1) {
             return 'active';
         }
@@ -173,10 +173,19 @@ onMounted(() => {
                                             </template>
                                             <!--                    status                        -->
                                             <template v-else-if="column === 'is_enabled'">
-                                                <div class="rounded w-14 text-center   mx-auto"
+                                                <div class="rounded  p-1 text-center text-black  shadow mx-auto"
                                                      :class="{
-                                                        'bg-green-400 font-semibold': resource[columnInOrder] === 1,
-                                                        'bg-red-400 font-semibold': resource[columnInOrder] === 0
+                                                        'status-active text-white': resource[columnInOrder] === 1,
+                                                        'status-inactive text-white': resource[columnInOrder] === 0
+                                                     }">
+                                                    {{ __(applyFormat(column, resource[columnInOrder])) ?? '--' }}
+                                                </div>
+                                            </template>
+                                            <template v-else-if="column === 'is_active'">
+                                                <div class="rounded  p-1 text-center text-black  shadow mx-auto"
+                                                     :class="{
+                                                        'status-active text-white': resource[columnInOrder] === 1,
+                                                        'status-inactive text-white': resource[columnInOrder] === 0
                                                      }">
                                                     {{ __(applyFormat(column, resource[columnInOrder])) ?? '--' }}
                                                 </div>

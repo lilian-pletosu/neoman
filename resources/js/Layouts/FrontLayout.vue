@@ -96,7 +96,7 @@ onMounted(() => {
 
             <div id="main-content" class=" flex-1  justify-between ">
                 <main class="">
-                    <Toaster title="Succes" :message="cartStore.message" :show="true"
+                    <Toaster title="Success" :message="cartStore.message" :show="true"
                              :success="cartStore.success"/>
 
                     <div class="">

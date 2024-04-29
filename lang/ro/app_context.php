@@ -198,6 +198,13 @@ return [
     'content ru' => 'Conținutul în rusă',
     'create_privacy' => 'Crează politică de confidențialitate',
     'buy_in_credit' => 'Cumpără în credit',
+    'settings' => 'Setări',
+    'is_active' => 'Status',
+    'credit_info' => 'Informații despre credit',
+    'installments_info' => 'Informații despre rate',
+    'installments' => 'rate',
+    'add' => 'Adaugă',
+    'interest_rate' => 'Rata dobânzii',
 
     //statuses
     'pending' => 'Procesare',

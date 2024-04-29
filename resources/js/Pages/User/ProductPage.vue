@@ -191,7 +191,7 @@ function buyProduct(productId) {
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
 
                             <div class="flex  flex-col 2xs:items-center 2xs:flex-row  2xs:space-x-6"
-                                 v-if="['cantitate', 'Cantitate\''].includes(key)">
+                                 v-if="['cantitate', 'Cantitate\''].includes(key) && attribute.values.length > 1">
                                 <h2 class="dark:text-slate-300 my-2 sm:my-6 text-base text-gray-900">{{
                                         attribute.name
                                     }}:</h2>

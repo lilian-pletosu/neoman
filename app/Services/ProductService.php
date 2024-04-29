@@ -289,7 +289,7 @@ class ProductService
                     $q->where('name', 'like', '%' . $query . '%');
                     $q->orWhere('description', 'like', '%' . $query . '%');
                 })
-                ->get();
+                ->limit(10)->get();
 
 
             foreach ($products as $product) {
