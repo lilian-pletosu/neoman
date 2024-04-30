@@ -210,6 +210,9 @@ return [
     'type' => 'Tip',
     'add_new_credit' => 'Adaugă credit nou',
     'here_is_all_settings' => 'Aici găsești toate setările',
+    'are_you_sure' => 'Ești sigur?',
+    'action_cannot_be_undone' => 'Această acțiune nu poate fi anulată. Aceasta va șterge itemul  și va elimina datele de pe server.',
+    'yes_delete' => 'Da, șterge',
 
     //statuses
     'pending' => 'Procesare',

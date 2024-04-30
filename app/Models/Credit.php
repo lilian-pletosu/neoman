@@ -13,4 +13,14 @@ class Credit extends Model
     protected $fillable = [
         'name', 'num_of_installments', 'interest_rate', 'type'
     ];
+
+    public function scopeCreditType($query)
+    {
+        return $query->where('type', 'credit')->orderBy('num_of_installments', 'asc');
+    }
+
+    public function scopeInstallmentType($query)
+    {
+        return $query->where('type', 'installments')->orderBy('num_of_installments', 'asc');
+    }
 }

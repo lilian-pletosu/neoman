@@ -1,10 +1,14 @@
 <script setup>
-import {onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref} from "vue";
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'select'])
 
 const props = defineProps({
-    title: String,
+    title: {
+        required: false,
+        type: String,
+        default: null
+    },
     visible: {
         required: true,
         type: Boolean,
@@ -20,8 +24,26 @@ const props = defineProps({
         required: false,
         default: null
 
-    }
+    },
+    maxWidth: {
+        type: String,
+        default: '2xl',
+    },
 })
+
+
+const maxWidthClass = computed(() => {
+    return {
+        sm: 'sm:max-w-sm',
+        md: 'sm:max-w-md',
+        lg: 'sm:max-w-lg',
+        xl: 'sm:max-w-xl',
+        '2xl': 'sm:max-w-2xl',
+        '3xl': 'sm:max-w-3xl',
+        '4xl': 'sm:max-w-4xl',
+        '6xl': 'sm:max-w-6xl',
+    }[props.maxWidth];
+});
 
 const selectedProduct = ref(null);
 
@@ -33,7 +55,6 @@ function close() {
 onMounted(() => document.addEventListener('handleClick', close));
 
 onUnmounted(() => {
-    // document.removeEventListener('keydown', close);
     document.body.style.overflow = null;
 });
 </script>
@@ -41,11 +62,12 @@ onUnmounted(() => {
 <template>
     <div @click.self="close" v-if="visible" id="authentication-modal"
          class="fixed inset-0 -top-[120%] z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
-        <div class="relative  top-1/4 w-full max-w-md max-h-full">
+        <div class="relative  top-1/4 w-full  max-h-full" :class="maxWidthClass">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                <div class="flex items-center justify-between p-4 md:p-5  rounded-t dark:border-gray-600"
+                     :class="{ 'border-b': title }">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         {{ title }}
                     </h3>
@@ -156,9 +178,67 @@ onUnmounted(() => {
                         </form>
                     </template>
                     <template v-if="type === 'buy_in_credit'">
-                        <Table>
-                            
-                        </Table>
+                        <div class="grid grid-cols-4 gap-2  ">
+                            <fieldset class="col-span-4 grid grid-cols-2 gap-4">
+                                <div v-for="credit in product.credits.credit">
+                                    <label
+                                        :for="credit.id"
+                                        class="block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                                    >
+                                        <div>
+                                            <p class="text-gray-700">{{ credit.num_of_installments }}
+                                                {{ __('installments') }}</p>
+
+                                            <p class="mt-1 text-gray-900">{{ parseInt(credit.interest_rate) }} %</p>
+                                        </div>
+
+                                        <input
+                                            type="radio"
+                                            @change="$emit('select', $event.target.value)"
+                                            :name="credit.name"
+                                            :value="credit.id"
+                                            :id="credit.id"
+                                            class="sr-only"
+                                        />
+                                    </label>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                        <hr class="my-4">
+                        <div class="grid grid-cols-4 gap-2">
+                            <fieldset class="col-span-4 grid grid-cols-2 gap-4">
+                                <div v-for="installment in product.credits.installments">
+                                    <label
+                                        :for="installment.id"
+                                        class="block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
+                                    >
+                                        <div class="grid grid-cols-2 ">
+                                            <div class="flex  items-center gap-4    ">
+                                                <p class="text-gray-700 text-4xl">{{ installment.num_of_installments }}
+                                                </p>
+                                                {{ __('installments') }}
+                                            </div>
+
+                                            <p class="mt-1 text-gray-900">
+                                                {{
+                                                    parseInt((product.price + 1 + 3) / installment.num_of_installments)
+
+                                                }}
+                                            </p>
+                                        </div>
+
+                                        <input
+                                            type="radio"
+                                            :name="installment.name"
+                                            :value="installment.id"
+                                            :id="installment.id"
+                                            class="sr-only"
+                                        />
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
                     </template>
                 </div>
             </div>

@@ -85,7 +85,6 @@ const submit = (type) => {
                                         <section>
 
                                             <span class="font-medium text-lg">{{ __('installments_info') }}</span>
-
                                             <div
                                                 class="container-custom-rounded border border-1 border-slate-300 p-2 bg-slate-100/50  min-h-[150px]">
                                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -102,20 +101,20 @@ const submit = (type) => {
                     </div>
                 </div>
                 <Modal :show="isOpen" @close="closeModal" :actions="false" :closeable="true">
-                    <div class="flex flex-col gap-4 p-4">
+                    <div class="flex flex-col gap-4 p-4 ">
                         <div class="flex justify-between">
                             <h3 class="primary-text">{{ __('add_new_credit') }}</h3>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                             <div>
                                 <black-input v-model="form.num_of_installments"
-                                             type="text"
+                                             :type="'number'"
                                              :error-message="__(form.errors.num_of_installments)"
                                              :label="__('num_of_installments')"/>
                             </div>
                             <div>
                                 <black-input v-model="form.interest_rate"
-                                             type="text"
+                                             :type="'number'"
                                              :error-message="__(form.errors.interest_rate)"
                                              :label="__('interest_rate')"/>
                             </div>

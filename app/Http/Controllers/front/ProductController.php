@@ -5,6 +5,7 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Brand;
+use App\Models\Credit;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\SubSubCategory;
@@ -110,6 +111,8 @@ class ProductController extends Controller
 
 
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
+
+        $product['credits'] = Credit::get()->groupBy('type');
 
         return inertia('User/ProductPage', ['product' => $product, 'latest_products' => $latest_products]);
     }
