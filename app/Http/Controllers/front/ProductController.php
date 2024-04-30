@@ -5,6 +5,7 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Brand;
+use App\Models\Credit;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\SubSubCategory;
@@ -86,7 +87,6 @@ class ProductController extends Controller
 
         $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
 
-//        dd($productSlug);
 
         (new SessionService())->AddVisitedProductInSession($product);
 
@@ -94,12 +94,15 @@ class ProductController extends Controller
         $product['attributes'] = $product->attributeValues->load('attribute')->groupBy('attribute.slug');
 
         $product['attributes'] = $product['attributes']->map(function ($item) use ($res, $mu_unit) {
+            $values = [];
             return [
                 'name' => $item[0]->attribute->translate()->name,
                 'values' => $item->map(function ($value) use ($res, $mu_unit) {
-                    $value['link'] = $res . '_' . Str::slug($value->translate()->value, '_') . $mu_unit;
-                    $value->translate()->value;
-                    return $value;
+                    $translation = Str::slug($value->translateOrDefault('ro')->value, '_');
+                    $values['link'] = $res . '_' . $translation . $mu_unit;
+                    $values['value'] = $value->translate()->value ?? $value->translate('ro')->value;
+                    $values['mu'] = $mu_unit;
+                    return $values;
                 })->toArray(),
             ];
         });
@@ -109,6 +112,7 @@ class ProductController extends Controller
 
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
 
+        $product['credits'] = Credit::get()->groupBy('type');
 
         return inertia('User/ProductPage', ['product' => $product, 'latest_products' => $latest_products]);
     }

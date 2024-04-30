@@ -39,6 +39,17 @@ class CategorySchema
                     'required'
                 ],
             ],
+            [
+                'name' => 'is_active',
+                'value' => '',
+                'type' => 'select',
+                'label' => 'is_active',
+                'placeholder' => 'is_active',
+                'options' => [['id' => 0, 'value' => 'inactive'], ['id' => 1, 'value' => 'active']],
+                'rules' => [
+                    'required'
+                ],
+            ],
 
 //            [
 //                'name' => 'currency',

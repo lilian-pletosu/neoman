@@ -136,41 +136,39 @@ class ProductsImport
 
         foreach ($data as $item) {
             if ($item['name ro'] || $item['name ru']) {
-                $product = Product::firstOrNew(['slug' => Str::slug($item['name ro'], '_')]);
+                try {
+                    $brand = (new BrandService)->createWithProduct($item);
+                    $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
+                    $mu = (new MeasurementUnitService())->associateToProduct($item);
 
-                if (!$product->exists) {
-                    try {
-                        $brand = (new BrandService)->createWithProduct($item);
-                        $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
-                        $mu = (new MeasurementUnitService())->associateToProduct($item);
+                    $productData = [
+                        'price' => $item['price'],
+                        'slug' => Str::slug($item['name ro'], '_'),
+                        'product_code' => (new GenerateProductCode)((new Product())),
+                        'specifications_id' => null,
+                        'brand_id' => $brand->id,
+                        'sub_sub_category_id' => $subSubcategory->id,
+                        'measurement_unit_id' => $mu->id,
+                    ];
 
-                        $product->fill([
-                            'price' => $item['price'],
-                            'slug' => Str::slug($item['name ro'], '_'),
-                            'product_code' => (new GenerateProductCode)((new Product())),
-                            'specifications_id' => null,
-                            'brand_id' => $brand->id,
-                            'sub_sub_category_id' => $subSubcategory->id,
-                            'measurement_unit_id' => $mu->id,
-                        ]);
 
-                        foreach (config('app.available_locales') as $locale) {
-                            foreach ($this->translatedAttributes as $translatedAttribute) {
-                                $xlsxKey = $translatedAttribute . ' ' . $locale;
-                                $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey] ?? $item['name ro'];
-                            }
+                    $product = Product::updateOrCreate(['slug' => Str::slug($item['name ro'], '_')], $productData);
+
+                    foreach (config('app.available_locales') as $locale) {
+                        foreach ($this->translatedAttributes as $translatedAttribute) {
+                            $xlsxKey = $translatedAttribute . ' ' . $locale;
+                            $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey] ?? $item['name ro'];
                         }
-
-                        $product->save();
-                        $this->associateAttributes($product, $subSubcategory, $item);
-                        $this->associateImagesWithProduct($product, $item);
-                    } catch (\Exception $e) {
-                        return redirect()->back()->withErrors([
-                            'import' => $e->getMessage()
-                        ]);
-
-
                     }
+
+                    $product->save();
+
+                    $this->associateAttributes($product, $subSubcategory, $item);
+                    $this->associateImagesWithProduct($product, $item);
+                } catch (\Exception $e) {
+                    return redirect()->back()->withErrors([
+                        'import' => $e->getMessage()
+                    ]);
                 }
             }
         }
@@ -190,12 +188,21 @@ class ProductsImport
         }
 
         if ($images) {
-            $product->images()->create($images);
+            $productImage = $product->images()->first();
+
+            if ($productImage) {
+                $productImage->update($images);
+            } else {
+                $product->images()->create($images);
+            }
         }
     }
 
     public function associateAttributes($product, $subSubcategory, $item)
     {
+        // TODO:// Here need to fix probelem when update product and update or create attribute value
+
+
         $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get()->toArray();
 
         foreach ($attributes as $attribute) {

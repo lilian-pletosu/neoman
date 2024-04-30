@@ -30,7 +30,7 @@ class SubcategoryController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('SubCategory')
-            ->setResourceColumns(['id', 'name', 'slug', 'image'])
+            ->setResourceColumns(['id', 'name', 'slug', 'image', 'is_active'])
             ->setColumnsOrder(['id', 'name', 'slug', 'image'])
             ->setRelationColumn('category', 'category', ['name'])
             ->editInModal(true)
@@ -59,14 +59,16 @@ class SubcategoryController extends Controller
                 'name_ro' => 'required|min:3',
                 'name_ru' => 'required|min:3',
                 'category_id' => 'required',
-                'image' => 'nullable|image|mimes:jpg,bmp,png,svg'
+                'image' => 'nullable|image|mimes:jpg,bmp,png,svg',
+                'is_active' => 'required|boolean',
             ]);
         } else {
             $data = $request->validate([
                 'name ro' => 'required|min:3',
                 'name ru' => 'required|min:3',
                 'category_id' => 'required',
-                'image' => 'nullable|image|mimes:jpg,bmp,png,svg'
+                'image' => 'nullable|image|mimes:jpg,bmp,png,svg',
+                'is_active' => 'required|boolean',
             ]);
         }
 
@@ -94,7 +96,8 @@ class SubcategoryController extends Controller
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
                 'form.category_id' => 'required',
-                'image._value' => 'nullable|image'
+                'image._value' => 'nullable|image',
+                'form.is_active' => 'required|boolean'
             ]);
             $data['image'] = $request->file('image');
         } else {
@@ -102,7 +105,8 @@ class SubcategoryController extends Controller
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
                 'form.category_id' => 'required',
-                'image._value' => 'nullable|image'
+//                'image._value' => 'nullable|image',
+                'form.is_active' => 'required|boolean'
             ]);
             $data['image'] = null;
         }

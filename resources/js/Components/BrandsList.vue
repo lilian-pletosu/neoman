@@ -32,11 +32,10 @@ const randomColorClass = () => {
 <template>
 
     <div
-        class="w-full bg-slate-100 p-3 dark:bg-white overflow-x-auto hide-scrollbar flex gap-5">
+        class="w-full mt-2 p-3 dark:bg-white overflow-x-auto hide-scrollbar flex gap-5">
         <img v-for="brand in brands"
              :src="brand.image" :alt="brand.name"
-             class=" p-1 object-contain flex-none w-24 h-16"/>
-
+             class="bg-3  p-1 object-contain flex-none border rounded-xl w-24 h-16 md:w-32 md:h-24 "/>
     </div>
 
 </template>

@@ -14,8 +14,15 @@ class Category extends Model implements TranslatableContract
 
     protected $table = 'categories';
     protected $fillable = [
-        'name', 'slug', 'icon'
+        'name', 'slug', 'icon', 'is_active'
     ];
+
+    
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', 1);
+    }
+
 
     public $translatedAttributes = ['name'];
 

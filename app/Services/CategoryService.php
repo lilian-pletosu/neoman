@@ -47,6 +47,7 @@ class CategoryService
         $category->update([
             'slug' => $data['slug'],
             'icon' => $data['icon'],
+            'is_active' => $data['is_active']
         ]);
         foreach ($this->translatedAttributes as $translatableAttribute) {
             foreach (config('translatable.locales') as $locale) {

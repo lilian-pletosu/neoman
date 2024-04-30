@@ -156,9 +156,29 @@
                                   class="text-base font-normal rounded-lg flex items-center p-2 group"
                                   :class="checkRoute(route('admin.privacy.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
 
-                                <view-columns-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
-                                                   :class="checkRoute(route('admin.privacy.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
+                                <shield-exclamation-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
+                                                         :class="checkRoute(route('admin.privacy.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
                                 <span class="ml-3 flex-1 whitespace-nowrap">{{ __('privacy') }}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link :href="route('admin.privacy.index')"
+                                  class="text-base font-normal rounded-lg flex items-center p-2 group"
+                                  :class="checkRoute(route('admin.privacy.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
+
+                                <user-group-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
+                                                 :class="checkRoute(route('admin.privacy.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
+                                <span class="ml-3 flex-1 whitespace-nowrap">{{ __('about_us') }}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link :href="route('admin.settings.index')"
+                                  class="text-base font-normal rounded-lg flex items-center p-2 group"
+                                  :class="checkRoute(route('admin.settings.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
+
+                                <cog6-tooth-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
+                                                 :class="checkRoute(route('admin.settings.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
+                                <span class="ml-3 flex-1 whitespace-nowrap">{{ __('settings') }}</span>
                             </Link>
                         </li>
                     </ul>
@@ -188,12 +208,15 @@ import {
     AdjustmentsHorizontalIcon,
     ArrowLeftOnRectangleIcon,
     ArrowRightIcon,
+    Cog6ToothIcon,
     FireIcon,
     PuzzlePieceIcon,
     RocketLaunchIcon,
+    ShieldExclamationIcon,
     ShoppingBagIcon,
     SwatchIcon,
     TruckIcon,
+    UserGroupIcon,
     ViewColumnsIcon
 } from "@heroicons/vue/20/solid/index.js";
 import {getCurrentInstance, reactive} from "vue";

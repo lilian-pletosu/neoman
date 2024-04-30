@@ -69,7 +69,7 @@ function openModal(type) {
     if (type === 'buy_in_credit') {
         isOpen.value = !isOpen.value;
         typeModal.value = type
-        modalTitle.value = app.appContext.config.globalProperties.__('buy_in_credit')
+        modalTitle.value = null
     }
 }
 
@@ -191,7 +191,7 @@ function buyProduct(productId) {
                         <div v-for="(attribute, key) in product.attributes" class="border-t">
 
                             <div class="flex  flex-col 2xs:items-center 2xs:flex-row  2xs:space-x-6"
-                                 v-if="['cantitate', 'Cantitate\''].includes(key)">
+                                 v-if="['cantitate', 'Cantitate\''].includes(key) && attribute.values.length > 1">
                                 <h2 class="dark:text-slate-300 my-2 sm:my-6 text-base text-gray-900">{{
                                         attribute.name
                                     }}:</h2>
@@ -211,7 +211,7 @@ function buyProduct(productId) {
                                                 :key="index"
                                                 selected
                                                 :value="value.link">
-                                            {{ value.value }} L
+                                            {{ value.value }} {{ value.mu }}
                                         </option>
                                     </select>
 
@@ -322,7 +322,9 @@ function buyProduct(productId) {
 
                 </div>
             </div>
-            <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen" :product/>
+            <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"
+                         :product="product" @select="console.log($event)"/>
+            max-width="4xl"/>
         </section>
         <hr>
         <product-section :title="__('latest_products')" :top_products="true" :products="latest_products"/>

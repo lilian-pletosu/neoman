@@ -44,7 +44,7 @@
                                      :resource-type="resourceType"
                                      :endpoint="initialRoute"
                                      :method="method"
-                                     :columns="['name', 'slug']"
+                                     :columns="['name', 'slug', 'is_active']"
                                      :resource-route="$page.props.resourceRoute"
                                      :fields="$page.props.columnsOrder"/>
 

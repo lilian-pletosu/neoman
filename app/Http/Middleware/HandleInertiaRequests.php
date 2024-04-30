@@ -61,7 +61,13 @@ class HandleInertiaRequests extends Middleware
             },
             'availableLanguages' => config('availableLanguages'),
             'categories' => Category::orderBy('name')->get(),
-            'menu' => Category::orderBy('name')->with('subcategory.subSubcategory')->get(),
+            'menu' => Category::orderBy('name')->active()->with('subcategory', function ($item) {
+                $item->active();
+                $item->with('subSubcategory', function ($item) {
+                    $item->active()->get();
+                });
+                $item->orderBy('name');
+            })->get(),
             'subcategories' => SubCategory::orderBy('name')->get(),
             'sub_subcategories' => SubSubCategory::orderBy('name')->get(),
             'brands' => Brand::where('is_enabled', 1)->get(),
