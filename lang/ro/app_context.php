@@ -202,9 +202,14 @@ return [
     'is_active' => 'Status',
     'credit_info' => 'Informații despre credit',
     'installments_info' => 'Informații despre rate',
-    'installments' => 'rate',
+    'installments' => 'Rate',
     'add' => 'Adaugă',
-    'interest_rate' => 'Rata dobânzii',
+    'interest_rate' => 'Dobândă',
+    'num_of_installments' => 'Număr de rate',
+    'credit' => 'Credit',
+    'type' => 'Tip',
+    'add_new_credit' => 'Adaugă credit nou',
+    'here_is_all_settings' => 'Aici găsești toate setările',
 
     //statuses
     'pending' => 'Procesare',

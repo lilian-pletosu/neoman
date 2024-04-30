@@ -32,13 +32,23 @@ class SettingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => 'nullable',
+            'num_of_installments' => 'required',
+            'interest_rate' => 'required',
+            'type' => 'required',
+        ]);
+        $data['name'] = $request->type;
+
+        Credit::create($data);
+
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Settings $settings)
+    public function show(Credit $credit)
     {
         //
     }
@@ -46,7 +56,7 @@ class SettingsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Settings $settings)
+    public function edit(Credit $credit)
     {
         //
     }
@@ -54,16 +64,23 @@ class SettingsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Settings $settings)
+    public function update(Request $request, Credit $setting)
     {
-        //
+        if ($request->form['type'] == 'credit') $data = $request->validate([
+            'form.name' => 'nullable',
+            'form.num_of_installments' => 'required',
+            'form.interest_rate' => 'required',
+            'form.type' => 'required',
+        ]);
+        $data['form']['name'] = $request->form['type'];
+        $setting->update($data['form']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Settings $settings)
+    public function destroy(Credit $setting)
     {
-        //
+        $setting->delete();
     }
 }
