@@ -257,6 +257,7 @@ return [
     //validation
     'validation.url' => 'Introduce-ți un url valid',
     'validation.min.string' => 'Prea puține caractere',
+    'validation.max.string' => 'Prea multe caractere',
     'validation.decimal' => 'Numărul trebuie sa fie decimal',
     'validation.first_name' => 'Completați numele',
     'validation.last_name' => 'Completați prenumele',

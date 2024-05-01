@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BrandStoreRequest;
 use App\Models\Brand;
 use App\Services\BrandService;
 use App\Services\DataTableService;
@@ -49,18 +48,28 @@ class BrandController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, BrandStoreRequest $brandRequest)
+    public function store(Request $request)
     {
+        if ($request->hasFile('image')) {
 
-        $data = $request->validate([
-            'name' => 'required|min:3|String',
-            "description_ro" => 'required|min:5|String',
-            "description_ru" => 'required|min:5|String',
-            'website' => 'required',
-            'is_enabled' => 'required',
-            'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
+            $data = $request->validate([
+                'name' => 'required|min:3|String',
+                "description_ro" => 'required|min:5|max:800|String',
+                "description_ru" => 'required|min:5|max:800|String',
+                'website' => 'required',
+                'is_enabled' => 'required',
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
+        } else {
+            $data = $request->validate([
+                'name' => 'required|min:3|String',
+                'description ro' => 'required|min:5|max:800|String',
+                'description ru' => 'required|min:5|max:800|String',
+                'website' => 'required',
+                'is_enabled' => 'required',
+                'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
+        }
 
-        (new BrandService($request))->create($brandRequest->all(), true);
+        (new BrandService($request))->create($data, true);
         return to_route($this->route);
     }
 
