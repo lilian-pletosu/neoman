@@ -84,6 +84,10 @@
     background-color: #022425;
 }
 
+.text-primary-dark-green {
+    @apply text-[#022425];
+}
+
 .bg-2 {
     background-color: #FFFFFF;
 }
@@ -97,7 +101,7 @@
 }
 
 .bg-primary-blue {
-    background-color: #1FC8F3;
+    @apply bg-[#1FC8F3] ;
 }
 
 .capitalize-first::first-letter {
