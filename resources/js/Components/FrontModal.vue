@@ -1,5 +1,11 @@
 <script setup>
-import {computed, onMounted, onUnmounted, ref} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
+import CreditContent from "@/Components/CreditContent.vue";
+import {useScrollLock} from '@vueuse/core'
+
+
+const body = ref(document.body);
+const isLocked = useScrollLock(body);
 
 const emit = defineEmits(['close', 'select'])
 
@@ -45,30 +51,50 @@ const maxWidthClass = computed(() => {
     }[props.maxWidth];
 });
 
-const selectedProduct = ref(null);
 
 function close() {
+    isLocked.value = false;
     emit('close')
 }
 
-// onMounted(() => document.addEventListener('keydown', close));
-onMounted(() => document.addEventListener('handleClick', close));
+const selectedTab = ref('credit')
+
+const showTabContent = () => {
+    if (selectedTab.value === 'credit') {
+        return props.product.credits.credit;
+    } else {
+        return props.product.credits.installments;
+    }
+}
+
+
+watch(() => props.visible, (value) => {
+    if (value) {
+        isLocked.value = true;
+    } else
+        isLocked.value = false;
+});
+
+onMounted(() => {
+    document.addEventListener('handleClick', close);
+});
 
 onUnmounted(() => {
     document.body.style.overflow = null;
+
 });
 </script>
 
 <template>
     <div @click.self="close" v-if="visible" id="authentication-modal"
-         class="fixed inset-0 -top-[120%] z-50 flex items-center justify-center bg-gray-900 bg-opacity-50">
-        <div class="relative  top-1/4 w-full  max-h-full" :class="maxWidthClass">
+         class="fixed inset-0  z-50 flex items-center justify-center bg-gray-900 bg-opacity-50 overflow-x-scroll">
+        <div class="relative  w-full max-h-full" :class="maxWidthClass">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5  rounded-t dark:border-gray-600"
                      :class="{ 'border-b': title }">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    <h3 v-if="title" class="text-xl font-semibold text-gray-900 dark:text-white">
                         {{ title }}
                     </h3>
                     <button type="button"
@@ -81,11 +107,10 @@ onUnmounted(() => {
                                   stroke-width="2"
                                   d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                         </svg>
-                        <span class="sr-only">Close modal</span>
                     </button>
                 </div>
                 <!-- Modal body -->
-                <div class="p-4 md:p-5">
+                <div class="p-4 md:px-5">
                     <template v-if="type === 'call'">
                         <form class="space-y-4" action="#">
                             <div>
@@ -178,66 +203,65 @@ onUnmounted(() => {
                         </form>
                     </template>
                     <template v-if="type === 'buy_in_credit'">
-                        <div class="grid grid-cols-4 gap-2  ">
-                            <fieldset class="col-span-4 grid grid-cols-2 gap-4">
-                                <div v-for="credit in product.credits.credit">
-                                    <label
-                                        :for="credit.id"
-                                        class="block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
-                                    >
-                                        <div>
-                                            <p class="text-gray-700">{{ credit.num_of_installments }}
-                                                {{ __('installments') }}</p>
+                        <div class="flex flex-col gap-2">
 
-                                            <p class="mt-1 text-gray-900">{{ parseInt(credit.interest_rate) }} %</p>
-                                        </div>
+                            <div
+                                class="relative mb-4 grid grid-cols-2 sm:grid-cols-6 gap-4  container-custom-rounded border border-1 border-slate-300 dark:border-slate-100/20 bg-slate-300/20  dark:bg-slate-100/20
+                                 rounded-md items-start p-4 dark:text-white">
 
-                                        <input
-                                            type="radio"
-                                            @change="$emit('select', $event.target.value)"
-                                            :name="credit.name"
-                                            :value="credit.id"
-                                            :id="credit.id"
-                                            class="sr-only"
-                                        />
-                                    </label>
+                                <div class="col-span-2 sm:col-span-1 mx-auto">
+                                    <img class="w-24 " :src="product.images[0].image1" alt="">
                                 </div>
-                            </fieldset>
-
-                        </div>
-                        <hr class="my-4">
-                        <div class="grid grid-cols-4 gap-2">
-                            <fieldset class="col-span-4 grid grid-cols-2 gap-4">
-                                <div v-for="installment in product.credits.installments">
-                                    <label
-                                        :for="installment.id"
-                                        class="block cursor-pointer rounded-lg border border-gray-100 bg-white p-4 text-sm font-medium shadow-sm hover:border-gray-200 has-[:checked]:border-blue-500 has-[:checked]:ring-1 has-[:checked]:ring-blue-500"
-                                    >
-                                        <div class="grid grid-cols-2 ">
-                                            <div class="flex  items-center gap-4    ">
-                                                <p class="text-gray-700 text-4xl">{{ installment.num_of_installments }}
-                                                </p>
-                                                {{ __('installments') }}
-                                            </div>
-
-                                            <p class="mt-1 text-gray-900">
-                                                {{
-                                                    parseInt((product.price + 1 + 3) / installment.num_of_installments)
-
-                                                }}
-                                            </p>
-                                        </div>
-
-                                        <input
-                                            type="radio"
-                                            :name="installment.name"
-                                            :value="installment.id"
-                                            :id="installment.id"
-                                            class="sr-only"
-                                        />
-                                    </label>
+                                <div class=" col-span-2 sm:col-span-3 mx-auto sm:mx-0 my-auto"><p>{{
+                                        product.name
+                                    }}</p>
                                 </div>
-                            </fieldset>
+
+                                <div class="sm:col-span-1 text-right my-auto">
+                                    <p class="font-bold" :key="product.total_price">
+                                        {{ product.total_price ?? product.price }}
+                                        {{ __('lei') }}</p>
+                                </div>
+                            </div>
+                            <div
+                                class="relative mx-auto cursor-pointer mb-5 min-w-44 sm:w-72  items-center flex justify-between bg-slate-100 dark:bg-slate-300 text-lg rounded-xl">
+                                <div
+                                    class="absolute bg-primary-blue h-full w-1/2 duration-500 shadow transition rounded-xl z-10"
+                                    :class="{'translate-x-full': selectedTab === 'installments'}"/>
+                                <p @click="selectedTab = 'credit'"
+                                   class="w-full flex justify-center p-1 rounded-xl z-20 duration-500 "
+                                   :class="{'text-white': selectedTab === 'credit'}">
+                                    Credit</p>
+                                <p @click="selectedTab = 'installments'"
+                                   class="w-full flex justify-center p-1 rounded-xl z-20 duration-500"
+                                   :class="{'text-white': selectedTab === 'installments'}">Rate</p>
+                            </div>
+                            <CreditContent :details="showTabContent()" :product="product"/>
+                            <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}</span>
+                            <hr class="my-3">
+                            <form class="space-y-4" action="#">
+
+                                <div>
+                                    <label for="phone"
+                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                            __('phone')
+                                        }}</label>
+                                    <input type="tel" name="phone" id="phone" placeholder=""
+                                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+
+                                </div>
+
+                                <input type="text" name="product" id="product" placeholder="" :value="product"
+                                       class="hidden"/>
+                                <input type="hidden" name="offer" :value="se">
+
+
+                                <button type="submit"
+                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    {{ __('send_order') }}
+                                </button>
+
+                            </form>
                         </div>
                     </template>
                 </div>
@@ -246,6 +270,4 @@ onUnmounted(() => {
     </div>
 </template>
 
-<style scoped>
 
-</style>

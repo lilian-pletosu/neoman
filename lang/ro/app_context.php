@@ -213,6 +213,7 @@ return [
     'are_you_sure' => 'Ești sigur?',
     'action_cannot_be_undone' => 'Această acțiune nu poate fi anulată. Aceasta va șterge itemul  și va elimina datele de pe server.',
     'yes_delete' => 'Da, șterge',
+    'is_preventive_offer' => 'Datele sunt cu caracter informativ și nu constituie o ofertă. Rata lunară va fi stabilită în momentul plasării cererii de împrumut și poate să difere nesemnificativ',
 
     //statuses
     'pending' => 'Procesare',
