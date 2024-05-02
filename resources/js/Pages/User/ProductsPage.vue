@@ -202,6 +202,35 @@ onBeforeUnmount(() => {
                             <!-- Filters -->
                             <form class="hidden lg:block">
 
+                                <Disclosure as="div"
+                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                    <h3 class="-my-3 flow-root">
+                                        <DisclosureButton
+                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                            <span class="font-medium text-gray-900">{{ __('price') }}</span>
+                                            <span class="ml-6 flex items-center">
+                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
+                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                        </DisclosureButton>
+                                    </h3>
+                                    <DisclosurePanel :unmount="true" class="pt-6">
+
+                                        <div class=" ">
+                                            <div class="flex justify-around space-x-2 ">
+                                                <input placeholder="min"
+                                                       type="number"
+                                                       :min="0"
+                                                       v-model="priceRange[0]"
+                                                       class="w-full rounded-sm h-8 ">
+                                                <input placeholder="max" type="number"
+                                                       :min="0"
+                                                       v-model="priceRange[1]"
+                                                       class="w-full rounded-sm h-8 ">
+                                            </div>
+                                        </div>
+                                    </DisclosurePanel>
+                                </Disclosure>
                                 <Disclosure as="div" v-for="brand in brands"
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
@@ -257,35 +286,6 @@ onBeforeUnmount(() => {
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
                                                         option.value
                                                     }}</label>
-                                            </div>
-                                        </div>
-                                    </DisclosurePanel>
-                                </Disclosure>
-                                <Disclosure as="div"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
-                                    <h3 class="-my-3 flow-root">
-                                        <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                            <span class="font-medium text-gray-900">{{ __('price') }}</span>
-                                            <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
-                                    </span>
-                                        </DisclosureButton>
-                                    </h3>
-                                    <DisclosurePanel :unmount="true" class="pt-6">
-
-                                        <div class=" ">
-                                            <div class="flex justify-around space-x-2 ">
-                                                <input placeholder="min"
-                                                       type="number"
-                                                       :min="0"
-                                                       v-model="priceRange[0]"
-                                                       class="w-full rounded-sm h-8 ">
-                                                <input placeholder="max" type="number"
-                                                       :min="0"
-                                                       v-model="priceRange[1]"
-                                                       class="w-full rounded-sm h-8 ">
                                             </div>
                                         </div>
                                     </DisclosurePanel>

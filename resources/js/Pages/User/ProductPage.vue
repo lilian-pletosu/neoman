@@ -326,7 +326,6 @@ function buyProduct(productId) {
             </div>
             <front-modal :title="modalTitle" :type="typeModal" @close="isOpen= false" :visible="isOpen"
                          :product="product" @select="console.log($event)"/>
-            max-width="4xl"/>
         </section>
         <hr>
         <product-section :title="__('latest_products')" :top_products="true" :products="latest_products"/>

@@ -2,6 +2,7 @@
 import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import CreditContent from "@/Components/CreditContent.vue";
 import {useScrollLock} from '@vueuse/core'
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 
 const body = ref(document.body);
@@ -239,7 +240,7 @@ onUnmounted(() => {
                             <CreditContent :details="showTabContent()" :product="product"/>
                             <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}</span>
                             <hr class="my-3">
-                            <form class="space-y-4" action="#">
+                            <form class="space-y-4">
 
                                 <div>
                                     <label for="phone"
@@ -256,10 +257,13 @@ onUnmounted(() => {
                                 <input type="hidden" name="offer" :value="se">
 
 
-                                <button type="submit"
-                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                    {{ __('send_order') }}
-                                </button>
+                                <PrimaryButton @click="console.log('submit')"
+                                               class="w-full h-10 flex justify-center hover:bg-slate-400">
+                                    {{
+                                        __('submit')
+                                    }}
+                                </PrimaryButton>
+
 
                             </form>
                         </div>
