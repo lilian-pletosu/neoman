@@ -3,7 +3,7 @@ import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import CreditContent from "@/Components/CreditContent.vue";
 import {useScrollLock} from '@vueuse/core'
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-
+import {Link} from "@inertiajs/vue3";
 
 const body = ref(document.body);
 const isLocked = useScrollLock(body);
@@ -241,14 +241,27 @@ onUnmounted(() => {
                             <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}</span>
                             <hr class="my-3">
                             <form class="space-y-4">
-
-                                <div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <label for="full_name"
+                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
+                                            __('full_name')
+                                        }}
+                                        <input type="text" name="full_name" id="full_name" placeholder="Ion Popescu"
+                                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+                                    </label>
                                     <label for="phone"
                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
                                             __('phone')
-                                        }}</label>
-                                    <input type="tel" name="phone" id="phone" placeholder=""
-                                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+                                        }}
+                                        <input type="tel" name="phone" id="phone" placeholder="012345678"
+                                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+                                    </label>
+
+                                    <span class="flex gap-1">
+                                             <input type="checkbox" name="terms" id="terms" required
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+    {{ __('accord_terms') }} <Link :href="route('terms_page')" class="text-blue-800 underline">{{ __('terms') }}</Link>
+                                        </span>
 
                                 </div>
 
