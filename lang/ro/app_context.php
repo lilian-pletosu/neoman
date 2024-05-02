@@ -215,6 +215,8 @@ return [
     'yes_delete' => 'Da, șterge',
     'is_preventive_offer' => 'Datele sunt cu caracter informativ și nu constituie o ofertă. Rata lunară va fi stabilită în momentul plasării cererii de împrumut și poate să difere nesemnificativ',
     'select_offer' => 'Selectează oferta dorită',
+    'accord_terms' => 'Sunt de acord cu',
+
     //statuses
     'pending' => 'Procesare',
     'confirmed' => 'Confirmată',

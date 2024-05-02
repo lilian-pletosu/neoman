@@ -17,7 +17,6 @@ class ProductController extends Controller
 {
     public function index($subSubcategorySlug)
     {
-
         $subSubcategory = SubSubCategory::where('slug', $subSubcategorySlug)->first();
         $brandQuery = Brand::all();
         $attributesQuery = Attribute::where('sub_sub_category_id', $subSubcategory->id)->with('attributeValues')->get();
