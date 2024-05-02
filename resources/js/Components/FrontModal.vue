@@ -132,10 +132,10 @@ onUnmounted(() => {
                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
                             </div>
 
-                            <button type="submit"
-                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Aștept apelul
-                            </button>
+                            <PrimaryButton type="submit"
+                                           class="w-full h-10 flex justify-center hover:bg-slate-400">
+                                {{ __('wait_call') }}
+                            </PrimaryButton>
 
                         </form>
                     </template>
@@ -167,10 +167,10 @@ onUnmounted(() => {
                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
                             </div>
 
-                            <button type="submit"
-                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Aștept apelul
-                            </button>
+                            <PrimaryButton type="submit"
+                                           class="w-full h-10 flex justify-center hover:bg-slate-400">
+                                {{ __('wait_call') }}
+                            </PrimaryButton>
 
                         </form>
                     </template>
@@ -195,11 +195,11 @@ onUnmounted(() => {
                             <input type="text" name="product" id="product" placeholder="" :value="product"
                                    class="hidden"/>
 
-
-                            <button type="submit"
-                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <PrimaryButton type="submit"
+                                           class="w-full h-10 flex justify-center hover:bg-slate-400">
                                 {{ __('send_order') }}
-                            </button>
+                            </PrimaryButton>
+
 
                         </form>
                     </template>
@@ -238,7 +238,7 @@ onUnmounted(() => {
                                    :class="{'text-white': selectedTab === 'installments'}">Rate</p>
                             </div>
                             <CreditContent :details="showTabContent()" :product="product"/>
-                            <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}</span>
+                            <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}.</span>
                             <hr class="my-3">
                             <form class="space-y-4">
                                 <div class="grid grid-cols-2 gap-2">
@@ -257,10 +257,12 @@ onUnmounted(() => {
                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
                                     </label>
 
-                                    <span class="flex gap-1">
+                                    <span class="flex gap-1 col-span-2">
                                              <input type="checkbox" name="terms" id="terms" required
                                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
-    {{ __('accord_terms') }} <Link :href="route('terms_page')" class="text-blue-800 underline">{{ __('terms') }}</Link>
+    {{ __('accord_terms') }} <Link :href="route('privacy_page')" class="text-blue-800 underline">{{
+                                            __('privacy')
+                                        }}</Link>
                                         </span>
 
                                 </div>
