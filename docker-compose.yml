@@ -32,8 +32,8 @@ services:
             - traefik.http.routers.neoman-nginx.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-            - traefik.http.routers.neoman-nginx.tls=${APP_TLS:-false}
-            - traefik.http.routers.neoman-nginx.tls.certresolver=lets-encrypt
+            - traefik.http.routers.neoman-nginx.tls=true
+            - traefik.http.routers.neoman-nginx.tls.certresolver=myresolver
 
 
     neoman-php:
@@ -92,7 +92,7 @@ services:
             #            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-            - traefik.http.routers.neoman.tls=${APP_TLS:-false}
-            - traefik.http.routers.neoman.tls.certresolver=lets-encrypt
+            - traefik.http.routers.neoman.tls=true
+            - traefik.http.routers.neoman.tls.certresolver=myresolver
         volumes:
             - ./database-storage:/var/lib/mysql
