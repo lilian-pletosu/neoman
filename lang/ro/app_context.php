@@ -216,6 +216,9 @@ return [
     'is_preventive_offer' => 'Datele sunt cu caracter informativ și nu constituie o ofertă. Rata lunară va fi stabilită în momentul plasării cererii de împrumut și poate să difere nesemnificativ',
     'select_offer' => 'Selectează oferta dorită',
     'accord_terms' => 'Sunt de acord cu',
+    'order_type' => 'Tipul comenzii',
+    'installment' => 'Rata lunară',
+    'change_status' => 'Schimbă statusul',
 
     //statuses
     'pending' => 'Procesare',
@@ -268,7 +271,9 @@ return [
 
 
     //mail
-    'you_have_new_message' => 'Ai primit un mesaj nou',
+    'hello_user' => 'Bună ziua,',
+    'received_order' => 'Am primit comanda dvs.',
+    'thanks_for_order' => 'Vă mulțumim pentru comandă! Cererea dvs. este acceptată. Vă vom contacta în curând pentru confirmare.'
 
 
 ];

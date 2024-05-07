@@ -7,6 +7,5 @@ defineProps({
 </script>
 
 <template>
-    <img class="h-auto" :class="[w]" src="/img/neo_logo_new.png" alt="neoman.md">
-
+    <img class="h-auto" :class="[w]" src="/img/neo_logo_new.svg" alt="Neoman">
 </template>

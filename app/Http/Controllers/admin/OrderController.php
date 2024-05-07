@@ -5,7 +5,6 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\AttributeValue;
 use App\Models\Order;
-use App\Services\DataTableBuilder;
 use App\Services\DataTableService;
 use Illuminate\Http\Request;
 
@@ -31,7 +30,7 @@ class OrderController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Order')
-            ->setResourceColumns(['id', 'order_number', 'full_name', 'total_price', 'status', 'created_at'])
+            ->setResourceColumns(['id', 'order_number', 'full_name', 'total_price', 'status', 'created_at', 'type'])
             ->paginate(10)
             ->sortBy('created_at', 'desc')
             ->setSearchRoute('admin.orders');
@@ -65,18 +64,22 @@ class OrderController extends Controller
     {
         $order = Order::findOrFail($id);
         $products = $order->products;
-
-        foreach ($products as $key => $product) {
-            if (AttributeValue::find($product['color_value'])) {
-                $product['color_value'] = AttributeValue::find($product['color_value'])->translate()->value;
-                $products[$key] = $product;
-            } else {
-                $product['color_value'] = null;
-                $products[$key] = $product;
+        if (array_key_exists('id', $products)) {
+            $products['brand'] = $products['brand']['name'];
+            $products['color_value'] = $products['attributes']['culoare']['values'][0]['value'] ?? null;
+            $products = [$products];
+        } else {
+            foreach ($products as $key => $product) {
+                if (AttributeValue::find($product['color_value'])) {
+                    $product['color_value'] = AttributeValue::find($product['color_value'])->translate()->value ?? '';
+                    $products[$key] = $product;
+                } else {
+                    $product['color_value'] = null;
+                    $products[$key] = $product;
+                }
             }
-
         }
-
+        $order->load('credit');
         $order->products = $products;
 
 
@@ -120,6 +123,20 @@ class OrderController extends Controller
                 $this->destroy($id);
             }
         }
+
+        if ($request->type == 'updateOrder') {
+
+            $request->validate([
+                'field' => 'required|string',
+                'value' => 'required|string'
+            ]);
+
+           
+            $order = Order::findOrFail($id);
+            $order[$request->field] = $request->value;
+            $order->save();
+        }
+
         if ($request->type == 'updateStatus') {
             $order = Order::findOrFail($id);
             $newStatus = $request->status;

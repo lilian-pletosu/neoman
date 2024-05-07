@@ -23,7 +23,8 @@ const form = useForm({
     address: '',
     products: {},
     message: '',
-    total_price: cartStore.totalPrice
+    total_price: cartStore.totalPrice,
+    type: 'simple'
 });
 
 

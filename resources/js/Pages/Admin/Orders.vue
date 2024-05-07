@@ -40,17 +40,16 @@
                                     <div v-if="!showSelectStatus"
                                          class="rounded py-0.5 px-2 text-center  shadow "
                                          :class="{
-                                                                                                        'status-pending': orderLoad.status === 'pending',
-                                                                                                        'status-confirmed': orderLoad.status === 'confirmed',
-                                                                                                        'status-shipped': orderLoad.status === 'shipped',
-                                                                                                        'status-delivered': orderLoad.status === 'delivered',
-                                                                                                        'status-canceled': orderLoad.status === 'canceled',
-                                                                                                     }">
+                                               'status-pending': orderLoad.status === 'pending',
+                                               'status-confirmed': orderLoad.status === 'confirmed',
+                                               'status-shipped': orderLoad.status === 'shipped',
+                                               'status-delivered': orderLoad.status === 'delivered',
+                                               'status-canceled': orderLoad.status === 'canceled'
+                                                 }">
                                         <p
                                             class="text-white flex gap-2 items-center"
                                             :class="{'text-white': orderLoad.status === 'canceled'}">
                                             {{ __(orderLoad.status) }}
-
                                         </p>
                                     </div>
                                     <div v-if="showSelectStatus">
@@ -72,7 +71,9 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <pencil-square-icon class="w-6" @click="showSelectStatus = !showSelectStatus"/>
+                                    <pencil-square-icon
+                                        @click="showSelectStatus = !showSelectStatus"
+                                        class="w-6"/>
                                 </div>
                                 <div>
                                     <p class="text-sm text-slate-500">{{ __('date') }}:
@@ -80,43 +81,29 @@
                                             useDateFormat(orderLoad.created_at, "DD.MM.YYYY, HH:mm", {locales: 'rum'}).value
                                         }}</p>
                                 </div>
+                                <CreditDetailTable v-if="['credit', 'installments'].includes(orderLoad.type)"
+                                                   :order="orderLoad" :key="orderLoad.id"/>
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 ">
-                                    <div>
-                                        <span class="text-sm text-slate-500">{{ __('full_name') }}</span>
-                                        <div class="p-1 border container-custom-rounded">
-                                            <p>{{ orderLoad.full_name }}</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-slate-500">{{ __('phone') }}</span>
-                                        <div class="p-1 border container-custom-rounded">
-                                            <p>{{ orderLoad.phone }}</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-slate-500 ">{{ __('email') }}</span>
-                                        <div class="p-1 border container-custom-rounded ">
-                                            <p class="whitespace-wrap text-ellipsis">{{ orderLoad.email }}</p>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span class="text-sm text-slate-500">{{ __('city') }}</span>
-                                        <div class="p-1 border container-custom-rounded">
-                                            <p>{{ orderLoad.city }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="sm:col-span-2">
-                                        <span class="text-sm text-slate-500">{{ __('address') }}</span>
-                                        <div class="p-1 border container-custom-rounded">
-                                            <p>{{ orderLoad.address }}</p>
-                                        </div>
-                                    </div>
-                                    <div v-if="orderLoad.message" class="sm:col-span-2">
-                                        <span class="text-sm text-slate-500">{{ __('notices') }}</span>
-                                        <div class="p-1 border container-custom-rounded">
-                                            <p>{{ orderLoad.message }}</p>
-                                        </div>
-                                    </div>
+                                    <EditableInput
+                                        v-model="orderLoad"
+                                        name="full_name" :key="orderLoad.id"/>
+
+                                    <EditableInput
+                                        v-model="orderLoad"
+                                        name="phone" :key="orderLoad.id"/>
+                                    <EditableInput
+                                        v-model="orderLoad"
+                                        name="email" :key="orderLoad.id"/>
+                                    <EditableInput
+                                        v-model="orderLoad"
+                                        name="city" :key="orderLoad.id"/>
+                                    <EditableInput
+                                        v-model="orderLoad"
+                                        name="address" :key="orderLoad.id"/>
+                                    <EditableInput
+                                        v-model="orderLoad"
+                                        name="message" :key="orderLoad.id"/>
+
 
                                 </div>
                                 <div>
@@ -204,8 +191,10 @@
                                                         {{ __('lei') }}</p>
                                                     <div ref="target" class="flex justify-end space-x-2"
                                                          v-show="showDeliveryPriceInput">
-                                                        <input v-model="orderLoad.delivery_price" type="number"
-                                                               class="border rounded p-1 w-20"
+                                                        <input
+                                                            @keydown.enter="updateOrderDeliveryPrice(orderLoad.delivery_price)"
+                                                            v-model="orderLoad.delivery_price" type="number"
+                                                            class="border rounded p-1 w-20"
                                                         >
 
                                                         <arrow-path-icon
@@ -257,6 +246,8 @@ import axios from "axios";
 import {onClickOutside, useDateFormat} from "@vueuse/core";
 import Modal from "@/Components/Modal.vue";
 import {ArrowPathIcon, PencilSquareIcon, TrashIcon} from "@heroicons/vue/16/solid/index.js";
+import CreditDetailTable from "@/Components/CreditDetailTable.vue";
+import EditableInput from "@/Components/EditableInput.vue";
 
 const app = getCurrentInstance();
 
@@ -299,6 +290,14 @@ const loadProducts = ref(false);
 const showSelectStatus = ref(false)
 const showDeliveryPriceInput = ref(false);
 const target = ref(null)
+const editOrder = ref(false);
+
+const showEdit = () => {
+    editOrder.value = true;
+}
+const cancelEdit = () => {
+    editOrder.value = false;
+}
 
 
 onClickOutside(target, () => {
@@ -320,7 +319,6 @@ const fetchOrder = async (order) => {
     axios.get(route('api.fetchOrder', order.id)).then((res) => {
         orderLoad.value = res.data;
     }).finally(() => loadProducts.value = false)
-
 };
 
 

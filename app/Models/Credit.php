@@ -11,8 +11,13 @@ class Credit extends Model
 
     protected $table = 'credits';
     protected $fillable = [
-        'name', 'num_of_installments', 'interest_rate', 'type'
+        'id', 'name', 'num_of_installments', 'interest_rate', 'type'
     ];
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'credit_id');
+    }
 
     public function scopeCreditType($query)
     {
