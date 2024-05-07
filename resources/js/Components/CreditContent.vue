@@ -15,6 +15,8 @@ const props = defineProps({
 
 const selectedOffer = ref(null);
 
+const emits = defineEmits(['selectedOffer']);
+
 function calculateInstallmentWithInterest(productPrice, numOfInstallments, interestRate) {
     let interest_rate = productPrice * (interestRate / 100);
     let finalPrice = productPrice + interest_rate;
@@ -57,6 +59,7 @@ function calculateInstallmentWithInterest(productPrice, numOfInstallments, inter
                 <input
                     type="radio"
                     :name="detail.name"
+                    @change="$emit('selectedOffer', selectedOffer)"
                     :value="detail.id"
                     v-model="selectedOffer"
                     :id="detail.id"

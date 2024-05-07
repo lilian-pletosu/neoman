@@ -3,7 +3,7 @@ import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import CreditContent from "@/Components/CreditContent.vue";
 import {useScrollLock} from '@vueuse/core'
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {Link} from "@inertiajs/vue3";
+import ReusableOrderForm from "@/Components/ReusableOrderForm.vue";
 
 const body = ref(document.body);
 const isLocked = useScrollLock(body);
@@ -56,9 +56,19 @@ const maxWidthClass = computed(() => {
 function close() {
     isLocked.value = false;
     emit('close')
+    success.value = false;
 }
 
 const selectedTab = ref('credit')
+
+const selectedOffer = ref(null);
+
+const success = ref(false);
+
+function showSuccessMessage() {
+    success.value = true;
+}
+
 
 const showTabContent = () => {
     if (selectedTab.value === 'credit') {
@@ -204,7 +214,7 @@ onUnmounted(() => {
                         </form>
                     </template>
                     <template v-if="type === 'buy_in_credit'">
-                        <div class="flex flex-col gap-2">
+                        <div v-if="!success" class="flex flex-col gap-2">
 
                             <div
                                 class="relative mb-4 grid grid-cols-2 sm:grid-cols-6 gap-4  container-custom-rounded border border-1 border-slate-300 dark:border-slate-100/20 bg-slate-300/20  dark:bg-slate-100/20
@@ -218,7 +228,7 @@ onUnmounted(() => {
                                     }}</p>
                                 </div>
 
-                                <div class="sm:col-span-1 text-right my-auto">
+                                <div class="col-span-2 mx-auto sm:col-span-1 text-right my-auto">
                                     <p class="font-bold" :key="product.total_price">
                                         {{ product.total_price ?? product.price }}
                                         {{ __('lei') }}</p>
@@ -237,50 +247,35 @@ onUnmounted(() => {
                                    class="w-full flex justify-center p-1 rounded-xl z-20 duration-500"
                                    :class="{'text-white': selectedTab === 'installments'}">Rate</p>
                             </div>
-                            <CreditContent :details="showTabContent()" :product="product"/>
+                            <CreditContent :details="showTabContent()" :product="product"
+                                           @selected-offer="offerId => selectedOffer = offerId"/>
                             <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}.</span>
                             <hr class="my-3">
-                            <form class="space-y-4">
-                                <div class="grid grid-cols-2 gap-2">
-                                    <label for="full_name"
-                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                            __('full_name')
-                                        }}
-                                        <input type="text" name="full_name" id="full_name" placeholder="Ion Popescu"
-                                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
-                                    </label>
-                                    <label for="phone"
-                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                            __('phone')
-                                        }}
-                                        <input type="tel" name="phone" id="phone" placeholder="012345678"
-                                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
-                                    </label>
 
-                                    <span class="flex gap-1 col-span-2">
-                                             <input type="checkbox" name="terms" id="terms" required
-                                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
-    {{ __('accord_terms') }} <Link :href="route('privacy_page')" class="text-blue-800 underline">{{
-                                            __('privacy')
-                                        }}</Link>
-                                        </span>
-
+                            <ReusableOrderForm :selected-offer="selectedOffer" @submit-success="showSuccessMessage"
+                                               :product="product"
+                                               :selected-type="selectedTab"/>
+                        </div>
+                        <div v-if="success">
+                            <div class="bg-white p-6  md:mx-auto">
+                                <svg viewBox="0 0 24 24" class="text-green-600 w-16 h-16 mx-auto my-6">
+                                    <path fill="currentColor"
+                                          d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z">
+                                    </path>
+                                </svg>
+                                <div class="text-center">
+                                    <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">
+                                        {{ __('order_placed') }}!</h3>
+                                    <p class="text-gray-600 my-2">{{ __('thanks_order') }}</p>
+                                    <p>{{ __('order_success_message') }}</p>
+                                    <div class="py-10 text-center">
+                                        <p @click="close"
+                                           class="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3 cursor-pointer rounded-md">
+                                            {{ __('back_to_shop') }}
+                                        </p>
+                                    </div>
                                 </div>
-
-                                <input type="text" name="product" id="product" placeholder="" :value="product"
-                                       class="hidden"/>
-                                <input type="hidden" name="offer" :value="se">
-
-
-                                <PrimaryButton @click="console.log('submit')"
-                                               class="w-full h-10 flex justify-center hover:bg-slate-400">
-                                    {{
-                                        __('submit')
-                                    }}
-                                </PrimaryButton>
-
-
-                            </form>
+                            </div>
                         </div>
                     </template>
                 </div>

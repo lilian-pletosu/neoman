@@ -102,7 +102,7 @@ class CookieService
         if (!$itemsCart) {
             $items[] = $product;
             $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-            return response('primul')->cookie($cookie);
+            return response(trans('app_context.new_product_added'))->cookie($cookie);
         } else {
             foreach ($items as &$item) {
                 if ($item['id'] == $product['id'] && $item['color_value'] == $product['color_value']) {

@@ -26,7 +26,9 @@ class Order extends Model
         'total_price',
         'delivery_price',
         'status',
-        'order_number'
+        'order_number',
+        'type',
+        'credit_id'
     ];
 
     protected $casts = [
@@ -71,5 +73,11 @@ class Order extends Model
             }
         });
 
+    }
+
+
+    public function credit()
+    {
+        return $this->belongsTo(Credit::class, 'credit_id', 'id');
     }
 }

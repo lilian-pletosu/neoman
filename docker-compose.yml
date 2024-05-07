@@ -71,6 +71,7 @@ services:
             - "3306:3306"
         volumes:
             - ./database-storage:/var/lib/mysql
+        restart: unless-stopped
         networks:
             - neoman
 

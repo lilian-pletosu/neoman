@@ -38,7 +38,8 @@ class NewOrderNotifyEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.new_order',
+//            view: 'emails.new_order',
+            markdown: 'vendor.mail.new_order',
             with: ['order' => $this->order],
         );
     }
