@@ -24,7 +24,7 @@ class CartController extends Controller
         if ($request->type == OrderTypeEnum::SIMPLE->value) {
             $data = $request->validate([
                 'full_name' => 'required|string',
-                'phone' => 'required|numeric',
+                'phone' => 'required|string',
                 'email' => 'required|email',
                 'city' => 'required|string',
                 'address' => 'required|string',

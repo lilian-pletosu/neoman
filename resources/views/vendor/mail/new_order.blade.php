@@ -1,65 +1,59 @@
-@component('mail::message')
-    {{ __('app_context.received_order') }}
+@php
+    $productHeader = __('app_context.product');
+    $colorHeader = __('app_context.color');
+    $qtyHeader = __('app_context.qty');
+    $priceHeader = __('app_context.price');
+@endphp
 
-    {{ __('app_context.hello_user'), $order->full_name }}
+<x-mail::layout>
 
-    {{ __('app_context.thanks_for_order') }}
+    <x-slot name="header">
+        <x-mail::header url="{{config('app.url')}}">
+            #AppTeam
+        </x-mail::header>
+    </x-slot>
 
-
-    {{--@component('mail::button')--}}
-    {{--{{ __('Accept Invitation') }}--}}
-    {{--@endcomponent--}}
-
-    {{ __('If you did not expect to receive an invitation to this team, you may discard this email.') }}
-@endcomponent
-
-
-{{--    <!DOCTYPE html>--}}
-{{--<html lang="en">--}}
-{{--<head>--}}
-{{--    <meta charset="UTF-8">--}}
-{{--    <meta name="viewport" content="width=device-width, initial-scale=1.0">--}}
-{{--    <title>Comandă recepționată</title>--}}
-{{--    <style>--}}
-{{--        @import url('https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css');--}}
-{{--    </style>--}}
-{{--</head>--}}
-{{--<body class="bg-gray-100 p-4">--}}
-{{--<div class="max-w-md mx-auto bg-white p-8 rounded shadow-md">--}}
-{{--    <h2 class="text-2xl font-semibold mb-4">Comandă recepționată</h2>--}}
-{{--    <p class="mb-4">Bună ziua, {{ $order->full_name }}!</p>--}}
-
-{{--    <p>Vă mulțumim pentru comandă! Cererea dvs. este acceptată. Vă vom contacta în curând pentru confirmare. Vom fi--}}
-{{--        bucuroși să vă răspundem la întrebări.</p>--}}
-
-{{--    <p>Ora comenzii: {{ $order->created_at->format('d.m.Y / H:i') }}</p>--}}
-{{--    <p>Telefon: {{ $order->phone }}</p>--}}
-{{--    <p>Email: {{ $order->email }}</p>--}}
-{{--    <p>Adresă: {{$order->city}},{{$order->address}}</p>--}}
-{{--    @if($order->commment)--}}
-{{--        <p>Comentariu: {{ $order->comment}}</p>--}}
-{{--    @endif--}}
-{{--    <hr>--}}
-
-{{--    <table>--}}
-{{--        <tr>--}}
-{{--            <th>Denumirea</th>--}}
-{{--            <th>Cantitate</th>--}}
-{{--            <th>Preț</th>--}}
-{{--        </tr>--}}
-{{--        @foreach($order->products as $product)--}}
-{{--            <tr>--}}
-{{--                <td>{{$product['name']}}</td>--}}
-{{--                <td>{{$product['qty']}}</td>--}}
-{{--                <td>{{$product['price']}}</td>--}}
-{{--            </tr>--}}
-{{--        @endforeach--}}
-{{--    </table>--}}
+    # Comanda nr. {{$order['order_number']}}!
 
 
-{{--    <p>Total de plată: {{ $order->total_price }} lei</p>--}}
+    <x-slot name="subcopy">
+        Vă mulțumim pentru comandă! Cererea dvs. cu nr. <b>{{$order['order_number']}}</b> este acceptată. Vă vom
+        contacta în
+        curând pentru confirmare.
 
-{{--    <p class="mt-4">Cu drag,<br>Echipa Neoman!</p>--}}
-{{--</div>--}}
-{{--</body>--}}
-{{--</html>--}}
+
+        <x-mail::subcopy>
+            <h3>Iată detaliile comenzei:</h3>
+            Data și ora comenzei: {{ \Illuminate\Support\Carbon::parse($order['created_at'])->format('d.m.Y, h:m') }}
+            <br>
+            Telefon: {{$order['phone']}} <br>
+            Email: {{$order['email']}} <br>
+            Adresă: {{$order['address']}} <br>
+        </x-mail::subcopy>
+
+
+        <x-mail::table>
+            | {{ $productHeader }} | {{ $colorHeader }} | {{ $qtyHeader }} | {{ $priceHeader }} |
+            |:-----------|:----------------:|:------------:| --------:|
+            @foreach($order['products'] as $product)
+                | {{$product['name']}} | {{$product['color_value']}} | {{$product['qty']}} | {{$product['price']}} |
+            @endforeach
+        </x-mail::table>
+        <hr>
+        <h2>Preț produse: {{$order['total_price']}} {{__('app_context.lei')}}</h2>
+        <h2>Livrare: {{$order['delivery_price']}} {{__('app_context.lei')}}</h2>
+        <h1>Total: {{$order['total_price'] + $order['delivery_price']}} {{__('app_context.lei')}}</h1>
+
+        <x-mail::subcopy>
+            Dacă ai întrebări sau nelămuriri, nu ezita să ne contactezi la adresa de
+            email {{ config('mail.from.address') }} sau la numărul de telefon {{ config('mail.from.phone') }}.
+        </x-mail::subcopy>
+
+        <x-slot name="footer">
+            <x-mail::footer>
+                © {{ date('Y') }} {{ config('app.name') }}. @lang('Toate drepturile rezervate.')
+            </x-mail::footer>
+        </x-slot>
+    </x-slot>
+
+</x-mail::layout>

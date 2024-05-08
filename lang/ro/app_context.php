@@ -272,7 +272,7 @@ return [
 
     //mail
     'hello_user' => 'Bună ziua,',
-    'received_order' => 'Am primit comanda dvs.',
+    'received_order' => 'Comanda dvs. a fost recepționată',
     'thanks_for_order' => 'Vă mulțumim pentru comandă! Cererea dvs. este acceptată. Vă vom contacta în curând pentru confirmare.'
 
 

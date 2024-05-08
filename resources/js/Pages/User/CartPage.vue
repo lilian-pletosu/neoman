@@ -46,6 +46,10 @@ const checkout = () => {
             form.errors = {};
             await cartStore.cartForget()
             loading.value = false;
+        },
+        onError: () => {
+            loading.value = false;
+            showModal.value = false;
         }
     })
 }
@@ -134,86 +138,88 @@ watch(cartStore, () => {
                     </div>
                     <div
                         class="container-simple border dark:bg-white rounded-md text-red p-4 lg:col-span-1">
-                        <div class="grid grid-cols-1 gap-4">
-                            <p class="font-bold">{{ __('order_details') }}</p>
+                        <form @submit.prevent="checkout()">
+                            <div class="grid grid-cols-1 gap-4">
+                                <p class="font-bold">{{ __('order_details') }}</p>
 
 
-                            <div>
-                                <input-label :value="__('full_name')"/>
-                                <input class="rounded-md w-full" type="text"
-                                       name="first_name"
-                                       v-model="form.full_name"
-                                       id="first_name">
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.full_name">{{ __(form.errors.full_name) }}</span>
-                            </div>
-                            <div>
-                                <input-label :value="__('phone')"/>
-                                <input class="rounded-md w-full" type="tel"
-                                       v-model="form.phone"
-                                       name="phone"
-                                       id="phone">
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.phone">{{ __(form.errors.phone) }}</span>
-                            </div>
-                            <div>
-                                <input-label :value="__('email')"/>
-                                <input class="rounded-md w-full" type="email"
-                                       v-model="form.email"
-                                       name="email"
-                                       id="email">
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.email">{{ __(form.errors.email) }}</span>
-                            </div>
-                            <div>
-                                <input-label :value="__('city')"/>
-                                <input class="rounded-md w-full" type="text"
-                                       v-model="form.city"
-                                       name="city"
-                                       id="city">
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.city">{{ __(form.errors.city) }}</span>
-                            </div>
-                            <div>
-                                <input-label :value="__('address')"/>
-                                <input class="rounded-md w-full" type="search"
-                                       v-model="form.address"
-                                       name="address"
-                                       id="address">
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.city">{{ __(form.errors.address) }}</span>
-                            </div>
-                            <div>
-                                <input-label :value="__('message')"/>
-                                <textarea class="rounded-md w-full"
-                                          v-model="form.message"
-                                          name="message"
-                                          id="message"/>
-                                <span class="font-light text-xs text-red-500"
-                                      v-if="form.errors.message">{{ __(form.errors.message) }}</span>
-                            </div>
+                                <div>
+                                    <input-label :value="__('full_name')"/>
+                                    <input class="rounded-md w-full" type="text"
+                                           name="first_name"
+                                           v-model="form.full_name"
+                                           id="first_name">
+                                    <span class="font-light text-xs text-red-500"
+                                          v-if="form.errors.full_name">{{ __(form.errors.full_name) }}</span>
+                                </div>
+                                <div>
+                                    <input-label :value="__('phone')"/>
+                                    <input class="rounded-md w-full" type="tel"
+                                           v-model="form.phone"
+                                           name="phone"
+                                           id="phone">
+                                    <span class="font-light text-xs text-red-500"
+                                          v-if="form.errors.phone">{{ __(form.errors.phone) }}</span>
+                                </div>
+                                <div>
+                                    <input-label :value="__('email')"/>
+                                    <input class="rounded-md w-full" type="email"
+                                           v-model="form.email"
+                                           name="email"
+                                           id="email">
+                                    <span class="font-light text-xs text-red-500"
+                                          v-if="form.errors.email">{{ __(form.errors.email) }}</span>
+                                </div>
+                                <div>
+                                    <input-label :value="__('city')"/>
+                                    <input class="rounded-md w-full" type="text"
+                                           v-model="form.city"
+                                           name="city"
+                                           id="city">
+                                    <span class="font-light text-xs text-red-500"
+                                          v-if="form.errors.city">{{ __(form.errors.city) }}</span>
+                                </div>
+                                <div>
+                                    <input-label :value="__('address')"/>
+                                    <input class="rounded-md w-full" type="search"
+                                           v-model="form.address"
+                                           name="address"
+                                           id="address">
+                                    <span class="font-light text-xs text-red-500"
+                                          v-if="form.errors.city">{{ __(form.errors.address) }}</span>
+                                </div>
+                                <div>
+                                    <input-label :value="__('message')"/>
+                                    <textarea class="rounded-md w-full"
+                                              v-model="form.message"
+                                              name="message"
+                                              id="message"/>
+                                    <span class="font-light text-xs text-red-500"
+                                          v-if="form.errors.message">{{ __(form.errors.message) }}</span>
+                                </div>
 
-                            <hr class="mt-2">
+                                <hr class="mt-2">
 
-                            <div class="grid grid-cols-2 font-bold">
-                                <p class="justify-self-start">Subtotal:</p>
-                                <p class="justify-self-end">
-                                    {{ cartStore.totalPrice }} {{ __('lei') }}</p>
+                                <div class="grid grid-cols-2 font-bold">
+                                    <p class="justify-self-start">Subtotal:</p>
+                                    <p class="justify-self-end">
+                                        {{ cartStore.totalPrice }} {{ __('lei') }}</p>
+                                </div>
+                                <div class="grid grid-cols-2 font-bold">
+                                    <p class="justify-self-start">{{ __('shipping') }}:</p>
+                                    <p class="justify-self-end italic">
+                                        {{ __('will_be_calculated_by_manager') }}</p>
+                                </div>
+
+                                <button type="submit"
+                                        class="container-custom-rounded  space-x-4 p-2 bg-[#1FC8F3] shadow cursor-pointer text-white font-mulish font-semibold">
+                                    {{
+                                        __('checkout')
+                                    }}
+                                </button>
+
                             </div>
-                            <div class="grid grid-cols-2 font-bold">
-                                <p class="justify-self-start">{{ __('shipping') }}:</p>
-                                <p class="justify-self-end italic">
-                                    {{ __('will_be_calculated_by_manager') }}</p>
-                            </div>
-
-                            <button @click="checkout"
-                                    class="container-custom-rounded  space-x-4 p-2 bg-[#1FC8F3] shadow cursor-pointer text-white font-mulish font-semibold">
-                                {{
-                                    __('checkout')
-                                }}
-                            </button>
-
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div v-else class="p-2 mx-auto flex flex-col justify-center items-center space-y-6 py-12">
