@@ -67,6 +67,7 @@ class Order extends Model
             } while (Order::where('order_number', $orderNumber)->exists());
             $order->order_number = "#$orderNumber";
         });
+
         static::updating(function ($order) {
             if ($order->isDirty('status')) {
                 event(new \App\Events\OrderStatusUpdated($order));

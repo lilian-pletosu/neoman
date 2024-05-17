@@ -219,6 +219,14 @@ return [
     'order_type' => 'Tipul comenzii',
     'installment' => 'Rata lunară',
     'change_status' => 'Schimbă statusul',
+    'filter' => 'Filtru',
+    'here_is_all_info_about_us' => 'Aici găsești toate informațiile despre noi',
+    'create_content_about_us' => 'Crează conținut despre noi',
+    'content_ro' => 'Conținut în română',
+    'content_ru' => 'Conținut în rusă',
+    'no_content' => 'Nu sunt conținuturi',
+    'content' => 'Conținut',
+
 
     //statuses
     'pending' => 'Procesare',

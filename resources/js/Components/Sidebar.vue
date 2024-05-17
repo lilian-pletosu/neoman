@@ -1,6 +1,6 @@
 <template>
     <aside id="sidebar" :class="{'hidden' : hidden}"
-           class="fixed z-20 h-full top-0 left-0 pt-16 lg:flex flex-shrink-0 flex-col min-w-64 w-auto transition-width duration-75"
+           class="  h-full top-0 left-0 pt-16 lg:flex flex-shrink-0 flex-col min-w-64 w-auto transition-width duration-75"
            aria-label="Sidebar">
         <div class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0">
             <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
@@ -162,12 +162,12 @@
                             </Link>
                         </li>
                         <li>
-                            <Link :href="route('admin.privacy.index')"
+                            <Link :href="route('admin.about_us.index')"
                                   class="text-base font-normal rounded-lg flex items-center p-2 group"
-                                  :class="checkRoute(route('admin.privacy.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
+                                  :class="checkRoute(route('admin.about_us.index')) ? 'bg-gray-100 text-gray-900' : 'hover:bg-gray-100'">
 
                                 <user-group-icon class="w-6 transition duration-75 text-gray-500 flex-shrink-0"
-                                                 :class="checkRoute(route('admin.privacy.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
+                                                 :class="checkRoute(route('admin.about_us.index')) ? 'text-gray-900' : 'group-hover:text-gray-900'"/>
                                 <span class="ml-3 flex-1 whitespace-nowrap">{{ __('about_us') }}</span>
                             </Link>
                         </li>

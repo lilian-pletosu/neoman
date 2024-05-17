@@ -3,11 +3,10 @@
     <div>
         <nav-bar @sidebar="toggleSidebar"/>
 
-        <div class="flex  overflow-auto bg-white ">
-            <Sidebar :hidden=sidebarHidden :current-route=currentRoute></Sidebar>
-            <div class="bg-gray-900 opacity-50 hidden fixed inset-0 z-10" id="sidebarBackdrop"></div>
+        <div class="grid grid-cols-12 bg-white ">
+            <Sidebar class="col-span-2" :hidden=sidebarHidden :current-route=currentRoute></Sidebar>
             <div id="main-content "
-                 class="flex flex-col justify-between h-screen w-full bg-gray-50 relative lg:ml-64">
+                 class="col-span-10 flex flex-col justify-between h-screen w-full bg-gray-50 relative ">
                 <main>
                     <div class=" px-4 pt-[88px]">
                         <slot/>

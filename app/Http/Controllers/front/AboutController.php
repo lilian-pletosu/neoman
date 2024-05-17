@@ -13,7 +13,9 @@ class AboutController extends Controller
      */
     public function index()
     {
-        return inertia('User/AboutPage');
+        return inertia('User/AboutPage', [
+            'content' => About::first(),
+        ]);
     }
 
     /**
