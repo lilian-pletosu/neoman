@@ -11,6 +11,7 @@ const props = defineProps({
     maxWidth: {
         type: String,
         default: '2xl',
+        variants: ['sm', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '6xl'],
     },
     marginTop: {
         type: String,

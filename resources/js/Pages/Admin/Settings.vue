@@ -73,12 +73,9 @@ const submit = (type) => {
                                             <div
                                                 class="container-custom-rounded  border border-1 border-slate-300 p-2 bg-slate-100/50 min-h-[150px]">
                                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
-
-
                                                     <div v-for="credit in resources.credit">
                                                         <Installments :credit="credit" :key="credit.id"/>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </section>

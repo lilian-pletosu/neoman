@@ -28,22 +28,22 @@ const props = defineProps({
                     }}</h1>
                 <div class="grid grid-cols-1 pt-12 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-28 lg:gap-y-16">
                     <div v-for="subcategory in category.subcategory"
-                         class="relative group h-48 flex   flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+                         class="relative group md:h-48 flex   flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
                         <Link :href="route('subcategory_page', {slug: subcategory.slug})" class="block">
-                            <div class="h-28">
+                            <div class="md:h-28">
                                 <div
-                                    class="absolute bg-cover -top-20 lg:top-[-10%] left-[5%]  group-hover:top-[-40%] group-hover:opacity-[0.9]   duration-300 w-[90%] h-48 rounded-xl justify-items-center align-middle">
+                                    class="md:absolute bg-cover md:-top-20 lg:top-[-10%] md:left-[5%]  md:group-hover:top-[-40%] md:group-hover:opacity-[0.9]   duration-300 w-[90%] h-48 rounded-xl justify-items-center align-middle">
                                     <img :src="subcategory.image"
-                                         class=" w-80 h-44  mt-6 m-auto  mix-blend-multiply"
-                                         alt="Automotive"
-                                         title="Automotive"
+                                         class=" w-80 h-44 mt-6 m-auto mix-blend-multiply"
+                                         :alt="subcategory.name"
+                                         :title="subcategory.name"
                                          loading="lazy"
                                          width="200" height="200">
                                 </div>
                             </div>
-                            <div class="p-6  w-full">
+                            <div class="p-6 w-full ">
                                 <p
-                                    class="mb-2  text-tg text-center w-full  text-xl  font-sans hidden group-hover:inline-block  font-semibold leading-snug tracking-normal   antialiased">
+                                    class="mb-2 text-tg text-center w-full  text-xl  font-sans md:hidden md:group-hover:inline-block  font-semibold leading-snug tracking-normal   antialiased">
                                     {{ subcategory.name }}
                                 </p>
                             </div>

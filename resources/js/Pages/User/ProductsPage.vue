@@ -48,6 +48,10 @@ watch([brandsFilter, sortProducts, attributesFilter, priceRange], () => {
     updateFilteredProducts();
 })
 
+if (window.innerWidth < 1024) {
+    mobileFiltersOpen.value = false
+}
+
 function updateFilteredProducts() {
     router.get(route('products_page', {subSubcategory: props.subSubcategory.slug}), {
         brands: brandsFilter.value,
@@ -100,48 +104,101 @@ onBeforeUnmount(() => {
             <div>
                 <!-- Mobile filter dialog -->
                 <ReusableSidebar :title="__('filter')" :open="mobileFiltersOpen"
-                                 @close="mobileFiltersOpen = false">
+                                 @close="mobileFiltersOpen = false" class="lg:hidden">
                     <template v-slot:content>
-                        <form class="mt-4 border-t border-gray-200">
-                            <h3 class="sr-only">Categories</h3>
-                            <ul role="list" class="px-2 py-3 font-medium text-gray-900">
-                                <li v-for="category in subCategories" :key="category.name">
-                                    <a :href="category.href" class="block px-2 py-3">{{ category.name }}</a>
-                                </li>
-                            </ul>
+                        <div class="px-4">
+                            <form class="block ">
 
-                            <Disclosure as="div" v-for="section in filters" :key="section.id"
-                                        class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
-                                <h3 class="-mx-2 -my-3 flow-root">
-                                    <DisclosureButton
-                                        class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                                                                            <span class="font-medium text-gray-900">{{
-                                                                                    section.name
-                                                                                }} {{ filterParams }}</span>
-                                        <span class="ml-6 flex items-center">
-                                                  <PlusIcon v-if="!open " class="h-5 w-5" aria-hidden="true"/>
-                                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
-                                                </span>
-                                    </DisclosureButton>
-                                </h3>
-                                <DisclosurePanel class="pt-6">
-                                    <div class="space-y-6">
-                                        <div v-for="(option, optionIdx) in section.options"
-                                             :key="option.value"
-                                             class="flex items-center">
-                                            <input :id="`filter-mobile-${section.id}-${optionIdx}`"
-                                                   :name="`${section.id}[]`" :value="option.value"
-                                                   type="checkbox" :checked="option.checked"
-                                                   class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-                                            <label :for="`filter-mobile-${section.id}-${optionIdx}`"
-                                                   class="ml-3 min-w-0 flex-1 text-gray-500">{{
-                                                    option.label
-                                                }}</label>
+                                <Disclosure as="div"
+                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                    <h3 class="-my-3 flow-root">
+                                        <DisclosureButton
+                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                            <span class="font-medium text-gray-900">{{ __('price') }}</span>
+                                            <span class="ml-6 flex items-center">
+                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
+                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                        </DisclosureButton>
+                                    </h3>
+                                    <DisclosurePanel :unmount="true" class="pt-6">
+
+                                        <div class=" ">
+                                            <div class="flex justify-around space-x-2 ">
+                                                <input placeholder="min"
+                                                       type="number"
+                                                       :min="0"
+                                                       v-model="priceRange[0]"
+                                                       class="w-full rounded-sm h-8 ">
+                                                <input placeholder="max" type="number"
+                                                       :min="0"
+                                                       v-model="priceRange[1]"
+                                                       class="w-full rounded-sm h-8 ">
+                                            </div>
                                         </div>
-                                    </div>
-                                </DisclosurePanel>
-                            </Disclosure>
-                        </form>
+                                    </DisclosurePanel>
+                                </Disclosure>
+                                <Disclosure as="div" v-for="brand in brands"
+                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                    <h3 class="-my-3 flow-root">
+                                        <DisclosureButton
+                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                            <span class="font-medium text-gray-900">{{ brand.name }}</span>
+                                            <span class="ml-6 flex items-center">
+                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
+                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                        </DisclosureButton>
+                                    </h3>
+                                    <DisclosurePanel class="pt-6">
+                                        <div class="space-y-4">
+                                            <div v-for="(option, optionIdx) in brand.options"
+                                                 class="flex items-center">
+                                                <input :name="option.value"
+                                                       :value="option.id"
+                                                       v-model="brandsFilter"
+                                                       type="checkbox"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                <label :for="option.value"
+                                                       class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
+                                                        option.value
+                                                    }}</label>
+                                            </div>
+                                        </div>
+                                    </DisclosurePanel>
+                                </Disclosure>
+                                <Disclosure as="div" v-for="attribute in attributes"
+                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                    <h3 class="-my-3 flow-root">
+                                        <DisclosureButton
+                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                            <span class="font-medium text-gray-900">{{ attribute.name }}</span>
+                                            <span class="ml-6 flex items-center">
+                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
+                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                        </DisclosureButton>
+                                    </h3>
+                                    <DisclosurePanel class="pt-6">
+                                        <div class="space-y-4">
+                                            <div v-for="(option) in attribute.options"
+                                                 class="flex items-center">
+                                                <input :name="option.value"
+                                                       :value="option.id"
+                                                       @change="addVariable(attribute.key, option.id)"
+                                                       type="checkbox"
+                                                       :checked="isOptionSelected(attribute.key, option.id)"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                <label :for="option.value"
+                                                       class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
+                                                        option.value
+                                                    }}</label>
+                                            </div>
+                                        </div>
+                                    </DisclosurePanel>
+                                </Disclosure>
+                            </form>
+                        </div>
 
                     </template>
 

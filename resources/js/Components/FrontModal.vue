@@ -4,6 +4,7 @@ import CreditContent from "@/Components/CreditContent.vue";
 import {useScrollLock} from '@vueuse/core'
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ReusableOrderForm from "@/Components/ReusableOrderForm.vue";
+import FastOrderForm from "@/Components/FastOrderForm.vue";
 
 const body = ref(document.body);
 const isLocked = useScrollLock(body);
@@ -185,33 +186,14 @@ onUnmounted(() => {
                         </form>
                     </template>
                     <template v-if="type === 'buy_1_click'">
-
                         <span class="flex text-center mb-4 font-mulish font-medium">{{
                                 __('for_fast_order_complete_phone_number')
                             }}</span>
 
-                        <form class="space-y-4" action="#">
 
-                            <div>
-                                <label for="phone"
-                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
-                                        __('phone')
-                                    }}</label>
-                                <input type="tel" name="phone" id="phone" placeholder=""
-                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
-
-                            </div>
-
-                            <input type="text" name="product" id="product" placeholder="" :value="product"
-                                   class="hidden"/>
-
-                            <PrimaryButton type="submit"
-                                           class="w-full h-10 flex justify-center hover:bg-slate-400">
-                                {{ __('send_order') }}
-                            </PrimaryButton>
+                        <FastOrderForm :product="product" @submitSuccess="showSuccessMessage"/>
 
 
-                        </form>
                     </template>
                     <template v-if="type === 'buy_in_credit'">
                         <div v-if="!success" class="flex flex-col gap-2">

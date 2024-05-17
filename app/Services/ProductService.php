@@ -109,7 +109,7 @@ class ProductService
                         $productArray = [
                             'id' => $product->id,
                             'slug' => $product->slug,
-                            'name' => $product->translateOrDefault('ro')->name,
+                            'name' => $product->translateOrDefault()->name,
                             'image' => $image,
                             'price' => $product->price,
                             'final_price' => $product->price - ($product->price * $promotion->discount / 100), // 'discount' => $promotion->discount . '%',
