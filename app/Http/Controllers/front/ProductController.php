@@ -23,7 +23,7 @@ class ProductController extends Controller
 
         $brands[] = [
             'key' => 'brand',
-            'name' => 'Brand',
+            'name' => trans('app_context.brand'),
             'options' => $brandQuery->map(function ($brand) {
                 return [
                     'id' => $brand->id,
