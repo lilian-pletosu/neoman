@@ -393,7 +393,7 @@ onBeforeUnmount(() => {
                                                     <p class="font-mulish text-xl font-semibold">{{ product.price }}
                                                         {{ __('lei') }}</p>
                                                 </div>
-                                                <div @click="cartStore.addProductInCart(product.id)"
+                                                <div @click="cartStore.addProductInCart(product.id, 'default')"
                                                      class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-[#1FC8F3]  cursor-pointer group/cart"
                                                      :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
                                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
