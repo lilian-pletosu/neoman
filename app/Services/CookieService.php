@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Product;
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Cache;
 
 class CookieService
 {
@@ -46,7 +46,7 @@ class CookieService
     public function updateQtyOfProductFromCart($productId, $qty)
     {
         $items = $this->getProducts('cart');
-        if (request()->cookie('cart')) {
+        if (Cache::get('cart')) {
             foreach ($items as $index => $product) {
                 if ($product['id'] == $productId) {
                     $items[$index]['qty'] = max($qty, 1);
@@ -54,8 +54,12 @@ class CookieService
                     break;
                 }
             }
-            $cookie = cookie('cart', serialize($items), 262656);
-            return response(trans('app_context.product_updated'))->cookie($cookie);
+            Cache::forget('cart');
+
+            Cache::remember('cart', 262656, function () use ($items) {
+                return $items;
+            });
+            return response(trans('app_context.product_updated'));
         }
     }
 
@@ -73,8 +77,8 @@ class CookieService
     public function getProducts(string $storageName)
     {
         $products = [];
-        if (request()->cookie($storageName)) {
-            foreach (unserialize(\request()->cookie($storageName)) as $product) {
+        if (Cache::get($storageName)) {
+            foreach (Cache::get($storageName) as $product) {
                 $products[] = $product;
             }
         }
@@ -84,8 +88,8 @@ class CookieService
 
     public function addInCookie($productId, string $storageName, $colorId = null)
     {
-        $itemsCart = request()->cookie($storageName);
-        $items = $itemsCart ? unserialize($itemsCart) : [];
+        $itemsCart = Cache::get($storageName);
+        $items = $itemsCart ?? [];
 
         $productDb = Product::where('id', $productId)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
         $product = [
@@ -101,36 +105,48 @@ class CookieService
 
         if (!$itemsCart) {
             $items[] = $product;
-            $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-            return response(trans('app_context.new_product_added'))->cookie($cookie);
+            Cache::forget($storageName);
+            Cache::remember($storageName, 262656, function () use ($items) {
+                return $items;
+            });
+            return response(trans('app_context.new_product_added'));
         } else {
-            foreach ($items as &$item) {
+            foreach ($items as $item) {
                 if ($item['id'] == $product['id'] && $item['color_value'] == $product['color_value']) {
                     $item['qty'] += 1;
                     $item['total_price'] = $item['price'] * $item['qty'];
-                    $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-                    return response(trans('app_context.product_qty_updated'))->cookie($cookie);
+                    return response(trans('app_context.product_already_exist_cart'));
                 }
             }
             $items[] = $product;
-            $cookie = cookie($storageName, serialize($items), 262656); // Name, Value, Minutes
-            return response(trans('app_context.new_product_added'))->cookie($cookie);
+//            dd( $items);
+            Cache::forget($storageName);
+
+            Cache::remember($storageName, 262656, function () use ($items) {
+                return $items;
+            });
         }
+
+        return response(trans('app_context.new_product_added'));
     }
 
 
     public function deleteProductFromCookie($productId, string $storageName)
     {
-        $itemsCart = request()->cookie($storageName);
+        $itemsCart = Cache::get($storageName);
 
-        $items = $itemsCart ? unserialize($itemsCart) : [];
+        $items = $itemsCart ?? [];
 
         if ($itemsCart) {
             foreach ($items as $index => $product) {
                 if ($product['id'] == $productId) {
                     unset($items[$index]);
-                    $cookie = cookie($storageName, serialize($items), 262656);
-                    return response(trans('app_context.product_was_deleted'))->cookie($cookie);
+                    Cache::forget($storageName);
+
+                    Cache::remember($storageName, 262656, function () use ($items) {
+                        return $items;
+                    });
+                    return response(trans('app_context.product_was_deleted'));
                 }
             }
         }
@@ -139,8 +155,8 @@ class CookieService
 
     public function forgetCookie($storageName)
     {
-        $cookie = Cookie::forget($storageName);
-        return response('success')->withCookie($cookie);
+        Cache::forget($storageName);
+        return response('success');
     }
 
 

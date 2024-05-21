@@ -47,19 +47,6 @@ class ProductsImport
 
     }
 
-    public function _columnIndexToNumber($columnIndex)
-    {
-        $numericColumnIndex = 0;
-        $base = ord('A') - 1;
-
-        for ($i = strlen($columnIndex) - 1, $j = 0; $i >= 0; $i--, $j++) {
-            $numericColumnIndex += (ord($columnIndex[$i]) - $base) * (26 ** $j);
-        }
-
-        return $numericColumnIndex - 1;
-    }
-
-
     public function processImages()
     {
         $spreadSheet = IOFactory::load(request()->file('file'));

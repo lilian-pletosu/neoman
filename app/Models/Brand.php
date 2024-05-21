@@ -26,4 +26,8 @@ class Brand extends Model implements TranslatableContract
         return $this->hasMany(Product::class, 'brand_id');
     }
 
+    public function promotions()
+    {
+        return $this->belongsToMany(Promotion::class, 'promotion_brand')->withPivot('brand_id', 'promotion_id');
+    }
 }

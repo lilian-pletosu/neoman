@@ -50,7 +50,7 @@ const deleteProductFromCart = (id) => {
                                 <img
                                     :src="product.image"
                                     :alt="product.name"
-                                    class="h-full w-full object-cover object-center">
+                                    class="w-24 h-24  object-contain mx-auto">
                             </div>
                             <div class="col-span-2 flex flex-col justify-between">
                                 <p class="font-medium text-xs md:text-base text-gray-900">{{ product.name }}</p>
@@ -65,15 +65,16 @@ const deleteProductFromCart = (id) => {
                                             class="text-sm sm:text-xl cursor-default">-</span>
                                             <input
                                                 class="w-12 h-8 border-none"
+                                                disabled
                                                 min="1"
                                                 style="text-align:center;"
-                                                @input.self="product.qty = $event.target.value"
+                                                @input="cartStore.updateQtyOfProduct(product.id,  $event.target.value)"
                                                 :value="product.qty"
                                                 type="number"
                                                 name=""
                                                 id="">
                                             <span
-                                                @click="cartStore.updateQtyOfProduct(product.id,  ++product.qty)"
+                                                @click.capture="cartStore.updateQtyOfProduct(product.id,  ++product.qty)"
                                                 class="text-sm sm:text-xl cursor-default">+</span>
                                         </div>
                                     </div>
@@ -81,7 +82,8 @@ const deleteProductFromCart = (id) => {
                             </div>
                             <div class="col-span-1 flex flex-col justify-between items-end">
                                 <p class=" ">
-                                    {{ product.price.toFixed(2) * product.qty }} {{ __('lei') }} </p>
+                                    {{ product.price.toFixed(2) * product.qty }} {{ __('lei') }}
+                                </p>
                                 <div>
                                     <button type="button"
                                             @click="deleteProductFromCart(product.id)"

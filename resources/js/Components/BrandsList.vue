@@ -1,4 +1,6 @@
 <script setup>
+import {onMounted, ref} from 'vue';
+import {useScroll} from '@vueuse/core'
 
 const props = defineProps({
     brands: {
@@ -7,50 +9,79 @@ const props = defineProps({
     }
 })
 
-const randomColorClass = () => {
-    const colorClasses = [
-        'bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400',
-        'bg-gradient-to-r from-blue-500 via-blue-400 to-indigo-400',
-        'bg-gradient-to-r from-green-500 via-green-400 to-teal-400',
-        'bg-gradient-to-r from-pink-500 via-pink-400 to-purple-400',
-        'bg-gradient-to-r from-red-500 via-red-400 to-pink-400',
-        'bg-gradient-to-r from-yellow-500 via-yellow-400 to-green-400',
-        'bg-gradient-to-r from-indigo-500 via-indigo-400 to-blue-400',
-        'bg-gradient-to-r from-purple-500 via-purple-400 to-pink-400',
-        'bg-gradient-to-r from-teal-500 via-teal-400 to-green-400',
-        'bg-gradient-to-r from-gray-500 via-gray-400 to-gray-400',
-        'bg-gradient-to-r from-blue-500 via-blue-400 to-blue-400',
-        'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-400',
-        // Adăugați aici mai multe clase de culori
-    ];
+const duplicatedBrands = ref([...props.brands, ...props.brands]);
 
-    const randomIndex = Math.floor(Math.random() * colorClasses.length);
-    return colorClasses[randomIndex];
-}
+onMounted(() => {
+    const trackElement = document.querySelector('.carousel-track');
+
+    trackElement.addEventListener('scroll', () => {
+        const {scrollLeft, scrollWidth, clientWidth} = trackElement;
+
+        if (scrollLeft + clientWidth >= scrollWidth) {
+            duplicatedBrands.value = [...duplicatedBrands.value, ...props.brands];
+        }
+    });
+});
+
+
+let intervalId;
+
+onMounted(() => {
+    intervalId = setInterval(() => {
+        x.value += 1;
+    }, 30); // 1000 ms = 1 secundă
+});
+
+const el = ref(null);
+const {x, y} = useScroll(el)
+//
+
+let isDragging = ref(false);
+let startX = ref(0);
+let scrollLeft = ref(0);
+
+const startDrag = (e) => {
+    isDragging.value = true;
+    startX.value = e.pageX - el.value.offsetLeft;
+    scrollLeft.value = el.value.scrollLeft;
+};
+
+const endDrag = () => {
+    isDragging.value = false;
+};
+
+const drag = (e) => {
+    if (!isDragging.value) return;
+    const x = e.pageX - el.value.offsetLeft;
+    const scroll = x - startX.value;
+    el.value.scrollLeft = scrollLeft.value - scroll;
+};
 </script>
 
 <template>
-
-    <div
-        class="w-full mt-2 p-3 dark:bg-gray-900 overflow-x-auto hide-scrollbar flex gap-5">
-        <img v-for="brand in brands"
-             :src="brand.image" :alt="brand.name"
-             class="bg-3  p-1 object-contain flex-none border rounded-xl w-24 h-16 md:w-32 md:h-24 "/>
+    <div ref="el" class="carousel-track gap-4 pt-2 w-full hide-scrollbar"
+         @mousedown="startDrag"
+         @mouseleave="endDrag"
+         @mouseup="endDrag"
+         @mousemove="drag"
+    >
+        <img
+            v-for="(brand, index) in duplicatedBrands"
+            :key="index"
+            :src="brand.image"
+            :alt="brand.name"
+            @click="alert('click')"
+            class="bg-3 p-3 object-contain flex-none border rounded-xl w-24 h-16 md:w-32 md:h-24 pointer-events-none"
+        />
     </div>
-
 </template>
 
 <style scoped>
+.carousel-track {
+    display: inline-flex;
+    animation: scroll 20s linear infinite;
+    overflow-x: auto;
+}
+
 
 </style>
-
-<!--<div class="static w-16 md:h-20">-->
-<!--<div-->
-<!--    class="bg-slate-100 dark:bg-white overflow-x-auto hide-scrollbar overflow-a absolute w-full left-0   whitespace-no-wrap ">-->
-<!--    <div class="flex space-x-16 px-4">-->
-<!--        <img v-for="brand in brands"-->
-<!--             :src="brand.image" :alt="brand.name"-->
-<!--             class="container-custom-rounded p-2 bg-1 bg-[#00000012]  object-cover w-16 md:w-20   mix-blend-multiply"/>-->
-<!--    </div>-->
-<!--</div>-->
-<!--</div>-->

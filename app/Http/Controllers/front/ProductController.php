@@ -34,11 +34,11 @@ class ProductController extends Controller
         $attributes = $attributesQuery->map(function ($attribute) {
             return [
                 'key' => $attribute->slug,
-                'name' => $attribute->translate()->name,
+                'name' => $attribute->translateOrDefault()->name,
                 'options' => $attribute->attributeValues->map(function ($item) {
                     return [
                         'id' => $item->id,
-                        'value' => $item->translate()->value
+                        'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value
                     ];
                 })->all()
             ];
@@ -84,7 +84,7 @@ class ProductController extends Controller
             $mu_unit = '';
         }
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
+        $product = Product::withDiscountDetails()->where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
 
 
         (new SessionService())->AddVisitedProductInSession($product);

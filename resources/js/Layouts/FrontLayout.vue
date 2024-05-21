@@ -77,7 +77,7 @@ onMounted(() => {
 
 <template>
     <template v-if="!isLoading">
-        <body class=" dark:bg-dark">
+        <body class=" dark:bg-dark overflow-x-hidden">
         <Head :title="title">
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,7 +94,7 @@ onMounted(() => {
                 <front-header @call="openModal"/>
             </div>
 
-            <div id="main-content" class=" flex-1  justify-between ">
+            <div id="main-content" class=" flex-1  justify-between">
                 <main class="">
                     <Toaster title="Success" :message="cartStore.message" :show="true"
                              :success="cartStore.success"/>

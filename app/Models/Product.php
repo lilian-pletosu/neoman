@@ -49,6 +49,29 @@ class Product extends Model implements TranslatableContract
         return $this->belongsToMany(AttributeValue::class, 'product_attributes')->withPivot('product_id')->with('attribute');
     }
 
+    public function scopeWithDiscountDetails($query)
+    {
+        return $query->addSelect([
+            'has_discount' => Brand::select('is_enabled')
+                ->whereIn('id', function ($query) {
+                    $query->select('brand_id')
+                        ->from('promotion_brand')
+                        ->whereColumn('brand_id', 'products.brand_id')
+                        ->where('is_enabled', 1);
+                }),
+            'promotion_price' => Brand::selectRaw('products.price - (products.price * promotions.discount / 100)')
+                ->join('promotion_brand', 'brands.id', '=', 'promotion_brand.brand_id')
+                ->join('promotions', 'promotions.id', '=', 'promotion_brand.promotion_id')
+                ->whereColumn('brands.id', 'products.brand_id')
+                ->where('promotions.status', 1),
+            'sale' => Brand::selectRaw('promotions.discount')
+                ->join('promotion_brand', 'brands.id', '=', 'promotion_brand.brand_id')
+                ->join('promotions', 'promotions.id', '=', 'promotion_brand.promotion_id')
+                ->whereColumn('brands.id', 'products.brand_id')
+                ->where('promotions.status', 1)
+        ]);
+    }
+
 
     public function scopeFiltered(Builder $query, $attributes)
     {
