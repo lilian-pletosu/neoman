@@ -226,6 +226,9 @@ return [
     'content_ru' => 'Conținut în rusă',
     'no_content' => 'Nu sunt conținuturi',
     'content' => 'Conținut',
+    'wait_call' => 'Așteptăm apelul dvs.',
+    'product_already_exist_cart' => 'Produsul deja există în coș',
+    'catalog' => 'Catalog',
 
 
     //statuses

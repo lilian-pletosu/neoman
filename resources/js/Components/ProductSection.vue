@@ -60,7 +60,7 @@ const props = defineProps({
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    //object-fit: cover;
 }
 </style>
 <template>
@@ -174,7 +174,7 @@ const props = defineProps({
                             <div>
                                 <div class="mt-2">
                                     <img :src="product.image" alt="Product Image"
-                                         class="transition  hover:scale-110   object-cover opacity-100 mix-blend-multiply ">
+                                         class="transition  hover:scale-110 aspect-square h-[200px] w-[200px] object-contain opacity-100 mix-blend-multiply ">
                                 </div>
                             </div>
                             <div class="relative mt-3 ">
@@ -205,17 +205,18 @@ const props = defineProps({
                                 <p class="font-mulish text-xl font-medium">{{ product.price }} {{ __('lei') }}</p>
                             </template>
                         </div>
-                        <Link :href="route('product_page', {slug: product.slug})"
-                              class="shadow rounded-lg transition p-4 sm:p-4 hover:scale-110 hover:bg-[#1FC8F3]
+                        <div
+                            @click="cartStore.addProductInCart(product.id, 'default')"
+                            class="shadow rounded-lg transition p-4 sm:p-4 hover:scale-110 hover:bg-[#1FC8F3]
                             cursor-pointer group/cart"
-                              :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
+                            :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                                  class="h-4 w-4  group-hover/cart:text-white"
                                  :class="cartStore.checkIfProductExistInCart(product.id) ? 'text-white' : 'text-black'">
                                 <path
                                     d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                             </svg>
-                        </Link>
+                        </div>
                     </div>
 
                 </div>

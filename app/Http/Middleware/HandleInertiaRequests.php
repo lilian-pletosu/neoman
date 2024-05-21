@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+//        dd(serialize(Cache::get('cart')));
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),

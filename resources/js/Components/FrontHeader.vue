@@ -193,7 +193,7 @@ onMounted(async () => {
                         <div class="flex justify-center items-center space-x-3 py-5">
                             <bars3-icon class="w-[25px] h-[25px] text-black md:text-white dark:text-white"/>
                             <p class="text-2 flex items-center text-base text-black md:text-white dark:text-white uppercase">
-                                Catalog</p>
+                                {{ __('catalog') }}</p>
                             <chevron-down-icon v-if="menu" class="w-5 animate-rotateUp text-blue-800"/>
                             <chevron-up-icon v-if="!menu" class="w-5 animate-rotateUp text-blue-800"/>
                         </div>

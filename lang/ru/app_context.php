@@ -226,7 +226,9 @@ return [
     'content_ru' => 'Содержание на русском',
     'no_content' => 'Нет контента',
     'content' => 'Содержание',
-
+    'wait_call' => 'Ожидайте звонка',
+    'product_already_exist_cart' => 'Продукт уже существует в корзине',
+    'catalog' => 'Каталог',
 
     //statuses
     'pending' => 'В ожидании',

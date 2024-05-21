@@ -3,6 +3,7 @@
 use App\Models\Product;
 use App\Services\CookieService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
@@ -46,17 +47,17 @@ Route::get('/cart/forget', function () {
 Route::get('/getCart', function () {
     $products = [];
 
-    if (request()->cookie('cart')) {
-        $products = unserialize(\request()->cookie('cart'));
+    if (Cache::get('cart')) {
+        $products = Cache::get('cart');
     }
     $totalPrice = 0;
-
     foreach ($products as $product) {
         if (isset($product['total_price'])) {
             $totalPrice += $product['total_price'];
         }
     }
-    $count = request()->cookie('cart') ? count(unserialize(request()->cookie('cart'))) : 0;
+
+    $count = Cache::get('cart') ? count(Cache::get('cart')) : 0;
     return response()->json(['count' => $count, 'products' => $products, 'total_price' => $totalPrice]);
 })->name('api.getCart');
 
