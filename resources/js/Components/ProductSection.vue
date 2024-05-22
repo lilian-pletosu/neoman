@@ -177,7 +177,7 @@ const props = defineProps({
                                          class="transition  hover:scale-110 aspect-square h-[200px] w-[200px] object-contain opacity-100 mix-blend-multiply ">
                                 </div>
                             </div>
-                            <div class="relative mt-3 ">
+                            <div class="relative mt-3" style="margin-bottom: 5vh">
                                 <p class="font-mulish font-bold text-shadow-lg text-xs md:text-lg text-black ">{{
                                         product.name.slice(0, 42) + '...'
                                     }}</p>
