@@ -148,6 +148,7 @@ class ProductsImport
                         }
                     }
 
+
                     $product->save();
 
                     $this->associateAttributes($product, $subSubcategory, $item);
@@ -185,42 +186,86 @@ class ProductsImport
         }
     }
 
+//    public function associateAttributes($product, $subSubcategory, $item)
+//    {
+//        // TODO:// Here need to fix probelem when update product and update or create attribute value
+//
+//
+////        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get()->toArray();
+////
+////        foreach ($attributes as $attribute) {
+////            if ($attribute['slug'] == 'cantitate') {
+////
+////                $attributeObj = Attribute::find($attribute['id']);
+////                if (array_key_exists($attribute['name'], $item)) {
+////                    $quantities = json_decode($item[$attribute['name']], true);
+////                    foreach ($quantities as $qty) {
+////                        $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
+////                        $valueAttribute->value = $qty;
+////                        $valueAttribute->save();
+////                        $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+////                    }
+////                }
+////
+////            }
+////            if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
+////                $attributeObj = Attribute::find($attribute['id']);
+////
+////                foreach (config('app.available_locales') as $locale) {
+////                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute['name'] . ' ' . 'ro']]);
+////                    $valueAttribute->translateOrNew($locale)->value = $item[$attribute['name'] . ' ' . $locale];
+////                    $valueAttribute->save();
+////                }
+////                // Attach the attribute value to the product
+////                $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+////            }
+////        }
+//    }
+
     public function associateAttributes($product, $subSubcategory, $item)
     {
-        // TODO:// Here need to fix probelem when update product and update or create attribute value
-
-
-        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get()->toArray();
+        // Obține toate atributele existente pentru subcategoria specificată
+        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get();
 
         foreach ($attributes as $attribute) {
-            if ($attribute['slug'] == 'cantitate') {
-
-                $attributeObj = Attribute::find($attribute['id']);
-                if (array_key_exists($attribute['name'], $item)) {
-                    $quantities = json_decode($item[$attribute['name']], true);
+            if ($attribute->slug == 'cantitate') {
+                // Obține obiectul atributului
+                $attributeObj = Attribute::find($attribute->id);
+                if (array_key_exists($attribute->name, $item)) {
+                    $quantities = json_decode($item[$attribute->name], true);
                     foreach ($quantities as $qty) {
+                        // Verifică dacă valoarea atributului există deja
                         $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
                         $valueAttribute->value = $qty;
                         $valueAttribute->save();
-                        $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+
+                        // Atașează valoarea atributului la produs, dacă nu este deja atașată
+                        if (!$product->attributes()->where('attribute_id', $attribute->id)->where('attribute_value_id', $valueAttribute->id)->exists()) {
+                            $product->attributes()->attach($attribute->id, ['attribute_value_id' => $valueAttribute->id]);
+                        }
                     }
                 }
-
-            }
-            if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
-                $attributeObj = Attribute::find($attribute['id']);
-
+            } else {
                 foreach (config('app.available_locales') as $locale) {
-                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute['name'] . ' ' . 'ro']]);
-                    $valueAttribute->translateOrNew($locale)->value = $item[$attribute['name'] . ' ' . $locale];
-                    $valueAttribute->save();
+                    if (isset($item[$attribute->name . ' ' . $locale])) {
+                        $attributeObj = Attribute::find($attribute->id);
+
+                        // Verifică dacă valoarea atributului există deja
+                        $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute->name . ' ' . 'ro']]);
+                        $valueAttribute->translateOrNew($locale)->value = $item[$attribute->name . ' ' . $locale];
+                        $valueAttribute->save();
+
+                        // Atașează valoarea atributului la produs, dacă nu este deja atașată
+                        if (!$product->attributes()->where('attribute_id', $attribute->id)->where('attribute_value_id', $valueAttribute->id)->exists()) {
+                            $product->attributes()->attach($attribute->id, ['attribute_value_id' => $valueAttribute->id]);
+                        }
+                    }
                 }
-                // Attach the attribute value to the product
-                $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
             }
         }
-
     }
+
+
 
 
 

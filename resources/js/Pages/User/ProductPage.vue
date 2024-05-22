@@ -225,9 +225,15 @@ function buyProduct(productId) {
                         <div class="my-1 space-x-2 py-6 flex items-end ">
                             <h1 v-if="!product.has_discount" class="dark:text-slate-300 text-3xl font-bold">
                                 {{ product.price.toFixed(2) }} </h1>
-                            <span v-else class="flex flex-row space-x-2">
-                                <h1 class="dark:text-slate-300 text-md font-bold line-through">
+                            <span v-else class="flex flex-col space-x-2">
+                                <span class="flex space-x-2">
+                                    <h1 class="dark:text-slate-300 text-slate-400 text-xl font-bold line-through">
                                 {{ product.price.toFixed(2) }} </h1>
+                                    <span
+                                        class="my-auto px-1  rounded bg-red-400 text-sm text-white font-semibold">-{{
+                                            product.sale
+                                        }}%</span>
+                                </span>
                                 <h1 class="dark:text-slate-300 text-3xl font-bold">
                                 {{ product?.promotion_price?.toFixed(2) }} </h1>
                             </span>
