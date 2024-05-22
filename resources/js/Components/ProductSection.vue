@@ -60,7 +60,6 @@ const props = defineProps({
     display: block;
     width: 100%;
     height: 100%;
-    //object-fit: cover;
 }
 </style>
 <template>
@@ -153,7 +152,7 @@ const props = defineProps({
                 <div
                     class="container-rounded flex items-center justify-center bg-white border border-slate-100 dark:bg-slate-100  w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px]  relative group/card">
                     <div
-                        class="absolute z-20 flex items-center rounded left-2 top-2 bg-gradient-to-r  from-pink-500 via-purple-500  to-indigo-500  w-auto px-2  h-auto shadow border-1 border-slate-600">
+                        class="absolute z-20 flex items-center  rounded-b-xl  -top-0.5 bg-gradient-to-r  from-pink-500 via-purple-500  to-indigo-500  w-auto px-10 py-0.5 p  h-auto shadow border-1 border-slate-600">
                         <span class=" text-xs text-white font-semibold">Credit 0%</span>
                     </div>
                     <div class="hover:cursor-pointer ">
@@ -172,9 +171,9 @@ const props = defineProps({
                         </div>
                         <Link :href="route('product_page', {slug: product.slug})">
                             <div>
-                                <div class="mt-2">
+                                <div class="mt-2 ">
                                     <img :src="product.image" alt="Product Image"
-                                         class="transition  hover:scale-110 aspect-square h-[200px] w-[200px] object-contain opacity-100 mix-blend-multiply ">
+                                         class="transition  hover:scale-110 aspect-square object-contain opacity-100 mix-blend-multiply ">
                                 </div>
                             </div>
                             <div class="relative mt-3" style="margin-bottom: 5vh">

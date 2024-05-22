@@ -199,9 +199,7 @@ onBeforeUnmount(() => {
                                 </Disclosure>
                             </form>
                         </div>
-
                     </template>
-
                 </ReusableSidebar>
 
                 <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
