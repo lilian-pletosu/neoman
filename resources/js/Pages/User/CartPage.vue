@@ -104,7 +104,7 @@ watch(cartStore, () => {
                                 </svg>
                             </div>
                             <div class="col-span-2 sm:col-span-1    mx-auto ">
-                                <img class="w-24 " :src="product.image" alt="">
+                                <img class="w-24 h-24  object-contain mx-auto" :src="product.image" alt="">
                             </div>
                             <div class=" col-span-2 sm:col-span-3 mx-auto sm:mx-0 my-auto"><p>{{ product.name }}</p>
                             </div>
@@ -201,9 +201,9 @@ watch(cartStore, () => {
                                 <hr class="mt-2">
 
                                 <div class="grid grid-cols-2 font-bold">
-                                    <p class="justify-self-start">Subtotal:</p>
+                                    <p class="justify-self-start">{{ __('subtotal') }}:</p>
                                     <p class="justify-self-end">
-                                        {{ cartStore.totalPrice }} {{ __('lei') }}</p>
+                                        {{ cartStore.totalPrice.toFixed(2) }} {{ __('lei') }}</p>
                                 </div>
                                 <div class="grid grid-cols-2 font-bold">
                                     <p class="justify-self-start">{{ __('shipping') }}:</p>

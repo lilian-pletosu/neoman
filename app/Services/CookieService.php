@@ -21,21 +21,28 @@ class CookieService
 
     public function wishlistToCart(): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory
     {
-        $itemsCart = request()->cookie('cart');
-        $itemsWishlist = request()->cookie('wishlist');
+        $itemsCart = Cache::get('cart');
+        $itemsWishlist = Cache::get('wishlist');
 
-        $itemsCart = $itemsCart ? unserialize($itemsCart) : [];
-        $itemsWishlist = $itemsWishlist ? unserialize($itemsWishlist) : [];
+        $itemsCart = $itemsCart ?? [];
+        $itemsWishlist = $itemsWishlist ?? [];
 
         if ($itemsWishlist) {
             foreach ($itemsWishlist as $product) {
                 $itemsCart[] = $product;
             }
-            $cookie = cookie('cart', serialize($itemsCart), 262656);
+            Cache::forget('cart');
+            Cache::remember('cart', 262656, function () use ($itemsCart) {
+                return $itemsCart;
+            });
         } else {
-            $cookie = cookie('cart', serialize($itemsCart), 262656);
+            Cache::forget('cart');
+            Cache::remember('cart', 262656, function () use ($itemsCart) {
+                return $itemsCart;
+            });
         }
-        return response('success')->cookie($cookie);
+        Cache::forget('wishlist');
+        return response('success');
     }
 
     public function removeProductFromCart($productId)
@@ -50,7 +57,8 @@ class CookieService
             foreach ($items as $index => $product) {
                 if ($product['id'] == $productId) {
                     $items[$index]['qty'] = max($qty, 1);
-                    $items[$index]['total_price'] = $product['price'] * max($qty, 1);;
+                    $items[$index]['total_price'] = $product['has_discount'] ? round($product['promotion_price'] * max($qty, 1), 2) : $product['price'] * max($qty, 1);
+
                     break;
                 }
             }
@@ -91,14 +99,17 @@ class CookieService
         $itemsCart = Cache::get($storageName);
         $items = $itemsCart ?? [];
 
-        $productDb = Product::where('id', $productId)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
+        $productDb = Product::withDiscountDetails()->where('id', $productId)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
         $product = [
             'id' => $productDb->id,
             'name' => $productDb->name,
             'brand' => $productDb->brand->name,
             'image' => $productDb->images[0]->image1,
             'price' => $productDb->price,
-            'total_price' => $productDb->price,
+            'promotion_price' => $productDb->promotion_price,
+            'has_discount' => $productDb->has_discount,
+            'sale' => $productDb->sale,
+            'total_price' => $productDb->has_discount ? $productDb->promotion_price : $productDb->price,
             'qty' => 1,
             'color_value' => $colorId ?? null
         ];
@@ -114,7 +125,7 @@ class CookieService
             foreach ($items as $item) {
                 if ($item['id'] == $product['id'] && $item['color_value'] == $product['color_value']) {
                     $item['qty'] += 1;
-                    $item['total_price'] = $item['price'] * $item['qty'];
+                    $item['total_price'] = $item['has_discount'] ? $item['promotion_price'] * $item['qty'] : $item['price'] * $item['qty'];
                     return response(trans('app_context.product_already_exist_cart'));
                 }
             }

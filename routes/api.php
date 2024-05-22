@@ -52,6 +52,7 @@ Route::get('/getCart', function () {
     }
     $totalPrice = 0;
     foreach ($products as $product) {
+
         if (isset($product['total_price'])) {
             $totalPrice += $product['total_price'];
         }
@@ -72,13 +73,13 @@ Route::delete('/wishlistCount{productCode}', function ($productCode) {
 Route::get('/wishlistCount', function () {
     $products = [];
 
-    if (request()->cookie('wishlist')) {
-        foreach (unserialize(\request()->cookie('wishlist')) as $id) {
+    if (Cache::get('wishlist')) {
+        foreach (Cache::get('wishlist') as $id) {
             $product = Product::where('id', $id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
             $products[] = $product;
         }
     }
-    $count = request()->cookie('wishlist') ? count(unserialize(request()->cookie('wishlist'))) : 0;
+    $count = Cache::get('wishlist') ? count(Cache::get('wishlist')) : 0;
     return response()->json(['count' => $count, 'products' => $products]);
 })->name('api.wishlistCount');
 
