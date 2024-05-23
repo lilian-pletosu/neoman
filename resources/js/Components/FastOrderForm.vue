@@ -16,7 +16,7 @@ const emits = defineEmits(['submitSuccess'])
 const form = useForm({
     phone: '',
     products: props.product,
-    total_price: props.product.price,
+    total_price: props.product.has_discount ? props.product.promotion_price : props.product.price,
     type: 'fast_order'
 });
 

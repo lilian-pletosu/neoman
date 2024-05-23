@@ -18,7 +18,7 @@ class ProductController extends Controller
     public function index($subSubcategorySlug)
     {
         $subSubcategory = SubSubCategory::where('slug', $subSubcategorySlug)->first();
-        $brandQuery = Brand::all();
+        $brandQuery = Brand::brandsOfSubsubCategory($subSubcategory->id)->get();
         $attributesQuery = Attribute::where('sub_sub_category_id', $subSubcategory->id)->with('attributeValues')->get();
 
         $brands[] = [
@@ -27,7 +27,9 @@ class ProductController extends Controller
             'options' => $brandQuery->map(function ($brand) {
                 return [
                     'id' => $brand->id,
-                    'value' => $brand->name];
+                    'value' => $brand->name,
+                    'count' => $brand->products_count,
+                ];
             })->toArray(),
         ];
 
@@ -44,7 +46,7 @@ class ProductController extends Controller
             ];
         })->all();
 
-        $products = Product::where('sub_sub_category_id', $subSubcategory->id)
+        $products = Product::withDiscountDetails()->where('sub_sub_category_id', $subSubcategory->id)
             ->with('brand', 'images');
 
         $attributesForFilter = [];
@@ -53,7 +55,7 @@ class ProductController extends Controller
         }
 
 
-        $products = $products->filtered($attributesForFilter)->paginate(9)->withQueryString();
+        $products = $products->filtered($attributesForFilter)->paginate(12)->withQueryString();
 
         return inertia('User/ProductsPage', [
             'products' => $products,

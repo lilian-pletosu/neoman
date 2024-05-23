@@ -41,16 +41,16 @@ const transferProductsToCart = () => {
     <ReusableSidebar :title="__('wishlist')" :open="isOpen" @close="$emit('close')">
         <template v-slot:content>
             <div class=" flex flex-col justify-between" style="height: 93vh">
-                <div class="overflow-y-auto">
-                    <div class="border-t p-2" v-if="wishlistStore.products.length !== 0">
-                        <ul role="list" class="-my-6 divide-y divide-gray-200">
-                            <li v-for="product in cartStore.products" class="grid grid-cols-4 gap-2 my-3 py-3"
+                <div class="overflow-y-auto border-t">
+                    <div class=" p-2" v-if="wishlistStore.products.length !== 0">
+                        <ul role="list" class="divide-y divide-gray-200">
+                            <li v-for="product in wishlistStore.products" class="grid grid-cols-4 gap-2  py-3"
                                 :key="product.id"
                                 :id="product.name">
                                 <div
                                     class="col-span-1 p-0.5 overflow-hidden rounded-md border border-gray-200">
                                     <img
-                                        :src="product.image"
+                                        :src="product.images[0].image1"
                                         :alt="product.name"
                                         class="w-24 h-24  object-contain mx-auto">
                                 </div>
@@ -58,12 +58,9 @@ const transferProductsToCart = () => {
                                     <p class="font-medium text-xs md:text-base text-gray-900">{{ product.name }}</p>
                                 </div>
                                 <div class="col-span-1 flex flex-col justify-between items-end">
-                                    <p class=" ">
-                                        {{ product.price.toFixed(2) * product.qty }} {{ __('lei') }}
-                                    </p>
                                     <div>
                                         <button type="button"
-                                                @click="deleteProductFromCart(product.id)"
+                                                @click="wishlistStore.removeProductFromWishlist(product.id)"
                                                 class="font-medium text-indigo-600 hover:text-indigo-500">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  width="1.5em" height="1.5em"
@@ -78,6 +75,7 @@ const transferProductsToCart = () => {
                                         </button>
                                     </div>
                                 </div>
+                                
                             </li>
                         </ul>
                     </div>
@@ -90,10 +88,10 @@ const transferProductsToCart = () => {
                 </div>
 
                 <div v-if="wishlistStore.products.length !== 0"
-                     class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                     class="border-t border-gray-200 px-4  sm:px-6">
                     <div class="mt-6">
                         <p @click="transferProductsToCart"
-                           class="flex items-center cursor-pointer  mx-auto
+                           class="flex items-center cursor-pointer justify-center rounded-lg
                                         bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700">
                             {{ __('add_all_products_in_cart') }}
                         </p>

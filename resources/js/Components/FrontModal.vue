@@ -189,11 +189,7 @@ onUnmounted(() => {
                         <span class="flex text-center mb-4 font-mulish font-medium">{{
                                 __('for_fast_order_complete_phone_number')
                             }}</span>
-
-
-                        <FastOrderForm :product="product" @submitSuccess="showSuccessMessage"/>
-
-
+                        <FastOrderForm :product="product" @submitSuccess="showSuccessMessage()"/>
                     </template>
                     <template v-if="type === 'buy_in_credit'">
                         <div v-if="!success" class="flex flex-col gap-2">
@@ -224,17 +220,17 @@ onUnmounted(() => {
                                 <p @click="selectedTab = 'credit'"
                                    class="w-full flex justify-center p-1 rounded-xl z-20 duration-500 "
                                    :class="{'text-white': selectedTab === 'credit'}">
-                                    Credit</p>
+                                    {{ __('credit') }}</p>
                                 <p @click="selectedTab = 'installments'"
                                    class="w-full flex justify-center p-1 rounded-xl z-20 duration-500"
-                                   :class="{'text-white': selectedTab === 'installments'}">Rate</p>
+                                   :class="{'text-white': selectedTab === 'installments'}">{{ __('installments') }}</p>
                             </div>
                             <CreditContent :details="showTabContent()" :product="product"
                                            @selected-offer="offerId => selectedOffer = offerId"/>
                             <span class="text-sm dark:text-slate-300">*{{ __('is_preventive_offer') }}.</span>
                             <hr class="my-3">
 
-                            <ReusableOrderForm :selected-offer="selectedOffer" @submit-success="showSuccessMessage"
+                            <ReusableOrderForm :selected-offer="selectedOffer" @submit-success="showSuccessMessage()"
                                                :product="product"
                                                :selected-type="selectedTab"/>
                         </div>
