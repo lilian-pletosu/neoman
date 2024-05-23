@@ -12,6 +12,7 @@ use App\Services\BannerService;
 use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
@@ -61,22 +62,36 @@ class HandleInertiaRequests extends Middleware
                 return __('app_context');
             },
             'availableLanguages' => config('availableLanguages'),
-            'categories' => Category::orderBy('name')->get(),
-            'menu' => Category::orderBy('name')->active()->with('subcategory', function ($item) {
-                $item->active();
-                $item->with('subSubcategory', function ($item) {
-                    $item->active()->get();
-                });
-                $item->orderBy('name');
-            })->get(),
-            'subcategories' => SubCategory::orderBy('name')->get(),
-            'sub_subcategories' => SubSubCategory::orderBy('name')->get(),
-            'brands' => Brand::where('is_enabled', 1)->get(),
+            'categories' => Cache::has('categories') ? Cache::get('categories') : Cache::remember('categories', 10000, function () {
+                return Category::orderBy('name')->active()->get();
+            }),
+            'menu' => Cache::has('menu') ? Cache::get('menu') : Cache::remember('menu', 10000, function () {
+                return Category::orderBy('name')->active()->with('subcategory', function ($item) {
+                    $item->active();
+                    $item->with('subSubcategory', function ($item) {
+                        $item->active()->get();
+                    });
+                    $item->orderBy('name');
+                })->get();
+            }),
+            'subcategories' => Cache::has('subcategories') ? Cache::get('subcategories') : Cache::remember('subcategories', 10000, function () {
+                return SubCategory::orderBy('name')->get();
+            }),
+            'sub_subcategories' => Cache::has('sub_subcategories') ? Cache::get('sub_subcategories') : Cache::remember('sub_subcategories', 10000, function () {
+                return SubSubCategory::orderBy('name')->get();
+            }),
+            'brands' => Cache::has('brands') ? Cache::get('brands') : Cache::remember('brands', 10000, function () {
+                return Brand::orderBy('name')->get();
+            }),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct(request()) ?? [],
             'all_products' => [],
-            'home_banners' => (new BannerService())->getHomeBanners(),
-            'orders' => (new OrderService())->getOrders()
+            'home_banners' => Cache::has('home_banners') ? Cache::get('home_banners') : Cache::remember('home_banners', 10000, function () {
+                return (new BannerService())->getHomeBanners();
+            }),
+            'orders' => Cache::has('orders') ? Cache::get('orders') : Cache::remember('orders', 10000, function () {
+                return (new OrderService())->getOrders();
+            }),
         ]);
     }
 }
