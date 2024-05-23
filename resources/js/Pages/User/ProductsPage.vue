@@ -202,7 +202,7 @@ onBeforeUnmount(() => {
                     </template>
                 </ReusableSidebar>
 
-                <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <main class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
                     <div class="flex items-center justify-between border-b border-gray-200 pb-2 pt-4">
                         <h1 class="font-mulish font-bold text-lg md:text-xl lg:text-2xl  ">
                             {{ subSubcategory.name }}</h1>
@@ -211,7 +211,8 @@ onBeforeUnmount(() => {
                                 <div>
                                     <MenuButton
                                         class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                                        {{ __('sort') }}
+                                        <span class="hidden sm:flex">{{ __('sort') }}</span>
+                                        <span class="flex sm:hidden">{{ __('sort') }}</span>
                                         <ChevronDownIcon
                                             class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                             aria-hidden="true"/>
@@ -251,9 +252,9 @@ onBeforeUnmount(() => {
                     </div>
 
                     <section aria-labelledby="products-heading" class="pb-24 pt-6">
-                        <h2 id="products-heading" class="sr-only">Products</h2>
+                        <h2 id="products-heading" class="sr-only">{{ __('products') }}</h2>
 
-                        <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+                        <div class="grid grid-cols-1 gap-x-8 gap-y-10  lg:grid-cols-6">
                             <!-- Filters -->
                             <form class="hidden lg:block">
 
@@ -261,8 +262,10 @@ onBeforeUnmount(() => {
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                            <span class="font-medium text-gray-900">{{ __('price') }}</span>
+                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500">
+                                            <span class="text-xs 2xl:text-sm 4xl:text-base text-gray-900">{{
+                                                    __('price')
+                                                }}</span>
                                             <span class="ml-6 flex items-center">
                                   <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
                                   <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
@@ -290,8 +293,10 @@ onBeforeUnmount(() => {
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                            <span class="font-medium text-gray-900">{{ brand.name }}</span>
+                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500">
+                                            <span class="text-xs 2xl:text-sm 4xl:text-base text-gray-900">{{
+                                                    brand.name
+                                                }}</span>
                                             <span class="ml-6 flex items-center">
                                   <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
                                   <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
@@ -309,7 +314,7 @@ onBeforeUnmount(() => {
                                                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
                                                 <label :for="option.value"
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
-                                                        option.value
+                                                        `${option.value} (${option.count})`
                                                     }}</label>
                                             </div>
                                         </div>
@@ -319,8 +324,10 @@ onBeforeUnmount(() => {
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                            <span class="font-medium text-gray-900">{{ attribute.name }}</span>
+                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500">
+                                            <span class="text-xs 2xl:text-sm 4xl:text-base text-gray-900">{{
+                                                    attribute.name
+                                                }}</span>
                                             <span class="ml-6 flex items-center">
                                   <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
                                   <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
@@ -348,12 +355,23 @@ onBeforeUnmount(() => {
                             </form>
 
                             <!-- Product grid -->
-                            <div v-if="products.data.length > 0" class="lg:col-span-3">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-4">
-                                    <div v-for="product in products.data" class="">
+                            <div v-if="products.data.length > 0" class="md:grid-cols-3 lg:col-span-5 ">
+                                <div
+                                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:col-span-4 2xl:grid-cols-3 4xl:grid-cols-4  gap-4">
+                                    <div v-for="product in products.data">
                                         <div
                                             class="container-rounded bg-3 relative group/card">
-                                            <div class="hover:cursor-pointer">
+                                            <div
+                                                class="absolute w-full -top-0 left-0 ">
+                                                <div class=" flex justify-center">
+                                                    <div
+                                                        class=" flex items-center  rounded-b-xl  bg-gradient-to-r  from-pink-500 via-purple-500  to-indigo-500   px-10 py-0.5 p  h-auto shadow border-1 border-slate-600">
+                                                        <span
+                                                            class=" text-xs text-white font-semibold">{{ __('credit') }} 0%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="hover:cursor-pointer pb-2">
                                                 <div>
                                                     <div class="static">
                                                         <div class="w-12 absolute left-2 top-2 z-80">
@@ -372,7 +390,7 @@ onBeforeUnmount(() => {
                                                     <div>
                                                         <div class="mt-2">
                                                             <img :src="product.images[0].image1" alt="Product Image"
-                                                                 class="transition  hover:scale-110   object-cover opacity-100 mix-blend-multiply ">
+                                                                 class="transition  hover:scale-110   w-56 h-56 mx-auto aspect-square object-contain opacity-100 mix-blend-multiply ">
                                                         </div>
                                                     </div>
                                                     <div class="relative my-8 md:my-6">
@@ -388,8 +406,26 @@ onBeforeUnmount(() => {
                                                 class="absolute bottom-2 left-2 right-2 flex justify-between items-center">
                                                 <div class="flex flex-col items-start">
 
-                                                    <p class="font-mulish text-xl font-semibold">{{ product.price }}
-                                                        {{ __('lei') }}</p>
+                                                    <template v-if="product.has_discount">
+                                                        <div class="flex flex-row space-x-1">
+                                                            <p class="font-mulish text-sm line-through font-medium">
+                                                                {{ product.price }}
+                                                                {{ __('lei') }}</p>
+                                                            <span
+                                                                class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{{
+                                                                    product.sale
+                                                                }}</span>
+
+                                                        </div>
+                                                    </template>
+                                                    <template v-if="product.promotion_price">
+                                                        <p class="font-mulish text-xl font-medium">
+                                                            {{ product.promotion_price }} {{ __('lei') }}</p>
+                                                    </template>
+                                                    <template v-else>
+                                                        <p class="font-mulish text-xl font-medium">{{ product.price }}
+                                                            {{ __('lei') }}</p>
+                                                    </template>
                                                 </div>
                                                 <div @click="cartStore.addProductInCart(product.id, 'default')"
                                                      class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-[#1FC8F3]  cursor-pointer group/cart"
