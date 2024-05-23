@@ -19,6 +19,7 @@ Route::prefix('front')->group(function () {
     Route::resource('/contacts', \App\Http\Controllers\front\ContactController::class);
     Route::get('terms', [\App\Http\Controllers\front\TermsController::class, 'index'])->name('terms_page');
     Route::get('privacy', [\App\Http\Controllers\front\PrivacyController::class, 'index'])->name('privacy_page');
+    Route::get('search/{search?}', [\App\Http\Controllers\front\SearchController::class, 'index'])->name('search_page');
 
 
     Route::post('post_order', [\App\Http\Controllers\front\CartController::class, 'checkout'])->name('set_order');

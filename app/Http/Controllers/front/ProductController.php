@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\SubSubCategory;
 use App\Services\ProductService;
 use App\Services\SessionService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -113,7 +114,9 @@ class ProductController extends Controller
 
         $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
 
-        $product['credits'] = Credit::get()->groupBy('type');
+        $product['credits'] = Cache::has('credits') ? Cache::get('credits') : Cache::remember('credits', 20000, function () {
+            return Credit::get()->groupBy('type');
+        });
 
         return inertia('User/ProductPage', ['product' => $product, 'latest_products' => $latest_products]);
     }

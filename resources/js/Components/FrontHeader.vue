@@ -12,7 +12,7 @@ import {
     MagnifyingGlassIcon,
     ShoppingCartIcon
 } from "@heroicons/vue/24/outline/index.js";
-import {Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import Cart from "@/Components/Cart.vue";
@@ -48,7 +48,6 @@ const searchString = ref("");
 watchDebounced(
     searchString,
     () => {
-        console.log(searchString)
         loadSearch.value = true;
         axios.get(route('api.search_product', {query: searchString.value})).then((response) => {
             searchedProducts.value = response.data;
@@ -66,7 +65,6 @@ watchDebounced(
 onClickOutside(searchElement, () => {
     openSearch.value = false;
     loadSearch.value = false;
-
 })
 
 
@@ -178,9 +176,10 @@ onMounted(async () => {
                     class="absolute top-2/4 right-3 grid h-5 w-5 -translate-y-2/4 place-items-center text-blue-gray-500">
                     <magnifying-glass-icon class="w-6 dark:text-white"/>
                 </div>
-                <input
-                    class=" h-full w-full rounded-md dark:border-slate-500 dark:bg-dark dark:text-white  px-3 py-2.5 !pr-9 font-mulish text-sm font-normal  focus:border-none focus:outline-none"
-                    placeholder="Caută un produs..."
+                <input @keydown.enter="router.get(route('search_page', {search: searchString}))"
+                       v-model="searchString"
+                       class=" h-full w-full rounded-md dark:border-slate-500 dark:bg-dark dark:text-white  px-3 py-2.5 !pr-9 font-mulish text-sm font-normal  focus:border-none focus:outline-none"
+                       :placeholder="__('search_product') + '...'"
                 />
             </div>
 
@@ -204,13 +203,15 @@ onMounted(async () => {
                 <div class="relative h-10  w-full " ref="searchElement">
                     <div
                         class="absolute top-2/4 right-3 grid h-5 w-5 -translate-y-2/4 place-items-center text-blue-gray-500">
-                        <magnifying-glass-icon v-if="!loadSearch" class="w-6 dark:text-white"/>
+                        <magnifying-glass-icon @click="router.get(route('search_page', {search: searchString}))"
+                                               v-if="!loadSearch" class="w-6 dark:text-white"/>
                         <arrow-path-icon v-if="loadSearch" class="w-6 dark:text-white"/>
                     </div>
                     <input
                         @focus="openSearch = true"
                         @change="openSearch = true"
                         v-model="searchString"
+                        @keydown.enter="router.get(route('search_page', {search: searchString}))"
                         class=" h-full w-full rounded-md dark:border-slate-500 dark:bg-dark dark:text-white  px-3 py-2.5 !pr-9 font-mulish text-sm font-normal  focus:border-none focus:outline-none"
                         :placeholder="__('search_product') + '...'"
                     />

@@ -229,6 +229,7 @@ return [
     'wait_call' => 'Ожидайте звонка',
     'product_already_exist_cart' => 'Продукт уже существует в корзине',
     'catalog' => 'Каталог',
+    'search_for' => 'Поиск по',
 
     //statuses
     'pending' => 'В ожидании',

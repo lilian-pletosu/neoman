@@ -103,10 +103,6 @@ Route::get('forget_wishlist', function () {
 })->name('api.forget_wishlist');
 
 //-------------------------------------------------------------------------------
-//Route::get('/searchProducts/{search}', function ($search) {
-//    $products = (new \App\Services\ProductService())->searchProducts($search);
-//    return response()->json($products);
-//})->name('api.searchProducts');
 
 
 Route::get('acceptCookies', function () {

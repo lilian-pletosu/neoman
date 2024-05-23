@@ -229,6 +229,7 @@ return [
     'wait_call' => 'Așteptăm apelul dvs.',
     'product_already_exist_cart' => 'Produsul deja există în coș',
     'catalog' => 'Catalog',
+    'search_for' => 'Căutare după',
 
 
     //statuses
