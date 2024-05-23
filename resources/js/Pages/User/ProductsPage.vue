@@ -1,7 +1,7 @@
 <script setup>
 import {onBeforeUnmount, onMounted, reactive, ref, useAttrs, watch} from 'vue'
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems,} from '@headlessui/vue'
-import {ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon} from '@heroicons/vue/20/solid'
+import {ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, PresentationChartBarIcon} from '@heroicons/vue/20/solid'
 import FrontLayout from "@/Layouts/FrontLayout.vue";
 import {useWishlistStore} from "@/stores/wishlistStore.js";
 import {useCartStore} from "@/stores/cartStore.js";
@@ -210,9 +210,11 @@ onBeforeUnmount(() => {
                             <Menu as="div" class="relative inline-block text-left">
                                 <div>
                                     <MenuButton
-                                        class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                        class="group inline-flex justify-center text-sm font-medium text-gray-400 hover:text-gray-500">
                                         <span class="hidden sm:flex">{{ __('sort') }}</span>
-                                        <span class="flex sm:hidden">{{ __('sort') }}</span>
+                                        <span class="flex sm:hidden"><PresentationChartBarIcon
+                                            class="h-5 w-5"
+                                            aria-hidden="true"/></span>
                                         <ChevronDownIcon
                                             class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                             aria-hidden="true"/>

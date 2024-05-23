@@ -113,4 +113,29 @@ class Product extends Model implements TranslatableContract
 
 
     }
+
+    public function scopeSort(Builder $query)
+    {
+        return $query->when(request('sorts'), function (Builder $q) {
+            if (request('sorts') == 'new') {
+                $q->orderBy('created_at', 'desc');
+            }
+            if (request('sorts') == 'asc') {
+                $q->orderBy('price');
+            }
+            if (request('sorts') == 'desc') {
+                $q->orderBy('price', 'desc');
+            }
+        });
+    }
+
+    public function scopeSearch($query, $word)
+    {
+        return $query->where('slug', 'like', '%' . $word . '%')
+            ->orWhereHas('translations', function ($q) use ($word) {
+                $q->where('name', 'like', '%' . $word . '%');
+                $q->orWhere('description', 'like', '%' . $word . '%');
+            })
+            ->limit(10)->get();
+    }
 }
