@@ -129,7 +129,7 @@ class ProductsImport
                     $mu = (new MeasurementUnitService())->associateToProduct($item);
 
                     $productData = [
-                        'price' => $item['price'],
+                        'price' => floatval(str_replace(',', '', $item['price'])),
                         'slug' => Str::slug($item['name ro'], '_'),
                         'product_code' => (new GenerateProductCode)((new Product())),
                         'specifications_id' => null,

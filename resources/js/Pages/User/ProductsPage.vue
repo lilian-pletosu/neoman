@@ -202,8 +202,9 @@ onBeforeUnmount(() => {
                     </template>
                 </ReusableSidebar>
 
-                <main class="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
-                    <div class="flex items-center justify-between border-b border-gray-200 pb-2 pt-4">
+                <main class="mx-auto max-w-full px-4 sm:px-6 lg:px-8 bg-white dark:bg-dark">
+                    <div
+                        class="flex items-center justify-between border-b border-gray-200 pb-2 pt-4 text-dark dark:text-white">
                         <h1 class="font-mulish font-bold text-lg md:text-xl lg:text-2xl  ">
                             {{ subSubcategory.name }}</h1>
                         <div class="flex items-center">
@@ -258,14 +259,15 @@ onBeforeUnmount(() => {
 
                         <div class="grid grid-cols-1 gap-x-8 gap-y-10  lg:grid-cols-6">
                             <!-- Filters -->
-                            <form class="hidden lg:block">
+                            <form class="hidden lg:block ">
 
                                 <Disclosure as="div"
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500">
-                                            <span class="text-xs 2xl:text-sm 4xl:text-base text-gray-900">{{
+                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500 dark:bg-dark ">
+                                            <span
+                                                class="text-xs 2xl:text-sm 4xl:text-base text-gray-900 dark:text-slate-200">{{
                                                     __('price')
                                                 }}</span>
                                             <span class="ml-6 flex items-center">
@@ -274,7 +276,7 @@ onBeforeUnmount(() => {
                                     </span>
                                         </DisclosureButton>
                                     </h3>
-                                    <DisclosurePanel :unmount="true" class="pt-6">
+                                    <DisclosurePanel :unmount="true" class="pt-6 ">
 
                                         <div class=" ">
                                             <div class="flex justify-around space-x-2 ">
@@ -295,8 +297,9 @@ onBeforeUnmount(() => {
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500">
-                                            <span class="text-xs 2xl:text-sm 4xl:text-base text-gray-900">{{
+                                            class="flex w-full items-center justify-between dark:bg-dark  py-3  text-gray-400 hover:text-gray-500">
+                                            <span
+                                                class="text-xs 2xl:text-sm 4xl:text-base text-gray-900 dark:text-slate-200">{{
                                                     brand.name
                                                 }}</span>
                                             <span class="ml-6 flex items-center">
@@ -326,8 +329,9 @@ onBeforeUnmount(() => {
                                             class="border-b border-gray-200 py-6" v-slot="{ open }">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
-                                            class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500">
-                                            <span class="text-xs 2xl:text-sm 4xl:text-base text-gray-900">{{
+                                            class="flex w-full items-center justify-between dark:bg-dark py-3  text-gray-400 hover:text-gray-500">
+                                            <span
+                                                class="text-xs 2xl:text-sm 4xl:text-base text-gray-900 dark:text-slate-200">{{
                                                     attribute.name
                                                 }}</span>
                                             <span class="ml-6 flex items-center">

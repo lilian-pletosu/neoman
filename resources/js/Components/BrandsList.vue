@@ -59,7 +59,7 @@ const drag = (e) => {
 </script>
 
 <template>
-    <div ref="el" class="carousel-track gap-4 pt-2 w-full hide-scrollbar"
+    <div ref="el" class="carousel-track gap-3 pt-3 w-full hide-scrollbar"
          @mousedown="startDrag"
          @mouseleave="endDrag"
          @mouseup="endDrag"
