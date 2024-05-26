@@ -3,10 +3,13 @@
     <div>
         <nav-bar @sidebar="toggleSidebar"/>
 
-        <div class="grid grid-cols-12 bg-white ">
-            <Sidebar class="col-span-2" :hidden=sidebarHidden :current-route=currentRoute></Sidebar>
-            <div id="main-content "
-                 class="col-span-10 flex flex-col justify-between h-screen w-full bg-gray-50 relative ">
+        <div class="grid grid-cols-12 bg-gray-50 ">
+            <Sidebar
+                class="mt-5 lg:mt-12 lg:col-span-3 xl:col-span-2  rounded-t-lg shadow border absolute lg:relative z-10 "
+                :hidden=sidebarHidden
+                :current-route=currentRoute></Sidebar>
+            <div id="main-content"
+                 class="col-span-12 lg:col-span-9 xl:col-span-10  justify-between h-screen w-full  relative ">
                 <main>
                     <div class=" px-4 pt-[88px]">
                         <slot/>
