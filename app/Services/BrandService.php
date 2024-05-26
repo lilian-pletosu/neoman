@@ -99,7 +99,6 @@ class BrandService
         if ($data['image'] === null) {
             $data['image'] = $brand->image;
         } else {
-            $removeBgService = new RemoveBGService();
 
             if (is_array($data['image'])) {
                 $fileName = $data['image']['_value']->hashName();
@@ -109,7 +108,7 @@ class BrandService
                 Storage::disk('brands')->put($fileName, $imageContents);
 
                 // Apelarea serviciului RemoveBGService
-                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
+//                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
 
 
                 $data['image'] = '/storage/brands/' . $imageContents;
@@ -121,7 +120,7 @@ class BrandService
                 Storage::disk('brands')->put($fileName, $imageContents);
 
                 // Apelarea serviciului RemoveBGService
-                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
+//                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
 
 
                 $data['image'] = '/storage/brands/' . $imageContents;

@@ -230,7 +230,8 @@ return [
     'product_already_exist_cart' => 'Produsul deja există în coș',
     'catalog' => 'Catalog',
     'search_for' => 'Căutare după',
-
+    'fast_order' => 'Comandă rapidă',
+    'simple' => 'Comandă simplă',
 
     //statuses
     'pending' => 'Procesare',

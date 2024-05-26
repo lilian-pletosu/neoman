@@ -8,6 +8,7 @@ use App\Services\BrandService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class BrandController extends Controller
@@ -70,7 +71,10 @@ class BrandController extends Controller
         }
 
         (new BrandService($request))->create($data, true);
-        return to_route($this->route);
+        Cache::forget('brands');
+        Cache::remember('brands', 10000, function () {
+            return Brand::active()->orderBy('name')->get();
+        });
     }
 
     /**
@@ -116,7 +120,10 @@ class BrandController extends Controller
 
         }
         (new BrandService())->update($data, $brand);
-        return to_route($this->route);
+        Cache::forget('brands');
+        Cache::remember('brands', 10000, function () {
+            return Brand::active()->orderBy('name')->get();
+        });
     }
 
     /**
@@ -127,6 +134,9 @@ class BrandController extends Controller
         $imagePath = str_replace('/storage', 'public', $brand->image);
         Storage::delete($imagePath);
         $brand->delete();
-        return to_route($this->route);
+        Cache::forget('brands');
+        Cache::remember('brands', 10000, function () {
+            return Brand::active()->orderBy('name')->get();
+        });
     }
 }

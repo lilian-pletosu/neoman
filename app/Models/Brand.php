@@ -41,6 +41,11 @@ class Brand extends Model implements TranslatableContract
         }]);
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('is_enabled', 1);
+    }
+    
     public function promotions()
     {
         return $this->belongsToMany(Promotion::class, 'promotion_brand')->withPivot('brand_id', 'promotion_id');

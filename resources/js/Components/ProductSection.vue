@@ -5,11 +5,11 @@ import 'swiper/css';
 import {Link} from "@inertiajs/vue3";
 import {useCartStore} from "@/stores/cartStore.js";
 import {useWishlistStore} from "@/stores/wishlistStore.js"
-import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/vue/16/solid/index.js";
-
+import {Navigation} from 'swiper/modules';
 
 const cartStore = useCartStore()
 const wishlistStore = useWishlistStore()
+
 
 const props = defineProps({
     products: {
@@ -32,9 +32,9 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-
-
 });
+
+const modules = [Navigation]
 
 </script>
 
@@ -61,10 +61,113 @@ const props = defineProps({
     width: 100%;
     height: 100%;
 }
+
+
+:root {
+    --swiper-navigation-size: 3vh;
+    /*
+    --swiper-navigation-top-offset: 50%;
+    --swiper-navigation-sides-offset: 10px;
+    --swiper-navigation-color: var(--swiper-theme-color);
+    */
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    position: absolute;
+    top: var(--swiper-navigation-top-offset, 50%);
+    width: 1vw;
+    height: var(--swiper-navigation-size);
+    margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a202c;
+}
+
+.swiper-button-prev.swiper-button-disabled,
+.swiper-button-next.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: auto;
+    pointer-events: none;
+}
+
+.swiper-button-prev.swiper-button-hidden,
+.swiper-button-next.swiper-button-hidden {
+    opacity: 0;
+    cursor: auto;
+    pointer-events: none;
+}
+
+.swiper-navigation-disabled .swiper-button-prev,
+.swiper-navigation-disabled .swiper-button-next {
+    display: none !important;
+}
+
+.swiper-button-prev svg,
+.swiper-button-next svg {
+    width: 1vh;
+    height: 5vh;
+    object-fit: contain;
+    transform-origin: center;
+}
+
+.swiper-rtl .swiper-button-prev svg,
+.swiper-rtl .swiper-button-next svg {
+    transform: rotate(180deg);
+}
+
+.swiper-button-prev,
+.swiper-rtl .swiper-button-next {
+    left: var(--swiper-navigation-sides-offset, 10px);
+    right: auto;
+}
+
+.swiper-button-next,
+.swiper-rtl .swiper-button-prev {
+    right: var(--swiper-navigation-sides-offset, 10px);
+    left: auto;
+}
+
+.swiper-button-lock {
+    display: none;
+}
+
+/* Navigation font start */
+.swiper-button-prev:after,
+.swiper-button-next:after {
+    font-family: swiper-icons;
+    font-size: var(--swiper-navigation-size);
+    text-transform: none !important;
+    letter-spacing: 0;
+    font-variant: initial;
+    line-height: 1;
+}
+
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
+    content: 'prev';
+}
+
+.swiper-button-next,
+.swiper-rtl .swiper-button-prev {
+    right: var(--swiper-navigation-sides-offset, 10px);
+    left: auto;
+}
+
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
+    content: 'next';
+}
+
+/* Navigation font end */
+
 </style>
 <template>
 
-    <div class="mb-6 py-12  space-y-6">
+    <div class="mb-6 py-12  space-y-6 ">
         <div class="flex  items-center justify-between px-0">
             <div class="flex items-center space-x-2">
                 <div v-if="sale">
@@ -109,23 +212,14 @@ const props = defineProps({
                 </div>
                 <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ title }}</h2>
             </div>
-            <div class="w-16 flex space-x-2">
-                <div id="swiper-button-prev"
-                     @click="showSuccess"
-                     class="swiper-button-prev rounded-3xl flex items-center justify-center border border-slate-600 w-full h-auto">
-                    <arrow-left-icon class="w-4"/>
-                </div>
-                <div id="swiper-button-next"
-                     class="swiper-button-next rounded-3xl flex  justify-center border border-slate-600 w-full h-auto">
-                    <arrow-right-icon class="w-4"/>
-                </div>
-            </div>
+
         </div>
 
         <swiper
             :slidesPerView="1"
             :spaceBetween="20"
             :navigation="true"
+            :modules="modules"
             direction="horizontal"
             :breakpoints="{
                   '400': {
@@ -147,7 +241,7 @@ const props = defineProps({
 
                 }"
 
-            class="mySwiper">
+            class="relative">
             <swiper-slide v-for="(product, key) in products" class="p-2">
                 <div
                     class="container-rounded flex items-center justify-center bg-white border border-slate-100 dark:bg-slate-100  w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96  md:h-[380px]  2xl:h-[450px]  3xl:h-[450px]  relative group/card">

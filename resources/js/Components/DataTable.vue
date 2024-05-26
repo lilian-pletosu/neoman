@@ -3,7 +3,13 @@ import {getCurrentInstance, onMounted, ref} from "vue";
 import Pagination from "@/Components/Pagination.vue";
 import {router, useForm} from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import {XCircleIcon} from "@heroicons/vue/20/solid/index.js";
+import {
+    BoltIcon,
+    CheckBadgeIcon,
+    ReceiptPercentIcon,
+    VariableIcon,
+    XCircleIcon
+} from "@heroicons/vue/20/solid/index.js";
 import {useDateFormat} from "@vueuse/core";
 
 
@@ -171,6 +177,22 @@ onMounted(() => {
                                                         }}</a>
                                                 </div>
                                             </template>
+                                            <!--                     order_type                       -->
+                                            <template v-else-if="column === 'type'">
+                                                <template v-if="resource[columnInOrder] === 'fast_order'">
+                                                    <bolt-icon class="text-yellow-400 p-1 mx-auto"/>
+                                                </template>
+                                                <template v-if="resource[columnInOrder] === 'credit'">
+                                                    <receipt-percent-icon class="text-red-400 p-1 mx-auto"/>
+                                                </template>
+                                                <template v-if="resource[columnInOrder] === 'simple'">
+                                                    <check-badge-icon class="text-blue-400 p-1 mx-auto"/>
+                                                </template>
+                                                <template v-if="resource[columnInOrder] === 'installments'">
+                                                    <variable-icon class="text-red-400 p-1 mx-auto"/>
+                                                </template>
+                                            </template>
+
                                             <!--                    status                        -->
                                             <template v-else-if="column === 'is_enabled'">
                                                 <div class="rounded  p-1 text-center text-black  shadow mx-auto"

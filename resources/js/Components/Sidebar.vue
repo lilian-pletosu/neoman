@@ -1,6 +1,6 @@
 <template>
     <aside id="sidebar" :class="{'hidden' : hidden}"
-           class="  h-full top-0 left-0 pt-16 lg:flex flex-shrink-0 flex-col min-w-64 w-auto transition-width duration-75"
+           class="top-10 left-0 lg:flex flex-shrink-0 flex-col min-w-64 w-auto transition-width duration-75"
            aria-label="Sidebar">
         <div class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0">
             <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
