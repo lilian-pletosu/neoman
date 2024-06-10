@@ -8,6 +8,8 @@
  */
 
 
+use App\Http\Controllers\front\UltraImportController;
+
 Route::prefix('front')->group(function () {
     Route::get('/', [\App\Http\Controllers\front\HomeController::class, 'index'])->name('home');
     Route::get('product/{slug}', [\App\Http\Controllers\front\ProductController::class, 'show'])->name('product_page');
@@ -21,6 +23,11 @@ Route::prefix('front')->group(function () {
     Route::get('privacy', [\App\Http\Controllers\front\PrivacyController::class, 'index'])->name('privacy_page');
     Route::get('search/{search?}', [\App\Http\Controllers\front\SearchController::class, 'index'])->name('search_page');
 
+    Route::get('/request-data', [UltraImportController::class, 'requestData']);
+    Route::get('/check-is-ready/{GUID}', [UltraImportController::class, 'checkIsReady']);
+    Route::get('/check-data-status/{guid}', [UltraImportController::class, 'checkDataStatus']);
+    Route::get('/get-data-by-id/{GUID}', [UltraImportController::class, 'getDataByID']);
+    Route::post('/commit-receiving-data', [UltraImportController::class, 'commitReceivingData']);
 
     Route::post('post_order', [\App\Http\Controllers\front\CartController::class, 'checkout'])->name('set_order');
 });

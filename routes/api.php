@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\front\UltraImportController;
 use App\Models\Product;
 use App\Services\CookieService;
 use Illuminate\Http\Request;
@@ -24,6 +25,13 @@ require __DIR__ . '/api_endpoints.php';
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// --------------------------------- API UltraImportController Endpoints ---------------------------------
+Route::post('/request-data', [UltraImportController::class, 'requestData']);
+Route::get('/check-status/{guid}', [UltraImportController::class, 'checkStatus']);
+Route::get('/get-data/{guid}', [UltraImportController::class, 'getData']);
+
+//-------------------------------------------------------------------------------
 
 // Cart
 Route::get('/cart/{productId}/{colorId}', function ($productCode, $colorId) {
