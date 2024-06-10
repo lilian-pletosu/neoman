@@ -20,8 +20,10 @@
         "maatwebsite/excel": "^3.1",
         "phpoffice/phpspreadsheet": "^1.29",
         "predis/predis": "^2.0",
+        "ricorocks-digital-agency/soap": "^2.0",
         "spatie/image": "^2.2",
-        "tightenco/ziggy": "^2.1"
+        "tightenco/ziggy": "^2.1",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.13",
