@@ -35,11 +35,7 @@ class UltraImportJob implements ShouldQueue
      */
     public function handle(UltraImportService $ultraImportService)
     {
-        $client = new Client([
-            'base_uri' => 'http://neoman.local',
-            'timeout' => 300, // Timeout total în secunde
-            'connect_timeout' => 60, // Timeout pentru conexiune în secunde
-        ]);
+        $client = new Client(['base_uri' => 'https://neoman.md']);
 //
 //        $response = $client->post('request-data');
 //

@@ -23,13 +23,13 @@ class HomeController extends Controller
 
 //
 //        $client = new Client([
-//            'base_uri' => 'http://172.18.0.4:80',
+//            'base_uri' => 'https://neoman.md',
 //            'timeout' => 10, // Timeout total în secunde
 //            'connect_timeout' => 10, // Timeout pentru conexiune în secunde
 //        ]);
 //
 //        try {
-//            $response = $client->get('/api/request-data');
+//            $response = $client->post('/api/request-data');
 //            // procesează răspunsul
 //        } catch (\GuzzleHttp\Exception\RequestException $e) {
 //            // gestionează eroarea
@@ -91,8 +91,8 @@ class HomeController extends Controller
 //                return $item['nomenclatureType'] === '0e795ff5-4e6f-11ea-b816-00155d1de702';
 //            });
 //            dd($new);
-////        }
-//
+//        }
+
 //        // Inițiază cererea și primește GUID-ul
 //        $guid = $this->ultraImportService->requestData('BRAND', true, '');
 //
