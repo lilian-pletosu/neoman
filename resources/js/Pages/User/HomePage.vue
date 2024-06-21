@@ -28,7 +28,7 @@ const props = defineProps({
 
     <front-layout :current-language="attrs.current_locale" title="Pagina principală">
         <template v-slot:carousel>
-            <carousel-front :images="['/img/slider.png','/img/slider2.png']"/>
+            <carousel-front />
         </template>
 
         <product-section :products="sales_products" :sale="true"

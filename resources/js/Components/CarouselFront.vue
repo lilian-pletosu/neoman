@@ -6,13 +6,6 @@ import {getCurrentInstance} from "vue";
 import {Link} from "@inertiajs/vue3";
 
 const app = getCurrentInstance();
-
-const props = defineProps({
-    images: {
-        type: Object,
-        required: true
-    },
-})
 </script>
 
 <template>
@@ -21,7 +14,7 @@ const props = defineProps({
         <slide v-for="(slide, index) in app.appContext.config.globalProperties.$page.props.home_banners" :key="index">
             <Link :href="slide.link">
                 <img class="object-cover w-screen flex"
-                     :src="slide.image" :alt="index">
+                     :src="slide.image" :alt="slide.title">
             </Link>
         </slide>
         <template #addons>

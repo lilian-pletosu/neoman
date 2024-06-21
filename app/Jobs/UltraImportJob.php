@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\PollingResult;
 use App\Services\UltraImportService;
 use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
@@ -17,15 +18,17 @@ class UltraImportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $guid;
+    protected $service;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($guid)
+    public function __construct($guid, $service)
     {
         $this->guid = $guid;
+        $this->service = $service;
     }
 
     /**
@@ -33,46 +36,36 @@ class UltraImportJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(UltraImportService $ultraImportService)
+    public function handle()
     {
         $client = new Client(['base_uri' => 'https://neoman.md']);
-//
-//        $response = $client->post('request-data');
-//
-//        $body = json_decode((string)$response->getBody(), true);
-//        return $body['guid'];
-
-        // Așteaptă până când serviciul este gata
-
 
         do {
             $status = $this->isReady($client, $this->guid);
-        } while (!$status);
+            Log::info("Status for $this->service is: ", [$status]);
+        } while ($status == false);
 
         Log::info('Service is ready, proceeding with the next steps');
 
         // Obține datele pe baza GUID-ului
+
         $data = $this->getData($client, $this->guid);
-        Log::info('Data received: ', $data);
+
+        Log::info("Data for: {$this->service} received: ", [$data]);
+
 
         // Continuă cu următorii pași, de exemplu, salvarea datelor în baza de date
-        Redis::set('data:' . $this->guid, json_encode($data));
+        Redis::set("$this->service:" . $this->guid, json_encode($data));
 
     }
 
-//    protected function requestData(Client $client)
-//    {
-//        $response = $client->post('/api/request-data');
-//
-//        $body = json_decode((string)$response->getBody(), true);
-//        return $body['guid'];
-//    }
-
-    protected function isReady(Client $client, $guid, $maxRetries = 10, $retryInterval = 5)
+    protected function isReady(Client $client, $guid, $maxRetries = 10, $retryInterval = 10)
     {
         $response = $client->get("/api/check-status/{$guid}");
+        Log::info('In Ready function1 body is:' . $response->getBody()->getContents());
         $body = json_decode((string)$response->getBody(), true);
-        return $body['status'];
+        Log::info('In Ready function2 body is:', [$body]);
+        return $body;
 
     }
 
@@ -81,4 +74,5 @@ class UltraImportJob implements ShouldQueue
         $response = $client->get("/api/get-data/{$guid}");
         return json_decode((string)$response->getBody(), true);
     }
+
 }

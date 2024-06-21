@@ -27,7 +27,7 @@ class UltraImportController extends Controller
             $request->input('additionalParams')
         );
 
-        UltraImportJob::dispatch($guid);
+        UltraImportJob::dispatch($guid, $request->input('service'));
 
         return response()->json(['guid' => $guid]);
     }
@@ -39,10 +39,15 @@ class UltraImportController extends Controller
     }
 
 
-    public function getData($guid)
+    public function getData($guid): \Illuminate\Http\JsonResponse
     {
         $data = $this->ultraImportService->getDataByID($guid);
         return response()->json($data);
+    }
+
+    public function commitReceivingData(string $service): void
+    {
+        $this->ultraImportService->commitReceivingData($service);
     }
 
 }

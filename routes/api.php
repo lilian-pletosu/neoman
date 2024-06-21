@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/request-data', [UltraImportController::class, 'requestData']);
 Route::get('/check-status/{guid}', [UltraImportController::class, 'checkStatus']);
 Route::get('/get-data/{guid}', [UltraImportController::class, 'getData']);
+Route::post('/commit-receiving-data', [UltraImportController::class, 'commitReceivingData']);
 
 //-------------------------------------------------------------------------------
 
