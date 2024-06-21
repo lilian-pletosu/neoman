@@ -51,15 +51,15 @@ class UltraImportJob implements ShouldQueue
 
         $data = $this->getData($client, $this->guid);
 
-        Log::info("Data for: {$this->service} received: ", [$data]);
+        Log::info("Data for: {$this->service} received");
 
 
         // Continuă cu următorii pași, de exemplu, salvarea datelor în baza de date
-        Redis::set("$this->service:" . $this->guid, json_encode($data));
+        Redis::set("$this->service:", json_encode($data));
 
     }
 
-    protected function isReady(Client $client, $guid, $maxRetries = 10, $retryInterval = 10)
+    protected function isReady(Client $client, $guid)
     {
         $response = $client->get("/api/check-status/{$guid}");
         Log::info('In Ready function1 body is:' . $response->getBody()->getContents());
@@ -71,8 +71,11 @@ class UltraImportJob implements ShouldQueue
 
     protected function getData(Client $client, $guid)
     {
-        $response = $client->get("/api/get-data/{$guid}");
-        return json_decode((string)$response->getBody(), true);
+//        $response = $client->get("/api/get-data/{$guid}", ['timeout' => 500]);
+//        return json_decode((string)$response->getBody(), true);
+
+        $response = (new UltraImportService())->getDataByID($guid);
+        return $response;
     }
 
 }

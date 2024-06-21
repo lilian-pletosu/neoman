@@ -62,7 +62,7 @@ class UltraImportService
     }
 
 
-    public function waitForReady($GUID, $maxRetries = 10, $retryInterval = 5)
+    public function waitForReady($GUID, $maxRetries = 10, $retryInterval = 10)
     {
         for ($i = 0; $i < $maxRetries; $i++) {
             $isReady = $this->isReady($GUID);

@@ -22,13 +22,12 @@ class HomeController extends Controller
     public function index()
     {
 
-        $r = Redis::get('PARENTLIST:11e93218-fdad-4d45-978a-d7d94b53c064'); // parentlist
-//        $r = Redis::get('data:5d27e6eb-fd38-4df6-93cd-d03ba60d98b3'); // nomenclature
-//        $r = Redis::get('data:8a6ae0ae-f115-4419-a779-4ecb5df34c28'); //parent
-//        $r = Redis::get('data:eb02162e-bf57-4344-8d60-1dc7d6906dac'); //nomeclaturetype
-//        $r = Redis::get('data:740bbaf6-0030-4982-a694-7f043028b29b'); //brands
+//        $r = Redis::get('NOMENCLATURETYPELIST:bd9ed935-2844-4d7a-9779-0cdc4ea78d98'); // parentlist
+//        $r = Redis::get('NOMENCLATURE:ebb3c1f9-8a2e-46a0-b8a4-9371f5c13a10'); // nomenclature
+        $r = Redis::get('NOMENCLATURE'); // nomenclature
 
-        dd(json_decode($r)->parent);
+
+        dd($r);
 //        $aspiratoare = '033999cf-4e76-11ea-b816-00155d1de702';
 //        $congelatoare = 'ad8cff32-4e6f-11ea-b816-00155d1de702';
 //        $xxml = json_decode($r)->return->data;
