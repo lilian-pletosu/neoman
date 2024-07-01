@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\UltraImportJob;
 use App\Services\UltraImportService;
 use Illuminate\Http\Request;
 
@@ -27,9 +26,8 @@ class UltraImportController extends Controller
             $request->input('additionalParams')
         );
 
-        UltraImportJob::dispatch($guid, $request->input('service'));
 
-        return response()->json(['guid' => $guid]);
+        return $guid;
     }
 
     public function checkStatus($guid)

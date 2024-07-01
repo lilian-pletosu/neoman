@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 
 class UltraImportService
@@ -34,17 +35,19 @@ class UltraImportService
         return $response->response->return;
     }
 
-    public function isReady($GUID)
-    {
-        $response = $this->client->call('isReady', ['ID' => $GUID]);
-
-        return $response->response->return;
-    }
-
     public function getDataByID($GUID)
     {
         $response = $this->client->call('getDataByID', ['ID' => $GUID]);
         return $this->prepareResponse($response->response);
+    }
+
+    public function prepareResponse($response)
+    {
+
+        $xml = $response;
+        $simple_xml = simplexml_load_string($xml);
+        Log::info("sdsadsadasd" . $simple_xml);
+        return json_decode($simple_xml);
     }
 
     public function commitReceivingData($service)
@@ -52,15 +55,6 @@ class UltraImportService
         $response = $this->client->call('CommitReceivingData', ['Service' => $service]);
         return $response->response;
     }
-
-
-    public function prepareResponse($response)
-    {
-        $xml = $response->return->data;
-        $simple_xml = simplexml_load_string($xml);
-        return $simple_xml;
-    }
-
 
     public function waitForReady($GUID, $maxRetries = 10, $retryInterval = 10)
     {
@@ -77,6 +71,13 @@ class UltraImportService
 
         echo "Service did not become ready after $maxRetries attempts\n";
         return false;
+    }
+
+    public function isReady($GUID)
+    {
+        $response = $this->client->call('isReady', ['ID' => $GUID]);
+
+        return $response->response->return;
     }
 
 

@@ -24,10 +24,15 @@ class HomeController extends Controller
 
 //        $r = Redis::get('NOMENCLATURETYPELIST:bd9ed935-2844-4d7a-9779-0cdc4ea78d98'); // parentlist
 //        $r = Redis::get('NOMENCLATURE:ebb3c1f9-8a2e-46a0-b8a4-9371f5c13a10'); // nomenclature
-        $r = Redis::get('NOMENCLATURE'); // nomenclature
+//        $keys = Redis::get('NOMENCLATURE:fda2f377-3f3c-45f8-8fff-e8fe3fb91eb3'); // nomenclature
+//        $keys = Redis::keys('*'); // nomenclature
+        $keys = Redis::get('NOMENCLATURE'); // nomenclature.
+//        $keys = Redis::get('PARENTLIST'); // nomenclature.
+
+//        $keys = Redis::del('NOMENCLATURE:fda2f377-3f3c-45f8-8fff-e8fe3fb91eb3');
 
 
-        dd($r);
+        dd($keys);
 //        $aspiratoare = '033999cf-4e76-11ea-b816-00155d1de702';
 //        $congelatoare = 'ad8cff32-4e6f-11ea-b816-00155d1de702';
 //        $xxml = json_decode($r)->return->data;
@@ -65,7 +70,7 @@ class HomeController extends Controller
 //        $guid = $this->ultraImportService->requestData('BRAND', true, '');
 //
 //        // Dispatchează job-ul
-//        UltraImportJob::dispatch('BRAND', true, '', $guid);
+//        NomenclatureImportJob::dispatch('BRAND', true, '', $guid);
 //
 //        return response()->json(['status' => 'Import job dispatched']);
 

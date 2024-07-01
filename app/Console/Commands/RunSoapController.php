@@ -2,102 +2,93 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\front\UltraImportController;
-use App\Services\UltraImportService;
-use GuzzleHttp\Client;
-use Illuminate\Http\Request;
+use App\Jobs\BrandImportJob;
+use App\Jobs\NomenclatureImportJob;
+use App\Jobs\NomenclatureTypeImportJob;
+use App\Jobs\ParentListImportJob;
+use App\Jobs\PricelistImportJob;
 use Illuminate\Console\Command;
-use Illuminate\Support\Carbon;
-use PHPUnit\Event\Exception;
+use Illuminate\Support\Facades\Log;
 
 class RunSoapController extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'run:import-ultra';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $signature = 'run:import-ultra'; // Numele și semnătura comenzii console
+    protected $description = 'Import data from Ultra service'; // Descrierea comenzii console
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-
         $startTime = microtime(true);
-        $ultraImportController = new UltraImportController(new UltraImportService());
+
+        // Parametrii pentru diferite servicii
+        $services = [
+            'NOMENCLATURE' => [
+                'params' => [
+                    "service" => "NOMENCLATURE",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => NomenclatureImportJob::class
+            ],
+            'PARENTLIST' => [
+                'params' => [
+                    "service" => "PARENTLIST",
+                    "all" => true,
+                    "additionalParams" => "NOMENCLATURE"
+                ],
+                'job' => ParentListImportJob::class
+            ],
+            'NOMENCLATURETYPELIST' => [
+                'params' => [
+                    "service" => "NOMENCLATURETYPELIST",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => NomenclatureTypeImportJob::class
+            ],
+            'BRAND' => [
+                'params' => [
+                    "service" => "BRAND",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => BrandImportJob::class
+            ],
+            'PRICELIST' => [
+                'params' => [
+                    "service" => "PRICELIST",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => PricelistImportJob::class
+            ]
+        ];
 
         try {
-            // Step 1: Import NOMENCLATURE
-            $nomenclatureRequest = new Request();
-            $nomenclatureRequest->merge([
-                "service" => "NOMENCLATURE",
-                "all" => true,
-                "additionalParams" => ""
-            ]);
-            $ultraImportController->requestData($nomenclatureRequest);
-            $this->info('NOMENCLATURE import was successful');
+            foreach ($services as $service => $details) {
+                $requestParams = $details['params'];
+                $jobClass = $details['job'];
 
-            // Step 2: Import BRAND
-            $brandRequest = new Request();
-            $brandRequest->merge([
-                "service" => "BRAND",
-                "all" => true,
-                "additionalParams" => ""
-            ]);
-            $ultraImportController->requestData($brandRequest);
-            $this->info('BRAND import was successful');
+                $jobClass::dispatch($requestParams);
 
-            // Step 3: Import PRICELIST
-            $pricelistRequest = new Request();
-            $pricelistRequest->merge([
-                "service" => "PRICELIST",
-                "all" => true,
-                "additionalParams" => ""
-            ]);
-            $ultraImportController->requestData($pricelistRequest);
-            $this->info('PRICELIST import was successful');
-
-            // Step 4: Import NOMENCLATURETYPE
-            $nomenclatureTypeRequest = new Request();
-            $nomenclatureTypeRequest->merge([
-                "service" => "NOMENCLATURETYPE",
-                "all" => true,
-                "additionalParams" => ""
-            ]);
-            $ultraImportController->requestData($nomenclatureTypeRequest);
-            $this->info('NOMENCLATURETYPE import was successful');
+                Log::info("$service import was successfully executed with GUID: $service");
+            }
 
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
             $this->info('All imports were successfully executed');
             $this->info('Total execution time: ' . round($executionTime, 2) . ' seconds');
-        } catch (Exception $exception) {
+
+        } catch (\Exception $e) {
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
-
-            $this->info('An error occurred during the import process');
+            $this->error('An error occurred during the import process');
             $this->error('Execution time before error: ' . round($executionTime, 2) . ' seconds');
-            $this->error($exception->getMessage());
+            $this->error($e->getMessage());
+            Log::error('An error occurred during the import process: ' . $e->getMessage());
+            throw $e; // Aruncăm din nou excepția pentru a permite retry logic
         }
-        return 0;
-
-
-
-//        $client->post('api/request-data', [
-//            "service"=> "PARENTLIST",
-//            "all"=> true,
-//            "additionalParams"=> "NOMENCLATURE"
-//        ]);
-
-
     }
 }
