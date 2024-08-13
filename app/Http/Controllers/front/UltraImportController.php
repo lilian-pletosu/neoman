@@ -12,9 +12,9 @@ class UltraImportController extends Controller
 
     protected $ultraImportService;
 
-    public function __construct(UltraImportService $ultraImportService)
+    public function __construct()
     {
-        $this->ultraImportService = $ultraImportService;
+        $this->ultraImportService = new UltraImportService();
     }
 
     public function requestData(Request $request)
@@ -37,7 +37,7 @@ class UltraImportController extends Controller
     }
 
 
-    public function getData($guid): \Illuminate\Http\JsonResponse
+    public function getData($guid)
     {
         $data = $this->ultraImportService->getDataByID($guid);
         return response()->json($data);

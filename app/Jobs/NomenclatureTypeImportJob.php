@@ -42,41 +42,61 @@ class NomenclatureTypeImportJob implements ShouldQueue
     public function handle()
     {
         $attempt = $this->attempts();
-        Log::info("Attempt number: $attempt, in NOMENCLATURETYPELISTTYPELIST service for GUID: $this->guid");
+        Log::info("Attempt number: $attempt, in NOMENCLATURETYPELIST service for GUID:", [$this->guid]);
 
-        $client = new Client(['base_uri' => 'https://neoman.md']);
-        $ultraImportController = new (new UltraImportService());
+        $client = new Client([
+            'base_uri' => 'https://neoman.md',
+            'timeout' => 600, // Timeout set to 600 seconds (10 minutes)
+            'connect_timeout' => 600, // Connection timeout set to 60 seconds
+        ]);
+
+
+        $ultraImportController = new UltraImportController();
 
         $request = new Request();
         $request->merge($this->requestParams);
         $this->guid = $ultraImportController->requestData($request);
 
+        Log::info('Guid is:', [$this->guid]);
+
+        $status = false;
+
+
         do {
-            $status = $this->isReady($client, $this->guid);
-            Log::info("Status for NOMENCLATURETYPELISTTYPELIST is: ", $status);
-            if (isset($status['status']) && !$status['status']) {
-                Log::info('Service not yet ready', ['status' => $status['status']]);
-                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
+            try {
+                $newStatus = $this->isReady($client, $this->guid);
+                $status = $newStatus['status'] ?? false;
+                Log::info("Status for NOMENCLATURETYPELIST is: ", [$status]);
+
+            } catch (\Exception $e) {
+                Log::error('Error checking status: ' . $e->getMessage());
+                throw $e;
             }
-        } while (isset($status['status']) && !$status['status']);
+        } while ($status == false);
 
         Log::info('Service is ready, proceeding with the next steps');
 
+
+
         // Obține datele pe baza GUID-ului
-        try {
-            $data = $this->getData($ultraImportController, $this->guid);
+       try {
+            ini_set('max_execution_time', 600);
+
+            $responseBody = (new UltraImportService())->getDataByID($this->guid);
+          
         } catch (\Exception $exception) {
             Log::error('We have an error: ' . $exception->getMessage());
             throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
         }
 
         $this->isCommit();
-        Log::info("Data for NOMENCLATURETYPELISTTYPELIST received", ['data' => $data]);
+        $encodedData = json_encode($responseBody);
+        $data = json_decode($encodedData, true);
 
-        // Salvăm datele în Redis
-        Redis::set("NOMENCLATURETYPELIST:{$this->guid}", json_encode($data));
 
-        Log::info('NOMENCLATURETYPELIST process is done!');
+       Redis::set("NOMENCLATURETYPELIST", json_encode($data['nomenclatureType']));
+
+       Log::info('NOMENCLATURETYPELIST process is done!');
     }
 
     protected function isReady(Client $client, $guid)

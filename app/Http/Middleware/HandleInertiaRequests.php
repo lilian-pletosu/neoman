@@ -91,6 +91,7 @@ class HandleInertiaRequests extends Middleware
             'orders' => Cache::has('orders') ? Cache::get('orders') : Cache::remember('orders', 10000, function () {
                 return (new OrderService())->getOrders();
             }),
+            'toast' => session('toast'),
         ]);
     }
 }

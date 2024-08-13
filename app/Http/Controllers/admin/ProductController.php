@@ -47,11 +47,6 @@ class ProductController extends Controller
         ])->loadData($builder);
     }
 
-    public function create()
-    {
-        return (new SchemaFormBuilder)('Product', 'post', 'admin.products.store');
-    }
-
     public function store(Request $request)
     {
         if ($request->hasFile('image')) {
@@ -79,6 +74,11 @@ class ProductController extends Controller
         }
         (new ProductService())->create($request, $data);
         return to_route($this->route);
+    }
+
+    public function create()
+    {
+        return (new SchemaFormBuilder)('Product', 'post', 'admin.products.store');
     }
 
     public function show(Product $product)

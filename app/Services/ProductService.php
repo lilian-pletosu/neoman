@@ -2,10 +2,16 @@
 
 namespace App\Services;
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\ImportedProduct;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\Promotion;
+use App\Models\SubCategory;
+use App\Models\SubSubCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ProductService
@@ -15,57 +21,6 @@ class ProductService
     public function __construct()
     {
         $this->translatedAttributes = (new Product())->translatedAttributes;
-    }
-
-    public function create(Request $request, $data)
-    {
-        if ($request->hasFile('image')) {
-            $data['slug'] = array_key_exists('name_ro', $data) ? Str::slug($data['name_ro'], '_') : Str::slug('Product name', '_');
-
-            $data['image'] = '/products/' . $request->file('image')->hashName();
-            $request->image->move(public_path('products'), $request->file('image')->hashName());
-        } else {
-            $data['slug'] = array_key_exists('name ro', $data) ? Str::slug($data['name ro'], '_') : Str::slug('Product name', '_');
-
-            $data['image'] = '/img/no_image.svg';
-        }
-        try {
-            $product = Product::firstOrCreate(['slug' => $data['slug']], [
-                'slug' => $data['slug'],
-                'price' => $data['price'],
-                'brand_id' => $data['brand_id'],
-                'sub_sub_category_id' => $data['sub_sub_category_id'],
-                'product_code' => (new GenerateProductCode)((new Product())),
-                'specifications_id' => null,
-                'image' => 'image'
-            ]);
-
-
-            if ($request->hasFile('image')) {
-                foreach ($this->translatedAttributes as $translatableAttribute) {
-                    foreach (config('translatable.locales') as $locale) {
-                        $product->translateOrNew($locale)->$translatableAttribute = $data[$translatableAttribute . '_' . $locale];
-
-                    }
-                }
-                $product->save();
-            } else {
-                foreach ($this->translatedAttributes as $translatableAttribute) {
-                    foreach (config('translatable.locales') as $locale) {
-                        $product->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
-
-                    }
-                }
-                $product->save();
-            }
-
-
-            return $product;
-        } catch (\Exception $exception) {
-            return $exception;
-        }
-
-
     }
 
     public function update($data, Product $product, Request $request)
@@ -82,7 +37,6 @@ class ProductService
         $product->save();
 
     }
-
 
     public function loadSalesProducts(): array
     {
@@ -173,7 +127,6 @@ class ProductService
         return $productsArray;
     }
 
-
     public function loadLastVisitedProduct($request)
     {
         $productsArray = [];
@@ -228,7 +181,6 @@ class ProductService
         return $productsArray;
     }
 
-
     public function loadAllProducts()
     {
         $productsArray = [];
@@ -278,7 +230,6 @@ class ProductService
         return $productsArray;
     }
 
-
     public function searchProduct($query = null)
     {
         if ($query) {
@@ -327,5 +278,232 @@ class ProductService
         }
 
         return $productsArray;
+    }
+
+    public function saveUltraImportedProductInDB($product)
+    {
+        try {
+            // Convertim $product într-un array
+            $productArray = json_decode(json_encode($product), true);
+
+            $slug = Str::slug($productArray['name']['ro'], '_');
+            $newProd = ImportedProduct::updateOrCreate(['product_code' => $productArray['code'],], [
+                'name' => $productArray['name'],
+                'slug' => $slug,
+                'description' => json_encode($productArray['description']),
+                'price' => $productArray['price'],
+                'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
+                'sub_sub_category_id' => $this->ultraImportSubSubcategory($productArray['sub_subcategory'], $productArray['subcategory'], $productArray['category']),
+                'specifications_id' => null,
+                'images' => $productArray['images']
+            ]);
+            return $newProd;
+
+        } catch (\Error $error) {
+            Log::error('Error occurred while saving the product', [
+                'error' => $error->getMessage(),
+                'product' => $product,
+                'trace' => $error->getTraceAsString()
+            ]);
+            return null;
+        } catch (\Exception $exception) {
+            Log::error('Exception occurred while saving the product', [
+                'error' => $exception->getMessage(),
+                'product' => $product,
+                'trace' => $exception->getTraceAsString()
+            ]);
+            return null;
+        }
+    }
+
+    private function ultraImportBrandSave($brand)
+    {
+        try {
+            $imagePath = $brand->image->pathGlobal ?? 'null';
+
+            $dbBrand = Brand::where('name', $brand['name'])->first();
+
+            if (!$dbBrand) {
+                return Brand::create([
+                    'name' => $brand['name'] ?? '',
+                    'slug' => Str::slug($brand['name'], '_') ?? '',
+                    'website' => $brand['name'] ?? '',
+                    'seo_title' => $brand['name'] ?? '',
+                    'seo_description' => 'description',
+                    'is_enabled' => 1,
+                    'image' => $imagePath,
+                ]);
+            } else
+                return $dbBrand;
+        } catch (\Error $error) {
+            Log::error('Error when trying to create new brand', [
+                'error' => $error->getMessage(),
+                'brand' => $brand,
+                'trace' => $error->getTraceAsString()
+            ]);
+        } catch (\Exception $exception) {
+            Log::error('Exception occurred while  create new brand', [
+                'error' => $exception->getMessage(),
+                'brand' => $brand,
+                'trace' => $exception->getTraceAsString()
+            ]);
+        }
+
+    }
+
+    public function create(Request $request, $data)
+    {
+        if ($request->hasFile('image')) {
+            $data['slug'] = array_key_exists('name_ro', $data) ? Str::slug($data['name_ro'], '_') : Str::slug('Product name', '_');
+
+            $data['image'] = '/products/' . $request->file('image')->hashName();
+            $request->image->move(public_path('products'), $request->file('image')->hashName());
+        } else {
+            $data['slug'] = array_key_exists('name ro', $data) ? Str::slug($data['name ro'], '_') : Str::slug('Product name', '_');
+
+            $data['image'] = '/img/no_image.svg';
+        }
+        try {
+            $product = Product::firstOrCreate(['slug' => $data['slug']], [
+                'slug' => $data['slug'],
+                'price' => $data['price'],
+                'brand_id' => $data['brand_id'],
+                'sub_sub_category_id' => $data['sub_sub_category_id'],
+                'product_code' => (new GenerateProductCode)((new Product())),
+                'specifications_id' => null,
+                'image' => 'image'
+            ]);
+
+
+            if ($request->hasFile('image')) {
+                foreach ($this->translatedAttributes as $translatableAttribute) {
+                    foreach (config('translatable.locales') as $locale) {
+                        $product->translateOrNew($locale)->$translatableAttribute = $data[$translatableAttribute . '_' . $locale];
+
+                    }
+                }
+                $product->save();
+            } else {
+                foreach ($this->translatedAttributes as $translatableAttribute) {
+                    foreach (config('translatable.locales') as $locale) {
+                        $product->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
+
+                    }
+                }
+                $product->save();
+            }
+
+
+            return $product;
+        } catch (\Exception $exception) {
+            return $exception;
+        }
+
+
+    }
+
+    private function ultraImportSubSubcategory($sub_subcategory, $subcategory, $category)
+    {
+
+        if (!isset($sub_subcategory['translations'])) {
+            return null;
+        }
+
+        try {
+            $dbSubsubcategory = SubSubCategory::where('slug', Str::slug($sub_subcategory['translations']['ro'], '_'))->first();
+
+            if (!$dbSubsubcategory) {
+
+                $subsubcategory = SubSubCategory::create([
+                    'slug' => Str::slug($sub_subcategory['translations']['ro'], '_') ?? '',
+                    'website' => $sub_subcategory['translations']['ro'] ?? '',
+                    'seo_title' => $sub_subcategory['translations']['ro'] ?? '',
+                    'seo_description' => 'description',
+                    'is_enabled' => 1,
+                    'image' => 'image',
+                    'subcategory_id' => $this->ultraImportSubcategory($subcategory, $category),
+                ]);
+
+                foreach (config('app.available_locales') as $locale) {
+                    foreach ((new SubSubCategory())->translatedAttributes as $translatedAttribute) {
+                        $subsubcategory->translateOrNew($locale)->$translatedAttribute = $sub_subcategory['translations'][$locale] ?? $sub_subcategory['translations']['ro'];
+                        $subsubcategory->save();
+                    }
+                }
+                return $subsubcategory->id;
+            } else {
+                return $dbSubsubcategory->id;
+            }
+        } catch (\Exception $exception) {
+
+            Log::error('We have error when trying to create new SubSubcategory', [
+                'error' => $exception->getMessage(),
+                'product' => $sub_subcategory,
+                'trace' => $exception->getTraceAsString()
+            ]);
+        }
+
+    }
+
+    private function ultraImportSubcategory($ultraSubcategory, $category)
+    {
+        try {
+            $dbSubcategory = SubCategory::where('slug', Str::slug($ultraSubcategory['ro'], '_'))->first();
+
+            if (!$dbSubcategory) {
+                $subcategory = SubCategory::create([
+                    'slug' => Str::slug($ultraSubcategory['ro'], '_') ?? '',
+                    'is_active' => 1,
+                    'image' => 'image',
+                    'category_id' => $this->ultraImportCategory($category),
+                ]);
+
+                foreach (config('app.available_locales') as $locale) {
+                    foreach ((new SubCategory())->translatedAttributes as $translatedAttribute) {
+                        $subcategory->translateOrNew($locale)->$translatedAttribute = $ultraSubcategory[$locale] ?? $ultraSubcategory['ro'];
+                        $subcategory->save();
+                    }
+                }
+                return $subcategory->id;
+            } else {
+                return $dbSubcategory->id;
+            }
+        } catch (\Exception $exception) {
+            Log::error('We have error when trying to create new subcategory', [
+                'error' => $exception->getMessage(),
+                'product' => $ultraSubcategory,
+                'trace' => $exception->getTraceAsString()
+            ]);
+        }
+    }
+
+    private function ultraImportCategory($ultraCategory)
+    {
+        try {
+            $dbCategory = Category::where('slug', Str::slug($ultraCategory['ro'], '_'))->first();
+
+            if (!$dbCategory) {
+                $category = Category::create([
+                    'slug' => Str::slug($ultraCategory['ro'], '_') ?? '',
+                    'is_active' => 1,
+                    'icon' => 'icon',
+                ]);
+                foreach (config('app.available_locales') as $locale) {
+                    foreach ((new Category())->translatedAttributes as $translatedAttribute) {
+                        $category->translateOrNew($locale)->$translatedAttribute = $ultraCategory[$locale] ?? $ultraCategory['ro'];
+                        $category->save();
+                    }
+                }
+                return $category->id;
+            } else {
+                return $dbCategory->id;
+            }
+        } catch (\Exception $exception) {
+            Log::error('We have error when trying to create new category', [
+                'error' => $exception->getMessage(),
+                'product' => $ultraCategory,
+                'trace' => $exception->getTraceAsString()
+            ]);
+        }
     }
 }

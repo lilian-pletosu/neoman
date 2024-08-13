@@ -47,10 +47,10 @@ const submit = (type) => {
 </script>
 <template>
     <admin-layout :current-route="initialRoute" title="Promotions">
-        <div class="w-full grid grid-cols-1  gap-4">
+        <div class="grid w-full grid-cols-1 gap-4">
             <div class="container-rounded ">
 
-                <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="primary-text">{{ __('settings') }}</h3>
                         <span class="secondary-text">{{ __('here_is_all_settings') }}</span>
@@ -66,13 +66,13 @@ const submit = (type) => {
                     <div class="overflow-x-auto rounded-lg ">
                         <div class="flex-shrink-0 ">
                             <div class="flex flex-col mt-8 ">
-                                <div class="overflow-x-auto rounded-lg p-2 ">
-                                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 ">
+                                <div class="p-2 overflow-x-auto rounded-lg ">
+                                    <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 ">
                                         <section>
-                                            <span class="font-medium text-lg">{{ __('credit_info') }}</span>
+                                            <span class="text-lg font-medium">{{ __('credit_info') }}</span>
                                             <div
                                                 class="container-custom-rounded  border border-1 border-slate-300 p-2 bg-slate-100/50 min-h-[150px]">
-                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                                <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                                                     <div v-for="credit in resources.credit">
                                                         <Installments :credit="credit" :key="credit.id"/>
                                                     </div>
@@ -81,10 +81,10 @@ const submit = (type) => {
                                         </section>
                                         <section>
 
-                                            <span class="font-medium text-lg">{{ __('installments_info') }}</span>
+                                            <span class="text-lg font-medium">{{ __('installments_info') }}</span>
                                             <div
                                                 class="container-custom-rounded border border-1 border-slate-300 p-2 bg-slate-100/50  min-h-[150px]">
-                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                                <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                                                     <div v-for="installments in resources.installments">
                                                         <Installments :credit="installments" :key="installments.id"/>
                                                     </div>
@@ -102,7 +102,7 @@ const submit = (type) => {
                         <div class="flex justify-between">
                             <h3 class="primary-text">{{ __('add_new_credit') }}</h3>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                             <div>
                                 <black-input v-model="form.num_of_installments"
                                              :type="'number'"
@@ -127,7 +127,7 @@ const submit = (type) => {
                                                 :label="__('type')"/>
                             </div>
                         </div>
-                        <div class="mt-6  flex justify-end">
+                        <div class="flex justify-end mt-6">
                             <SecondaryButton class="mx-2" @click="closeModal"> {{
                                     __('cancel')
                                 }}

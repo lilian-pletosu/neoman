@@ -2,11 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\BrandImportJob;
-use App\Jobs\NomenclatureImportJob;
-use App\Jobs\NomenclatureTypeImportJob;
-use App\Jobs\ParentListImportJob;
-use App\Jobs\PricelistImportJob;
+use App\Jobs\TranslationsUltra;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -21,48 +17,57 @@ class RunSoapController extends Command
     public function handle()
     {
         $startTime = microtime(true);
+        ini_set('max_execution_time', 0); // Setăm timpul de execuție la infinit (0)
 
         // Parametrii pentru diferite servicii
         $services = [
-            'NOMENCLATURE' => [
+            // 'NOMENCLATURE' => [
+            //     'params' => [
+            //         "service" => "NOMENCLATURE",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => NomenclatureImportJob::class
+            // ],
+            // 'PARENTLIST' => [
+            //     'params' => [
+            //         "service" => "PARENTLIST",
+            //         "all" => true,
+            //         "additionalParams" => "NOMENCLATURETYPELIST"
+            //     ],
+            //     'job' => ParentImportJob::class
+            // ],
+            // 'NOMENCLATURETYPELIST' => [
+            //     'params' => [
+            //         "service" => "NOMENCLATURETYPELIST",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => NomenclatureTypeImportJob::class
+            // ],
+            // 'BRAND' => [
+            //     'params' => [
+            //         "service" => "BRAND",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => BrandImportJob::class
+            // ],
+            // 'PRICELIST' => [
+            //     'params' => [
+            //         "service" => "PRICELIST",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => PricelistImportJob::class
+            // ],
+            'TRANSLATIONS' => [
                 'params' => [
-                    "service" => "NOMENCLATURE",
+                    "service" => "TRANSLATIONS",
                     "all" => true,
                     "additionalParams" => ""
                 ],
-                'job' => NomenclatureImportJob::class
-            ],
-            'PARENTLIST' => [
-                'params' => [
-                    "service" => "PARENTLIST",
-                    "all" => true,
-                    "additionalParams" => "NOMENCLATURE"
-                ],
-                'job' => ParentListImportJob::class
-            ],
-            'NOMENCLATURETYPELIST' => [
-                'params' => [
-                    "service" => "NOMENCLATURETYPELIST",
-                    "all" => true,
-                    "additionalParams" => ""
-                ],
-                'job' => NomenclatureTypeImportJob::class
-            ],
-            'BRAND' => [
-                'params' => [
-                    "service" => "BRAND",
-                    "all" => true,
-                    "additionalParams" => ""
-                ],
-                'job' => BrandImportJob::class
-            ],
-            'PRICELIST' => [
-                'params' => [
-                    "service" => "PRICELIST",
-                    "all" => true,
-                    "additionalParams" => ""
-                ],
-                'job' => PricelistImportJob::class
+                'job' => TranslationsUltra::class
             ]
         ];
 
@@ -73,14 +78,15 @@ class RunSoapController extends Command
 
                 $jobClass::dispatch($requestParams);
 
-                Log::info("$service import was successfully executed with GUID: $service");
+                Log::info("$service import was successfully executed");
             }
+            Log::info('All imports were successfully dispatched');
+
 
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;
             $this->info('All imports were successfully executed');
             $this->info('Total execution time: ' . round($executionTime, 2) . ' seconds');
-
         } catch (\Exception $e) {
             $endTime = microtime(true);
             $executionTime = $endTime - $startTime;

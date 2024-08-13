@@ -46,7 +46,9 @@ class BrandImportJob implements ShouldQueue
         Log::info("Attempt number: $attempt, in BRAND service for GUID: $this->guid");
 
         $client = new Client(['base_uri' => 'https://neoman.md']);
-        $ultraImportController = new (new UltraImportService());
+
+
+        $ultraImportController = new UltraImportController(new UltraImportService());
 
         $request = new Request();
         $request->merge($this->requestParams);
@@ -65,17 +67,19 @@ class BrandImportJob implements ShouldQueue
 
         // Obține datele pe baza GUID-ului
         try {
-            $data = $this->getData($ultraImportController, $this->guid);
+            $response = $client->get("api/get-data/$this->guid");
+
+            $responseBody = json_decode($response->getBody()->getContents());
         } catch (\Exception $exception) {
             Log::error('We have an error: ' . $exception->getMessage());
             throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
         }
 
         $this->isCommit();
-        Log::info("Data for BRAND received", ['data' => $data]);
+        Log::info("Data for BRAND received", ['data' => $responseBody->brand]);
 
         // Salvăm datele în Redis
-        Redis::set("BRAND:{$this->guid}", json_encode($data));
+        Redis::set("BRAND", json_encode($responseBody->brand));
 
         Log::info('BRAND process is done!');
     }
@@ -86,12 +90,6 @@ class BrandImportJob implements ShouldQueue
         $body = json_decode((string)$response->getBody(), true);
         return $body;
     }
-
-    protected function getData(UltraImportController $ultraImportController, $guid)
-    {
-        return $ultraImportController->getData($guid);
-    }
-
 
     protected function isCommit()
     {
@@ -107,6 +105,11 @@ class BrandImportJob implements ShouldQueue
     public function failed(\Throwable $exception)
     {
         Log::error("Job failed after {$this->attempts()} attempts for GUID: {$this->guid}. Exception: {$exception->getMessage()}");
+    }
+
+    protected function getData(UltraImportController $ultraImportController, $guid)
+    {
+        return $ultraImportController->getData($guid);
     }
 
 }

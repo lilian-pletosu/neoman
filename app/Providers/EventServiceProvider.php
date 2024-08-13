@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Events\NewOrder;
+use App\Events\NewSubcategory;
 use App\Events\OrderStatusUpdated;
 use App\Listeners\SendEmailNotificationAboutChangeOrderStatus;
 use App\Listeners\SendEmailNotificationAboutNewOrder;
+use App\Listeners\SubcategoryCreatedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderStatusUpdated::class => [
             SendEmailNotificationAboutChangeOrderStatus::class,
+        ],
+        NewSubcategory::class => [
+            SubcategoryCreatedListener::class,
         ],
     ];
 

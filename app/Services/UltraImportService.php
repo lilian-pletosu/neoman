@@ -20,6 +20,7 @@ class UltraImportService
         $this->password = env('SOAP_PASS');
         $this->client = Soap::to($this->wsdl)
             ->withBasicAuth($this->username, $this->password);
+
     }
 
     public function requestData($service, $all = true, $additionalParameters = '', $compress = false)
@@ -38,16 +39,17 @@ class UltraImportService
     public function getDataByID($GUID)
     {
         $response = $this->client->call('getDataByID', ['ID' => $GUID]);
-        return $this->prepareResponse($response->response);
+        $xml = $this->prepareResponse($response->response);
+        return $xml;
     }
 
     public function prepareResponse($response)
     {
+        $xml = $response->return->data;
 
-        $xml = $response;
         $simple_xml = simplexml_load_string($xml);
-        Log::info("sdsadsadasd" . $simple_xml);
-        return json_decode($simple_xml);
+        return $simple_xml;
+//        return json_decode($simple_xml);
     }
 
     public function commitReceivingData($service)
