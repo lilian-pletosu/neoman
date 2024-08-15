@@ -62,7 +62,7 @@ class BrandImportJob implements ShouldQueue
                 Log::info('Service not yet ready', ['status' => $status]);
                 sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
             }
-        } while (isset($status['status']) && !$status['status']);
+        } while ($status === false);
 
         Log::info('Service is ready, proceeding with the next steps');
 
@@ -89,8 +89,6 @@ class BrandImportJob implements ShouldQueue
     {
         $responseBody = (new UltraImportService())->isReady($guid);
         $response = json_decode(json_encode($responseBody), true);
-        Log::info('test here', [$response]);
-
         return $response;
     }
 

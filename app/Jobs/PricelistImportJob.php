@@ -63,16 +63,14 @@ class PricelistImportJob implements ShouldQueue
 
 
         do {
-            try {
-                $newStatus = $this->isReady($client, $this->guid);
-                $status = $newStatus['status'] ?? false;
-                Log::info("Status for PRICELIST is: ", [$status]);
+            $status = $this->isReady($client, $this->guid);
+            Log::info("Status for PRICELIST is: ", (array)$status);
 
-            } catch (\Exception $e) {
-                Log::error('Error checking status: ' . $e->getMessage());
-                throw $e;
+            if (!$status) {
+                Log::info('Service not yet ready', ['status' => $status]);
+                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
             }
-        } while ($status == false);
+        } while ($status === false);
 
 
         Log::info('Service is ready, proceeding with the next steps');
@@ -82,7 +80,7 @@ class PricelistImportJob implements ShouldQueue
             ini_set('max_execution_time', 600);
 
             $responseBody = (new UltraImportService())->getDataByID($this->guid);
-        
+
         } catch (\Exception $exception) {
             Log::error('We have an error: ' . $exception->getMessage());
             throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
@@ -94,22 +92,17 @@ class PricelistImportJob implements ShouldQueue
 // //        // Salvăm datele în Redis
 
 
-       Redis::set("PRICELIST", json_encode($data['price']));
+        Redis::set("PRICELIST", json_encode($data['price']));
 // //
-       Log::info('NOMENCLATURE process is done!');
+        Log::info('NOMENCLATURE process is done!');
 
     }
 
     protected function isReady(Client $client, $guid)
     {
-        $response = $client->get("/api/check-status/{$guid}");
-        $body = json_decode((string)$response->getBody(), true);
-        return $body;
-    }
-
-    protected function getData(UltraImportController $ultraImportController, $guid)
-    {
-        return $ultraImportController->getData($guid);
+        $responseBody = (new UltraImportService())->isReady($guid);
+        $response = json_decode(json_encode($responseBody), true);
+        return $response;
     }
 
     protected function isCommit()
@@ -126,6 +119,11 @@ class PricelistImportJob implements ShouldQueue
     public function failed(\Throwable $exception)
     {
         Log::error("Job failed after {$this->attempts()} attempts for GUID: {$this->guid}. Exception: {$exception->getMessage()}");
+    }
+
+    protected function getData(UltraImportController $ultraImportController, $guid)
+    {
+        return $ultraImportController->getData($guid);
     }
 
 }
