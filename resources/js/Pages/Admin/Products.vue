@@ -1,9 +1,9 @@
 <template>
     <admin-layout :current-route="initialRoute" title="Products">
-        <div class="w-full grid grid-cols-1  gap-4">
+        <div class="grid w-full grid-cols-1 gap-4">
             <div class="container-rounded ">
 
-                <div class="mb-4 flex items-center justify-between">
+                <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="primary-text">{{ __('products') }}</h3>
                         <span class="secondary-text">{{ __('products_description_admin') }}</span>

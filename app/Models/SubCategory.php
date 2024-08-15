@@ -20,7 +20,18 @@ class SubCategory extends Model implements TranslatableContract
     ];
     public $translatedAttributes = ['name'];
 
-   
+    protected $dispatchesEvents = [
+        /**
+         * The 'created' event is dispatched when a new model is saved for the first time using the `save` method or the `create` method.
+         * The \App\Events\NewSubcategory::class event class is dispatched for this event.
+         * This event is only dispatched if at least one of the model's attributes has been changed.
+         */
+        'created' => \App\Events\NewSubcategory::class,
+
+
+    ];
+
+
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);

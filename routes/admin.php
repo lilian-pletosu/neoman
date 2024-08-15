@@ -34,6 +34,7 @@ Route::group([], function () {
             Route::resource('/settings', \App\Http\Controllers\admin\SettingsController::class);
             Route::resource('/attributes', \App\Http\Controllers\admin\AttributeController::class);
             Route::resource('/promotions', \App\Http\Controllers\admin\PromotionController::class);
+            Route::resource('/imported-products', \App\Http\Controllers\admin\ImportedProductController::class);
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit')->name('profile');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update')->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy')->name('profile.destroy');

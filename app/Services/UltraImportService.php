@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 
 class UltraImportService
@@ -19,6 +20,7 @@ class UltraImportService
         $this->password = env('SOAP_PASS');
         $this->client = Soap::to($this->wsdl)
             ->withBasicAuth($this->username, $this->password);
+
     }
 
     public function requestData($service, $all = true, $additionalParameters = '', $compress = false)
@@ -34,17 +36,20 @@ class UltraImportService
         return $response->response->return;
     }
 
-    public function isReady($GUID)
-    {
-        $response = $this->client->call('isReady', ['ID' => $GUID]);
-
-        return $response->response->return;
-    }
-
     public function getDataByID($GUID)
     {
         $response = $this->client->call('getDataByID', ['ID' => $GUID]);
-        return $this->prepareResponse($response->response);
+        $xml = $this->prepareResponse($response->response);
+        return $xml;
+    }
+
+    public function prepareResponse($response)
+    {
+        $xml = $response->return->data;
+
+        $simple_xml = simplexml_load_string($xml);
+        return $simple_xml;
+//        return json_decode($simple_xml);
     }
 
     public function commitReceivingData($service)
@@ -53,16 +58,7 @@ class UltraImportService
         return $response->response;
     }
 
-
-    public function prepareResponse($response)
-    {
-        $xml = $response->return->data;
-        $simple_xml = simplexml_load_string($xml);
-        return $simple_xml;
-    }
-
-
-    public function waitForReady($GUID, $maxRetries = 10, $retryInterval = 5)
+    public function waitForReady($GUID, $maxRetries = 10, $retryInterval = 10)
     {
         for ($i = 0; $i < $maxRetries; $i++) {
             $isReady = $this->isReady($GUID);
@@ -77,6 +73,13 @@ class UltraImportService
 
         echo "Service did not become ready after $maxRetries attempts\n";
         return false;
+    }
+
+    public function isReady($GUID)
+    {
+        $response = $this->client->call('isReady', ['ID' => $GUID]);
+
+        return $response->response->return;
     }
 
 

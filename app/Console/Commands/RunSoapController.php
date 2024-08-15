@@ -2,67 +2,107 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\front\UltraImportController;
+use App\Jobs\PropertiesNomenclatureUltra;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class RunSoapController extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'run:import-ultra';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    protected $soapController;
-
-    public function __construct(UltraImportController $soapController)
-    {
-        parent::__construct();
-
-        $this->soapController = $soapController;
-    }
+    protected $signature = 'run:import-ultra'; // Numele și semnătura comenzii console
+    protected $description = 'Import data from Ultra service'; // Descrierea comenzii console
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $service = 'NOMENCLATURE';
-        $all = true;
-        $additionalParameters = '';
-        $compress = false;
+        $startTime = microtime(true);
+        ini_set('max_execution_time', 0); // Setăm timpul de execuție la infinit (0)
 
-        $GUID = $this->soapController->requestData();
-//        $isReady = $this->soapController->checkIsReady($GUID);
-        // Loop until isReady returns true
-        while (true) {
-            $isReady = $this->soapController->checkIsReady($GUID);
-            if ($isReady) {
-                break;
+        // Parametrii pentru diferite servicii
+        $services = [
+            // 'NOMENCLATURE' => [
+            //     'params' => [
+            //         "service" => "NOMENCLATURE",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => NomenclatureImportJob::class
+            // ],
+            // 'PARENTLIST' => [
+            //     'params' => [
+            //         "service" => "PARENTLIST",
+            //         "all" => true,
+            //         "additionalParams" => "NOMENCLATURETYPELIST"
+            //     ],
+            //     'job' => ParentImportJob::class
+            // ],
+            // 'NOMENCLATURETYPELIST' => [
+            //     'params' => [
+            //         "service" => "NOMENCLATURETYPELIST",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => NomenclatureTypeImportJob::class
+            // ],
+            // 'BRAND' => [
+            //     'params' => [
+            //         "service" => "BRAND",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => BrandImportJob::class
+            // ],
+            // 'PRICELIST' => [
+            //     'params' => [
+            //         "service" => "PRICELIST",
+            //         "all" => true,
+            //         "additionalParams" => ""
+            //     ],
+            //     'job' => PricelistImportJob::class
+            // ],
+//            'TRANSLATIONS' => [
+//                'params' => [
+//                    "service" => "TRANSLATIONS",
+//                    "all" => true,
+//                    "additionalParams" => ""
+//                ],
+//                'job' => TranslationsUltra::class
+//            ],
+            'PROPERTIES' => [
+                'params' => [
+                    "service" => "PROPERTIES",
+                    "all" => false,
+                    "additionalParams" => ""
+                ],
+                'job' => PropertiesNomenclatureUltra::class
+            ]
+        ];
+
+        try {
+            foreach ($services as $service => $details) {
+                $requestParams = $details['params'];
+                $jobClass = $details['job'];
+
+                $jobClass::dispatch($requestParams);
+
+                Log::info("$service import was successfully executed");
             }
+            Log::info('All imports were successfully dispatched');
 
-            // Wait for 5 seconds before trying again
-            sleep(5);
+
+            $endTime = microtime(true);
+            $executionTime = $endTime - $startTime;
+            $this->info('All imports were successfully executed');
+            $this->info('Total execution time: ' . round($executionTime, 2) . ' seconds');
+        } catch (\Exception $e) {
+            $endTime = microtime(true);
+            $executionTime = $endTime - $startTime;
+            $this->error('An error occurred during the import process');
+            $this->error('Execution time before error: ' . round($executionTime, 2) . ' seconds');
+            $this->error($e->getMessage());
+            Log::error('An error occurred during the import process: ' . $e->getMessage());
+            throw $e; // Aruncăm din nou excepția pentru a permite retry logic
         }
-        while (true) {
-            $data = $this->soapController->getDataByID($GUID);
-            if ($data) {
-                break;
-            }
-        }
-
-        // Wait for 5 seconds before trying again
-
-//            $data = $this->soapController->getDataByID($GUID);
-        dd($data);
-//        $response = $this->soapController->commitReceivingData($service);
     }
 }

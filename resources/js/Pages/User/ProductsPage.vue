@@ -53,14 +53,16 @@ if (window.innerWidth < 1024) {
 }
 
 function updateFilteredProducts() {
+    let isEmptyPriceRange = priceRange.every(item => item === '');
+
     router.get(route('products_page', {subSubcategory: props.subSubcategory.slug}), {
         brands: brandsFilter.value,
         sorts: sortProducts.value,
         ...attributesFilter,
-        price: {
+        price: !isEmptyPriceRange ? {
             from: priceRange[0],
             to: priceRange[1]
-        }
+        } : null
     }, {
         preserveState: true,
         preserveScroll: true,
@@ -103,21 +105,21 @@ onBeforeUnmount(() => {
         <div class="bg-white">
             <div>
                 <!-- Mobile filter dialog -->
-                <ReusableSidebar :title="__('filter')" :open="mobileFiltersOpen"
-                                 @close="mobileFiltersOpen = false" class="lg:hidden">
+                <ReusableSidebar :open="mobileFiltersOpen" :title="__('filter')"
+                                 class="lg:hidden" @close="mobileFiltersOpen = false">
                     <template v-slot:content>
                         <div class="px-4">
                             <form class="block ">
 
-                                <Disclosure as="div"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                <Disclosure v-slot="{ open }"
+                                            as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                                             <span class="font-medium text-gray-900">{{ __('price') }}</span>
                                             <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
                                     </span>
                                         </DisclosureButton>
                                     </h3>
@@ -125,28 +127,28 @@ onBeforeUnmount(() => {
 
                                         <div class=" ">
                                             <div class="flex justify-around space-x-2 ">
-                                                <input placeholder="min"
-                                                       type="number"
+                                                <input v-model="priceRange[0]"
                                                        :min="0"
-                                                       v-model="priceRange[0]"
-                                                       class="w-full rounded-sm h-8 ">
-                                                <input placeholder="max" type="number"
-                                                       :min="0"
-                                                       v-model="priceRange[1]"
-                                                       class="w-full rounded-sm h-8 ">
+                                                       class="w-full rounded-sm h-8 "
+                                                       placeholder="min"
+                                                       type="number">
+                                                <input v-model="priceRange[1]" :min="0"
+                                                       class="w-full rounded-sm h-8 "
+                                                       placeholder="max"
+                                                       type="number">
                                             </div>
                                         </div>
                                     </DisclosurePanel>
                                 </Disclosure>
-                                <Disclosure as="div" v-for="brand in brands"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                <Disclosure v-for="brand in brands" v-slot="{ open }"
+                                            as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                                             <span class="font-medium text-gray-900">{{ brand.name }}</span>
                                             <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
                                     </span>
                                         </DisclosureButton>
                                     </h3>
@@ -154,11 +156,11 @@ onBeforeUnmount(() => {
                                         <div class="space-y-4">
                                             <div v-for="(option, optionIdx) in brand.options"
                                                  class="flex items-center">
-                                                <input :name="option.value"
+                                                <input v-model="brandsFilter"
+                                                       :name="option.value"
                                                        :value="option.id"
-                                                       v-model="brandsFilter"
-                                                       type="checkbox"
-                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                       type="checkbox"/>
                                                 <label :for="option.value"
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
                                                         option.value
@@ -167,15 +169,15 @@ onBeforeUnmount(() => {
                                         </div>
                                     </DisclosurePanel>
                                 </Disclosure>
-                                <Disclosure as="div" v-for="attribute in attributes"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                <Disclosure v-for="attribute in attributes" v-slot="{ open }"
+                                            as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                                             <span class="font-medium text-gray-900">{{ attribute.name }}</span>
                                             <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
                                     </span>
                                         </DisclosureButton>
                                     </h3>
@@ -183,12 +185,12 @@ onBeforeUnmount(() => {
                                         <div class="space-y-4">
                                             <div v-for="(option) in attribute.options"
                                                  class="flex items-center">
-                                                <input :name="option.value"
+                                                <input :checked="isOptionSelected(attribute.key, option.id)"
+                                                       :name="option.value"
                                                        :value="option.id"
-                                                       @change="addVariable(attribute.key, option.id)"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                        type="checkbox"
-                                                       :checked="isOptionSelected(attribute.key, option.id)"
-                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                       @change="addVariable(attribute.key, option.id)"/>
                                                 <label :for="option.value"
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
                                                         option.value
@@ -214,11 +216,11 @@ onBeforeUnmount(() => {
                                         class="group inline-flex justify-center text-sm font-medium text-gray-400 hover:text-gray-500">
                                         <span class="hidden sm:flex">{{ __('sort') }}</span>
                                         <span class="flex sm:hidden"><PresentationChartBarIcon
-                                            class="h-5 w-5"
-                                            aria-hidden="true"/></span>
+                                            aria-hidden="true"
+                                            class="h-5 w-5"/></span>
                                         <ChevronDownIcon
-                                            class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                            aria-hidden="true"/>
+                                            aria-hidden="true"
+                                            class="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"/>
                                     </MenuButton>
                                 </div>
 
@@ -233,9 +235,10 @@ onBeforeUnmount(() => {
                                         <div class="py-1">
                                             <MenuItem v-for="option in sortOptions" :key="option.name"
                                                       v-slot="{ active }">
-                                                <span class="cursor-pointer"
-                                                      @click="sortProducts = option.value"
-                                                      :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
+                                                <span
+                                                    :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']"
+                                                    class="cursor-pointer"
+                                                    @click="sortProducts = option.value">{{
                                                         option.name
                                                     }}</span>
                                             </MenuItem>
@@ -245,11 +248,11 @@ onBeforeUnmount(() => {
                             </Menu>
 
 
-                            <button type="button"
-                                    class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                            <button class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
+                                    type="button"
                                     @click="mobileFiltersOpen = true">
                                 <span class="sr-only">Filters</span>
-                                <FunnelIcon class="h-5 w-5" aria-hidden="true"/>
+                                <FunnelIcon aria-hidden="true" class="h-5 w-5"/>
                             </button>
                         </div>
                     </div>
@@ -261,8 +264,8 @@ onBeforeUnmount(() => {
                             <!-- Filters -->
                             <form class="hidden lg:block ">
 
-                                <Disclosure as="div"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                <Disclosure v-slot="{ open }"
+                                            as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between bg-white py-3  text-gray-400 hover:text-gray-500 dark:bg-dark ">
@@ -271,8 +274,8 @@ onBeforeUnmount(() => {
                                                     __('price')
                                                 }}</span>
                                             <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
                                     </span>
                                         </DisclosureButton>
                                     </h3>
@@ -280,21 +283,21 @@ onBeforeUnmount(() => {
 
                                         <div class=" ">
                                             <div class="flex justify-around space-x-2 ">
-                                                <input placeholder="min"
-                                                       type="number"
+                                                <input v-model="priceRange[0]"
                                                        :min="0"
-                                                       v-model="priceRange[0]"
-                                                       class="w-full rounded-sm h-8 ">
-                                                <input placeholder="max" type="number"
-                                                       :min="0"
-                                                       v-model="priceRange[1]"
-                                                       class="w-full rounded-sm h-8 ">
+                                                       class="w-full rounded-sm h-8 "
+                                                       placeholder="min"
+                                                       type="number">
+                                                <input v-model="priceRange[1]" :min="0"
+                                                       class="w-full rounded-sm h-8 "
+                                                       placeholder="max"
+                                                       type="number">
                                             </div>
                                         </div>
                                     </DisclosurePanel>
                                 </Disclosure>
-                                <Disclosure as="div" v-for="brand in brands"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                <Disclosure v-for="brand in brands" v-slot="{ open }"
+                                            as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between dark:bg-dark  py-3  text-gray-400 hover:text-gray-500">
@@ -303,8 +306,8 @@ onBeforeUnmount(() => {
                                                     brand.name
                                                 }}</span>
                                             <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
                                     </span>
                                         </DisclosureButton>
                                     </h3>
@@ -312,11 +315,11 @@ onBeforeUnmount(() => {
                                         <div class="space-y-4">
                                             <div v-for="(option, optionIdx) in brand.options"
                                                  class="flex items-center">
-                                                <input :name="option.value"
+                                                <input v-model="brandsFilter"
+                                                       :name="option.value"
                                                        :value="option.id"
-                                                       v-model="brandsFilter"
-                                                       type="checkbox"
-                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                       type="checkbox"/>
                                                 <label :for="option.value"
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
                                                         `${option.value} (${option.count})`
@@ -325,8 +328,8 @@ onBeforeUnmount(() => {
                                         </div>
                                     </DisclosurePanel>
                                 </Disclosure>
-                                <Disclosure as="div" v-for="attribute in attributes"
-                                            class="border-b border-gray-200 py-6" v-slot="{ open }">
+                                <Disclosure v-for="attribute in attributes" v-slot="{ open }"
+                                            as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
                                             class="flex w-full items-center justify-between dark:bg-dark py-3  text-gray-400 hover:text-gray-500">
@@ -335,8 +338,8 @@ onBeforeUnmount(() => {
                                                     attribute.name
                                                 }}</span>
                                             <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true"/>
-                                  <MinusIcon v-else class="h-5 w-5" aria-hidden="true"/>
+                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
                                     </span>
                                         </DisclosureButton>
                                     </h3>
@@ -344,12 +347,12 @@ onBeforeUnmount(() => {
                                         <div class="space-y-4">
                                             <div v-for="(option) in attribute.options"
                                                  class="flex items-center">
-                                                <input :name="option.value"
+                                                <input :checked="isOptionSelected(attribute.key, option.id)"
+                                                       :name="option.value"
                                                        :value="option.id"
-                                                       @change="addVariable(attribute.key, option.id)"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                        type="checkbox"
-                                                       :checked="isOptionSelected(attribute.key, option.id)"
-                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
+                                                       @change="addVariable(attribute.key, option.id)"/>
                                                 <label :for="option.value"
                                                        class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
                                                         option.value
@@ -366,7 +369,7 @@ onBeforeUnmount(() => {
                                     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:col-span-4 2xl:grid-cols-3 4xl:grid-cols-4  gap-4">
                                     <div v-for="product in products.data">
                                         <div
-                                            class="container-rounded bg-3 relative group/card">
+                                            class="container-rounded bg-3 relative group/card xl:min-h-[27.5rem]">
                                             <div
                                                 class="absolute w-full -top-0 left-0 ">
                                                 <div class=" flex justify-center">
@@ -381,14 +384,15 @@ onBeforeUnmount(() => {
                                                 <div>
                                                     <div class="static">
                                                         <div class="w-12 absolute left-2 top-2 z-80">
-                                                            <img class="mix-blend-multiply" :src="product.brand.image"
-                                                                 :alt="product.brand.name">
+                                                            <img :alt="product.brand.name" :src="product.brand.image"
+                                                                 class="mix-blend-multiply">
                                                         </div>
-                                                        <div @click="wishlistStore.addProductInWishlist(product.id)"
-                                                             class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer">
+                                                        <div
+                                                            class=" absolute group right-2 top-2 bg-white rounded-xl p-2 bg-opacity-40 cursor-pointer"
+                                                            @click="wishlistStore.addProductInWishlist(product.id)">
                                                             <heart-icon
-                                                                class="w-4 group-hover:text-red-500 group-hover:fill-red-500"
-                                                                :class="{'text-red-500 fill-red-500': wishlistStore.checkIfProductExistInWishlist(product.id)}"/>
+                                                                :class="{'text-red-500 fill-red-500': wishlistStore.checkIfProductExistInWishlist(product.id)}"
+                                                                class="w-4 group-hover:text-red-500 group-hover:fill-red-500"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -433,12 +437,15 @@ onBeforeUnmount(() => {
                                                             {{ __('lei') }}</p>
                                                     </template>
                                                 </div>
-                                                <div @click="cartStore.addProductInCart(product.id, 'default')"
-                                                     class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-[#1FC8F3]  cursor-pointer group/cart"
-                                                     :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                                         class="h-4 w-4  group-hover/cart:text-white"
-                                                         :class="cartStore.checkIfProductExistInCart(product.id) ? 'text-white' : 'text-black'">
+                                                <div
+                                                    :class="cartStore.checkIfProductExistInCart(product.id) ? 'bg-[#1FC8F3]' : 'bg-white'"
+                                                    class="shadow  rounded-lg  transition p-4 sm:p-4   hover:scale-110  hover:bg-[#1FC8F3]  cursor-pointer group/cart"
+                                                    @click="cartStore.addProductInCart(product.id, 'default')">
+                                                    <svg
+                                                        :class="cartStore.checkIfProductExistInCart(product.id) ? 'text-white' : 'text-black'"
+                                                        class="h-4 w-4  group-hover/cart:text-white"
+                                                        fill="currentColor"
+                                                        xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                             d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5M3.14 5l1.25 5h8.22l1.25-5zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0m9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0"/>
                                                     </svg>

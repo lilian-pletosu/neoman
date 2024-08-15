@@ -5,6 +5,8 @@ import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';
 import {createPinia} from 'pinia'
 import {ZiggyVue} from 'ziggy-js';
 import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+
 import 'primevue/resources/themes/aura-light-green/theme.css'
 
 
@@ -60,7 +62,17 @@ createInertiaApp({
 
         return app
             .use(plugin)
-            .use(PrimeVue)
+            .use(PrimeVue, {
+                // Default theme configuration
+                theme: {
+                    preset: Aura,
+                    options: {
+                        prefix: 'p',
+                        darkModeSelector: 'system',
+                        cssLayer: false
+                    }
+                }
+             })
             .use(ZiggyVue, Ziggy, 'route')
             .mount(el);
     },

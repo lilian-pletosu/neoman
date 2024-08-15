@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\UltraImportJob;
 use App\Services\UltraImportService;
 use Illuminate\Http\Request;
 
@@ -13,9 +12,9 @@ class UltraImportController extends Controller
 
     protected $ultraImportService;
 
-    public function __construct(UltraImportService $ultraImportService)
+    public function __construct()
     {
-        $this->ultraImportService = $ultraImportService;
+        $this->ultraImportService = new UltraImportService();
     }
 
     public function requestData(Request $request)
@@ -27,9 +26,8 @@ class UltraImportController extends Controller
             $request->input('additionalParams')
         );
 
-        UltraImportJob::dispatch($guid);
 
-        return response()->json(['guid' => $guid]);
+        return $guid;
     }
 
     public function checkStatus($guid)
@@ -43,6 +41,11 @@ class UltraImportController extends Controller
     {
         $data = $this->ultraImportService->getDataByID($guid);
         return response()->json($data);
+    }
+
+    public function commitReceivingData(string $service): void
+    {
+        $this->ultraImportService->commitReceivingData($service);
     }
 
 }

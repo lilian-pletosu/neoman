@@ -1,4 +1,3 @@
-version: '3.9'
 
 networks:
     neoman:
@@ -32,6 +31,7 @@ services:
             - traefik.http.routers.neoman-nginx.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
+
             - traefik.http.routers.neoman-nginx.tls=true
             - traefik.http.routers.neoman-nginx.tls.certresolver=myresolver
 
@@ -95,5 +95,7 @@ services:
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
             - traefik.http.routers.neoman.tls=true
             - traefik.http.routers.neoman.tls.certresolver=myresolver
+
+
         volumes:
             - ./database-storage:/var/lib/mysql

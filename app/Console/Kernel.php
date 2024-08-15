@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Jobs\UltraImportJob;
+use App\Jobs\NomenclatureImportJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $ultraImportService = new \App\Services\UltraImportService();
-        $schedule->job(new UltraImportJob($ultraImportService))->everyMinute();
+        $schedule->job(new NomenclatureImportJob($ultraImportService))->everyMinute();
 
     }
 
