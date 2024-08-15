@@ -56,9 +56,10 @@ class BrandImportJob implements ShouldQueue
 
         do {
             $status = $this->isReady($client, $this->guid);
-            Log::info("Status for BRAND is: ", $status);
-            if (isset($status['status']) && !$status['status']) {
-                Log::info('Service not yet ready', ['status' => $status['status']]);
+            Log::info("Status for BRAND is: ", (array)$status);
+
+            if (!$status) {
+                Log::info('Service not yet ready', ['status' => $status]);
                 sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
             }
         } while (isset($status['status']) && !$status['status']);
@@ -71,12 +72,12 @@ class BrandImportJob implements ShouldQueue
 
             $responseBody = json_decode($response->getBody()->getContents());
         } catch (\Exception $exception) {
-            Log::error('We have an error: ' . $exception->getMessage());
+            Log::error('We have an error: ', (array)$exception->getMessage());
             throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
         }
 
         $this->isCommit();
-        Log::info("Data for BRAND received", ['data' => $responseBody->brand]);
+        Log::info("Data for BRAND received");
 
         // Salvăm datele în Redis
         Redis::set("BRAND", json_encode($responseBody->brand));
@@ -86,9 +87,11 @@ class BrandImportJob implements ShouldQueue
 
     protected function isReady(Client $client, $guid)
     {
-        $response = $client->get("/api/check-status/{$guid}");
-        $body = json_decode((string)$response->getBody(), true);
-        return $body;
+        $responseBody = (new UltraImportService())->isReady($guid);
+        $response = json_decode(json_encode($responseBody), true);
+        Log::info('test here', [$response]);
+
+        return $response;
     }
 
     protected function isCommit()

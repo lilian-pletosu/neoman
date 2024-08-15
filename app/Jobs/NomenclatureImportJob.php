@@ -13,7 +13,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
@@ -69,6 +68,9 @@ class NomenclatureImportJob implements ShouldQueue
 
         do {
             try {
+                ini_set('max_execution_time', 0); // Setăm timpul de execuție la infinit (0)
+                // need to set time for request more than 60 seconds
+
                 $newStatus = $this->isReady($client, $this->guid);
                 $status = $newStatus['status'] ?? false;
                 Log::info("Status for NOMENCLATURE is: ", [$status]);
@@ -83,13 +85,13 @@ class NomenclatureImportJob implements ShouldQueue
         Log::info('Service is ready, proceeding with the next steps');
 
         // Obține datele pe baza GUID-ului
-        
-        
+
+
         try {
             ini_set('max_execution_time', 600);
 
             $responseBody = (new UltraImportService())->getDataByID($this->guid);
-        
+
         } catch (\Exception $exception) {
             Log::error('We have an error: ' . $exception->getMessage());
             throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
@@ -99,15 +101,17 @@ class NomenclatureImportJob implements ShouldQueue
         $encodedData = json_encode($responseBody);
         $data = json_decode($encodedData, true);
 // //        // Salvăm datele în Redis
-       Redis::set("NOMENCLATURE", json_encode($data['nomenclature']));
+        Redis::set("NOMENCLATURE", json_encode($data['nomenclature']));
 // //
-       Log::info('NOMENCLATURE process is done!');
+        Log::info('NOMENCLATURE process is done!');
 
     }
 
     protected function isReady(Client $client, $guid)
     {
-        $response = $client->get("/api/check-status/{$guid}");
+        $responseBody = (new UltraImportService())->isReady($guid);
+        $response = json_decode(json_encode($responseBody), true);
+//        $response = $client->get("/api/check-status/{$guid}");
         $body = json_decode((string)$response->getBody(), true);
         return $body;
     }
