@@ -5,8 +5,6 @@ namespace App\Jobs;
 use App\Http\Controllers\front\UltraImportController;
 use App\Services\UltraImportService;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\ServerException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 
 class NomenclatureImportJob implements ShouldQueue
 {
@@ -64,7 +61,6 @@ class NomenclatureImportJob implements ShouldQueue
 
         Log::info('Guid is:', [$this->guid]);
 
-        $status = false;
 
         do {
             $status = $this->isReady($client, $this->guid);
@@ -72,33 +68,14 @@ class NomenclatureImportJob implements ShouldQueue
 
             if (!$status) {
                 Log::info('Service not yet ready', ['status' => $status]);
-                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
+                sleep(7); // Așteaptă 2 secunde înainte de a verifica din nou
             }
         } while ($status === false);
 
 
-        Log::info('Service is ready, proceeding with the next steps');
+        Log::info('Service is ready, proceeding with the next steps. Dispatching NomenclatureImportFetchProductsJob.');
 
-        // Obține datele pe baza GUID-ului
-
-
-        try {
-            ini_set('max_execution_time', 600);
-
-            $responseBody = (new UltraImportService())->getDataByID($this->guid);
-
-        } catch (\Exception $exception) {
-            Log::error('We have an error: ' . $exception->getMessage());
-            throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
-        }
-// //
-        $this->isCommit();
-        $encodedData = json_encode($responseBody);
-        $data = json_decode($encodedData, true);
-// //        // Salvăm datele în Redis
-        Redis::set("NOMENCLATURE", json_encode($data['nomenclature']));
-// //
-        Log::info('NOMENCLATURE process is done!');
+        NomenclatureImportFetchProductsJob::dispatch($this->guid);
 
     }
 
@@ -107,11 +84,6 @@ class NomenclatureImportJob implements ShouldQueue
         $responseBody = (new UltraImportService())->isReady($guid);
         $response = json_decode(json_encode($responseBody), true);
         return $response;
-    }
-
-    protected function isCommit()
-    {
-        (new UltraImportService())->commitReceivingData('NOMENCLATURE');
     }
 
     /**
@@ -125,21 +97,5 @@ class NomenclatureImportJob implements ShouldQueue
         Log::error("Job failed after {$this->attempts()} attempts for GUID: {$this->guid}. Exception: {$exception->getMessage()}");
     }
 
-    protected function getDataWithRetries(Client $client, $uri, $retries = 0)
-    {
-        try {
-            $response = $client->get($uri);
-            return json_decode($response->getBody()->getContents());
-        } catch (RequestException $exception) {
-            if ($exception->getCode() == 504 && $retries < $this->maxRetries) {
-                Log::warning("504 Gateway Timeout error, retrying... ({$retries}/{$this->maxRetries})");
-                sleep($this->retryDelay);
-                return $this->getDataWithRetries($client, $uri, ++$retries);
-            }
-            throw $exception; // Rethrow the exception if max retries are reached
-        } catch (ServerException $exception) {
-            Log::error('Server error: ' . $exception->getMessage());
-            throw $exception;
-        }
-    }
+
 }
