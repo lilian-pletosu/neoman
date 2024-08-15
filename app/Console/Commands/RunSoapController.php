@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\TranslationsUltra;
+use App\Jobs\PropertiesNomenclatureUltra;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -61,13 +61,21 @@ class RunSoapController extends Command
             //     ],
             //     'job' => PricelistImportJob::class
             // ],
-            'TRANSLATIONS' => [
+//            'TRANSLATIONS' => [
+//                'params' => [
+//                    "service" => "TRANSLATIONS",
+//                    "all" => true,
+//                    "additionalParams" => ""
+//                ],
+//                'job' => TranslationsUltra::class
+//            ],
+            'PROPERTIES' => [
                 'params' => [
-                    "service" => "TRANSLATIONS",
-                    "all" => true,
+                    "service" => "PROPERTIES",
+                    "all" => false,
                     "additionalParams" => ""
                 ],
-                'job' => TranslationsUltra::class
+                'job' => PropertiesNomenclatureUltra::class
             ]
         ];
 

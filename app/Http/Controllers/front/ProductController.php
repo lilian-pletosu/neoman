@@ -6,10 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Credit;
-use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\SubSubCategory;
-use App\Services\ProductService;
 use App\Services\SessionService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -97,6 +95,7 @@ class ProductController extends Controller
 
         $product['attributes'] = $product['attributes']->map(function ($item) use ($res, $mu_unit) {
             $values = [];
+
             return [
                 'name' => $item[0]->attribute->translate()->name,
                 'values' => $item->map(function ($value) use ($res, $mu_unit) {
@@ -109,16 +108,17 @@ class ProductController extends Controller
             ];
         });
 
-        $latest_products = (new ProductService())->loadLatestProducts();
+//        $latest_products = (new ProductService())->loadLatestProducts();
 
 
-        $product['mu'] = MeasurementUnit::find($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol;
+//        $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? '';
+//        dd($product);
 
         $product['credits'] = Cache::has('credits') ? Cache::get('credits') : Cache::remember('credits', 20000, function () {
             return Credit::get()->groupBy('type');
         });
 
-        return inertia('User/ProductPage', ['product' => $product, 'latest_products' => $latest_products]);
+        return inertia('User/ProductPage', ['product' => $product, 'latest_products' => null]);
     }
 
     private function extractKeywordsFromSlug($slug): array

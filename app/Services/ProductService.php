@@ -117,7 +117,7 @@ class ProductService
                 'price' => $product->price,
                 'brand' => ['name' => $brandName, 'image' => $brandLogo],
                 'attributes' => $attributesArray,
-                'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
+                'mu' => MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol ?? 'buc'
             ];
 
             // Adaugă array-ul produsului în array-ul general de produse
@@ -166,7 +166,7 @@ class ProductService
                         'price' => $product->price,
                         'brand' => ['name' => $brandName, 'image' => $brandLogo],
                         'attributes' => $attributesArray,
-                        'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
+                        'mu' => null
                     ];
 
                     // Adaugă array-ul produsului în array-ul general de produse

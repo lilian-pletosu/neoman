@@ -11,19 +11,21 @@
                                 __('attention_imported_products_will_not_be_visible_until_they_are_saved_to_a_category')
                             }}</span>
                     </div>
-                    <div v-if="Object.keys(selectedProduct).length != 0" class="flex justify-end mb-2">
+                    <div v-if="Object.keys(selectedProduct).length !== 0" class="flex justify-end mb-2">
                         <primary-button class="mx-2" @click="isOpen = !isOpen">{{
                                 __('save_imported_products')
                             }}
                         </primary-button>
-                        <button
-                            class="inline-flex items-center px-4 py-2 bg-red-600 border border-gray-300 rounded-md font-semibold text-xs text-white uppercase tracking-widest shadow-sm hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150"
-                            type="button"
-                            @click="deleteSelectedProducts"
-                        >
-                            {{ __('delete_selected') }}
-                        </button>
+                        <DangerButton @click="deleteSelectedProducts">{{ __('delete_selected') }}</DangerButton>
                     </div>
+                </div>
+                <div class="my-2">
+                    <TextInput v-model="dt" :placeholder=" __('search') " class="min-w-16" @blur="search = !search"
+                    />
+                    <Link :data="{ search: dt }" :href="route(`${page.props.searchRoute}.index`)" preserve-state>
+                        Search
+                    </Link>
+
                 </div>
                 <div v-if="resources.data.length !== 0" class="flex flex-col mt-8 ">
 
@@ -99,7 +101,7 @@
                     <h2 v-if="resources.data.length === 0" class="flex justify-center">{{ __('no_products') }}...</h2>
                 </div>
 
-                <Modal :actions="false" :closeable="true" :show="isOpen" @close="isOpen =false">
+                <Modal :actions="false" :closeable="true" :show="isOpen" @close="closeModal">
                     <div class="h-auto p-4 bg-gray-100">
                         <BlackSelectorImport :column="name"
                                              :label="__('select_category_where_save_products')"
@@ -136,20 +138,22 @@
 </template>
 
 <script setup>
-import {ref, watch} from 'vue'
+import {getCurrentInstance, ref, watch} from 'vue'
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import {useForm, usePage} from "@inertiajs/vue3";
+import {Link, useForm, usePage} from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
 import BlackSelectorImport from "@/Components/BlackSelectorImport.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import toast from "@/stores/toast.js";
+import DangerButton from "@/Components/DangerButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import {Inertia} from "@inertiajs/inertia";
 
-const logValue = (value) => {
-    console.log(value);
-    return value;  // Returnează valoarea pentru a o afișa în șablon
-}
+
+const app = getCurrentInstance();
+
 
 const props = defineProps({
     initialRoute: {
@@ -167,7 +171,8 @@ const modalIsOpen = ref(false);
 const res = ref();
 const selectedProduct = ref([]);
 const page = usePage();
-const dt = ref(null);
+const dt = ref('');
+const search = ref(false)
 
 const isSelected = (product) => {
     return selectedProduct.value.includes(product);
@@ -216,14 +221,39 @@ const submit = () => {
 }
 
 function deleteSelectedProducts() {
-    form.delete(route('admin.imported-products.destroy', {imported_product: selectedProduct.value}), {
-        preserveScroll: true,
-        onSuccess: () => {
-            toast.add({message: page.props.toast});
-            selectedProduct.value = [];
-        },
-        onError: (e) => toast.add({message: e}),
-    })
+    const confirmed = app.appContext.config.globalProperties.__('are_you_sure_delete');
+
+    if (confirm(confirmed)) {
+        form.delete(route('admin.imported-products.destroy', {imported_product: selectedProduct.value}), {
+            preserveScroll: true,
+            onSuccess: () => {
+                toast.add({message: page.props.toast});
+                selectedProduct.value = [];
+            },
+            onError: (e) => toast.add({message: e}),
+        })
+    }
+
+}
+
+function searchProducts(value) {
+    if (value) {
+        Inertia.visit(route(`${page.props.searchRoute}.index`, {
+            search: dt.value,
+
+        }, {
+            preserveScroll: true,
+            preserveState: true,
+            only: ['resources']
+        }))
+    }
+}
+
+function closeModal() {
+    isOpen.value = false;
+    form.category = null;
+    form.subcategory = null;
+    form.sub_subcategory = null;
 }
 
 

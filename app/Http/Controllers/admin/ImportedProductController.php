@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ImportedProduct;
+use App\Models\Product;
 use App\Services\DataTableService;
 use Illuminate\Http\Request;
 
@@ -45,14 +46,28 @@ class ImportedProductController extends Controller
 
     public function store(Request $request)
     {
-//        /// need to clone all products from imported products to products with selected sub_subcategory_id
-//        collect($request->products)->each(function ($product) use ($request) {
-//            $product = ImportedProduct::find($product['id']);
-//            $product['sub_subcategory_id'] = $request->sub_subcategory_id;
-//            dd($product);
-//            $newProduct = Product::create($product);
-//            dd($newProduct);
-//        });
+        /// need to clone all products from imported products to products with selected sub_subcategory_id
+        collect($request->products)->each(function ($product) use ($request) {
+            $product = ImportedProduct::find($product['id']);
+            $product['sub_sub_category_id'] = $request->sub_subcategory ?? $product['sub_sub_category_id'];
+            $product['description'] = json_decode($product['description'], true);
+            $newProduct = Product::updateOrCreate(['product_code' => $product['product_code']], [
+                'slug' => $product['slug'],
+                'price' => $product['price'],
+                'brand_id' => $product['brand_id'],
+                'sub_sub_category_id' => $product['sub_sub_category_id'],
+                'specifications_id' => null,
+            ]);
+            $newProduct->images()->create($product['images']);
+
+            foreach ((new Product())->translatedAttributes as $translatableAttribute) {
+                foreach (config('translatable.locales') as $locale) {
+                    $newProduct->translateOrNew($locale)->$translatableAttribute = $product[$translatableAttribute][$locale] ?? null;
+                }
+            }
+            $newProduct->save();
+            $product->delete();
+        });
 
         return redirect()->back()->with('toast', 'Sectiunea este in lucru!');
     }

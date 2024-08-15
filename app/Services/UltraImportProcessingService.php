@@ -48,6 +48,7 @@ class UltraImportProcessingService
             $item->price = $this->getPrice($item->UUID)->Price ?? 'No price';
             $item->description = $this->parseDescription($item->UUID);
             $item->images = $this->getFirstFourImages($item->imageList);
+            dd($item);
             return $item;
         })->filter(function ($item) {
             return $item->price !== 'No price' &&
