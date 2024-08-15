@@ -67,19 +67,14 @@ class NomenclatureImportJob implements ShouldQueue
         $status = false;
 
         do {
-            try {
-                ini_set('max_execution_time', 0); // Setăm timpul de execuție la infinit (0)
-                // need to set time for request more than 60 seconds
+            $status = $this->isReady($client, $this->guid);
+            Log::info("Status for NOMENCLATURE is: ", (array)$status);
 
-                $newStatus = $this->isReady($client, $this->guid);
-                $status = $newStatus['status'] ?? false;
-                Log::info("Status for NOMENCLATURE is: ", [$status]);
-
-            } catch (\Exception $e) {
-                Log::error('Error checking status: ' . $e->getMessage());
-                throw $e;
+            if (!$status) {
+                Log::info('Service not yet ready', ['status' => $status]);
+                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
             }
-        } while ($status == false);
+        } while ($status === false);
 
 
         Log::info('Service is ready, proceeding with the next steps');
@@ -111,9 +106,7 @@ class NomenclatureImportJob implements ShouldQueue
     {
         $responseBody = (new UltraImportService())->isReady($guid);
         $response = json_decode(json_encode($responseBody), true);
-//        $response = $client->get("/api/check-status/{$guid}");
-        $body = json_decode((string)$response->getBody(), true);
-        return $body;
+        return $response;
     }
 
     protected function isCommit()

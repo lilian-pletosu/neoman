@@ -65,15 +65,14 @@ class TranslationsUltra implements ShouldQueue
         $status = false;
 
         do {
-            try {
-                $newStatus = $this->isReady($client, $this->guid);
-                $status = $newStatus['status'] ?? false;
-                Log::info("Status for TRANSLATIONS is: ", [$status]);
-            } catch (\Exception $e) {
-                Log::error('Error checking status: ' . $e->getMessage());
-                throw $e;
+            $status = $this->isReady($client, $this->guid);
+            Log::info("Status for TRANSLATIONS is: ", (array)$status);
+
+            if (!$status) {
+                Log::info('Service not yet ready', ['status' => $status]);
+                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
             }
-        } while ($status == false);
+        } while ($status === false);
 
         Log::info('Service is ready, proceeding with the next steps');
 
@@ -97,8 +96,6 @@ class TranslationsUltra implements ShouldQueue
             return;
         }
 
-        Log::info("Translations is", [$data]);
-
 
         Redis::set("TRANSLATIONS", json_encode($data));
 
@@ -107,9 +104,9 @@ class TranslationsUltra implements ShouldQueue
 
     protected function isReady(Client $client, $guid)
     {
-        $response = $client->get("/api/check-status/{$guid}");
-        $body = json_decode((string)$response->getBody(), true);
-        return $body;
+        $responseBody = (new UltraImportService())->isReady($guid);
+        $response = json_decode(json_encode($responseBody), true);
+        return $response;
     }
 
     protected function isCommit()

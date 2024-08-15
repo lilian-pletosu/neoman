@@ -3,6 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Jobs\BrandImportJob;
+use App\Jobs\NomenclatureImportJob;
+use App\Jobs\NomenclatureTypeImportJob;
+use App\Jobs\ParentImportJob;
+use App\Jobs\PricelistImportJob;
+use App\Jobs\TranslationsUltra;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -21,30 +26,30 @@ class RunSoapController extends Command
 
         // Parametrii pentru diferite servicii
         $services = [
-//            'NOMENCLATURE' => [
-//                'params' => [
-//                    "service" => "NOMENCLATURE",
-//                    "all" => true,
-//                    "additionalParams" => ""
-//                ],
-//                'job' => NomenclatureImportJob::class
-//            ],
-//            'PARENTLIST' => [
-//                'params' => [
-//                    "service" => "PARENTLIST",
-//                    "all" => true,
-//                    "additionalParams" => "NOMENCLATURETYPELIST"
-//                ],
-//                'job' => ParentImportJob::class
-//            ],
-//            'NOMENCLATURETYPELIST' => [
-//                'params' => [
-//                    "service" => "NOMENCLATURETYPELIST",
-//                    "all" => true,
-//                    "additionalParams" => ""
-//                ],
-//                'job' => NomenclatureTypeImportJob::class
-//            ],
+            'NOMENCLATURE' => [
+                'params' => [
+                    "service" => "NOMENCLATURE",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => NomenclatureImportJob::class
+            ],
+            'PARENTLIST' => [
+                'params' => [
+                    "service" => "PARENTLIST",
+                    "all" => true,
+                    "additionalParams" => "NOMENCLATURETYPELIST"
+                ],
+                'job' => ParentImportJob::class
+            ],
+            'NOMENCLATURETYPELIST' => [
+                'params' => [
+                    "service" => "NOMENCLATURETYPELIST",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => NomenclatureTypeImportJob::class
+            ],
             'BRAND' => [
                 'params' => [
                     "service" => "BRAND",
@@ -53,22 +58,22 @@ class RunSoapController extends Command
                 ],
                 'job' => BrandImportJob::class
             ],
-//            'PRICELIST' => [
-//                'params' => [
-//                    "service" => "PRICELIST",
-//                    "all" => true,
-//                    "additionalParams" => ""
-//                ],
-//                'job' => PricelistImportJob::class
-//            ],
-//            'TRANSLATIONS' => [
-//                'params' => [
-//                    "service" => "TRANSLATIONS",
-//                    "all" => true,
-//                    "additionalParams" => ""
-//                ],
-//                'job' => TranslationsUltra::class
-//            ],
+            'PRICELIST' => [
+                'params' => [
+                    "service" => "PRICELIST",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => PricelistImportJob::class
+            ],
+            'TRANSLATIONS' => [
+                'params' => [
+                    "service" => "TRANSLATIONS",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => TranslationsUltra::class
+            ],
 
         ];
 
