@@ -109,8 +109,9 @@ class NomenclatureImportJob implements ShouldQueue
 
     protected function isReady(Client $client, $guid)
     {
-        ini_set('max_execution_time', 0); // Setăm timpul de execuție la infinit (0
-        $response = $client->get("/api/check-status/{$guid}");
+        $responseBody = (new UltraImportService())->isReady($guid);
+        $response = json_decode(json_encode($responseBody), true);
+//        $response = $client->get("/api/check-status/{$guid}");
         $body = json_decode((string)$response->getBody(), true);
         return $body;
     }
