@@ -17,7 +17,7 @@
 
 
     <x-slot name="subcopy">
-        Pentru comanda dvs. cu nr. <b>{{$order['order_number']}}</b>, a fost
+        Comanda dvs. cu nr. <b>{{$order['order_number']}}</b>, a fost
         <b>{{ trans("app_context" . "." .$order->status->value) }}</b>.
 
 
@@ -35,7 +35,8 @@
             | {{ $productHeader }} | {{ $colorHeader }} | {{ $qtyHeader }} | {{ $priceHeader }} |
             |:-----------|:----------------:|:------------:| --------:|
             @foreach($order['products'] as $product)
-                | {{$product['name']}} | {{$product['color_value']}} | {{$product['qty']}} | {{$product['price']}} |
+                | {{$product['name']}} | {{$product['color_value'] === 'default' ? '' : $product['color_value']}}
+                | {{$product['qty']}} | {{$product['price']}} |
             @endforeach
         </x-mail::table>
         <hr>
