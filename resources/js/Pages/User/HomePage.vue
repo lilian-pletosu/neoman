@@ -28,7 +28,7 @@ const props = defineProps({
 
     <front-layout :current-language="attrs.current_locale" title="Pagina principală">
         <template v-slot:carousel>
-            <carousel-front />
+            <carousel-front/>
         </template>
 
         <product-section :products="sales_products" :sale="true"
@@ -54,8 +54,8 @@ const props = defineProps({
                     </Link>
 
                     <Link
-                        class="block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
                         :href="route('about_page')"
+                        class="block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
                     >
                         {{ __('learn_more') }}
                     </Link>
@@ -64,7 +64,8 @@ const props = defineProps({
 
         </section>
         <product-section :products="sales_products" :title="__('top_products')" :top_products="true"/>
-        <product-section :new_products="true" :products="latest_products" :title="__('latest_products')"/>
+        <product-section v-if="latest_products" :new_products="true" :products="latest_products"
+                         :title="__('latest_products')"/>
 
     </front-layout>
 </template>

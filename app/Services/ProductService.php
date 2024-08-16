@@ -319,8 +319,7 @@ class ProductService
     private function ultraImportBrandSave($brand)
     {
         try {
-            $imagePath = $brand->image->pathGlobal ?? 'null';
-
+            $imagePath = $brand['image']['pathGlobal'] ?? null;
             $dbBrand = Brand::where('name', $brand['name'])->first();
 
             if (!$dbBrand) {

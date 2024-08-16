@@ -65,7 +65,7 @@ class HandleInertiaRequests extends Middleware
                 return Category::orderBy('name')->active()->get();
             }),
             'menu' => Cache::has('menu') ? Cache::get('menu') : Cache::remember('menu', 10000, function () {
-                return Category::orderBy('name')->active()->with('subcategory', function ($item) {
+                return Category::active()->orderBy('name')->with('subcategory', function ($item) {
                     $item->active();
                     $item->with('subSubcategory', function ($item) {
                         $item->active()->get();
@@ -74,13 +74,13 @@ class HandleInertiaRequests extends Middleware
                 })->get();
             }),
             'subcategories' => Cache::has('subcategories') ? Cache::get('subcategories') : Cache::remember('subcategories', 10000, function () {
-                return SubCategory::orderBy('name')->get();
+                return SubCategory::active()->orderBy('name')->get();
             }),
             'sub_subcategories' => Cache::has('sub_subcategories') ? Cache::get('sub_subcategories') : Cache::remember('sub_subcategories', 10000, function () {
-                return SubSubCategory::orderBy('name')->get();
+                return SubSubCategory::active()->orderBy('name')->get();
             }),
             'brands' => Cache::has('brands') ? Cache::get('brands') : Cache::remember('brands', 10000, function () {
-                return Brand::orderBy('name')->get();
+                return Brand::whereNotNull('image')->active()->orderBy('name')->get();
             }),
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct(request()) ?? [],
