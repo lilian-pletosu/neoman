@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Services\ProductService;
 use App\Services\UltraImportService;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class HomeController extends Controller
 {
@@ -20,7 +21,6 @@ class HomeController extends Controller
 
     public function index()
     {
-
         if (Cache::has('categories')) {
             $categories = Cache::get('categories');
         } else {

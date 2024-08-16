@@ -4,8 +4,6 @@ use App\Http\Controllers\front\UltraImportController;
 use App\Models\Product;
 use App\Services\CookieService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Route;
 
 
@@ -48,26 +46,26 @@ Route::delete('/cart/{productID}', function ($productID) {
 })->name('api.cartRemove');
 
 Route::get('/cart/forget', function () {
-    $cookie = Cookie::forget('cart');
-    return response(trans('app_context.product_updated'))->withCookie($cookie);
+    \Illuminate\Support\Facades\Redis::del('cart');
+    return response(trans('app_context.product_updated'));
 })->name('api.cartForget');
 
 
 Route::get('/getCart', function () {
     $products = [];
 
-    if (Cache::get('cart')) {
-        $products = Cache::get('cart');
+    if (json_decode(\Illuminate\Support\Facades\Redis::get('cart'))) {
+        $products = json_decode(\Illuminate\Support\Facades\Redis::get('cart'));
     }
     $totalPrice = 0;
     foreach ($products as $product) {
 
-        if (isset($product['total_price'])) {
-            $totalPrice += $product['total_price'];
+        if (isset($product->total_price)) {
+            $totalPrice += $product->total_price;
         }
     }
 
-    $count = Cache::get('cart') ? count(Cache::get('cart')) : 0;
+    $count = json_decode(\Illuminate\Support\Facades\Redis::get('cart')) ? count(json_decode(\Illuminate\Support\Facades\Redis::get('cart'))) : 0;
     return response()->json(['count' => $count, 'products' => $products, 'total_price' => $totalPrice]);
 })->name('api.getCart');
 
@@ -82,13 +80,13 @@ Route::delete('/wishlistCount{productCode}', function ($productCode) {
 Route::get('/wishlistCount', function () {
     $products = [];
 
-    if (Cache::get('wishlist')) {
-        foreach (Cache::get('wishlist') as $id) {
-            $product = Product::where('id', $id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
+    if (json_decode(\Illuminate\Support\Facades\Redis::get('wishlist'))) {
+        foreach (json_decode(\Illuminate\Support\Facades\Redis::get('wishlist')) as $prod) {
+            $product = Product::where('id', $prod->id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
             $products[] = $product;
         }
     }
-    $count = Cache::get('wishlist') ? count(Cache::get('wishlist')) : 0;
+    $count = json_decode(\Illuminate\Support\Facades\Redis::get('wishlist')) ? count(json_decode(\Illuminate\Support\Facades\Redis::get('wishlist'))) : 0;
     return response()->json(['count' => $count, 'products' => $products]);
 })->name('api.wishlistCount');
 
@@ -107,9 +105,6 @@ Route::get('/wishlistToCart', function () {
     return (new CookieService())->wishlistToCart();
 })->name('api.transferProducts');
 
-Route::get('forget_wishlist', function () {
-    return (new CookieService())->forgetCookie('wishlist');
-})->name('api.forget_wishlist');
 
 //-------------------------------------------------------------------------------
 
