@@ -58,9 +58,6 @@ export const useCartStore = defineStore('cart', () => {
         return false;
     }
 
-    function cartForget() {
-        axios.get(route('api.cartForget'));
-    }
 
     return {
         checkIfProductExistInCart,
@@ -75,6 +72,5 @@ export const useCartStore = defineStore('cart', () => {
         shipping,
         notification,
         updateQtyOfProduct,
-        cartForget
     }
 })
