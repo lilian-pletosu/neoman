@@ -38,7 +38,7 @@ class NotifyEmailAboutChangeOrderStatus extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.order_status_updated',
+            markdown: 'vendor.mail.new_order',
             with: ['order' => $this->order],
         );
     }
