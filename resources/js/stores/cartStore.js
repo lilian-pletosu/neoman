@@ -12,12 +12,7 @@ export const useCartStore = defineStore('cart', () => {
     const notification = ref(false);
 
     async function addProductInCart(productId, colorId) {
-        // if (checkIfProductExistInCart(productId)) {
-        //     await removeProductInCart(productId).finally(() => {
-        //         notification.value = true;
-        //         success.value = true
-        //     }).then(() => notification.value = false);
-        // } else {
+
         notification.value = true;
         axios.get(route('api.cartAdd', {productId: productId, colorId: colorId})).then(async (response) => {
             message.value = response.data
@@ -64,9 +59,8 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     function cartForget() {
-        axios.get(route('api.cartForget')).finally(() => fetchCount());
+        axios.get(route('api.cartForget'));
     }
-
 
     return {
         checkIfProductExistInCart,
