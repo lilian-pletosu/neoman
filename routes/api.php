@@ -45,11 +45,6 @@ Route::delete('/cart/{productID}', function ($productID) {
     return (new CookieService())->removeProductFromCart($productID);
 })->name('api.cartRemove');
 
-Route::get('/cart/forget', function () {
-    \Illuminate\Support\Facades\Redis::del('cart');
-    return response(trans('app_context.product_updated'));
-})->name('api.cartForget');
-
 
 Route::get('/getCart', function () {
     $products = [];

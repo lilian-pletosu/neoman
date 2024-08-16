@@ -43,8 +43,8 @@ const checkout = () => {
             showModal.value = true;
         },
         onSuccess: async () => {
+            await cartStore.fetchCount();
             form.errors = {};
-            cartStore.cartForget()
             loading.value = false;
         },
         onError: () => {
@@ -67,7 +67,6 @@ onMounted(() => {
     // sweetMessage.
 })
 watch(cartStore, () => {
-    // cartStore.fetchCount();
     form.products = cartStore.products;
     form.total_price = cartStore.totalPrice;
 }, {deep: true, immediate: true})
@@ -91,15 +90,17 @@ watch(cartStore, () => {
                              class="relative grid grid-cols-2 sm:grid-cols-6 gap-4  container-simple border bg-white  dark:bg-1 rounded-md items-start p-4">
                             <div class="absolute right-2 top-2 group/remove"
                                  @click="cartStore.removeProductInCart(product.id)">
-                                <svg class="group-hover/remove:opacity-100 opacity-50 text-black group-hover:text-red-600 transition group-hover:ease-in-out duration-200 hover:scale-110"
-                                     height="1em" viewBox="0 0 24 24"
-                                     width="1em"
-                                     xmlns="http://www.w3.org/2000/svg">
+                                <svg
+                                    class="group-hover/remove:opacity-100 opacity-50 text-black group-hover:text-red-600 transition group-hover:ease-in-out duration-200 hover:scale-110"
+                                    height="1em" viewBox="0 0 24 24"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg">
                                     <g fill="none">
                                         <path
                                             d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.006l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/>
-                                        <path d="M14.28 2a2 2 0 0 1 1.897 1.368L16.72 5H20a1 1 0 1 1 0 2l-.003.071l-.867 12.143A3 3 0 0 1 16.138 22H7.862a3 3 0 0 1-2.992-2.786L4.003 7.07A1.01 1.01 0 0 1 4 7a1 1 0 0 1 0-2h3.28l.543-1.632A2 2 0 0 1 9.721 2zm3.717 5H6.003l.862 12.071a1 1 0 0 0 .997.929h8.276a1 1 0 0 0 .997-.929zM10 10a1 1 0 0 1 .993.883L11 11v5a1 1 0 0 1-1.993.117L9 16v-5a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1m.28-6H9.72l-.333 1h5.226z"
-                                              fill="currentColor"/>
+                                        <path
+                                            d="M14.28 2a2 2 0 0 1 1.897 1.368L16.72 5H20a1 1 0 1 1 0 2l-.003.071l-.867 12.143A3 3 0 0 1 16.138 22H7.862a3 3 0 0 1-2.992-2.786L4.003 7.07A1.01 1.01 0 0 1 4 7a1 1 0 0 1 0-2h3.28l.543-1.632A2 2 0 0 1 9.721 2zm3.717 5H6.003l.862 12.071a1 1 0 0 0 .997.929h8.276a1 1 0 0 0 .997-.929zM10 10a1 1 0 0 1 .993.883L11 11v5a1 1 0 0 1-1.993.117L9 16v-5a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1m.28-6H9.72l-.333 1h5.226z"
+                                            fill="currentColor"/>
                                     </g>
                                 </svg>
                             </div>
@@ -211,8 +212,9 @@ watch(cartStore, () => {
                                         {{ __('will_be_calculated_by_manager') }}</p>
                                 </div>
 
-                                <button class="container-custom-rounded  space-x-4 p-2 bg-[#1FC8F3] shadow cursor-pointer text-white font-mulish font-semibold"
-                                        type="submit">
+                                <button
+                                    class="container-custom-rounded  space-x-4 p-2 bg-[#1FC8F3] shadow cursor-pointer text-white font-mulish font-semibold"
+                                    type="submit">
                                     {{
                                         __('checkout')
                                     }}
@@ -240,8 +242,9 @@ watch(cartStore, () => {
                 <div class="bg-gray-100 h-auto ">
                     <div v-if="!loading" class="bg-white p-6  md:mx-auto">
                         <svg class="text-green-600 w-16 h-16 mx-auto my-6" viewBox="0 0 24 24">
-                            <path d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
-                                  fill="currentColor">
+                            <path
+                                d="M12,0A12,12,0,1,0,24,12,12.014,12.014,0,0,0,12,0Zm6.927,8.2-6.845,9.289a1.011,1.011,0,0,1-1.43.188L5.764,13.769a1,1,0,1,1,1.25-1.562l4.076,3.261,6.227-8.451A1,1,0,1,1,18.927,8.2Z"
+                                fill="currentColor">
                             </path>
                         </svg>
                         <div class="text-center">

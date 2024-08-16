@@ -6,6 +6,8 @@ use App\Enum\OrderTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 
 class CartController extends Controller
@@ -77,6 +79,13 @@ class CartController extends Controller
             ]);
             $data['type'] = OrderTypeEnum::FAST_ORDER->value;
         }
-        Order::create($data);
+        try {
+
+            Order::create($data);
+            Redis::del('cart');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
     }
 }
