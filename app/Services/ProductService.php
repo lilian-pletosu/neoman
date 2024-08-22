@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ImportedProduct;
@@ -21,21 +22,6 @@ class ProductService
     public function __construct()
     {
         $this->translatedAttributes = (new Product())->translatedAttributes;
-    }
-
-    public function update($data, Product $product, Request $request)
-    {
-        $data['slug'] = Str::slug($data['form']['name ro'], '_');
-
-
-        $product->update($data['form']);
-        foreach ($this->translatedAttributes as $translatableAttribute) {
-            foreach (config('translatable.locales') as $locale) {
-                $product->translateOrNew($locale)->$translatableAttribute = $data['form']["$translatableAttribute $locale"];
-            }
-        }
-        $product->save();
-
     }
 
     public function loadSalesProducts(): array
@@ -286,18 +272,47 @@ class ProductService
             // Convertim $product într-un array
             $productArray = json_decode(json_encode($product), true);
 
+
             $slug = Str::slug($productArray['name']['ro'], '_');
-            $newProd = ImportedProduct::updateOrCreate(['product_code' => $productArray['code'],], [
-                'name' => $productArray['name'],
-                'slug' => $slug,
-                'description' => json_encode($productArray['description']),
-                'price' => $productArray['price'],
-                'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
-                'sub_sub_category_id' => $this->ultraImportSubSubcategory($productArray['sub_subcategory'], $productArray['subcategory'], $productArray['category']),
-                'specifications_id' => null,
-                'images' => $productArray['images']
-            ]);
-            return $newProd;
+            $existProduct = Product::where('product_code', $productArray['code'])->first();
+            if ($existProduct) {
+
+                try {
+                    $existProduct->update([
+                        'product_code' => $productArray['code'],
+//                        'name' => $productArray['name'],
+                        'slug' => $slug,
+//                        'description' => json_encode($productArray['description']),
+                        'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
+                        'price' => $productArray['price'],
+                    ]);
+                    $existProduct->images()->create($product['images']);
+
+                    $this->assignAttributesToProduct($existProduct, $productArray['description'], $existProduct->sub_sub_category_id);
+
+                    $existProduct->save();
+                    return $existProduct;
+                } catch (\Exception $exception) {
+                    Log::error('----------------------------------------------------------------------------', [
+                        'error' => $exception->getMessage(),
+                        'product' => $product,
+                        'trace' => $exception->getTraceAsString()
+                    ]);
+                }
+            } else {
+                $newProd = ImportedProduct::updateOrCreate(['product_code' => $productArray['code'],], [
+                    'name' => $productArray['name'],
+                    'slug' => $slug,
+                    'description' => json_encode($productArray['description']),
+                    'price' => $productArray['price'],
+                    'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
+                    'sub_sub_category_id' => $this->ultraImportSubSubcategory($productArray['sub_subcategory'], $productArray['subcategory'], $productArray['category']),
+                    'specifications_id' => null,
+                    'images' => $productArray['images']
+                ]);
+                return $newProd;
+            }
+
 
         } catch (\Error $error) {
             Log::error('Error occurred while saving the product', [
@@ -314,6 +329,21 @@ class ProductService
             ]);
             return null;
         }
+    }
+
+    public function update($data, Product $product, Request $request)
+    {
+        $data['slug'] = Str::slug($data['form']['name ro'], '_');
+
+
+        $product->update($data['form']);
+        foreach ($this->translatedAttributes as $translatableAttribute) {
+            foreach (config('translatable.locales') as $locale) {
+                $product->translateOrNew($locale)->$translatableAttribute = $data['form']["$translatableAttribute $locale"];
+            }
+        }
+        $product->save();
+
     }
 
     private function ultraImportBrandSave($brand)
@@ -399,6 +429,73 @@ class ProductService
         }
 
 
+    }
+
+    public function assignAttributesToProduct($product, $attributes, $subSubCategoryId)
+    {
+        foreach (config('translatable.locales') as $locale) {
+            $localeAttributes = $this->transformStringToArray($attributes[$locale]);
+            foreach ($localeAttributes as $attributeName => $attributesValue) {
+                // Generează slug-ul folosind numele atributului din limba curentă
+                $slug = Str::slug($attributeName, '_');
+
+                // Verifică dacă atributul există deja în baza de date
+                $attribute = Attribute::where('slug', $slug)
+                    ->where('sub_sub_category_id', $subSubCategoryId)
+                    ->first();
+
+                // Dacă atributul nu există, creează-l
+                if (!$attribute) {
+                    $attribute = Attribute::create([
+                        'slug' => $slug,
+                        'sub_sub_category_id' => $subSubCategoryId,
+                    ]);
+                }
+
+                // Adaugă traducerea pentru atribut
+                $attribute->translateOrNew($locale)->name = $attributeName;
+                $attribute->save();
+
+                // Verifică dacă valoarea atributului există deja în baza de date
+                $attributeValueModel = $attribute->attributeValues()
+                    ->where('value', $attributesValue)
+                    ->first();
+
+                // Dacă valoarea atributului nu există, creează-o
+                if (!$attributeValueModel) {
+                    $attributeValueModel = $attribute->attributeValues()->create([
+                        'slug' => Str::slug($attributesValue, '_'),
+                    ]);
+                }
+
+                // Adaugă traducerea pentru valoarea atributului
+                $attributeValueModel->translateOrNew($locale)->value = $attributesValue;
+                $attributeValueModel->save();
+
+                // Atașează atributul la produs
+                $product->attributes()->attach($attribute->id, ['attribute_value_id' => $attributeValueModel->id]);
+            }
+        }
+
+
+        // Assign the attribute value to the product
+    }
+
+    public function transformStringToArray($string)
+    {
+        $lines = explode("\n", $string);
+        $attributes = [];
+
+        foreach ($lines as $line) {
+            if (strpos($line, ':') !== false) {
+                list($key, $value) = explode(':', $line, 2);
+                $attributes[trim($key)] = trim($value);
+            } else {
+                $attributes[trim($line)] = true; // For attributes without values
+            }
+        }
+
+        return $attributes;
     }
 
     private function ultraImportSubSubcategory($sub_subcategory, $subcategory, $category)

@@ -336,10 +336,11 @@ function buyProduct(productId) {
                                     <tbody>
                                     <tr v-for="(attribute, key) in product.attributes" :key="key"
                                         class="bg-white dark:bg-gray-800 da odd:bg-white even:bg-slate-100 dark:odd:bg-slate-700 dark:even:bg-slate-800 border dark:border-slate-600">
-                                        <td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium ">
+                                        <td v-if="attribute.name"
+                                            class="px-6 py-4 whitespace-nowrap capitalize-first font-medium ">
                                             {{ attribute.name }}:
                                         </td>
-                                        <td
+                                        <td v-if="attribute.name"
                                             class="px-6 py-4 whitespace-nowrap capitalize-first">
                                             <div class=" flex space-x-2">
                                                 <p v-for="value in attribute.values" class="capitalize-first">

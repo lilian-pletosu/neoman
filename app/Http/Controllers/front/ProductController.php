@@ -35,11 +35,11 @@ class ProductController extends Controller
         $attributes = $attributesQuery->map(function ($attribute) {
             return [
                 'key' => $attribute->slug,
-                'name' => $attribute->translateOrDefault()->name,
+                'name' => $attribute->translateOrDefault()->name ?? 'sss',
                 'options' => $attribute->attributeValues->map(function ($item) {
                     return [
                         'id' => $item->id,
-                        'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value
+                        'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value ?? 'sss'
                     ];
                 })->all()
             ];
@@ -96,12 +96,13 @@ class ProductController extends Controller
         $product['attributes'] = $product['attributes']->map(function ($item) use ($res, $mu_unit) {
             $values = [];
 
+
             return [
-                'name' => $item[0]->attribute->translate()->name,
+                'name' => $item[0]->attribute->translate()->name ?? null,
                 'values' => $item->map(function ($value) use ($res, $mu_unit) {
-                    $translation = Str::slug($value->translateOrDefault('ro')->value, '_');
+                    $translation = Str::slug($value->translateOrDefault('ro')?->value, '_') ?? null;
                     $values['link'] = $res . '_' . $translation . $mu_unit;
-                    $values['value'] = $value->translate()->value ?? $value->translate('ro')->value;
+                    $values['value'] = $value->translate()->value ?? $value->translate('ro')->value ?? null;
                     $values['mu'] = $mu_unit;
                     return $values;
                 })->toArray(),
