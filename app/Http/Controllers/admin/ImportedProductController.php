@@ -65,7 +65,9 @@ class ImportedProductController extends Controller
                     'sub_sub_category_id' => $product['sub_sub_category_id'],
                     'specifications_id' => null,
                 ]);
-                $newProduct->images()->create($product['images']);
+                if ($newProduct->images()->count() == 0) {
+                    $newProduct->images()->create($product['images']);
+                }
 
                 foreach ((new Product())->translatedAttributes as $translatableAttribute) {
                     foreach (config('translatable.locales') as $locale) {
