@@ -35,11 +35,11 @@ class ProductController extends Controller
         $attributes = $attributesQuery->map(function ($attribute) {
             return [
                 'key' => $attribute->slug,
-                'name' => $attribute->translateOrDefault()->name ?? 'sss',
+                'name' => $attribute->translateOrDefault()->name ?? null,
                 'options' => $attribute->attributeValues->map(function ($item) {
                     return [
                         'id' => $item->id,
-                        'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value ?? 'sss'
+                        'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value ?? null
                     ];
                 })->all()
             ];
