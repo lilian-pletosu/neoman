@@ -35,8 +35,7 @@
             | {{ $productHeader }} | {{ $colorHeader }} | {{ $qtyHeader }} | {{ $priceHeader }} |
             |:-----------|:----------------:|:------------:| --------:|
             @foreach($order['products'] as $product)
-                | {{$product['name']}} | {{$product['color_value'] === 'default' ? '' : $product['color_value']}}
-                | {{$product['qty']}} | {{$product['price']}} |
+                | {{$product['name']}} | {{$product['color_value']}} | {{$product['qty']}} | {{$product['price']}} |
             @endforeach
         </x-mail::table>
         <hr>

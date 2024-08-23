@@ -39,7 +39,7 @@ class UltraImportProcessingService
 
     public function getNomenclature()
     {
-        $products = collect($this->nomenclature)->take(1000)->map(function ($item) {
+        $products = collect($this->nomenclature)->take(5000)->map(function ($item) {
             $item->name = $this->getNomenclatureTranslation($item->UUID);
             $item->brand = $this->getBrand($item->brand)->first();
             $item->sub_subcategory = $this->getNomenclatureType($item->nomenclatureType) ?? null;

@@ -16,6 +16,8 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
+//        (new UltraImportProcessingService())();
+
 
         if (Session::get('locale') != null) {
             app()->setLocale(Session::get('locale'));
