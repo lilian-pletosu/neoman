@@ -20,7 +20,8 @@ class ImportedProduct extends Model
         'brand_id',
         'sub_sub_category_id',
         'measurement_unit_id',
-        'images'
+        'images',
+        'for_searching'
     ];
 
     protected $casts = [

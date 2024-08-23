@@ -308,7 +308,8 @@ class ProductService
                     'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
                     'sub_sub_category_id' => $this->ultraImportSubSubcategory($productArray['sub_subcategory'], $productArray['subcategory'], $productArray['category']),
                     'specifications_id' => null,
-                    'images' => $productArray['images']
+                    'images' => $productArray['images'],
+                    'for_searching' => $productArray['name']['ro'] . ' ' . $productArray['description']['ro']
                 ]);
                 return $newProd;
             }

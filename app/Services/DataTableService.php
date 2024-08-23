@@ -5,30 +5,30 @@ namespace App\Services;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DataTableService
 {
 
 
-    private Model $resource;
-    private Builder $query;
-    private int|null $perPage = 20;
     public array $resourceColumns = ['*'];
-    private array $extraColumns = [];
     public array $relations = [];
-    private array $relationFields = [];
     public string $resourceName;
     public bool $editInModal = true;
     public array $filters;
-    public string $resourceRoute = '';  //this is checked on vue js side, as empty
+    public string $resourceRoute = '';
     public string $searchRoute = '';
+    public array $formatters = [];
+    public array $columnsOrder = [];
+    private Model $resource;
+    private Builder $query;  //this is checked on vue js side, as empty
+    private int|null $perPage = 20;
+    private array $extraColumns = [];
+    private array $relationFields = [];
     private string $defaultSortField;
     private string $defaultSortDirection = 'asc';
     private array $whereConditions = [];
-    public array $formatters = [];
-    public array $columnsOrder = [];
-
 
     public function __construct()
     {
@@ -128,32 +128,6 @@ class DataTableService
     }
 
     /**
-     * set items per page: default 10
-     *
-     * @param int $number
-     * @return $this
-     */
-    public function paginate(int $number): static
-    {
-        $this->perPage = $number;
-
-        return $this;
-    }
-
-    /**
-     * @param array $condition
-     * @return $this
-     */
-    public function where(array $condition): static
-    {
-        if (is_array($condition)) {
-            $this->whereConditions[] = $condition;
-        }
-
-        return $this;
-    }
-
-    /**
      * indicate if the link on each item will open edit modal or redirect to edit route;
      *
      * default true;
@@ -181,7 +155,6 @@ class DataTableService
         return $this;
     }
 
-
     /**
      * provide the route base name where submission or get requests of filter or search will hit;
      *
@@ -208,7 +181,6 @@ class DataTableService
         return $this;
     }
 
-
     public function setInventoryCategoryPageRoute(array $route): static
     {
         $this->inventoryCategoryPageRoute = $route;
@@ -232,7 +204,6 @@ class DataTableService
         return $this;
     }
 
-
     /**
      * Reordering the columns by parameters
      * @param array $list
@@ -245,7 +216,6 @@ class DataTableService
 
         return $this;
     }
-
 
     /**
      * set formatting rules on fields
@@ -275,6 +245,31 @@ class DataTableService
         $this->aggregatedCriteria['nonzero'] = $nonzero; //default true
 
         return $this;
+    }
+
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * prepare data to export
+     * @return array
+     */
+    public function getData()
+    {
+        return [
+            'resources' => $this->run(),
+            'editInModal' => $this->editInModal,
+            'filters' => $this->filters,
+            'columns' => $this->resourceColumns,
+            'relationColumns' => $this->relations,
+            'resourceRoute' => $this->resourceRoute,
+            'searchRoute' => $this->searchRoute,
+            'formatters' => $this->formatters ?? [],
+            'columnsOrder' => $this->columnsOrder ?? [],
+        ];
+
     }
 
     /**
@@ -358,10 +353,11 @@ class DataTableService
             $searchTerm = request('search');
 
             $this->query->where(function (Builder $query) use ($attributes, $searchTerm) {
-                foreach (($attributes) as $attribute) {
-                    $query->orWhere($attribute, 'like', "%{$searchTerm}%");
+                foreach ($attributes as $attribute) {
+                    $query->orWhere(DB::raw("LOWER({$attribute})"), 'LIKE', "%{$searchTerm}%");
                 }
             });
+
 
             //build the search on relations
             foreach ($this->relationFields as $relation => $fields) {
@@ -424,28 +420,29 @@ class DataTableService
             ->withQueryString();
     }
 
-    public function getQuery()
+    /**
+     * @param array $condition
+     * @return $this
+     */
+    public function where(array $condition): static
     {
-        return $this->query;
+        if (is_array($condition)) {
+            $this->whereConditions[] = $condition;
+        }
+
+        return $this;
     }
 
     /**
-     * prepare data to export
-     * @return array
+     * set items per page: default 10
+     *
+     * @param int $number
+     * @return $this
      */
-    public function getData()
+    public function paginate(int $number): static
     {
-        return [
-            'resources' => $this->run(),
-            'editInModal' => $this->editInModal,
-            'filters' => $this->filters,
-            'columns' => $this->resourceColumns,
-            'relationColumns' => $this->relations,
-            'resourceRoute' => $this->resourceRoute,
-            'searchRoute' => $this->searchRoute,
-            'formatters' => $this->formatters ?? [],
-            'columnsOrder' => $this->columnsOrder ?? [],
-        ];
+        $this->perPage = $number;
 
+        return $this;
     }
 }
