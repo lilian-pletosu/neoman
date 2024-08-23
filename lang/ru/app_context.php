@@ -239,6 +239,8 @@ return [
     'delete_selected' => 'Удалить выбранные',
     'products_was_successfully_deleted' => 'Продукты успешно удалены',
     'attention_imported_products_will_not_be_visible_until_they_are_saved_to_a_category' => 'Внимание! Импортированные продукты не будут видны, пока они не будут сохранены в категории',
+    'yes' => 'Да',
+    'no' => 'Нет',
 
     //statuses
     'pending' => 'В ожидании',
