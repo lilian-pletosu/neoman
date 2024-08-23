@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, reactive, ref, useAttrs, watch} from 'vue'
+import {computed, onBeforeUnmount, onMounted, reactive, ref, useAttrs, watch} from 'vue'
 import {Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems,} from '@headlessui/vue'
 import {ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, PresentationChartBarIcon} from '@heroicons/vue/20/solid'
 import FrontLayout from "@/Layouts/FrontLayout.vue";
@@ -28,6 +28,18 @@ const props = defineProps({
     brands: Array,
     attributes: Array
 });
+
+const computedAttributes = computed(() => {
+    const temp = props.attributes.map((attribute) => {
+        if (attribute.name) return attribute;
+    });
+    return temp.filter((item) => {
+        return item !== undefined;
+    });
+})
+
+console.log("computeeeeeeeeed", computedAttributes.value)
+
 
 const mobileFiltersOpen = ref(false)
 const attrs = useAttrs();
@@ -171,37 +183,35 @@ onBeforeUnmount(() => {
                                     </DisclosurePanel>
                                 </Disclosure>
                                 <!--               Attributes                 -->
-                                <Disclosure v-for="attribute in attributes" v-slot="{ open }"
-                                            as="div" class="border-b border-gray-200 py-6">
-                                    <template v-if="attribute.name">
-                                        <h3 class="-my-3 flow-root">
-                                            <DisclosureButton
-                                                class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                                                <span class="font-medium text-gray-900">{{ attribute.name }}</span>
-                                                <span class="ml-6 flex items-center">
-                                  <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
-                                  <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
-                                    </span>
-                                            </DisclosureButton>
-                                        </h3>
-                                        <DisclosurePanel class="pt-6">
-                                            <div class="space-y-4">
-                                                <div v-for="(option) in attribute.options"
-                                                     class="flex items-center">
-                                                    <input :checked="isOptionSelected(attribute.key, option.id)"
-                                                           :name="option.value"
-                                                           :value="option.id"
-                                                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                                           type="checkbox"
-                                                           @change="addVariable(attribute.key, option.id)"/>
-                                                    <label :for="option.value"
-                                                           class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
-                                                            option.value
-                                                        }}</label>
-                                                </div>
+                                <Disclosure v-for="attribute in computedAttributes"
+                                            v-slot="{ open }" as="div" class="border-b border-gray-200 py-6">
+                                    <h3 class="-my-3 flow-root">
+                                        <DisclosureButton
+                                            class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                                            <span class="font-medium text-gray-900">{{ attribute.name }}</span>
+                                            <span class="ml-6 flex items-center">
+                                              <PlusIcon v-if="!open" aria-hidden="true" class="h-5 w-5"/>
+                                              <MinusIcon v-else aria-hidden="true" class="h-5 w-5"/>
+                                            </span>
+                                        </DisclosureButton>
+                                    </h3>
+                                    <DisclosurePanel v-if="attribute.name" class="pt-6">
+                                        <div class="space-y-4">
+                                            <div v-for="(option) in attribute.options"
+                                                 class="flex items-center">
+                                                <input :checked="isOptionSelected(attribute.key, option.id)"
+                                                       :name="option.value"
+                                                       :value="option.id"
+                                                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                                       type="checkbox"
+                                                       @change="addVariable(attribute.key, option.id)"/>
+                                                <label :for="option.value"
+                                                       class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
+                                                        option.value
+                                                    }}</label>
                                             </div>
-                                        </DisclosurePanel>
-                                    </template>
+                                        </div>
+                                    </DisclosurePanel>
                                 </Disclosure>
                             </form>
                         </div>
@@ -332,7 +342,7 @@ onBeforeUnmount(() => {
                                         </div>
                                     </DisclosurePanel>
                                 </Disclosure>
-                                <Disclosure v-for="attribute in attributes" v-slot="{ open }"
+                                <Disclosure v-for="attribute in computedAttributes" v-slot="{ open }"
                                             as="div" class="border-b border-gray-200 py-6">
                                     <h3 class="-my-3 flow-root">
                                         <DisclosureButton
@@ -358,9 +368,17 @@ onBeforeUnmount(() => {
                                                        type="checkbox"
                                                        @change="addVariable(attribute.key, option.id)"/>
                                                 <label :for="option.value"
-                                                       class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
-                                                        option.value
-                                                    }}</label>
+                                                       class="ml-3 text-sm text-gray-600 first-letter:uppercase">
+                                                    <template v-if="option.value == 1">{{
+                                                            __('yes')
+                                                        }}
+                                                    </template>
+                                                    <template v-else>
+                                                        {{
+                                                            option.value
+                                                        }}
+                                                    </template>
+                                                </label>
                                             </div>
                                         </div>
                                     </DisclosurePanel>
