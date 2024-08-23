@@ -1,10 +1,10 @@
-import { getCurrentInstance, resolveComponent, unref, mergeProps, withCtx, createVNode, openBlock, createBlock, Fragment, renderList, useSSRContext, useAttrs, createTextVNode, toDisplayString } from "vue";
+import { getCurrentInstance, resolveComponent, unref, mergeProps, withCtx, createVNode, openBlock, createBlock, Fragment, renderList, useSSRContext, useAttrs, createTextVNode, toDisplayString, createCommentVNode } from "vue";
 import { ssrRenderComponent, ssrRenderList, ssrRenderAttr, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$2 } from "./FrontLayout-77cff396.js";
+import { _ as _sfc_main$2 } from "./FrontLayout-fec85b0a.js";
 /* empty css                   */import { Carousel, Navigation, Slide } from "vue3-carousel";
 import { Link } from "@inertiajs/vue3";
 import { _ as _export_sfc } from "./_plugin-vue_export-helper-cc2b3d55.js";
-import { _ as _sfc_main$3 } from "./ProductSection-6f127f9e.js";
+import { _ as _sfc_main$3 } from "./ProductSection-76549d77.js";
 import "./ApplicationLogo-caba15c6.js";
 import "@heroicons/vue/24/outline/index.js";
 import "pinia";
@@ -188,8 +188,8 @@ const _sfc_main = {
               _: 1
             }, _parent2, _scopeId));
             _push2(ssrRenderComponent(unref(Link), {
-              class: "block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto",
-              href: _ctx.route("about_page")
+              href: _ctx.route("about_page"),
+              class: "block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
             }, {
               default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -208,11 +208,15 @@ const _sfc_main = {
               title: _ctx.__("top_products"),
               top_products: true
             }, null, _parent2, _scopeId));
-            _push2(ssrRenderComponent(_sfc_main$3, {
-              new_products: true,
-              products: __props.latest_products,
-              title: _ctx.__("latest_products")
-            }, null, _parent2, _scopeId));
+            if (__props.latest_products) {
+              _push2(ssrRenderComponent(_sfc_main$3, {
+                new_products: true,
+                products: __props.latest_products,
+                title: _ctx.__("latest_products")
+              }, null, _parent2, _scopeId));
+            } else {
+              _push2(`<!---->`);
+            }
           } else {
             return [
               createVNode(_sfc_main$3, {
@@ -244,8 +248,8 @@ const _sfc_main = {
                       _: 1
                     }),
                     createVNode(unref(Link), {
-                      class: "block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto",
-                      href: _ctx.route("about_page")
+                      href: _ctx.route("about_page"),
+                      class: "block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
                     }, {
                       default: withCtx(() => [
                         createTextVNode(toDisplayString(_ctx.__("learn_more")), 1)
@@ -260,11 +264,12 @@ const _sfc_main = {
                 title: _ctx.__("top_products"),
                 top_products: true
               }, null, 8, ["products", "title"]),
-              createVNode(_sfc_main$3, {
+              __props.latest_products ? (openBlock(), createBlock(_sfc_main$3, {
+                key: 0,
                 new_products: true,
                 products: __props.latest_products,
                 title: _ctx.__("latest_products")
-              }, null, 8, ["products", "title"])
+              }, null, 8, ["products", "title"])) : createCommentVNode("", true)
             ];
           }
         }),

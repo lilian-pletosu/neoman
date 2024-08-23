@@ -1,9 +1,9 @@
 import { mergeProps, unref, withCtx, openBlock, createBlock, createVNode, createTextVNode, toDisplayString, useSSRContext, renderSlot, useAttrs, ref, getCurrentInstance, resolveComponent, Fragment, renderList, withDirectives, vShow, vModelSelect, createCommentVNode, withModifiers } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderSlot, ssrRenderAttr, ssrRenderList, ssrRenderStyle, ssrRenderClass, ssrIncludeBooleanAttr, ssrLooseContain, ssrLooseEqual } from "vue/server-renderer";
-import { u as useCartStore, a as useWishlistStore, _ as _sfc_main$3, b as _sfc_main$4 } from "./FrontLayout-77cff396.js";
+import { u as useCartStore, a as useWishlistStore, _ as _sfc_main$3, b as _sfc_main$4 } from "./FrontLayout-fec85b0a.js";
 import { Link, router } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import { _ as _sfc_main$5 } from "./ProductSection-6f127f9e.js";
+import { _ as _sfc_main$5 } from "./ProductSection-76549d77.js";
 import { HeartIcon } from "@heroicons/vue/24/outline/index.js";
 import { DialogRoot, DialogPortal, DialogOverlay, DialogContent, DialogClose } from "radix-vue";
 import { Icon } from "@iconify/vue";
@@ -367,11 +367,22 @@ const _sfc_main = {
               }
               _push2(`</div><div${_scopeId}><div class="container-custom-rounded dark:bg-slate-800 mb-4 flex items-center space-x-4 p-2 border border-[#1FC8F3] cursor-pointer"${_scopeId}><svg class="dark:text-slate-300 bi bi-question-circle" fill="currentColor" height="20" viewBox="0 0 16 16" width="20" xmlns="http://www.w3.org/2000/svg"${_scopeId}><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"${_scopeId}></path><path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"${_scopeId}></path></svg><p class="dark:text-slate-300 text-lg flex font-light"${_scopeId}>${ssrInterpolate(_ctx.__("found_cheaper"))}</p></div></div><div class="flex flex-col space-y-2 border-t border-b dark:border-y-slate-600 py-4 sm:flex-row sm:space-x-2 sm:space-y-0"${_scopeId}><button class="w-full sm:w-1/4 inline-flex items-center justify-center rounded-md border-2 border-transparent bg-primary-blue bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-primary-blue-200" type="button"${_scopeId}>${ssrInterpolate(_ctx.__("buy"))}</button><button class="w-full inline-flex items-center justify-center rounded-md border-2 border-transparent bg-1 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-gray-800" type="button"${_scopeId}>${ssrInterpolate(_ctx.__("buy_1_click"))}</button></div><div${_scopeId}><button class="w-full inline-flex items-center justify-center rounded-md border-2 border-transparent bg-slate-500 bg-none px-12 py-3 text-center text-base font-bold text-white transition-all duration-200 ease-in-out focus:shadow hover:bg-slate-600" type="button"${_scopeId}>${ssrInterpolate(_ctx.__("buy_in_credit"))}</button></div><div class="container-custom-rounded dark:bg-slate-800 mt-4 flex items-center space-x-4 w-full p-3 border border-slate-400"${_scopeId}><svg class="dark:text-slate-300" height="2em" viewBox="0 0 32 32" width="2em" xmlns="http://www.w3.org/2000/svg"${_scopeId}><path d="M4 16h12v2H4zm-2-5h10v2H2z" fill="currentColor"${_scopeId}></path><path d="m29.919 16.606l-3-7A.999.999 0 0 0 26 9h-3V7a1 1 0 0 0-1-1H6v2h15v12.556A3.992 3.992 0 0 0 19.142 23h-6.284a4 4 0 1 0 0 2h6.284a3.98 3.98 0 0 0 7.716 0H29a1 1 0 0 0 1-1v-7a.997.997 0 0 0-.081-.394M9 26a2 2 0 1 1 2-2a2.002 2.002 0 0 1-2 2m14-15h2.34l2.144 5H23Zm0 15a2 2 0 1 1 2-2a2.002 2.002 0 0 1-2 2m5-3h-1.142A3.995 3.995 0 0 0 23 20v-2h5Z" fill="currentColor"${_scopeId}></path></svg><div class="dark:text-slate-300 flex items-center flex-col text-center"${_scopeId}><p class="text-lg flex font-medium"${_scopeId}>${ssrInterpolate(_ctx.__("delivery_info"))}</p><p class="text-sm underline flex font-light"${_scopeId}>${ssrInterpolate(_ctx.__("delivery_aditional_info"))}</p></div></div></div><div class="lg:col-span-3"${_scopeId}><div class="border-b border-gray-300 dark:border-slate-500"${_scopeId}><nav class="flex gap-4"${_scopeId}><a class="${ssrRenderClass([{ "transition delay-150 border-b-2 border-gray-500": specifications.value, "border-transparent": !specifications.value }, "dark:text-slate-300 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"])}" href="#" title="specifications"${_scopeId}>${ssrInterpolate(_ctx.__("specifications"))}</a><a class="${ssrRenderClass([{ "transition delay-150 border-b-2 border-gray-500": description.value, "border-transparent": !description.value }, "dark:text-slate-300 py-4 text-sm font-medium text-gray-900 hover:border-gray-400 hover:text-gray-800"])}" href="#" title="description"${_scopeId}>${ssrInterpolate(_ctx.__("description"))}</a></nav></div><div style="${ssrRenderStyle(description.value ? null : { display: "none" })}" id="description" class="mt-8 flow-root sm:mt-12"${_scopeId}><h1 class="text-3xl font-bold dark:text-slate-300"${_scopeId}>${ssrInterpolate(__props.product.name)}</h1><p class="mt-4 dark:text-slate-300"${_scopeId}>${ssrInterpolate(__props.product.description)}</p></div><div style="${ssrRenderStyle(specifications.value ? null : { display: "none" })}" class="mt-8 flow-root sm:mt-2"${_scopeId}><div class="relative overflow-x-auto my-4"${_scopeId}><table class="w-full border dark:border-slate-600 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 bg-red-200"${_scopeId}><tbody${_scopeId}><!--[-->`);
               ssrRenderList(__props.product.attributes, (attribute, key) => {
-                _push2(`<tr class="bg-white dark:bg-gray-800 da odd:bg-white even:bg-slate-100 dark:odd:bg-slate-700 dark:even:bg-slate-800 border dark:border-slate-600"${_scopeId}><td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium"${_scopeId}>${ssrInterpolate(attribute.name)}: </td><td class="px-6 py-4 whitespace-nowrap capitalize-first"${_scopeId}><div class="flex space-x-2"${_scopeId}><!--[-->`);
-                ssrRenderList(attribute.values, (value) => {
-                  _push2(`<p class="capitalize-first"${_scopeId}>${ssrInterpolate(value.value)}</p>`);
-                });
-                _push2(`<!--]--></div></td></tr>`);
+                _push2(`<tr class="bg-white dark:bg-gray-800 da odd:bg-white even:bg-slate-100 dark:odd:bg-slate-700 dark:even:bg-slate-800 border dark:border-slate-600"${_scopeId}>`);
+                if (attribute.name) {
+                  _push2(`<td class="px-6 py-4 whitespace-nowrap capitalize-first font-medium"${_scopeId}>${ssrInterpolate(attribute.name)}: </td>`);
+                } else {
+                  _push2(`<!---->`);
+                }
+                if (attribute.name) {
+                  _push2(`<td class="px-6 py-4 whitespace-nowrap capitalize-first"${_scopeId}><div class="flex space-x-2"${_scopeId}><!--[-->`);
+                  ssrRenderList(attribute.values, (value) => {
+                    _push2(`<p class="capitalize-first"${_scopeId}>${ssrInterpolate(value.value)}</p>`);
+                  });
+                  _push2(`<!--]--></div></td>`);
+                } else {
+                  _push2(`<!---->`);
+                }
+                _push2(`</tr>`);
               });
               _push2(`<!--]--></tbody></table></div></div></div></div></div>`);
               _push2(ssrRenderComponent(_sfc_main$4, {
@@ -757,14 +768,20 @@ const _sfc_main = {
                                   key,
                                   class: "bg-white dark:bg-gray-800 da odd:bg-white even:bg-slate-100 dark:odd:bg-slate-700 dark:even:bg-slate-800 border dark:border-slate-600"
                                 }, [
-                                  createVNode("td", { class: "px-6 py-4 whitespace-nowrap capitalize-first font-medium" }, toDisplayString(attribute.name) + ": ", 1),
-                                  createVNode("td", { class: "px-6 py-4 whitespace-nowrap capitalize-first" }, [
+                                  attribute.name ? (openBlock(), createBlock("td", {
+                                    key: 0,
+                                    class: "px-6 py-4 whitespace-nowrap capitalize-first font-medium"
+                                  }, toDisplayString(attribute.name) + ": ", 1)) : createCommentVNode("", true),
+                                  attribute.name ? (openBlock(), createBlock("td", {
+                                    key: 1,
+                                    class: "px-6 py-4 whitespace-nowrap capitalize-first"
+                                  }, [
                                     createVNode("div", { class: "flex space-x-2" }, [
                                       (openBlock(true), createBlock(Fragment, null, renderList(attribute.values, (value) => {
                                         return openBlock(), createBlock("p", { class: "capitalize-first" }, toDisplayString(value.value), 1);
                                       }), 256))
                                     ])
-                                  ])
+                                  ])) : createCommentVNode("", true)
                                 ]);
                               }), 128))
                             ])

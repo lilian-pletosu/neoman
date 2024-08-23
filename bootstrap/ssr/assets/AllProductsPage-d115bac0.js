@@ -1,7 +1,7 @@
 import { ref, useAttrs, watch, onMounted, onBeforeUnmount, withCtx, unref, createVNode, toDisplayString, openBlock, createBlock, Fragment, renderList, createCommentVNode, Transition, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderClass, ssrRenderAttr } from "vue/server-renderer";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { u as useCartStore, a as useWishlistStore, _ as _sfc_main$1 } from "./FrontLayout-77cff396.js";
+import { u as useCartStore, a as useWishlistStore, _ as _sfc_main$1 } from "./FrontLayout-fec85b0a.js";
 import { ChevronDownIcon, HeartIcon } from "@heroicons/vue/24/outline/index.js";
 import { router, Link } from "@inertiajs/vue3";
 import { P as Pagination } from "./Pagination-cc4bc19e.js";

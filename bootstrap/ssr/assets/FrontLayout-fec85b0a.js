@@ -57,9 +57,6 @@ const useCartStore = defineStore("cart", () => {
     }
     return false;
   }
-  function cartForget() {
-    axios.get(route("api.cartForget")).finally(() => fetchCount());
-  }
   return {
     checkIfProductExistInCart,
     addProductInCart,
@@ -72,8 +69,7 @@ const useCartStore = defineStore("cart", () => {
     totalPrice,
     shipping,
     notification,
-    updateQtyOfProduct,
-    cartForget
+    updateQtyOfProduct
   };
 });
 const useWishlistStore = defineStore("wishlist", () => {
@@ -106,15 +102,11 @@ const useWishlistStore = defineStore("wishlist", () => {
       message.value = response.data;
       success.value = true;
       notification.value = true;
-      await forgetWishlist();
     }).finally(() => fetchCount()).catch((error) => {
       success.value = false;
       message.value = error.response.data;
       notification.value = false;
     });
-  }
-  async function forgetWishlist() {
-    await axios.get(route("api.forget_wishlist")).then(() => fetchCount());
   }
   async function removeProductFromWishlist(productId) {
     axios.delete(route("api.wishlistRemove", { productCode: productId })).then(async (response) => message.value = response.data).finally(() => fetchCount());

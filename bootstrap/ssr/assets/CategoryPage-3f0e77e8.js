@@ -1,7 +1,7 @@
 import { useAttrs, mergeProps, withCtx, unref, createVNode, toDisplayString, openBlock, createBlock, Fragment, renderList, createCommentVNode, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderAttr } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./FrontLayout-77cff396.js";
-import { _ as _sfc_main$2 } from "./ProductSection-6f127f9e.js";
+import { _ as _sfc_main$1 } from "./FrontLayout-fec85b0a.js";
+import { _ as _sfc_main$2 } from "./ProductSection-76549d77.js";
 import { Link } from "@inertiajs/vue3";
 import "./ApplicationLogo-caba15c6.js";
 import "@heroicons/vue/24/outline/index.js";
