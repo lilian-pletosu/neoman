@@ -436,11 +436,12 @@ class ProductService
     {
         foreach (config('translatable.locales') as $locale) {
             $localeAttributes = $this->transformStringToArray($attributes[$locale]);
+
             foreach ($localeAttributes as $attributeName => $attributesValue) {
-                // Generează slug-ul folosind numele atributului din limba curentă
+                // Generează slug-ul folosind numele atributului
                 $slug = Str::slug($attributeName, '_');
 
-                // Verifică dacă atributul există deja în baza de date
+                // Caută atributul folosind slug-ul și sub_sub_category_id
                 $attribute = Attribute::where('slug', $slug)
                     ->where('sub_sub_category_id', $subSubCategoryId)
                     ->first();
@@ -453,28 +454,34 @@ class ProductService
                     ]);
                 }
 
-                // Adaugă traducerea pentru atribut
+                // Adaugă sau actualizează traducerea pentru atribut
                 $attribute->translateOrNew($locale)->name = $attributeName;
                 $attribute->save();
 
-                // Verifică dacă valoarea atributului există deja în baza de date
+                // Verifică dacă valoarea atributului există deja pentru limba curentă
                 $attributeValueModel = $attribute->attributeValues()
-                    ->where('value', $attributesValue)
-                    ->first();
+                    ->whereHas('translations', function ($query) use ($attributesValue, $locale) {
+                        $query->where('value', $attributesValue)
+                            ->where('locale', $locale);
+                    })->first();
 
-                // Dacă valoarea atributului nu există, creează-o
+                // Dacă valoarea nu există, creează-o
                 if (!$attributeValueModel) {
                     $attributeValueModel = $attribute->attributeValues()->create([
                         'slug' => Str::slug($attributesValue, '_'),
                     ]);
                 }
 
-                // Adaugă traducerea pentru valoarea atributului
+                // Adaugă sau actualizează traducerea pentru valoarea atributului
                 $attributeValueModel->translateOrNew($locale)->value = $attributesValue;
                 $attributeValueModel->save();
 
-                // Atașează atributul la produs
-                $product->attributes()->attach($attribute->id, ['attribute_value_id' => $attributeValueModel->id]);
+                // Atașează atributul la produs doar dacă nu există deja
+                if (!$product->attributes()->wherePivot('attribute_id', $attribute->id)
+                    ->wherePivot('attribute_value_id', $attributeValueModel->id)
+                    ->exists()) {
+                    $product->attributes()->attach($attribute->id, ['attribute_value_id' => $attributeValueModel->id]);
+                }
             }
         }
 

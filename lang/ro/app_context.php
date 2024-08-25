@@ -241,6 +241,7 @@ return [
     'imported_products' => 'Produse importate',
     'delete_selected' => 'Șterge selectate',
     'products_was_successfully_deleted' => 'Produsele au fost șterse cu succes',
+    'products_was_successfully_imported' => 'Produsele au fost importate cu succes',
     'attention_imported_products_will_not_be_visible_until_they_are_saved_to_a_category' => 'Atenție! Lista aceasta se actualizează zilnic. Produsele importate  nu vor fi vizibile până când nu sunt salvate într-o categorie',
     'yes' => 'Da',
     'no' => 'Nu',
