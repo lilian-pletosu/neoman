@@ -345,7 +345,7 @@ function buyProduct(productId) {
                                             <div class=" flex space-x-2">
                                                 <p v-for="value in attribute.values" class="capitalize-first">
                                                     {{
-                                                        value.value
+                                                        value.value === '1' ? __('yes') : value.value === '0' ? __('no') : value.value
                                                     }}</p>
                                             </div>
                                         </td>
