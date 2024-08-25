@@ -79,7 +79,7 @@ class ImportedProductController extends Controller
                 $product->delete();
             });
 
-            return redirect()->back()->with('toast', 'Produsul a fost importat cu succes!');
+            return redirect()->back()->with('toast', trans('app_context.products_was_successfully_imported'));
         } catch (\Exception $e) {
             return redirect()->back()->with('toast', $e->getMessage());
         }
