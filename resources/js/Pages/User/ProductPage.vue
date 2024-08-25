@@ -12,6 +12,7 @@ import {router} from "@inertiajs/vue3";
 import CustomModal from "@/Components/CustomModal.vue";
 import 'vue3-carousel/dist/carousel.css'
 import {Carousel, Navigation, Slide} from 'vue3-carousel'
+import {formatPrice} from "@/helpers/helper.js";
 
 const attrs = useAttrs()
 
@@ -73,7 +74,6 @@ function openModal(type) {
         modalTitle.value = app.appContext.config.globalProperties.__('select_offer')
     }
 }
-
 
 function closeModal() {
     isOpen.value = !isOpen.value
@@ -232,18 +232,18 @@ function buyProduct(productId) {
 
                         <div class="my-1 space-x-2 py-6 flex items-end ">
                             <h1 v-if="!product.has_discount" class="dark:text-slate-300 text-3xl font-bold">
-                                {{ product.price.toFixed(2) }} </h1>
+                                {{ formatPrice(product.price) }} </h1>
                             <span v-else class="flex flex-col space-x-2">
                                 <span class="flex space-x-2">
                                     <h1 class="dark:text-slate-300 text-slate-400 text-xl font-bold line-through">
-                                {{ product.price.toFixed(2) }} </h1>
+                                {{ formatPrice(product.price) }} </h1>
                                     <span
                                         class="my-auto px-1  rounded bg-red-400 text-sm text-white font-semibold">-{{
                                             product.sale
                                         }}%</span>
                                 </span>
                                 <h1 class="dark:text-slate-300 text-3xl font-bold">
-                                {{ product?.promotion_price?.toFixed(2) }} </h1>
+                                {{ formatPrice(product?.promotion_price) }} </h1>
                             </span>
                             <h1 class="dark:text-white text-2xl  font-medium">{{ __('lei') }} </h1>
                             <h1 v-if="product.mu" class="text-xl text-slate-500  font-light"> / {{ product.mu }} </h1>

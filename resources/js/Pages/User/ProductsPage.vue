@@ -9,6 +9,7 @@ import {HeartIcon} from "@heroicons/vue/24/outline/index.js";
 import {Link, router} from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import ReusableSidebar from "@/Components/ReusableSidebar.vue";
+import {formatPrice} from "../../helpers/helper.js";
 
 
 const cartStore = useCartStore();
@@ -441,7 +442,7 @@ onBeforeUnmount(() => {
                                                     <template v-if="product.has_discount">
                                                         <div class="flex flex-row space-x-1">
                                                             <p class="font-mulish text-sm line-through font-medium">
-                                                                {{ product.price }}
+                                                                {{ formatPrice(product.price) }}
                                                                 {{ __('lei') }}</p>
                                                             <span
                                                                 class="bg-red-400 text-white text-xs font-medium me-2 px-0.5 sm:px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{{
@@ -452,10 +453,13 @@ onBeforeUnmount(() => {
                                                     </template>
                                                     <template v-if="product.promotion_price">
                                                         <p class="font-mulish text-xl font-medium">
-                                                            {{ product.promotion_price }} {{ __('lei') }}</p>
+                                                            {{ formatPrice(product.promotion_price) }} {{
+                                                                __('lei')
+                                                            }}</p>
                                                     </template>
                                                     <template v-else>
-                                                        <p class="font-mulish text-xl font-medium">{{ product.price }}
+                                                        <p class="font-mulish text-xl font-medium">
+                                                            {{ formatPrice(product.price) }}
                                                             {{ __('lei') }}</p>
                                                     </template>
                                                 </div>
