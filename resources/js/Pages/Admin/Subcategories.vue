@@ -1,6 +1,6 @@
 <template>
     <admin-layout :current-route="initialRoute" title="Subcategories">
-        <custom-notification :message="__(`success_${notifyType}`)" type="success" :show="notification"/>
+        <custom-notification :message="__(`success_${notifyType}`)" :show="notification" type="success"/>
 
         <div class="w-full grid grid-cols-1  gap-4">
             <div class="container-rounded ">
@@ -11,7 +11,7 @@
                         <span class="secondary-text">This is a list of latest transactions</span>
                     </div>
                     <div class="flex-shrink-0">
-                        <primary-button @click="schemaForm(null, 'create', 'POST')" class="mx-2">{{
+                        <primary-button class="mx-2" @click="schemaForm(null, 'create', 'POST')">{{
                                 __('create')
                             }}
                         </primary-button>
@@ -24,31 +24,31 @@
                 <div class="flex flex-col mt-8">
                     <div class="overflow-x-auto rounded-lg">
                         <data-table
-                            @emit-click="args => schemaForm(args, 'modal', 'PUT')"
-                            :resources="resources"
-                            :columnsOrder="$page.props.columnsOrder"
                             :columns="$page.props.columns"
+                            :columnsOrder="$page.props.columnsOrder"
                             :initial-route="$page.props.initialRoute"
-                            :search-route="$page.props.searchRoute"/>
+                            :resources="resources"
+                            :search-route="$page.props.searchRoute"
+                            @emit-click="args => schemaForm(args, 'modal', 'PUT')"/>
                     </div>
                 </div>
                 <div>
-                    <h2 class="flex justify-center" v-if="resources.data.length === 0">{{
+                    <h2 v-if="resources.data.length === 0" class="flex justify-center">{{
                             __('no_subcategories')
                         }}...</h2>
                 </div>
-                <schema-form-builder :type="type"
-                                     :modal-is-open="modalIsOpen"
-                                     @close="schemaForm"
-                                     @close-modal="schemaForm"
-                                     @showNotify="showNotify"
-                                     :resource="res"
-                                     :resource-type="resourceType"
+                <schema-form-builder :columns="['name', 'slug']"
                                      :endpoint="initialRoute"
+                                     :fields="$page.props.columnsOrder"
                                      :method="method"
-                                     :columns="['name', 'slug']"
+                                     :modal-is-open="modalIsOpen"
+                                     :resource="res"
                                      :resource-route="$page.props.resourceRoute"
-                                     :fields="$page.props.columnsOrder"/>
+                                     :resource-type="resourceType"
+                                     :type="type"
+                                     @close="schemaForm"
+                                     @showNotify="showNotify"
+                                     @close-modal="schemaForm"/>
 
 
             </div>

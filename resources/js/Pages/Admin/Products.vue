@@ -6,10 +6,13 @@
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="primary-text">{{ __('products') }}</h3>
-                        <span class="secondary-text">{{ __('products_description_admin') }}</span>
+                        <span class="secondary-text">{{ __('products_description_admin') }}</span> <br>
+                        <span class="secondary-text">{{ __('in_total_products_is') }} : {{
+                                resources.total
+                            }}</span>
                     </div>
                     <div class="flex-shrink-0">
-                        <primary-button @click="schemaForm(null, 'create', 'POST')" class="mx-2">{{
+                        <primary-button class="mx-2" @click="schemaForm(null, 'create', 'POST')">{{
                                 __('create')
                             }}
                         </primary-button>
@@ -22,27 +25,28 @@
                 </div>
                 <div class="flex flex-col mt-8">
                     <data-table
-                        :resource-type="resourceType"
-                        @emit-click="args => schemaForm(args, 'modal', 'PUT')"
-                        :resources="resources" :columnsOrder="$page.props.columnsOrder"
-                        :columns="$page.props.columns" :search-route="$page.props.searchRoute"/>
+                        :columns="$page.props.columns"
+                        :columnsOrder="$page.props.columnsOrder"
+                        :resource-type="resourceType" :resources="resources"
+                        :search-route="$page.props.searchRoute" @emit-click="args => schemaForm(args, 'modal', 'PUT')"/>
                 </div>
                 <div>
-                    <h2 class="flex justify-center" v-if="resources.data.length === 0">{{ __('no_products') }}...</h2>
+                    <h2 v-if="resources.data.length === 0" class="flex justify-center">{{ __('no_products') }}...</h2>
                 </div>
 
-                <schema-form-builder :type="type"
-                                     :modal-is-open="modalIsOpen"
-                                     @close="schemaForm"
-                                     @close-modal="schemaForm"
-                                     @showNotify="showNotify"
-                                     :resource="res"
-                                     :endpoint="initialRoute"
-                                     :method="method"
-                                     :resource-type="resourceType"
-                                     :columns="['name', 'description', 'product_code', 'price', 'brand_name', 'sub_sub_category_name', 'attributes']"
-                                     :resource-route="$page.props.resourceRoute"
-                                     :fields="$page.props.columnsOrder"/>
+                <schema-form-builder
+                    :columns="['name', 'description', 'product_code', 'price', 'brand_name', 'sub_sub_category_name', 'attributes']"
+                    :endpoint="initialRoute"
+                    :fields="$page.props.columnsOrder"
+                    :method="method"
+                    :modal-is-open="modalIsOpen"
+                    :resource="res"
+                    :resource-route="$page.props.resourceRoute"
+                    :resource-type="resourceType"
+                    :type="type"
+                    @close="schemaForm"
+                    @showNotify="showNotify"
+                    @close-modal="schemaForm"/>
 
 
             </div>
