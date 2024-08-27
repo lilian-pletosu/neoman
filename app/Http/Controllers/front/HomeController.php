@@ -5,6 +5,7 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Services\ProductService;
+use App\Services\UltraImportProcessingService;
 use App\Services\UltraImportService;
 use Illuminate\Support\Facades\Cache;
 
@@ -20,6 +21,7 @@ class HomeController extends Controller
 
     public function index()
     {
+        dd((new UltraImportProcessingService())());
         if (Cache::has('categories')) {
             $categories = Cache::get('categories');
         } else {
