@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use App\Jobs\NomenclatureImportJob;
+use App\Jobs\SeedInDatabaseUltraProducts;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,9 +13,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
-        $ultraImportService = new \App\Services\UltraImportService();
-        $schedule->job(new NomenclatureImportJob($ultraImportService))->everyMinute();
+        $schedule->command('queue:work --tries=3 --timeout=10000')->dailyAt('23:58');
+        $schedule->command('run:import-ultra')->dailyAt('00:00');
+        $schedule->job(new SeedInDatabaseUltraProducts())->dailyAt('02:30');
 
     }
 

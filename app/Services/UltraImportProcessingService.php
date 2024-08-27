@@ -39,7 +39,9 @@ class UltraImportProcessingService
 
     public function getNomenclature()
     {
-        $products = collect($this->nomenclature)->take(10000)->map(function ($item) {
+        $allowedSubSubcategories = config('products_structure');
+
+        $products = collect($this->nomenclature)->take(20000)->map(function ($item) {
             $item->name = $this->getNomenclatureTranslation($item->UUID);
             $item->brand = $this->getBrand($item->brand)->first();
             $item->sub_subcategory = $this->getNomenclatureType($item->nomenclatureType) ?? null;
@@ -49,10 +51,11 @@ class UltraImportProcessingService
             $item->description = $this->parseDescription($item->UUID);
             $item->images = $this->getFirstFourImages($item->imageList);
             return $item;
-        })->filter(function ($item) {
+        })->filter(function ($item) use ($allowedSubSubcategories) {
             return $item->price !== 'No price' &&
-                $item->name !== null &&
-                $item->sub_subcategory['nomenclatureType']->quantity > 0;
+                isset($item->sub_subcategory['translations']['ro']) &&
+                in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
+                $item->name !== null;
         });
 
         $products->map(function ($item) {
