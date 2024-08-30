@@ -66,7 +66,14 @@ class ImportedProductController extends Controller
                     'specifications_id' => null,
                 ]);
                 if ($newProduct->images()->count() == 0) {
-                    $newProduct->images()->create($product['images']);
+                    if (isset($product['images'])) {
+                        $newProduct->images()->create($product['images']);
+                    } else {
+                        $newProduct->images()->create([
+                            'image1' => 'https://banner2.cleanpng.com/20180815/sit/a1fff69c4e6de4ea9f7a7f388f4b51cb.webp',
+                        ]);
+                    }
+
                 }
 
                 foreach ((new Product())->translatedAttributes as $translatableAttribute) {

@@ -24,10 +24,10 @@ class CookieService
 
         $product = [
             'id' => $productDb->id,
-            'name' => $productDb->name,
-            'brand' => $productDb->brand->name,
+            'name' => $productDb->name ?? '',
+            'brand' => $productDb->brand->name ?? '',
             'image' => $productDb->images[0]->image1,
-            'price' => $productDb->price,
+            'price' => $productDb->price ?? 0,
             'promotion_price' => $productDb->promotion_price,
             'has_discount' => $productDb->has_discount,
             'sale' => $productDb->sale,

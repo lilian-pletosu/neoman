@@ -34,7 +34,7 @@ const error = ref({});
 
 const description = ref(false);
 const specifications = ref(true);
-const selectedImage = ref(props.product.images[0].image1);
+const selectedImage = ref(props.product.images[0]?.image1);
 
 const isOpen = ref(false);
 const modalTitle = ref();
@@ -133,33 +133,33 @@ function buyProduct(productId) {
                                 class="mt-2 w-full lg:order-1 lg:w-32 lg:flex-shrink-0">
                                 <div v-for="(image, index) in product.images"
                                      class="flex flex-row items-start lg:flex-col">
-                                    <button v-show="image.image1 != null"
-                                            :class="{'border-gray-900': image.image1 === selectedImage}"
+                                    <button v-show="image?.image1 != null"
+                                            :class="{'border-gray-900': image?.image1 === selectedImage}"
                                             class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2 text-center"
                                             type="button"
-                                            @click="selectImage(image.image1)">
-                                        <img :src="image.image1" alt="" class="h-full w-full object-cover"/>
+                                            @click="selectImage(image?.image1)">
+                                        <img :src="image?.image1" alt="" class="h-full w-full object-cover"/>
                                     </button>
-                                    <button v-show="image.image2 != null"
-                                            :class="{'border-gray-900': image.image2 === selectedImage}"
+                                    <button v-show="image?.image2 != null"
+                                            :class="{'border-gray-900': image?.image2 === selectedImage}"
                                             class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2  text-center"
                                             type="button"
-                                            @click="selectImage(image.image2)">
-                                        <img :src="image.image2" alt="" class="h-full w-full object-cover"/>
+                                            @click="selectImage(image?.image2)">
+                                        <img :src="image?.image2" alt="" class="h-full w-full object-cover"/>
                                     </button>
-                                    <button v-show="image.image3 != null"
-                                            :class="{'border-gray-900': image.image3 === selectedImage}"
+                                    <button v-show="image?.image3 != null"
+                                            :class="{'border-gray-900': image?.image3 === selectedImage}"
                                             class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2  text-center"
                                             type="button"
-                                            @click="selectImage(image.image3)">
+                                            @click="selectImage(image?.image3)">
                                         <img :src="image.image3" alt="" class="h-full w-full object-cover"/>
                                     </button>
-                                    <button v-show="image.image4 != null"
-                                            :class="{'border-gray-900': image.image4 === selectedImage}"
+                                    <button v-show="image?.image4 != null"
+                                            :class="{'border-gray-900': image?.image4 === selectedImage}"
                                             class="flex-0 aspect-square mb-3 h-20 overflow-hidden rounded-lg border-2  text-center"
                                             type="button"
-                                            @click="selectImage(image.image4)">
-                                        <img :src="image.image4" alt="" class="h-full w-full object-cover"/>
+                                            @click="selectImage(image?.image4)">
+                                        <img :src="image?.image4" alt="" class="h-full w-full object-cover"/>
                                     </button>
                                 </div>
                             </div>
@@ -184,7 +184,7 @@ function buyProduct(productId) {
                         </div>
 
                         <div class="mt-2 flex justify-between items-center">
-                            <img :src="product.brand.image" alt=""
+                            <img :src="product.brand?.image" alt=""
                                  class="w-16"/>
                             <div class=" flex items-center dark:text-slate-300">
                                 <div class="flex items-center">
