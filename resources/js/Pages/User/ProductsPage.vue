@@ -39,8 +39,6 @@ const computedAttributes = computed(() => {
     });
 })
 
-console.log("computeeeeeeeeed", computedAttributes.value)
-
 
 const mobileFiltersOpen = ref(false)
 const attrs = useAttrs();
