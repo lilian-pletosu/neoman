@@ -23,7 +23,10 @@
                     <TextInput v-model="dt" :placeholder=" __('search') " class="min-w-16" @blur="search = !search"
                     />
                     <Link :data="{ search: dt }" :href="route(`${page.props.searchRoute}.index`)" preserve-state>
-                        Search
+                        <secondary-button class="mx-2">{{
+                                __('search')
+                            }}
+                        </secondary-button>
                     </Link>
 
                 </div>
@@ -70,7 +73,9 @@
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-default	"
                                         @click="selectProducts(resource)">
-                                        <img :src="resource.images?.image1" alt="no" class="w-10 h-10"/>
+                                        <img
+                                            :src="resource.images?.image1 ?? 'https://banner2.cleanpng.com/20180815/sit/a1fff69c4e6de4ea9f7a7f388f4b51cb.webp'"
+                                            alt="no" class="w-10 h-10"/>
                                     </td>
                                     <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900 cursor-default	"
                                         @click="selectProducts(resource)">

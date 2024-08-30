@@ -5,7 +5,6 @@ namespace App\Services;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class DataTableService
@@ -354,7 +353,10 @@ class DataTableService
 
             $this->query->where(function (Builder $query) use ($attributes, $searchTerm) {
                 foreach ($attributes as $attribute) {
-                    $query->orWhere(DB::raw("LOWER({$attribute})"), 'LIKE', "%{$searchTerm}%");
+                    // Căutare în câmpul JSON "name->ro"
+                    $query->orWhere("{$attribute}->ro", 'LIKE', "%{$searchTerm}%");
+                    $query->orWhere("{$attribute}->ru", 'LIKE', "%{$searchTerm}%");
+                    $query->orWhere("{$attribute}->en", 'LIKE', "%{$searchTerm}%");
                 }
             });
 
