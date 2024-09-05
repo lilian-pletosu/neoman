@@ -86,7 +86,8 @@ let testData = {
                                         </td>
                                         <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500 uppercase">
                                             {{
-                                                useDateFormat(transaction.created_at, "dddd, D MMMM", {locales: 'rum'}).value
+                                            useDateFormat(transaction.created_at, "dddd, D MMMM", {locales:
+                                            'rum'}).value
                                             }}
                                         </td>
                                         <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
@@ -110,7 +111,7 @@ let testData = {
                     </div>
                     <div :class="productImportedPercentage.percentageChange > 0 ? '' : 'text-red-500'"
                          class="ml-5 w-0 flex items-center justify-end flex-1  text-base font-bold">
-                        {{ productImportedPercentage.percentageChange }}%
+                        {{ productImportedPercentage.percentageChange.toFixed(0) }}%
                         <svg v-if="productImportedPercentage.percentageChange > 0" class="w-5 h-5" fill="currentColor"
                              viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path clip-rule="evenodd"
