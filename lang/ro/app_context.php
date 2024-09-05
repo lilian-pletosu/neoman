@@ -246,6 +246,12 @@ return [
     'yes' => 'Da',
     'no' => 'Nu',
     'in_total_products_is' => 'În total sunt',
+    'transaction' => 'Tranzacție',
+    'payment_from' => 'Plată de la',
+    'total_products' => 'Total produse',
+    'orders_statistics' => 'Statistici comenzi',
+    'total_orders' => 'Total comenzi',
+    'latest_customers' => 'Ultimii clienți',
 
     //statuses
     'pending' => 'Procesare',

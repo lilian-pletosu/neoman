@@ -242,6 +242,12 @@ return [
     'attention_imported_products_will_not_be_visible_until_they_are_saved_to_a_category' => 'Внимание! Импортированные продукты не будут видны, пока они не будут сохранены в категории',
     'yes' => 'Да',
     'no' => 'Нет',
+    'transaction' => 'Транзакция',
+    'payment_from' => 'Оплата от',
+    'total_products' => 'Всего продуктов',
+    'orders_statistics' => 'Статистика заказов',
+    'total_orders' => 'Всего заказов',
+    'latest_customers' => 'Последние клиенты',
 
     //statuses
     'pending' => 'В ожидании',

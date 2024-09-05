@@ -81,4 +81,9 @@ class Order extends Model
     {
         return $this->belongsTo(Credit::class, 'credit_id', 'id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', StatusEnum::PENDING);
+    }
 }

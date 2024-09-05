@@ -1,7 +1,49 @@
+<script setup>
+
+
+import AdminLayout from "@/Layouts/AdminLayout.vue";
+import {BarChart} from 'vue-chart-3';
+import {Chart, registerables} from "chart.js";
+import {getCurrentInstance} from "vue";
+import {useDateFormat} from "@vueuse/core";
+
+const app = getCurrentInstance();
+
+Chart.register(...registerables);
+
+const props = defineProps({
+    'route': String,
+    'orders': Object,
+    'latestConfimerdOrders': Object,
+    'productImportedPercentage': Array,
+    'totalProducts': Number,
+    'totalOrders': Number,
+});
+
+
+let testData = {
+
+    labels: [app.appContext.config.globalProperties.__('pending'), app.appContext.config.globalProperties.__('confirmed'), app.appContext.config.globalProperties.__('shipped'), app.appContext.config.globalProperties.__('delivered'), app.appContext.config.globalProperties.__('canceled')],
+    datasets: [
+        {
+            label: app.appContext.config.globalProperties.__('comenzi'),
+            data: [app.appContext.config.globalProperties.$page.props.orders['pending'], app.appContext.config.globalProperties.$page.props.orders['confirmed'], app.appContext.config.globalProperties.$page.props.orders['shipped'], app.appContext.config.globalProperties.$page.props.orders['delivered'], app.appContext.config.globalProperties.$page.props.orders['canceled']],
+            backgroundColor: ['#77CEFF', '#0079AF', '#123E6B', '#97B0C4', '#A5C8ED'],
+        },
+    ],
+};
+
+
+</script>
+
+
 <template>
     <admin-layout :current-route="route" title="Dashboard">
         <div class="w-full grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
+
             <div class="container-rounded">
+                <h3 class="primary-text">{{ __('orders_statistics') }}</h3>
+
                 <!--                -->
 
                 <BarChart :chartData="testData"/>
@@ -9,14 +51,11 @@
                 <!--                -->
             </div>
             <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
-                <div class="mb-4 flex items-center justify-between">
+                <div class=" flex items-center justify-between">
                     <div>
                         <h3 class="primary-text">Ultimele comenzi</h3>
-                        <span class="secondary-text">This is a list of latest transactions</span>
                     </div>
-                    <div class="flex-shrink-0">
-                        <a href="#" class="text-link-blue">View all</a>
-                    </div>
+
                 </div>
                 <div class="flex flex-col mt-8">
                     <div class="overflow-x-auto rounded-lg">
@@ -25,96 +64,33 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col"
-                                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Transactions
+                                        <th class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            {{ __('transaction') }}
                                         </th>
-                                        <th scope="col"
-                                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date & Time
+                                        <th class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            {{ __('date') }}
                                         </th>
-                                        <th scope="col"
-                                            class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Amount
+                                        <th class="p-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                            scope="col">
+                                            {{ __('price') }}
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody class="bg-white">
-                                    <tr>
+                                    <tr v-for="transaction in latestConfimerdOrders" :key="transaction.id">
                                         <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                            Payment from <span class="font-semibold">Bonnie Green</span>
+                                            {{ __('payment_from') }} <span
+                                            class="font-semibold">{{ transaction.full_name }}</span>
                                         </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 23 ,2021
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            $2300
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-gray-50">
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                            Payment refund to <span class="font-semibold">#00910</span>
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 23 ,2021
+                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500 uppercase">
+                                            {{
+                                                useDateFormat(transaction.created_at, "dddd, D MMMM", {locales: 'rum'}).value
+                                            }}
                                         </td>
                                         <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            -$670
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                            Payment failed from <span class="font-semibold">#087651</span>
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 18 ,2021
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            $234
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-gray-50">
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                            Payment from <span class="font-semibold">Lana Byrd</span>
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 15 ,2021
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            $5000
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                            Payment from <span class="font-semibold">Jese Leos</span>
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 15 ,2021
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            $2300
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-gray-50">
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900 rounded-lg rounded-left">
-                                            Payment from <span class="font-semibold">THEMESBERG LLC</span>
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 11 ,2021
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            $560
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-900">
-                                            Payment from <span class="font-semibold">Lana Lysle</span>
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            Apr 6 ,2021
-                                        </td>
-                                        <td class="p-4 whitespace-nowrap text-sm font-semibold text-gray-900">
-                                            $1437
+                                            {{ transaction.total_price }} {{ __('lei') }}
                                         </td>
                                     </tr>
                                     </tbody>
@@ -129,165 +105,73 @@
             <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <span class="big-text">2,340</span>
-                        <h3 class="secondary-text">New products this week</h3>
+                        <span class="big-text">{{ productImportedPercentage.currentWeekCount }}</span>
+                        <h3 class="secondary-text">Produse noi venite</h3>
                     </div>
-                    <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
-                        14.6%
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
+                    <div :class="productImportedPercentage.percentageChange > 0 ? '' : 'text-red-500'"
+                         class="ml-5 w-0 flex items-center justify-end flex-1  text-base font-bold">
+                        {{ productImportedPercentage.percentageChange }}%
+                        <svg v-if="productImportedPercentage.percentageChange > 0" class="w-5 h-5" fill="currentColor"
+                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
                                   d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
-                                  clip-rule="evenodd"></path>
+                                  fill-rule="evenodd"></path>
                         </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">5,355</span>
-                        <h3 class="text-base font-normal text-gray-500">Visitors this week</h3>
-                    </div>
-                    <div class="ml-5 w-0 flex items-center justify-end flex-1 text-green-500 text-base font-bold">
-                        32.9%
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
-                                  clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">385</span>
-                        <h3 class="text-base font-normal text-gray-500">User signups this week</h3>
-                    </div>
-                    <div class="ml-5 w-0 flex items-center justify-end flex-1 text-red-500 text-base font-bold">
-                        -2.7%
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
+                        <svg v-else class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
                                   d="M14.707 12.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 14.586V3a1 1 0 012 0v11.586l2.293-2.293a1 1 0 011.414 0z"
-                                  clip-rule="evenodd"></path>
+                                  fill-rule="evenodd"></path>
                         </svg>
                     </div>
+                </div>
+            </div>
+            <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span
+                            class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ totalProducts }}</span>
+                        <h3 class="text-base font-normal text-gray-500">{{ __('total_products') }}</h3>
+                    </div>
+
+                </div>
+            </div>
+            <div class="bg-white shadow rounded-lg p-4 sm:p-6 xl:p-8 ">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl sm:text-3xl leading-none font-bold text-gray-900">{{ totalOrders }}</span>
+                        <h3 class="text-base font-normal text-gray-500">{{ __('total_orders') }}</h3>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="grid grid-cols-1 2xl:grid-cols-2 xl:gap-4 my-4">
             <div class="bg-white shadow rounded-lg mb-4 p-4 sm:p-6 h-full">
                 <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-xl font-bold leading-none text-gray-900">Latest Customers</h3>
-                    <a href="#"
-                       class="text-sm font-medium text-cyan-600 hover:bg-gray-100 rounded-lg inline-flex items-center p-2">
-                        View all
-                    </a>
+                    <h3 class="text-xl font-bold leading-none text-gray-900">{{ __('latest_customers') }}</h3>
+
                 </div>
                 <div class="flow-root">
-                    <ul role="list" class="divide-y divide-gray-200">
-                        <li class="py-3 sm:py-4">
+                    <ul class="divide-y divide-gray-200" role="list">
+                        <li v-for="order in orders" :key="order.id" class="py-3 sm:py-4">
                             <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full"
-                                         src="https://demo.themesberg.com/windster/images/users/neil-sims.png"
-                                         alt="Neil image">
+                                <div class="flex-shrink-0 flex items-center">
+                                    <span
+                                        class="h-8 w-8 p-2 rounded-full bg-slate-200 flex items-center justify-center font-semibold text-slate-600">{{
+                                            order.full_name[0]
+                                        }}</span>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p class="text-sm font-medium text-gray-900 truncate">
-                                        Neil Sims
+                                        {{ order.full_name }}
                                     </p>
                                     <p class="text-sm text-gray-500 truncate">
-                                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                           data-cfemail="17727a767e7b57607e7973646372653974787a">[email&#160;protected]</a>
+                                        {{ order.email ?? '' }}
                                     </p>
                                 </div>
                                 <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $320
-                                </div>
-                            </div>
-                        </li>
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full"
-                                         src="https://demo.themesberg.com/windster/images/users/bonnie-green.png"
-                                         alt="Neil image">
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                        Bonnie Green
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                           data-cfemail="d4b1b9b5bdb894a3bdbab0a7a0b1a6fab7bbb9">[email&#160;protected]</a>
-                                    </p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $3467
-                                </div>
-                            </div>
-                        </li>
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full"
-                                         src="https://demo.themesberg.com/windster/images/users/michael-gough.png"
-                                         alt="Neil image">
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                        Michael Gough
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                           data-cfemail="57323a363e3b17203e3933242332257934383a">[email&#160;protected]</a>
-                                    </p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $67
-                                </div>
-                            </div>
-                        </li>
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full"
-                                         src="https://demo.themesberg.com/windster/images/users/thomas-lean.png"
-                                         alt="Neil image">
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                        Thomes Lean
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                           data-cfemail="284d45494144685f41464c5b5c4d5a064b4745">[email&#160;protected]</a>
-                                    </p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $2367
-                                </div>
-                            </div>
-                        </li>
-                        <li class="pt-3 sm:pt-4 pb-0">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex-shrink-0">
-                                    <img class="h-8 w-8 rounded-full"
-                                         src="https://demo.themesberg.com/windster/images/users/lana-byrd.png"
-                                         alt="Neil image">
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">
-                                        Lana Byrd
-                                    </p>
-                                    <p class="text-sm text-gray-500 truncate">
-                                        <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
-                                           data-cfemail="a2c7cfc3cbcee2d5cbccc6d1d6c7d08cc1cdcf">[email&#160;protected]</a>
-                                    </p>
-                                </div>
-                                <div class="inline-flex items-center text-base font-semibold text-gray-900">
-                                    $367
+                                    {{ order.total_price }} {{ __('lei') }}
                                 </div>
                             </div>
                         </li>
@@ -426,35 +310,3 @@
         </div>
     </admin-layout>
 </template>
-
-<script setup>
-
-
-import AdminLayout from "@/Layouts/AdminLayout.vue";
-import {BarChart} from 'vue-chart-3';
-import {Chart, registerables} from "chart.js";
-import {getCurrentInstance} from "vue";
-
-const app = getCurrentInstance();
-
-Chart.register(...registerables);
-
-const props = defineProps({
-    'route': String
-});
-
-
-let testData = {
-
-    labels: [app.appContext.config.globalProperties.__('pending'), app.appContext.config.globalProperties.__('confirmed'), app.appContext.config.globalProperties.__('shipped'), app.appContext.config.globalProperties.__('delivered'), app.appContext.config.globalProperties.__('canceled')],
-    datasets: [
-        {
-            label: app.appContext.config.globalProperties.__('comenzi'),
-            data: [app.appContext.config.globalProperties.$page.props.orders['pending'], app.appContext.config.globalProperties.$page.props.orders['confirmed'], app.appContext.config.globalProperties.$page.props.orders['shipped'], app.appContext.config.globalProperties.$page.props.orders['delivered'], app.appContext.config.globalProperties.$page.props.orders['canceled']],
-            backgroundColor: ['#77CEFF', '#0079AF', '#123E6B', '#97B0C4', '#A5C8ED'],
-        },
-    ],
-};
-
-
-</script>
