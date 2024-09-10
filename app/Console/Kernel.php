@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('queue:work --tries=3 --timeout=10000')->dailyAt('23:58');
+//        $schedule->command('queue:work --tries=3 --timeout=10000')->dailyAt('23:58');
         $schedule->command('run:import-ultra')->dailyAt('00:00');
         $schedule->job(new SeedInDatabaseUltraProducts())->dailyAt('02:30');
 
