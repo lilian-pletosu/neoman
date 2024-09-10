@@ -105,8 +105,8 @@ function schemaForm(resource = null, sendType, sendMethod) {
     modalIsOpen.value = !modalIsOpen.value;
     if (resource) {
         res.value = resource;
-        res.value['brand_name'] = res.value['brand']['name'] ?? ''
-        res.value['sub_sub_category_name'] = res.value['sub_sub_category']['name'] ?? ''
+        res.value['brand_name'] = res.value['brand']['name']
+        res.value['sub_sub_category_name'] = res.value['sub_sub_category']['name']
     }
 }
 

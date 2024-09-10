@@ -25,18 +25,18 @@ class BrandSchema
                 'type' => 'textarea',
                 'placeholder' => "description $currentLocale",
                 'options' => [],
-//                'rules' => [
-//                    'required'
-//                ],
+                'rules' => [
+                    'required'
+                ],
             ], [
                 'name' => "description $reserveLanguage",
                 'value' => '',
                 'type' => 'textarea',
                 'placeholder' => "description $reserveLanguage",
                 'options' => [],
-//                'rules' => [
-//                    'required'
-//                ],
+                'rules' => [
+                    'required'
+                ],
             ],
             [
                 'name' => 'website',

@@ -39,6 +39,14 @@ class BrandController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): array
+    {
+        return (new SchemaFormBuilder)('Brand', 'post', 'admin.brands.store');
+    }
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -47,17 +55,17 @@ class BrandController extends Controller
 
             $data = $request->validate([
                 'name' => 'required|min:3|String',
-                "description_ro" => 'nullable|min:5|max:800|String',
-                "description_ru" => 'nullable|min:5|max:800|String',
-                'website' => 'nullable',
+                "description_ro" => 'required|min:5|max:800|String',
+                "description_ru" => 'required|min:5|max:800|String',
+                'website' => 'required',
                 'is_enabled' => 'required',
                 'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
         } else {
             $data = $request->validate([
                 'name' => 'required|min:3|String',
-                'description ro' => 'nullable|min:5|max:800|String',
-                'description ru' => 'nullable|min:5|max:800|String',
-                'website' => 'nullable',
+                'description ro' => 'required|min:5|max:800|String',
+                'description ru' => 'required|min:5|max:800|String',
+                'website' => 'required',
                 'is_enabled' => 'required',
                 'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg']);
         }
@@ -67,14 +75,6 @@ class BrandController extends Controller
         Cache::remember('brands', 10000, function () {
             return Brand::active()->orderBy('name')->get();
         });
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): array
-    {
-        return (new SchemaFormBuilder)('Brand', 'post', 'admin.brands.store');
     }
 
     /**
@@ -101,9 +101,9 @@ class BrandController extends Controller
         if ($request->hasFile('image')) {
             $data = $request->validate([
                 'form.name' => 'required|min:3',
-                'form.description ro' => 'nullable|min:3',
-                'form.description ru' => 'nullable|min:3',
-                'form.website' => 'nullable',
+                'form.description ro' => 'required|min:3',
+                'form.description ru' => 'required|min:3',
+                'form.website' => 'required',
                 'form.is_enabled' => 'required',
                 'image._value' => 'nullable|image'
             ]);
@@ -111,9 +111,9 @@ class BrandController extends Controller
         } else {
             $data = $request->validate([
                 'form.name' => 'required|min:3',
-                'form.description ro' => 'nullable|min:3',
-                'form.description ru' => 'nullable|min:3',
-                'form.website' => 'nullable',
+                'form.description ro' => 'required|min:3',
+                'form.description ru' => 'required|min:3',
+                'form.website' => 'required',
                 'form.is_enabled' => 'required',
             ]);
             $data['image'] = null;

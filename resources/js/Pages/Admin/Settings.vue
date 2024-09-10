@@ -9,7 +9,6 @@ import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackInput from "@/Components/BlackInput.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
-import MultiSelect from 'primevue/multiselect';
 
 const app = getCurrentInstance();
 
@@ -41,17 +40,9 @@ const submit = (type) => {
             closeModal();
         }
     });
+
+
 };
-
-const selectedCredits = ref([])
-
-const cities = [
-    {name: 'New York', code: 'NY'},
-    {name: 'Rome', code: 'RM'},
-    {name: 'London', code: 'LDN'},
-    {name: 'Istanbul', code: 'IST'},
-    {name: 'Paris', code: 'PRS'}
-];
 
 </script>
 <template>
@@ -65,29 +56,25 @@ const cities = [
                         <span class="secondary-text">{{ __('here_is_all_settings') }}</span>
                     </div>
                     <div class="flex-shrink-0">
-                        <primary-button class="mx-2" @click="openModal">{{
+                        <primary-button @click="openModal" class="mx-2">{{
                                 __('create')
                             }}
                         </primary-button>
                     </div>
                 </div>
-                <MultiSelect v-model="selectedCredits" :maxSelectedLabels="3" :options="cities" class="w-full md:w-80"
-                             display="chip"
-                             filter
-                             optionLabel="name" placeholder="Select Cities"/>
                 <div class="flex flex-col mt-8 ">
                     <div class="overflow-x-auto rounded-lg ">
                         <div class="flex-shrink-0 ">
                             <div class="flex flex-col mt-8 ">
                                 <div class="p-2 overflow-x-auto rounded-lg ">
-                                    <div class="grid grid-cols-2 gap-3 lg:grid-cols-2 ">
-                                        <section class="cols">
+                                    <div class="grid grid-cols-1 gap-3 lg:grid-cols-2 ">
+                                        <section>
                                             <span class="text-lg font-medium">{{ __('credit_info') }}</span>
                                             <div
-                                                class="container-custom-rounded  border border-1 border-slate-300 p-2 bg-slate-100/50 min-h-[150px] mt-2">
+                                                class="container-custom-rounded  border border-1 border-slate-300 p-2 bg-slate-100/50 min-h-[150px]">
                                                 <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                                                     <div v-for="credit in resources.credit">
-                                                        <Installments :key="credit.id" :credit="credit"/>
+                                                        <Installments :credit="credit" :key="credit.id"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -96,10 +83,10 @@ const cities = [
 
                                             <span class="text-lg font-medium">{{ __('installments_info') }}</span>
                                             <div
-                                                class="container-custom-rounded border border-1 border-slate-300 p-2 bg-slate-100/50  min-h-[150px] mt-2">
+                                                class="container-custom-rounded border border-1 border-slate-300 p-2 bg-slate-100/50  min-h-[150px]">
                                                 <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                                                     <div v-for="installments in resources.installments">
-                                                        <Installments :key="installments.id" :credit="installments"/>
+                                                        <Installments :credit="installments" :key="installments.id"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -110,7 +97,7 @@ const cities = [
                         </div>
                     </div>
                 </div>
-                <Modal :actions="false" :closeable="true" :show="isOpen" @close="closeModal">
+                <Modal :show="isOpen" @close="closeModal" :actions="false" :closeable="true">
                     <div class="flex flex-col gap-4 p-4 ">
                         <div class="flex justify-between">
                             <h3 class="primary-text">{{ __('add_new_credit') }}</h3>
@@ -118,26 +105,26 @@ const cities = [
                         <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                             <div>
                                 <black-input v-model="form.num_of_installments"
+                                             :type="'number'"
                                              :error-message="__(form.errors.num_of_installments)"
-                                             :label="__('num_of_installments')"
-                                             :type="'number'"/>
+                                             :label="__('num_of_installments')"/>
                             </div>
                             <div>
                                 <black-input v-model="form.interest_rate"
+                                             :type="'number'"
                                              :error-message="__(form.errors.interest_rate)"
-                                             :label="__('interest_rate')"
-                                             :type="'number'"/>
+                                             :label="__('interest_rate')"/>
                             </div>
                             <div class="col-span-2">
                                 <black-selector v-model="form.type"
-                                                :error-message="__(form.errors.type)"
-                                                :label="__('type')"
+                                                @update:status="form.type = $event"
                                                 :options="[
                                                     {id: 'credit', value: 'credit', label: 'Credit'},
                                                     {id: 'installments', value: 'installments', label: 'Installments'}
                                                 ]"
                                                 :value="form.type"
-                                                @update:status="form.type = $event"/>
+                                                :error-message="__(form.errors.type)"
+                                                :label="__('type')"/>
                             </div>
                         </div>
                         <div class="flex justify-end mt-6">
@@ -145,7 +132,7 @@ const cities = [
                                     __('cancel')
                                 }}
                             </SecondaryButton>
-                            <PrimaryButton class="mx-2" @click="submit">{{ __('submit') }}</PrimaryButton>
+                            <PrimaryButton @click="submit" class="mx-2">{{ __('submit') }}</PrimaryButton>
                         </div>
                     </div>
                 </Modal>
