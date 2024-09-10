@@ -28,4 +28,9 @@ class Credit extends Model
     {
         return $query->where('type', 'installments')->orderBy('num_of_installments', 'asc');
     }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_credits');
+    }
 }

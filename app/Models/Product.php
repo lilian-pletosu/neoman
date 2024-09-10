@@ -138,4 +138,9 @@ class Product extends Model implements TranslatableContract
             })
             ->limit(10)->get();
     }
+
+    public function credits()
+    {
+        return $this->belongsToMany(Credit::class, 'product_credits');
+    }
 }

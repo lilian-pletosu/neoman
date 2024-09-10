@@ -80,7 +80,7 @@ class ProductSchema
                 'type' => 'select',
                 'label' => 'sub_sub_category',
                 'placeholder' => 'sub_sub_category',
-                'options' => SubSubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->getTranslation()->name ?? $f->getTranslation($reserveLanguage)->name])->toArray(),
+                'options' => SubSubCategory::all()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
                 'rules' => [
                     'required'
                 ],
