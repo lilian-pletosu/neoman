@@ -37,7 +37,7 @@ class ImportedProductController extends Controller
             ->paginate(15)
             ->setSearchRoute('admin.imported-products')
             ->setResourceRoute('admin.imported-products')
-            ->sortBy('id');
+            ->sortBy('created_at');
 
         return inertia('Admin/ImportedProducts', [
             'initialRoute' => 'admin.products',
