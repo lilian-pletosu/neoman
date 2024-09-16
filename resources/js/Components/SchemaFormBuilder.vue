@@ -81,7 +81,6 @@ async function fetchEditFormData() {
             .then(data => {
                 schemaForm.value = data;
                 formEdit = useForm(app.appContext.config.globalProperties.fetchedSchemaFormBuild(data))
-                console.log(formEdit);
             })
     }
 }
