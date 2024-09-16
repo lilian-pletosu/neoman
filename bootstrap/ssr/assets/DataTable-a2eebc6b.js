@@ -1,6 +1,6 @@
 import { getCurrentInstance, ref, onMounted, unref, withCtx, createTextVNode, toDisplayString, useSSRContext } from "vue";
 import { ssrRenderAttr, ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderClass } from "vue/server-renderer";
-import { P as Pagination } from "./Pagination-cc4bc19e.js";
+import { P as Pagination } from "./Pagination-f107a932.js";
 import { useForm, router } from "@inertiajs/vue3";
 import { P as PrimaryButton } from "./PrimaryButton-84eba42e.js";
 import { XCircleIcon, BoltIcon, ReceiptPercentIcon, CheckBadgeIcon, VariableIcon } from "@heroicons/vue/20/solid/index.js";
@@ -173,7 +173,7 @@ const _sfc_main = {
                   "status-active text-white": resource[columnInOrder] === "active"
                 }, "rounded p-1 text-center text-black shadow mx-auto"])}" data-v-1d1c00db><p data-v-1d1c00db>${ssrInterpolate(_ctx.__(applyFormat(column, resource[columnInOrder])) ?? "--")}</p></div>`);
               } else if (column === "icon") {
-                _push(`<div class="flex items-center justify-center first-letter:uppercase" data-v-1d1c00db><p data-v-1d1c00db>${resource[columnInOrder]}</p></div>`);
+                _push(`<div class="flex items-center justify-center first-letter:uppercase" data-v-1d1c00db><p data-v-1d1c00db>${resource[columnInOrder] ?? ""}</p></div>`);
               } else {
                 _push(`<div class="flex items-center justify-center first-letter:uppercase" data-v-1d1c00db><p class="first-letter:uppercase" data-v-1d1c00db>${ssrInterpolate(_ctx.__(applyFormat(column, resource[columnInOrder])) ?? "---")}</p></div>`);
               }

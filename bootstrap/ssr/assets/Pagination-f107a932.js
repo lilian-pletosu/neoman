@@ -18,7 +18,7 @@ function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $op
   ssrRenderList($props.links, (link, key) => {
     _push(`<!--[-->`);
     if (link.url === null) {
-      _push(`<div class="mr-1 mb-1 px-2 py-3 text-base leading-4 text-gray-400 hover:text-black text-bold">${_ctx.__(link.label)}</div>`);
+      _push(`<div class="mr-1 mb-1 px-2 py-3 text-base leading-4 text-gray-400 hover:text-black text-bold">${_ctx.__(link.label) ?? ""}</div>`);
     } else {
       _push(ssrRenderComponent(_component_Link, {
         key,
@@ -27,7 +27,7 @@ function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $op
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<span${_scopeId}>${_ctx.__(link.label)}</span>`);
+            _push2(`<span${_scopeId}>${_ctx.__(link.label) ?? ""}</span>`);
           } else {
             return [
               createVNode("span", {

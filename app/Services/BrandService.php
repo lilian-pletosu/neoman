@@ -111,8 +111,9 @@ class BrandService
 //                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
 
 
-                $data['image'] = '/storage/brands/' . $imageContents;
+                $data['image'] = '/storage/brands/' . $fileName;
             } else {
+
                 $fileName = $data['image']->hashName();
                 $imageContents = $data['image']->getContent();
 
@@ -123,7 +124,7 @@ class BrandService
 //                $imageContents = $removeBgService('/storage/brands/' . $fileName, 'brands');
 
 
-                $data['image'] = '/storage/brands/' . $imageContents;
+                $data['image'] = '/storage/brands/' . $fileName;
             }
 
         }
