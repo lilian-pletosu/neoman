@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Credit;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Services\DataTableService;
@@ -99,7 +100,20 @@ class ProductController extends Controller
         $measurementUnit = MeasurementUnit::find($product->measurement_unit_id);
         $product['mu'] = $measurementUnit ? $measurementUnit->translate(app()->currentLocale())->symbol ?? '' : '';
 
-        return $product->loadAggregate(['brand', 'subSubCategory'], "name");
+        $product->loadAggregate(['brand', 'subSubCategory'], "name");
+        $product->loadAggregate(['images'], "image1");
+        $product->load(['credits', 'images']); // Încarcă relația 'credits'
+
+
+        $credits = Credit::all();
+
+
+        return inertia('Admin/Product', [
+            'product' => $product,
+            'initialRoute' => 'admin.products',
+            'resourceType' => 'product',
+            'creditsSettings' => $credits,
+        ]);
     }
 
     /**
@@ -126,7 +140,6 @@ class ProductController extends Controller
         ]);
         (new ProductService())->update($data, $product, $request);
         return to_route($this->route);
-
     }
 
     /**
@@ -137,8 +150,47 @@ class ProductController extends Controller
         $product = Product::find($id);
         $product->delete();
         return to_route($this->route);
-
     }
 
+    public function addNewCreditOptions(Request $request, Product $product)
+    {
+        $data = $request->validate([
+            'form' => 'required|array',
+            'form.num_of_installments' => 'required|numeric',
+            'form.interest_rate' => 'required|numeric',
+            'form.type' => 'required',
+        ]);
 
+        $product->credits()->firstOrCreate(['type' => $data['form']['type'], 'num_of_installments' => $data['form']['num_of_installments'], 'interest_rate' => $data['form']['interest_rate']], [
+            'num_of_installments' => $data['form']['num_of_installments'],
+            'interest_rate' => $data['form']['interest_rate'],
+            'type' => $data['form']['type'],
+        ]);
+    }
+
+    public function updateImagesOrder(Request $request, Product $product)
+    {
+
+
+        $data = $request->validate([
+            'images' => 'required|array',
+        ]);
+
+        $images = $data['images'];
+
+        // Actualizăm fiecare câmp (image1, image2, ...) pe baza ordinii din array
+        $productImagesData = [];
+        foreach ($images as $index => $image) {
+            $field = 'image' . ($index + 1); // Generează câmpurile: image1, image2, etc.
+            $productImagesData[$field] = $image;
+        }
+
+        // Actualizăm tabelul product_images pentru produsul curent
+        $product->images()->update($productImagesData);
+    }
+
+    public function deleteCreditFromProduct(Product $product, Credit $credit)
+    {
+        $product->credits()->detach($credit->id);
+    }
 }

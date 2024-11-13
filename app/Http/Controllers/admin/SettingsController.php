@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Credit;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -15,7 +16,7 @@ class SettingsController extends Controller
     {
 
         // I should group the credits by type
-        $resources = Credit::get()->groupBy('type');
+        $resources = Credit::with('products')->get()->groupBy('type');
         return inertia('Admin/Settings', ['resources' => $resources]);
     }
 
@@ -37,12 +38,18 @@ class SettingsController extends Controller
             'num_of_installments' => 'required',
             'interest_rate' => 'required',
             'type' => 'required',
+            'products' => 'nullable|array',
         ]);
         $data['name'] = $request->type;
 
-        Credit::create($data);
+        $credit = Credit::create($data);
 
-
+        // Extrage ID-urile produselor și sincronizează
+        if (!empty($data['products'])) {
+            $productIds = collect($data['products'])->pluck('id')->toArray();
+            $credit->products()->sync($productIds);
+        }
+        return redirect()->back()->with('toast', 'Credit adăugat cu succes');
     }
 
     /**
@@ -74,6 +81,8 @@ class SettingsController extends Controller
         ]);
         $data['form']['name'] = $request->form['type'];
         $setting->update($data['form']);
+
+        return redirect()->back()->with('toast', 'Credit actualizat cu succes');
     }
 
     /**
@@ -82,5 +91,11 @@ class SettingsController extends Controller
     public function destroy(Credit $setting)
     {
         $setting->delete();
+        return redirect()->back()->with('toast', 'Credit șters cu succes');
+    }
+
+    public function fetchProducts()
+    {
+        return Product::select('name', 'id')->get();
     }
 }

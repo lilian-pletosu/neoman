@@ -160,6 +160,7 @@ return [
     'success_create' => 'Creat cu succes',
     'success_import' => 'Importat cu succes',
     'monday_friday' => 'Lu - Vi',
+    'months' => 'Luni',
     'saturday' => 'Sâmbătă',
     'sunday' => 'Duminică',
     'return_with_call' => 'Revenim cu un apel',
