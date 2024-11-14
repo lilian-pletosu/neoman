@@ -147,12 +147,7 @@ class DataTableService
      * @param bool $cloneRecipe
      * @return $this
      */
-    public function cloneRecipe(bool $cloneRecipe): static
-    {
-        $this->cloneRecipe = $cloneRecipe;
 
-        return $this;
-    }
 
     /**
      * provide the route base name where submission or get requests of filter or search will hit;
@@ -268,7 +263,6 @@ class DataTableService
             'formatters' => $this->formatters ?? [],
             'columnsOrder' => $this->columnsOrder ?? [],
         ];
-
     }
 
     /**
@@ -325,9 +319,11 @@ class DataTableService
             //this is to avoid requesting extra fields in method params, since the foreign ksy may be extracted automatically
             $foreignKeyInRelation = '';
 
-            if ($this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\HasMany
+            if (
+                $this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\HasMany
                 ||
-                $this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\HasOne) {
+                $this->resource->$relation() instanceof \Illuminate\Database\Eloquent\Relations\HasOne
+            ) {
 
                 $foreignKeyInRelation = $this->resource->$relation()->getForeignKeyName() . ',';
             }
@@ -348,6 +344,7 @@ class DataTableService
         //if there is a search for something, define the searchable fields and relations
         if (request('search')) {
 
+
             $attributes = $this->resourceColumns;
             $searchTerm = request('search');
 
@@ -356,15 +353,21 @@ class DataTableService
                     // Căutare în câmpul JSON "name->ro"
                     $query->orWhere("{$attribute}->ro", 'LIKE', "%{$searchTerm}%");
                     $query->orWhere("{$attribute}->ru", 'LIKE', "%{$searchTerm}%");
-                    $query->orWhere("{$attribute}->en", 'LIKE', "%{$searchTerm}%");
+                }
+            });
+
+
+            $this->query->orWhere(function (Builder $query) use ($attributes, $searchTerm) {
+                foreach ($attributes as $attribute) {
+                    $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
                 }
             });
 
 
             //build the search on relations
             foreach ($this->relationFields as $relation => $fields) {
-                $this->query->orWhereHas($relation, function ($query) use ($fields, $searchTerm) {
-                    $query->where(function (Builder $query) use ($fields, $searchTerm) {
+                $this->query->orWhereHas($relation, function ($query) use ($attributes, $searchTerm) {
+                    $query->where(function (Builder $query) use ($attributes, $searchTerm) {
                         // Keep condition for warehouse when searching through related fields.
 
                         /*
@@ -384,12 +387,10 @@ class DataTableService
                         // encapsulate the conditions applied on fields of relation (orWhere)
                         // inside a 'where' block conditioning with AND warehouse, garage
                         // in other words, allowing searchTerm only inside filtered by garage or warehouse
-                        $query->where(function (Builder $query) use ($fields, $searchTerm) {
-
-                            foreach ($fields as $attribute) {
+                        $query->where(function (Builder $query) use ($attributes, $searchTerm) {
+                            foreach ($attributes as $attribute) {
                                 $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
                             }
-
                         });
                     });
                 });
