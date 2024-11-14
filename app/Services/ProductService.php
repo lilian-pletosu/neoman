@@ -216,53 +216,60 @@ class ProductService
 
     public function searchProduct($query = null)
     {
+        $locale = session()->get('locale');
+        $productsArray = [];
+
         if ($query) {
-            $productsArray = [];
+            $products = Product::with([
 
-            $products = Product::where('slug', 'like', '%' . $query . '%')
+                'attributes.attributeValues.translations' => function ($q) use ($locale) {
+                    $q->where('locale', $locale);
+                },
+                'brand',
+                'images',
+            ])
+                ->where('slug', 'like', '%' . $query . '%')
                 ->orWhereHas('translations', function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%');
-                    $q->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%' . $query . '%')
+                        ->orWhere('description', 'like', '%' . $query . '%');
                 })
-                ->limit(10)->get();
-
+                ->limit(10)
+                ->get();
 
             foreach ($products as $product) {
                 $attributesArray = [];
 
                 foreach ($product->attributes as $attribute) {
                     foreach ($attribute->attributeValues as $attributeValue) {
-                        $translatedValue = $attributeValue->translate(session()->get('locale'));
+                        $translatedValue = $attributeValue->translations->first();
                         if ($translatedValue) {
                             $attributesArray[$attribute->name] = $translatedValue->value;
                         }
                     }
                 }
 
-                $brandName = $product->brand->name ?? null;
-                $brandLogo = $product->brand->image ?? null;
-                $image = $product->images()->first()->image1 ?? null;
-
                 $productArray = [
                     'id' => $product->id,
                     'slug' => $product->slug,
-                    'name' => $product->translate(session()->get('locale'))->name,
-                    'description' => $product->translate(session()->get('locale'))->description,
-                    'image' => $image,
+                    'name' => $product->translations->first()->name ?? $product->name,
+                    'description' => $product->translations->first()->description ?? $product->description,
+                    'image' => $product->images->first()->image1 ?? null,
                     'price' => $product->price,
-                    'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                    'brand' => [
+                        'name' => $product->brand->name ?? null,
+                        'image' => $product->brand->image ?? null
+                    ],
                     'attributes' => $attributesArray,
-                    'mu' => $product->measurement_unit->symbol ?? ''
                 ];
 
                 $productsArray[] = $productArray;
             }
-        } else {
-            $productsArray = [];
         }
 
         return $productsArray;
     }
+
+
 
     public function saveUltraImportedProductInDB($product)
     {

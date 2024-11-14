@@ -1,15 +1,14 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import { Link, router, useForm } from "@inertiajs/vue3";
-import DataTable from "@/Components/DataTable.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import SchemaFormBuilder from "@/Components/SchemaFormBuilder.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
 import BlackInput from "@/Components/BlackInput.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
 import { TrashIcon } from "@heroicons/vue/20/solid";
+import CustomInputFile from "@/Components/CustomInputFile.vue";
+import { useForm, router } from "@inertiajs/vue3";
 
 const props = defineProps({
     initialRoute: {
@@ -36,6 +35,10 @@ const form = useForm({
     num_of_installments: "",
     interest_rate: "",
     type: "",
+});
+
+const formImage = useForm({
+    image: null,
 });
 
 const credits = ref([]);
@@ -124,6 +127,7 @@ const submitSortedImages = () => {
         }
     );
 };
+const uploadedImage = ref(null);
 
 const deleteCredit = (creditId) => {
     router.delete(
@@ -138,6 +142,23 @@ const deleteCredit = (creditId) => {
                 filtredInstallments();
             },
             only: ["product"],
+        }
+    );
+};
+
+const submitImage = () => {
+    router.post(
+        route("admin.update-product-image", {
+            product: props.product,
+        }),
+        {
+            image: uploadedImage.value,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                images.value = imageUrls();
+            },
         }
     );
 };
@@ -181,6 +202,22 @@ watch(isOrderChanged, () => {
                                         :alt="`Image ${index + 1}`"
                                     />
                                 </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-4 border"
+                                v-if="images.length != 4"
+                            >
+                                <input
+                                    @change="
+                                        uploadedImage = $event.target.files[0]
+                                    "
+                                    class="block text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                    id="image"
+                                    type="file"
+                                />
+                                <SecondaryButton @click="submitImage"
+                                    >Încarcă</SecondaryButton
+                                >
                             </div>
                         </div>
                         <div class="px-4 md:flex-1">

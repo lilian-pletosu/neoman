@@ -19,6 +19,7 @@ Route::group([], function () {
             Route::resource('/products', \App\Http\Controllers\admin\ProductController::class);
             Route::post('{product}/update-attribute-values', [\App\Http\Controllers\admin\ProductController::class, 'addNewCreditOptions'])->name('update-credits-options');
             Route::put('{product}/update-images-order', [\App\Http\Controllers\admin\ProductController::class, 'updateImagesOrder'])->name('update-images-order');
+            Route::post('{product}/update-product-image', [\App\Http\Controllers\admin\ProductController::class, 'uploadNewImage'])->name('update-product-image');
             Route::delete('{product}/delete-credit-product/{credit}', [\App\Http\Controllers\admin\ProductController::class, 'deleteCreditFromProduct'])->name('delete-credit-from-product');
             Route::resource('/orders', \App\Http\Controllers\admin\OrderController::class);
             Route::resource('/categories', \App\Http\Controllers\admin\CategoryController::class);

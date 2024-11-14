@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Credit;
-use App\Models\MeasurementUnit;
 use App\Models\Product;
-use App\Services\DataTableService;
-use App\Services\ProductService;
-use App\Services\SchemaFormBuilder;
 use Illuminate\Http\Request;
+use App\Models\MeasurementUnit;
+use App\Services\ProductService;
+use App\Services\DataTableService;
+use App\Services\SchemaFormBuilder;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -188,6 +189,37 @@ class ProductController extends Controller
         // Actualizăm tabelul product_images pentru produsul curent
         $product->images()->update($productImagesData);
     }
+
+    public function uploadNewImage(Product $product, Request $request)
+    {
+        $data = $request->validate([
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+        ]);
+
+        $fileName = $product['slug'] . now()->toDateString() . random_int(1, 100000) . '.' . $request->file('image')->extension();
+        $data['image'] = '/storage/products/' . $fileName;
+        $imageContents = $request->file('image')->getContent();
+        Storage::disk('products')->put($fileName, $imageContents);
+
+        // adaugam imaginea unde este null exemplu image1 = 'image.jpg', image2 = null, image3 = null, image4 = null
+        // atunci adaugam imaginea in image2
+        $productImage = $product->images()->first(); // Extrage obiectul productImage
+
+        // Lista de câmpuri care trebuie completate
+        $imageFields = ['image1', 'image2', 'image3', 'image4'];
+
+        foreach ($imageFields as $field) {
+            // Verificăm dacă câmpul este null
+            if (is_null($productImage->$field)) {
+                // Dacă este null, îl completăm cu noua imagine
+                $productImage->$field = $data['image'];
+                // Salvăm modificările
+                $productImage->save();
+                break; // Ieșim din buclă după prima completare
+            }
+        }
+    }
+
 
     public function deleteCreditFromProduct(Product $product, Credit $credit)
     {

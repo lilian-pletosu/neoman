@@ -12,10 +12,6 @@ import BlackSelector from "@/Components/BlackSelector.vue";
 import toast from "@/stores/toast";
 import VSelect from "vue-select";
 
-const app = getCurrentInstance();
-
-const page = usePage();
-
 const props = defineProps({
     resources: Object,
     products: Array,

@@ -20,7 +20,7 @@ class SearchController extends Controller
             ->orWhere('description', 'like', '%' . $search . '%')
             ->orWhere('slug', 'like', '%' . $search . '%')
             ->orWhere('product_code', 'like', '%' . $search . '%')
-            ->with('brand', 'images')
+            ->with('brand', 'images', 'credits')
             ->paginate(12)
             ->withQueryString();
 

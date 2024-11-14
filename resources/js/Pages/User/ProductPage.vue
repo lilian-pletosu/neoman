@@ -402,7 +402,8 @@ function buyProduct(productId) {
                         </div>
                         <div>
                             <button
-                                v-if="product.credits.length > 0"w
+                                v-if="product.credits.length > 0"
+                                w
                                 class="inline-flex items-center justify-center w-full px-12 py-3 text-base font-bold text-center text-white transition-all duration-200 ease-in-out border-2 border-transparent rounded-md bg-slate-500 bg-none focus:shadow hover:bg-slate-600"
                                 type="button"
                                 @click="openModal('buy_in_credit')"
