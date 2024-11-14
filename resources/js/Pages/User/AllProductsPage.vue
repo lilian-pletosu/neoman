@@ -216,13 +216,13 @@ onBeforeUnmount(() => {
                                                                 class="mix-blend-multiply"
                                                                 :src="
                                                                     product
-                                                                        .brand
-                                                                        .image
+                                                                        ?.brand
+                                                                        ?.image
                                                                 "
                                                                 :alt="
                                                                     product
-                                                                        .brand
-                                                                        .name
+                                                                        ?.brand
+                                                                        ?.name
                                                                 "
                                                             />
                                                         </div>
