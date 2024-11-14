@@ -52,6 +52,7 @@ class ProductService
                             'name' => $product->translateOrDefault()->name,
                             'image' => $image,
                             'price' => $product->price,
+                            'credits' => $product->credits,
                             'final_price' => $product->price - ($product->price * $promotion->discount / 100), // 'discount' => $promotion->discount . '%',
                             'sale' => $promotion->discount . '%',
                             'brand' => ['name' => $brandName, 'image' => $brandLogo],
@@ -63,7 +64,7 @@ class ProductService
                 }
             }
         }
-//        dd($productsArray);
+        //        dd($productsArray);
 
         return $productsArray;
     }
@@ -108,7 +109,6 @@ class ProductService
 
             // Adaugă array-ul produsului în array-ul general de produse
             $productsArray[] = $productArray;
-
         }
         return $productsArray;
     }
@@ -147,7 +147,7 @@ class ProductService
                     $productArray = [
                         'id' => $product->id,
                         'slug' => $product->slug,
-                        'name' => $product->translateOrDefault('ro')->name,
+                        'name' => $product->translateOrDefault('ro')->name ?? '',
                         'image' => $image,
                         'price' => $product->price,
                         'brand' => ['name' => $brandName, 'image' => $brandLogo],
@@ -157,10 +157,8 @@ class ProductService
 
                     // Adaugă array-ul produsului în array-ul general de produse
                     $productsArray[] = $productArray;
-
                 }
             }
-
         }
 
 
@@ -280,9 +278,9 @@ class ProductService
                 try {
                     $existProduct->update([
                         'product_code' => $productArray['code'],
-//                        'name' => $productArray['name'],
+                        //                        'name' => $productArray['name'],
                         'slug' => $slug,
-//                        'description' => json_encode($productArray['description']),
+                        //                        'description' => json_encode($productArray['description']),
                         'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
                         'price' => $productArray['price'],
                     ]);
@@ -313,8 +311,6 @@ class ProductService
                 ]);
                 return $newProd;
             }
-
-
         } catch (\Error $error) {
             Log::error('Error occurred while saving the product', [
                 'error' => $error->getMessage(),
@@ -344,7 +340,6 @@ class ProductService
             }
         }
         $product->save();
-
     }
 
     private function ultraImportBrandSave($brand)
@@ -378,7 +373,6 @@ class ProductService
                 'trace' => $exception->getTraceAsString()
             ]);
         }
-
     }
 
     public function create(Request $request, $data)
@@ -409,7 +403,6 @@ class ProductService
                 foreach ($this->translatedAttributes as $translatableAttribute) {
                     foreach (config('translatable.locales') as $locale) {
                         $product->translateOrNew($locale)->$translatableAttribute = $data[$translatableAttribute . '_' . $locale];
-
                     }
                 }
                 $product->save();
@@ -417,7 +410,6 @@ class ProductService
                 foreach ($this->translatedAttributes as $translatableAttribute) {
                     foreach (config('translatable.locales') as $locale) {
                         $product->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
-
                     }
                 }
                 $product->save();
@@ -428,8 +420,6 @@ class ProductService
         } catch (\Exception $exception) {
             return $exception;
         }
-
-
     }
 
     public function assignAttributesToProduct($product, $attributes, $subSubCategoryId)
@@ -546,7 +536,6 @@ class ProductService
                 'trace' => $exception->getTraceAsString()
             ]);
         }
-
     }
 
     private function ultraImportSubcategory($ultraSubcategory, $category)

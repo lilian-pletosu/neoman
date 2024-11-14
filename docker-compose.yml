@@ -48,7 +48,7 @@ services:
     neoman-redis:
         image: redis:7.0.12-alpine3.18
         command: redis-server --requirepass '${REDIS_PASSWORD:-secrets}'
-        restart: unless-stopped
+        restart: always
         networks:
             - neoman
         ports:

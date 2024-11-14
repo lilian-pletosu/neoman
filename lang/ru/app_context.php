@@ -160,6 +160,7 @@ return [
     'success_create' => 'Успешно создано',
     'success_import' => 'Успешно импортировано',
     'monday_friday' => 'Пн - Пт',
+    'months' => 'Месяцы',
     'saturday' => 'Суббота',
     'sunday' => 'Воскресенье',
     'return_with_call' => 'Вернуться с звонком',

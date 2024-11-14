@@ -62,7 +62,6 @@ class ProductController extends Controller
             'brands' => $brands,
             'attributes' => $attributes,
         ]);
-
     }
 
 
@@ -109,15 +108,12 @@ class ProductController extends Controller
             ];
         });
 
-//        $latest_products = (new ProductService())->loadLatestProducts();
+        //        $latest_products = (new ProductService())->loadLatestProducts();
 
 
-//        $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? '';
-//        dd($product);
+        //        $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? '';
 
-        $product['credits'] = Cache::has('credits') ? Cache::get('credits') : Cache::remember('credits', 20000, function () {
-            return Credit::get()->groupBy('type');
-        });
+        $product['credits'] = $product->credits()->get();
 
         return inertia('User/ProductPage', ['product' => $product, 'latest_products' => null]);
     }
@@ -152,5 +148,4 @@ class ProductController extends Controller
 
         return $groupedWords;
     }
-
 }

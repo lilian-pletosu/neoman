@@ -2,7 +2,7 @@
 import FrontHeader from "@/Components/FrontHeader.vue";
 import FrontNavBar from "@/Components/FrontNavBar.vue";
 import {Head} from '@inertiajs/vue3'
-import {PhoneIcon} from "@heroicons/vue/24/solid/index.js";
+import {ChatBubbleLeftRightIcon} from "@heroicons/vue/24/solid/index.js";
 
 import {useColorMode, useDark, useToggle} from "@vueuse/core";
 import {getCurrentInstance, onBeforeMount, onMounted, ref, useAttrs} from "vue";
@@ -267,12 +267,12 @@ onMounted(() => {
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
                         </div>
-                        <button type="button" data-dial-toggle="speed-dial-menu-default"
+                        <a href="https://www.facebook.com/neoman.online/"  type="button" data-dial-toggle="speed-dial-menu-default"
                                 aria-controls="speed-dial-menu-default" aria-expanded="false"
                                 class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ring-4 ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
-                            <phone-icon class="w-6 animate-pulse"/>
+                            <ChatBubbleLeftRightIcon class="w-6 animate-pulse"/>
                             <span class="sr-only">Open actions menu</span>
-                        </button>
+                        </a>
                     </div>
                     <front-modal
                         :title="__('return_with_call')"
