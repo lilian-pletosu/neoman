@@ -3,7 +3,7 @@ import { ssrRenderAttrs, ssrInterpolate, ssrRenderComponent, ssrRenderList, ssrR
 import { HeartIcon } from "@heroicons/vue/24/outline/index.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Link } from "@inertiajs/vue3";
-import { u as useCartStore, a as useWishlistStore, f as formatPrice } from "./FrontLayout-d4ebaafd.js";
+import { u as useCartStore, a as useWishlistStore, f as formatPrice } from "./FrontLayout-43d5da65.js";
 import { Navigation } from "swiper/modules";
 const swiper = "";
 const ProductSection_vue_vue_type_style_index_0_lang = "";

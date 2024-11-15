@@ -1,23 +1,18 @@
-import { ref, onMounted, watch, mergeProps, withCtx, unref, createTextVNode, toDisplayString, createVNode, openBlock, createBlock, Fragment, renderList, withModifiers, useSSRContext } from "vue";
+import { ref, onMounted, watch, mergeProps, withCtx, createTextVNode, unref, toDisplayString, createVNode, openBlock, createBlock, Fragment, renderList, withModifiers, createCommentVNode, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrRenderAttr, ssrRenderList, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./AdminLayout-6ca45c15.js";
-import { useForm, router } from "@inertiajs/vue3";
-import "./DataTable-dea1a98f.js";
-import { _ as _sfc_main$5 } from "./SecondaryButton-0974b11b.js";
-import "./SchemaFormBuilder-a7087e2e.js";
+import { _ as _sfc_main$1 } from "./AdminLayout-fd678994.js";
+import { _ as _sfc_main$2 } from "./SecondaryButton-0974b11b.js";
 import { P as PrimaryButton } from "./PrimaryButton-84eba42e.js";
-import { _ as _sfc_main$2 } from "./Modal-4741da5a.js";
-import { _ as _sfc_main$3, a as _sfc_main$4 } from "./BlackSelector-1fd5a2aa.js";
+import { _ as _sfc_main$3 } from "./Modal-4741da5a.js";
+import { _ as _sfc_main$4, a as _sfc_main$5 } from "./BlackSelector-1fd5a2aa.js";
 import { TrashIcon } from "@heroicons/vue/20/solid";
+import { useForm, router } from "@inertiajs/vue3";
 import "@heroicons/vue/20/solid/index.js";
 import "./Dropdown-7075589d.js";
 import "./ShortLogo-3a83a5f7.js";
 import "ziggy-js";
 import "./_plugin-vue_export-helper-cc2b3d55.js";
 import "@heroicons/vue/24/outline/index.js";
-import "./Pagination-cc4bc19e.js";
-import "@vueuse/core";
-import "radix-vue";
 const _sfc_main = {
   __name: "Product",
   __ssrInlineRender: true,
@@ -46,6 +41,9 @@ const _sfc_main = {
       num_of_installments: "",
       interest_rate: "",
       type: ""
+    });
+    useForm({
+      image: null
     });
     const credits = ref([]);
     const installments = ref([]);
@@ -119,6 +117,7 @@ const _sfc_main = {
         }
       );
     };
+    const uploadedImage = ref(null);
     const deleteCredit = (creditId) => {
       router.delete(
         route("admin.delete-credit-from-product", {
@@ -132,6 +131,22 @@ const _sfc_main = {
             filtredInstallments();
           },
           only: ["product"]
+        }
+      );
+    };
+    const submitImage = () => {
+      router.post(
+        route("admin.update-product-image", {
+          product: props.product
+        }),
+        {
+          image: uploadedImage.value
+        },
+        {
+          preserveScroll: true,
+          onSuccess: () => {
+            images.value = imageUrls();
+          }
         }
       );
     };
@@ -149,7 +164,26 @@ const _sfc_main = {
             ssrRenderList(images.value, (image, index) => {
               _push2(`<div class="flex gap-2 cursor-move" draggable="true"${_scopeId}><img${ssrRenderAttr("src", image)} class="w-20 h-20"${ssrRenderAttr("alt", `Image ${index + 1}`)}${_scopeId}></div>`);
             });
-            _push2(`<!--]--></div></div><div class="px-4 md:flex-1"${_scopeId}><h2 class="mb-2 text-2xl font-bold text-gray-800 dark:text-white"${_scopeId}>${ssrInterpolate(__props.product.name)}</h2><p class="mb-4 text-sm text-gray-600 dark:text-gray-300"${_scopeId}>${ssrInterpolate(__props.product.description)}</p><div class="flex mb-4"${_scopeId}><div class="mr-4"${_scopeId}><span class="font-bold text-gray-700 dark:text-gray-300"${_scopeId}>${ssrInterpolate(_ctx.__("price"))}: </span><span class="text-gray-600 dark:text-gray-300"${_scopeId}>${ssrInterpolate(__props.product.price)} MDL</span></div></div><div class="mb-4"${_scopeId}><span class="font-bold text-gray-700 dark:text-gray-300"${_scopeId}>${ssrInterpolate(_ctx.__("credit"))}:</span><div class="flex flex-wrap items-center gap-2 mt-2"${_scopeId}><!--[-->`);
+            _push2(`<!--]--></div>`);
+            if (images.value.length != 4) {
+              _push2(`<div class="flex items-center gap-4 border"${_scopeId}><input class="block text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="image" type="file"${_scopeId}>`);
+              _push2(ssrRenderComponent(_sfc_main$2, { onClick: submitImage }, {
+                default: withCtx((_2, _push3, _parent3, _scopeId2) => {
+                  if (_push3) {
+                    _push3(`Încarcă`);
+                  } else {
+                    return [
+                      createTextVNode("Încarcă")
+                    ];
+                  }
+                }),
+                _: 1
+              }, _parent2, _scopeId));
+              _push2(`</div>`);
+            } else {
+              _push2(`<!---->`);
+            }
+            _push2(`</div><div class="px-4 md:flex-1"${_scopeId}><h2 class="mb-2 text-2xl font-bold text-gray-800 dark:text-white"${_scopeId}>${ssrInterpolate(__props.product.name)}</h2><p class="mb-4 text-sm text-gray-600 dark:text-gray-300"${_scopeId}>${ssrInterpolate(__props.product.description)}</p><div class="flex mb-4"${_scopeId}><div class="mr-4"${_scopeId}><span class="font-bold text-gray-700 dark:text-gray-300"${_scopeId}>${ssrInterpolate(_ctx.__("price"))}: </span><span class="text-gray-600 dark:text-gray-300"${_scopeId}>${ssrInterpolate(__props.product.price)} MDL</span></div></div><div class="mb-4"${_scopeId}><span class="font-bold text-gray-700 dark:text-gray-300"${_scopeId}>${ssrInterpolate(_ctx.__("credit"))}:</span><div class="flex flex-wrap items-center gap-2 mt-2"${_scopeId}><!--[-->`);
             ssrRenderList(credits.value, (credit) => {
               _push2(`<span class="relative px-4 py-2 mr-2 font-bold text-gray-700 bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 group/credit"${_scopeId}>${ssrInterpolate(credit.num_of_installments)} ${ssrInterpolate(_ctx.__("months"))} - ${ssrInterpolate(credit.interest_rate)} % `);
               _push2(ssrRenderComponent(unref(TrashIcon), {
@@ -168,7 +202,7 @@ const _sfc_main = {
               _push2(`</span>`);
             });
             _push2(`<!--]--></div><div class="flex mt-6 mb-4 -mx-2"${_scopeId}><div class="w-full px-2"${_scopeId}><button class="w-full px-4 py-2 font-bold text-white bg-gray-900 rounded-full dark:bg-gray-600 hover:bg-gray-800 dark:hover:bg-gray-700"${_scopeId}> Adaugă posibilitățile de creditare </button></div></div></div></div></div>`);
-            _push2(ssrRenderComponent(_sfc_main$2, {
+            _push2(ssrRenderComponent(_sfc_main$3, {
               show: isOpen.value,
               closeable: true,
               onClose: closeModal,
@@ -177,14 +211,14 @@ const _sfc_main = {
               default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
                   _push3(`<div class="flex flex-col w-full gap-2 p-4 mt-8"${_scopeId2}><div class="flex justify-between gap-2"${_scopeId2}>`);
-                  _push3(ssrRenderComponent(_sfc_main$3, {
+                  _push3(ssrRenderComponent(_sfc_main$4, {
                     type: "text",
                     class: "w-full",
                     modelValue: unref(form).num_of_installments,
                     "onUpdate:modelValue": ($event) => unref(form).num_of_installments = $event,
                     label: "Număr de luni"
                   }, null, _parent3, _scopeId2));
-                  _push3(ssrRenderComponent(_sfc_main$3, {
+                  _push3(ssrRenderComponent(_sfc_main$4, {
                     type: "text",
                     class: "w-full",
                     modelValue: unref(form).interest_rate,
@@ -192,7 +226,7 @@ const _sfc_main = {
                     label: "Rata dobânzii"
                   }, null, _parent3, _scopeId2));
                   _push3(`</div>`);
-                  _push3(ssrRenderComponent(_sfc_main$4, {
+                  _push3(ssrRenderComponent(_sfc_main$5, {
                     modelValue: unref(form).type,
                     "onUpdate:modelValue": ($event) => unref(form).type = $event,
                     "onUpdate:status": ($event) => unref(form).type = $event,
@@ -213,7 +247,7 @@ const _sfc_main = {
                     label: _ctx.__("type")
                   }, null, _parent3, _scopeId2));
                   _push3(`</div><div class="flex justify-end mt-6 mb-4"${_scopeId2}>`);
-                  _push3(ssrRenderComponent(_sfc_main$5, {
+                  _push3(ssrRenderComponent(_sfc_main$2, {
                     class: "mx-2",
                     onClick: closeModal
                   }, {
@@ -248,14 +282,14 @@ const _sfc_main = {
                   return [
                     createVNode("div", { class: "flex flex-col w-full gap-2 p-4 mt-8" }, [
                       createVNode("div", { class: "flex justify-between gap-2" }, [
-                        createVNode(_sfc_main$3, {
+                        createVNode(_sfc_main$4, {
                           type: "text",
                           class: "w-full",
                           modelValue: unref(form).num_of_installments,
                           "onUpdate:modelValue": ($event) => unref(form).num_of_installments = $event,
                           label: "Număr de luni"
                         }, null, 8, ["modelValue", "onUpdate:modelValue"]),
-                        createVNode(_sfc_main$3, {
+                        createVNode(_sfc_main$4, {
                           type: "text",
                           class: "w-full",
                           modelValue: unref(form).interest_rate,
@@ -263,7 +297,7 @@ const _sfc_main = {
                           label: "Rata dobânzii"
                         }, null, 8, ["modelValue", "onUpdate:modelValue"])
                       ]),
-                      createVNode(_sfc_main$4, {
+                      createVNode(_sfc_main$5, {
                         modelValue: unref(form).type,
                         "onUpdate:modelValue": ($event) => unref(form).type = $event,
                         "onUpdate:status": ($event) => unref(form).type = $event,
@@ -285,7 +319,7 @@ const _sfc_main = {
                       }, null, 8, ["modelValue", "onUpdate:modelValue", "onUpdate:status", "value", "error-message", "label"])
                     ]),
                     createVNode("div", { class: "flex justify-end mt-6 mb-4" }, [
-                      createVNode(_sfc_main$5, {
+                      createVNode(_sfc_main$2, {
                         class: "mx-2",
                         onClick: closeModal
                       }, {
@@ -344,7 +378,24 @@ const _sfc_main = {
                               }, null, 8, ["src", "alt"])
                             ], 40, ["onDragenter", "onDragstart", "onDrop", "onDragover", "onDragleave"]);
                           }), 128))
-                        ])
+                        ]),
+                        images.value.length != 4 ? (openBlock(), createBlock("div", {
+                          key: 0,
+                          class: "flex items-center gap-4 border"
+                        }, [
+                          createVNode("input", {
+                            onChange: ($event) => uploadedImage.value = $event.target.files[0],
+                            class: "block text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400",
+                            id: "image",
+                            type: "file"
+                          }, null, 40, ["onChange"]),
+                          createVNode(_sfc_main$2, { onClick: submitImage }, {
+                            default: withCtx(() => [
+                              createTextVNode("Încarcă")
+                            ]),
+                            _: 1
+                          })
+                        ])) : createCommentVNode("", true)
                       ]),
                       createVNode("div", { class: "px-4 md:flex-1" }, [
                         createVNode("h2", { class: "mb-2 text-2xl font-bold text-gray-800 dark:text-white" }, toDisplayString(__props.product.name), 1),
@@ -399,7 +450,7 @@ const _sfc_main = {
                         ])
                       ])
                     ]),
-                    createVNode(_sfc_main$2, {
+                    createVNode(_sfc_main$3, {
                       show: isOpen.value,
                       closeable: true,
                       onClose: closeModal,
@@ -408,14 +459,14 @@ const _sfc_main = {
                       default: withCtx(() => [
                         createVNode("div", { class: "flex flex-col w-full gap-2 p-4 mt-8" }, [
                           createVNode("div", { class: "flex justify-between gap-2" }, [
-                            createVNode(_sfc_main$3, {
+                            createVNode(_sfc_main$4, {
                               type: "text",
                               class: "w-full",
                               modelValue: unref(form).num_of_installments,
                               "onUpdate:modelValue": ($event) => unref(form).num_of_installments = $event,
                               label: "Număr de luni"
                             }, null, 8, ["modelValue", "onUpdate:modelValue"]),
-                            createVNode(_sfc_main$3, {
+                            createVNode(_sfc_main$4, {
                               type: "text",
                               class: "w-full",
                               modelValue: unref(form).interest_rate,
@@ -423,7 +474,7 @@ const _sfc_main = {
                               label: "Rata dobânzii"
                             }, null, 8, ["modelValue", "onUpdate:modelValue"])
                           ]),
-                          createVNode(_sfc_main$4, {
+                          createVNode(_sfc_main$5, {
                             modelValue: unref(form).type,
                             "onUpdate:modelValue": ($event) => unref(form).type = $event,
                             "onUpdate:status": ($event) => unref(form).type = $event,
@@ -445,7 +496,7 @@ const _sfc_main = {
                           }, null, 8, ["modelValue", "onUpdate:modelValue", "onUpdate:status", "value", "error-message", "label"])
                         ]),
                         createVNode("div", { class: "flex justify-end mt-6 mb-4" }, [
-                          createVNode(_sfc_main$5, {
+                          createVNode(_sfc_main$2, {
                             class: "mx-2",
                             onClick: closeModal
                           }, {

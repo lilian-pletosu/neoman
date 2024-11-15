@@ -32,20 +32,29 @@ const _sfc_main$4 = {
     return (_ctx, _push, _parent, _attrs) => {
       _push(`<aside${ssrRenderAttrs(mergeProps({
         id: "sidebar",
-        class: [{ "hidden": __props.hidden }, "top-10 left-0 lg:flex flex-shrink-0 flex-col min-w-64 w-auto transition-width duration-75"],
+        class: [{ hidden: __props.hidden }, "left-0 flex-col flex-shrink-0 w-auto duration-75 top-10 lg:flex min-w-64 transition-width"],
         "aria-label": "Sidebar"
-      }, _attrs))}><div class="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0"><div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto"><div class="flex-1 px-3 bg-white divide-y space-y-1"><ul class="space-y-2 pb-2"><li>`);
+      }, _attrs))}><div class="relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200"><div class="flex flex-col flex-1 pt-5 pb-4 overflow-y-auto"><div class="flex-1 px-3 space-y-1 bg-white divide-y"><ul class="pb-2 space-y-2"><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.dashboard")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.dashboard")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.dashboard")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<svg class="${ssrRenderClass([checkRoute(_ctx.route("admin.dashboard")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 h-6 text-gray-500 transition duration-75"])}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"${_scopeId}><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"${_scopeId}></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"${_scopeId}></path></svg><span class="ml-3"${_scopeId}>${ssrInterpolate(_ctx.__("dashboard"))}</span>`);
+            _push2(`<svg class="${ssrRenderClass([
+              checkRoute(_ctx.route("admin.dashboard")) ? "text-gray-900" : "group-hover:text-gray-900",
+              "w-6 h-6 text-gray-500 transition duration-75"
+            ])}" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"${_scopeId}><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"${_scopeId}></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"${_scopeId}></path></svg><span class="ml-3"${_scopeId}>${ssrInterpolate(_ctx.__("dashboard"))}</span>`);
           } else {
             return [
               (openBlock(), createBlock("svg", {
-                class: [checkRoute(_ctx.route("admin.dashboard")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 h-6 text-gray-500 transition duration-75"],
+                class: [
+                  checkRoute(_ctx.route("admin.dashboard")) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "w-6 h-6 text-gray-500 transition duration-75"
+                ],
                 fill: "currentColor",
                 viewBox: "0 0 20 20",
                 xmlns: "http://www.w3.org/2000/svg"
@@ -61,21 +70,34 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.products.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.products.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.products.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(ShoppingBagIcon), {
-              class: [checkRoute(_ctx.route("admin.products.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(
+                  _ctx.route("admin.products.index")
+                ) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("products"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("products"))}</span>`);
           } else {
             return [
               createVNode(unref(ShoppingBagIcon), {
-                class: [checkRoute(_ctx.route("admin.products.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route("admin.products.index")
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("products")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("products")), 1)
             ];
           }
         }),
@@ -83,21 +105,40 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.imported-products.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(
+            _ctx.route("admin.imported-products.index")
+          ) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.imported-products.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(CloudArrowDownIcon), {
-              class: [checkRoute(_ctx.route("admin.imported-products.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(
+                  _ctx.route(
+                    "admin.imported-products.index"
+                  )
+                ) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("imported_products"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("imported_products"))}</span>`);
           } else {
             return [
               createVNode(unref(CloudArrowDownIcon), {
-                class: [checkRoute(_ctx.route("admin.imported-products.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route(
+                      "admin.imported-products.index"
+                    )
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("imported_products")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("imported_products")), 1)
             ];
           }
         }),
@@ -105,23 +146,35 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.orders.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.orders.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.orders.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(TruckIcon), {
-              class: [checkRoute(_ctx.route("admin.orders.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(_ctx.route("admin.orders.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("orders"))}</span><span style="${ssrRenderStyle(unref(app).appContext.config.globalProperties.$page.props.order_count > 0 ? null : { display: "none" })}" class="animate-pulse inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200"${_scopeId}>${ssrInterpolate(unref(app).appContext.config.globalProperties.$page.props.order_count)}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("orders"))}</span><span style="${ssrRenderStyle(unref(app).appContext.config.globalProperties.$page.props.order_count > 0 ? null : { display: "none" })}" class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"${_scopeId}>${ssrInterpolate(unref(app).appContext.config.globalProperties.$page.props.order_count)}</span>`);
           } else {
             return [
               createVNode(unref(TruckIcon), {
-                class: [checkRoute(_ctx.route("admin.orders.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(_ctx.route("admin.orders.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("orders")), 1),
-              withDirectives(createVNode("span", { class: "animate-pulse inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200" }, toDisplayString(unref(app).appContext.config.globalProperties.$page.props.order_count), 513), [
-                [vShow, unref(app).appContext.config.globalProperties.$page.props.order_count > 0]
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("orders")), 1),
+              withDirectives(createVNode("span", { class: "inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200" }, toDisplayString(unref(app).appContext.config.globalProperties.$page.props.order_count), 513), [
+                [
+                  vShow,
+                  unref(app).appContext.config.globalProperties.$page.props.order_count > 0
+                ]
               ])
             ];
           }
@@ -129,67 +182,115 @@ const _sfc_main$4 = {
         _: 1
       }, _parent));
       _push(`</li><li><div class="${ssrRenderClass([{
-        "bg-gray-100 text-gray-900": checkRoute(_ctx.route("admin.categories.index")) || checkRoute(_ctx.route("admin.categories.subcategories.index")),
+        "bg-gray-100 text-gray-900": checkRoute(
+          _ctx.route("admin.categories.index")
+        ) || checkRoute(
+          _ctx.route(
+            "admin.categories.subcategories.index"
+          )
+        ),
         "hover:bg-gray-100": !state.openCollapse,
         "transition duration-300 ease-in-out": true
-      }, "text-base font-normal rounded-lg flex items-center p-2 group"])}">`);
+      }, "flex items-center p-2 text-base font-normal rounded-lg group"])}">`);
       _push(ssrRenderComponent(unref(AdjustmentsHorizontalIcon), {
-        class: [checkRoute(_ctx.route("admin.categories.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+        class: [
+          checkRoute(
+            _ctx.route("admin.categories.index")
+          ) ? "text-gray-900" : "group-hover:text-gray-900",
+          "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+        ]
       }, null, _parent));
-      _push(`<span class="ml-3 flex-1 whitespace-nowrap">${ssrInterpolate(_ctx.__("categories"))}</span><span class="bg-gray-200 text-gray-800 ml-3 text-sm font-medium inline-flex items-center justify-center px-2 rounded-full"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg></span></div>`);
+      _push(`<span class="flex-1 ml-3 whitespace-nowrap">${ssrInterpolate(_ctx.__("categories"))}</span><span class="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path></svg></span></div>`);
       if (state.openCollapse) {
         _push(`<ul class="pl-4"><li>`);
         _push(ssrRenderComponent(unref(Link), {
-          class: [checkRoute(_ctx.route("admin.categories.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+          class: [
+            checkRoute(
+              _ctx.route("admin.categories.index")
+            ) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+            "flex items-center p-2 text-base font-normal rounded-lg group"
+          ],
           href: _ctx.route("admin.categories.index")
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
               _push2(ssrRenderComponent(unref(ArrowRightIcon), {
-                class: [checkRoute(_ctx.route("admin.categories.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route(
+                      "admin.categories.index"
+                    )
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, _parent2, _scopeId));
-              _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("categories"))}</span>`);
+              _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("categories"))}</span>`);
             } else {
               return [
                 createVNode(unref(ArrowRightIcon), {
-                  class: [checkRoute(_ctx.route("admin.categories.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                  class: [
+                    checkRoute(
+                      _ctx.route(
+                        "admin.categories.index"
+                      )
+                    ) ? "text-gray-900" : "group-hover:text-gray-900",
+                    "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                  ]
                 }, null, 8, ["class"]),
-                createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("categories")), 1)
+                createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("categories")), 1)
               ];
             }
           }),
           _: 1
         }, _parent));
-        _push(`</li><li class="${ssrRenderClass([checkRoute(_ctx.route("admin.categories.subcategories.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "rounded-lg"])}">`);
+        _push(`</li><li class="${ssrRenderClass([
+          checkRoute(
+            _ctx.route(
+              "admin.categories.subcategories.index"
+            )
+          ) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "rounded-lg"
+        ])}">`);
         _push(ssrRenderComponent(unref(Link), {
-          href: _ctx.route("admin.categories.subcategories.index"),
-          class: "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 group transition duration-75 flex items-center p-2"
+          href: _ctx.route(
+            "admin.categories.subcategories.index"
+          ),
+          class: "flex items-center p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group"
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(ssrRenderComponent(unref(ArrowRightIcon), { class: "w-6 transition duration-75 text-gray-500 flex-shrink-0 group-hover:text-gray-900" }, null, _parent2, _scopeId));
+              _push2(ssrRenderComponent(unref(ArrowRightIcon), { class: "flex-shrink-0 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900" }, null, _parent2, _scopeId));
               _push2(`<span class="ml-3"${_scopeId}>${ssrInterpolate(_ctx.__("subcategories"))}</span>`);
             } else {
               return [
-                createVNode(unref(ArrowRightIcon), { class: "w-6 transition duration-75 text-gray-500 flex-shrink-0 group-hover:text-gray-900" }),
+                createVNode(unref(ArrowRightIcon), { class: "flex-shrink-0 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900" }),
                 createVNode("span", { class: "ml-3" }, toDisplayString(_ctx.__("subcategories")), 1)
               ];
             }
           }),
           _: 1
         }, _parent));
-        _push(`</li><li class="${ssrRenderClass([checkRoute(_ctx.route("admin.categories.subSubcategories.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "rounded-lg"])}">`);
+        _push(`</li><li class="${ssrRenderClass([
+          checkRoute(
+            _ctx.route(
+              "admin.categories.subSubcategories.index"
+            )
+          ) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "rounded-lg"
+        ])}">`);
         _push(ssrRenderComponent(unref(Link), {
-          href: _ctx.route("admin.categories.subSubcategories.index"),
-          class: "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 group transition duration-75 flex items-center p-2"
+          href: _ctx.route(
+            "admin.categories.subSubcategories.index"
+          ),
+          class: "flex items-center p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group"
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(ssrRenderComponent(unref(ArrowRightIcon), { class: "w-6 transition duration-75 text-gray-500 flex-shrink-0 group-hover:text-gray-900" }, null, _parent2, _scopeId));
+              _push2(ssrRenderComponent(unref(ArrowRightIcon), { class: "flex-shrink-0 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900" }, null, _parent2, _scopeId));
               _push2(`<span class="ml-3"${_scopeId}>${ssrInterpolate(_ctx.__("sub_subcategories"))}</span>`);
             } else {
               return [
-                createVNode(unref(ArrowRightIcon), { class: "w-6 transition duration-75 text-gray-500 flex-shrink-0 group-hover:text-gray-900" }),
+                createVNode(unref(ArrowRightIcon), { class: "flex-shrink-0 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900" }),
                 createVNode("span", { class: "ml-3" }, toDisplayString(_ctx.__("sub_subcategories")), 1)
               ];
             }
@@ -202,21 +303,30 @@ const _sfc_main$4 = {
       }
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.attributes.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.attributes.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.attributes.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(SwatchIcon), {
-              class: [checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("attributes"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("attributes"))}</span>`);
           } else {
             return [
               createVNode(unref(SwatchIcon), {
-                class: [checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("attributes")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("attributes")), 1)
             ];
           }
         }),
@@ -224,21 +334,30 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.brands.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.brands.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.brands.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(RocketLaunchIcon), {
-              class: [checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("brands"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("brands"))}</span>`);
           } else {
             return [
               createVNode(unref(RocketLaunchIcon), {
-                class: [checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(_ctx.route("admin.brands.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("brands")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("brands")), 1)
             ];
           }
         }),
@@ -246,21 +365,36 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.associations.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(
+            _ctx.route("admin.associations.index")
+          ) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.associations.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(PuzzlePieceIcon), {
-              class: [checkRoute(_ctx.route("admin.associations.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(
+                  _ctx.route("admin.associations.index")
+                ) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("associations"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("associations"))}</span>`);
           } else {
             return [
               createVNode(unref(PuzzlePieceIcon), {
-                class: [checkRoute(_ctx.route("admin.associations.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route("admin.associations.index")
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("associations")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("associations")), 1)
             ];
           }
         }),
@@ -268,21 +402,34 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.promotions.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.promotions.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.promotions.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(FireIcon), {
-              class: [checkRoute(_ctx.route("admin.promotions.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(
+                  _ctx.route("admin.promotions.index")
+                ) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("promotions"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("promotions"))}</span>`);
           } else {
             return [
               createVNode(unref(FireIcon), {
-                class: [checkRoute(_ctx.route("admin.promotions.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route("admin.promotions.index")
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("promotions")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("promotions")), 1)
             ];
           }
         }),
@@ -290,21 +437,30 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.banners.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.banners.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.banners.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(ViewColumnsIcon), {
-              class: [checkRoute(_ctx.route("admin.banners.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(_ctx.route("admin.banners.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("banners"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("banners"))}</span>`);
           } else {
             return [
               createVNode(unref(ViewColumnsIcon), {
-                class: [checkRoute(_ctx.route("admin.banners.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(_ctx.route("admin.banners.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("banners")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("banners")), 1)
             ];
           }
         }),
@@ -312,21 +468,30 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.privacy.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.privacy.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.privacy.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(ShieldExclamationIcon), {
-              class: [checkRoute(_ctx.route("admin.privacy.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(_ctx.route("admin.privacy.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("privacy"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("privacy"))}</span>`);
           } else {
             return [
               createVNode(unref(ShieldExclamationIcon), {
-                class: [checkRoute(_ctx.route("admin.privacy.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(_ctx.route("admin.privacy.index")) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("privacy")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("privacy")), 1)
             ];
           }
         }),
@@ -334,21 +499,34 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.about_us.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.about_us.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.about_us.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(UserGroupIcon), {
-              class: [checkRoute(_ctx.route("admin.about_us.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(
+                  _ctx.route("admin.about_us.index")
+                ) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("about_us"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("about_us"))}</span>`);
           } else {
             return [
               createVNode(unref(UserGroupIcon), {
-                class: [checkRoute(_ctx.route("admin.about_us.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route("admin.about_us.index")
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("about_us")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("about_us")), 1)
             ];
           }
         }),
@@ -356,40 +534,53 @@ const _sfc_main$4 = {
       }, _parent));
       _push(`</li><li>`);
       _push(ssrRenderComponent(unref(Link), {
-        class: [checkRoute(_ctx.route("admin.settings.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100", "text-base font-normal rounded-lg flex items-center p-2 group"],
+        class: [
+          checkRoute(_ctx.route("admin.settings.index")) ? "bg-gray-100 text-gray-900" : "hover:bg-gray-100",
+          "flex items-center p-2 text-base font-normal rounded-lg group"
+        ],
         href: _ctx.route("admin.settings.index")
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(unref(Cog6ToothIcon), {
-              class: [checkRoute(_ctx.route("admin.settings.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+              class: [
+                checkRoute(
+                  _ctx.route("admin.settings.index")
+                ) ? "text-gray-900" : "group-hover:text-gray-900",
+                "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+              ]
             }, null, _parent2, _scopeId));
-            _push2(`<span class="ml-3 flex-1 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("settings"))}</span>`);
+            _push2(`<span class="flex-1 ml-3 whitespace-nowrap"${_scopeId}>${ssrInterpolate(_ctx.__("settings"))}</span>`);
           } else {
             return [
               createVNode(unref(Cog6ToothIcon), {
-                class: [checkRoute(_ctx.route("admin.settings.index")) ? "text-gray-900" : "group-hover:text-gray-900", "w-6 transition duration-75 text-gray-500 flex-shrink-0"]
+                class: [
+                  checkRoute(
+                    _ctx.route("admin.settings.index")
+                  ) ? "text-gray-900" : "group-hover:text-gray-900",
+                  "flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                ]
               }, null, 8, ["class"]),
-              createVNode("span", { class: "ml-3 flex-1 whitespace-nowrap" }, toDisplayString(_ctx.__("settings")), 1)
+              createVNode("span", { class: "flex-1 ml-3 whitespace-nowrap" }, toDisplayString(_ctx.__("settings")), 1)
             ];
           }
         }),
         _: 1
       }, _parent));
-      _push(`</li></ul><div class="space-y-2 pt-2"><div class="hover:bg-gray-200 mt-auto">`);
+      _push(`</li></ul><div class="pt-2 space-y-2"><div class="mt-auto hover:bg-gray-200">`);
       _push(ssrRenderComponent(unref(Link), {
         href: _ctx.route("logout"),
-        class: "text-base text-gray-900 font-normal rounded-lg hover:bg-gray-100 group transition duration-75 flex items-center p-2",
+        class: "flex items-center p-2 text-base font-normal text-gray-900 transition duration-75 rounded-lg hover:bg-gray-100 group",
         method: "post",
         target: "_blank"
       }, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(ssrRenderComponent(unref(ArrowLeftOnRectangleIcon), { class: "w-6 transition duration-75 text-gray-500 flex-shrink-0 group-hover:text-gray-900" }, null, _parent2, _scopeId));
+            _push2(ssrRenderComponent(unref(ArrowLeftOnRectangleIcon), { class: "flex-shrink-0 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900" }, null, _parent2, _scopeId));
             _push2(`<span class="ml-3"${_scopeId}>${ssrInterpolate(_ctx.__("logout"))}</span>`);
           } else {
             return [
-              createVNode(unref(ArrowLeftOnRectangleIcon), { class: "w-6 transition duration-75 text-gray-500 flex-shrink-0 group-hover:text-gray-900" }),
+              createVNode(unref(ArrowLeftOnRectangleIcon), { class: "flex-shrink-0 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900" }),
               createVNode("span", { class: "ml-3" }, toDisplayString(_ctx.__("logout")), 1)
             ];
           }

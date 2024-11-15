@@ -1,10 +1,10 @@
 import { getCurrentInstance, resolveComponent, unref, mergeProps, withCtx, createVNode, openBlock, createBlock, Fragment, renderList, useSSRContext, useAttrs, createTextVNode, toDisplayString, createCommentVNode } from "vue";
 import { ssrRenderComponent, ssrRenderList, ssrRenderAttr, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$2 } from "./FrontLayout-d4ebaafd.js";
+import { _ as _sfc_main$2 } from "./FrontLayout-43d5da65.js";
 /* empty css                   */import { Carousel, Navigation, Slide } from "vue3-carousel";
 import { Link } from "@inertiajs/vue3";
 import { _ as _export_sfc } from "./_plugin-vue_export-helper-cc2b3d55.js";
-import { _ as _sfc_main$3 } from "./ProductSection-ef70c81e.js";
+import { _ as _sfc_main$3 } from "./ProductSection-1fdf9caf.js";
 import "./ApplicationLogo-caba15c6.js";
 import "@heroicons/vue/24/outline/index.js";
 import "pinia";

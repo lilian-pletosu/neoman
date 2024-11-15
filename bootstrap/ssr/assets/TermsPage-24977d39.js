@@ -1,6 +1,6 @@
 import { withCtx, createVNode, toDisplayString, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./FrontLayout-d4ebaafd.js";
+import { _ as _sfc_main$1 } from "./FrontLayout-43d5da65.js";
 import "./ApplicationLogo-caba15c6.js";
 import "@heroicons/vue/24/outline/index.js";
 import "@inertiajs/vue3";

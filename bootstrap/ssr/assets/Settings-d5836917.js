@@ -1,8 +1,8 @@
-import { unref, withCtx, renderSlot, createTextVNode, toDisplayString, createVNode, useSSRContext, ref, mergeProps, getCurrentInstance, openBlock, createBlock, Fragment, renderList } from "vue";
+import { unref, withCtx, renderSlot, createTextVNode, toDisplayString, createVNode, useSSRContext, ref, mergeProps, openBlock, createBlock, Fragment, renderList } from "vue";
 import { ssrRenderComponent, ssrRenderSlot, ssrInterpolate, ssrRenderAttrs, ssrRenderAttr, ssrIncludeBooleanAttr, ssrRenderClass, ssrRenderList } from "vue/server-renderer";
-import { _ as _sfc_main$4 } from "./AdminLayout-6ca45c15.js";
+import { _ as _sfc_main$4 } from "./AdminLayout-fd678994.js";
 import { P as PrimaryButton } from "./PrimaryButton-84eba42e.js";
-import { router, usePage, useForm } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/vue/16/solid/index.js";
 import { _ as _sfc_main$3 } from "./Modal-4741da5a.js";
@@ -354,8 +354,6 @@ const _sfc_main = {
     products: Array
   },
   setup(__props) {
-    getCurrentInstance();
-    usePage();
     const form = useForm({
       num_of_installments: "",
       interest_rate: "",

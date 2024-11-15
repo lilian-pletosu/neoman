@@ -1,6 +1,6 @@
 import { getCurrentInstance, mergeProps, withCtx, unref, createVNode, toDisplayString, openBlock, createBlock, Fragment, renderList, createTextVNode, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate, ssrRenderList, ssrRenderClass, ssrRenderStyle } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./AdminLayout-6ca45c15.js";
+import { _ as _sfc_main$1 } from "./AdminLayout-fd678994.js";
 import { BarChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
 import { useDateFormat } from "@vueuse/core";

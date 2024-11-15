@@ -1,6 +1,6 @@
 import { ref, mergeProps, withCtx, createTextVNode, toDisplayString, createVNode, openBlock, createBlock, createCommentVNode, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./AdminLayout-6ca45c15.js";
+import { _ as _sfc_main$1 } from "./AdminLayout-fd678994.js";
 import { _ as _sfc_main$2 } from "./CustomNotification-e315c9e4.js";
 import { P as PrimaryButton } from "./PrimaryButton-84eba42e.js";
 import { _ as _sfc_main$3 } from "./SecondaryButton-0974b11b.js";
@@ -19,7 +19,7 @@ import "./Modal-4741da5a.js";
 import "./BlackSelector-1fd5a2aa.js";
 import "radix-vue";
 const _sfc_main = {
-  __name: "Categories",
+  __name: "SubSubcategories",
   __ssrInlineRender: true,
   props: {
     initialRoute: {
@@ -47,13 +47,14 @@ const _sfc_main = {
       type.value = sendType;
       modalIsOpen.value = !modalIsOpen.value;
       if (resource) {
+        console.log("resoure");
         res.value = resource;
       }
     }
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(_sfc_main$1, mergeProps({
         "current-route": __props.initialRoute,
-        title: "Categories"
+        title: "SubSubcategories"
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -62,7 +63,7 @@ const _sfc_main = {
               type: "success",
               show: notification.value
             }, null, _parent2, _scopeId));
-            _push2(`<div class="w-full grid grid-cols-1 gap-4"${_scopeId}><div class="container-rounded"${_scopeId}><div class="mb-4 flex items-center justify-between"${_scopeId}><div${_scopeId}><h3 class="primary-text"${_scopeId}>${ssrInterpolate(_ctx.__("categories"))}</h3><span class="secondary-text"${_scopeId}>This is a list of latest transactions</span></div><div class="flex-shrink-0"${_scopeId}>`);
+            _push2(`<div class="w-full grid grid-cols-1 gap-4"${_scopeId}><div class="container-rounded"${_scopeId}><div class="mb-4 flex items-center justify-between"${_scopeId}><div${_scopeId}><h3 class="primary-text"${_scopeId}>${ssrInterpolate(_ctx.__("sub_subcategories"))}</h3><span class="secondary-text"${_scopeId}>This is a list of latest transactions</span></div><div class="flex-shrink-0"${_scopeId}>`);
             _push2(ssrRenderComponent(PrimaryButton, {
               onClick: ($event) => schemaForm(null, "create", "POST"),
               class: "mx-2"
@@ -103,7 +104,7 @@ const _sfc_main = {
             }, null, _parent2, _scopeId));
             _push2(`</div></div><div${_scopeId}>`);
             if (__props.resources.data.length === 0) {
-              _push2(`<h2 class="flex justify-center"${_scopeId}>${ssrInterpolate(_ctx.__("no_categories"))}...</h2>`);
+              _push2(`<h2 class="flex justify-center"${_scopeId}>${ssrInterpolate(_ctx.__(`no_${__props.resourceType}`))}...</h2>`);
             } else {
               _push2(`<!---->`);
             }
@@ -118,7 +119,7 @@ const _sfc_main = {
               "resource-type": __props.resourceType,
               endpoint: __props.initialRoute,
               method: method.value,
-              columns: ["name", "slug", "is_active"],
+              columns: ["name", "slug"],
               "resource-route": _ctx.$page.props.resourceRoute,
               fields: _ctx.$page.props.columnsOrder
             }, null, _parent2, _scopeId));
@@ -134,7 +135,7 @@ const _sfc_main = {
                 createVNode("div", { class: "container-rounded" }, [
                   createVNode("div", { class: "mb-4 flex items-center justify-between" }, [
                     createVNode("div", null, [
-                      createVNode("h3", { class: "primary-text" }, toDisplayString(_ctx.__("categories")), 1),
+                      createVNode("h3", { class: "primary-text" }, toDisplayString(_ctx.__("sub_subcategories")), 1),
                       createVNode("span", { class: "secondary-text" }, "This is a list of latest transactions")
                     ]),
                     createVNode("div", { class: "flex-shrink-0" }, [
@@ -173,7 +174,7 @@ const _sfc_main = {
                     __props.resources.data.length === 0 ? (openBlock(), createBlock("h2", {
                       key: 0,
                       class: "flex justify-center"
-                    }, toDisplayString(_ctx.__("no_categories")) + "...", 1)) : createCommentVNode("", true)
+                    }, toDisplayString(_ctx.__(`no_${__props.resourceType}`)) + "...", 1)) : createCommentVNode("", true)
                   ]),
                   createVNode(_sfc_main$4, {
                     type: type.value,
@@ -185,7 +186,7 @@ const _sfc_main = {
                     "resource-type": __props.resourceType,
                     endpoint: __props.initialRoute,
                     method: method.value,
-                    columns: ["name", "slug", "is_active"],
+                    columns: ["name", "slug"],
                     "resource-route": _ctx.$page.props.resourceRoute,
                     fields: _ctx.$page.props.columnsOrder
                   }, null, 8, ["type", "modal-is-open", "resource", "resource-type", "endpoint", "method", "resource-route", "fields"])
@@ -202,7 +203,7 @@ const _sfc_main = {
 const _sfc_setup = _sfc_main.setup;
 _sfc_main.setup = (props, ctx) => {
   const ssrContext = useSSRContext();
-  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("resources/js/Pages/Admin/Categories.vue");
+  (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("resources/js/Pages/Admin/SubSubcategories.vue");
   return _sfc_setup ? _sfc_setup(props, ctx) : void 0;
 };
 export {

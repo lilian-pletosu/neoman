@@ -1,6 +1,6 @@
 import { unref, mergeProps, withCtx, createVNode, toDisplayString, openBlock, createBlock, Fragment, renderList, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrRenderList, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$2 } from "./FrontLayout-d4ebaafd.js";
+import { _ as _sfc_main$2 } from "./FrontLayout-43d5da65.js";
 import { AccordionRoot, AccordionItem, AccordionHeader, AccordionTrigger, AccordionContent } from "radix-vue";
 import { Icon } from "@iconify/vue";
 import "./ApplicationLogo-caba15c6.js";

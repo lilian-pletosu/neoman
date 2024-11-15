@@ -1,6 +1,6 @@
 import { ref, watch, unref, useSSRContext, getCurrentInstance, mergeProps, withCtx, createTextVNode, toDisplayString, createVNode, openBlock, createBlock, createCommentVNode, Fragment, renderList } from "vue";
 import { ssrRenderAttrs, ssrInterpolate, ssrRenderClass, ssrIncludeBooleanAttr, ssrLooseContain, ssrLooseEqual, ssrRenderList, ssrRenderAttr, ssrRenderComponent } from "vue/server-renderer";
-import { _ as _sfc_main$2, t as toast } from "./AdminLayout-6ca45c15.js";
+import { _ as _sfc_main$2, t as toast } from "./AdminLayout-fd678994.js";
 import { usePage, useForm, Link } from "@inertiajs/vue3";
 import { P as Pagination } from "./Pagination-cc4bc19e.js";
 import { P as PrimaryButton } from "./PrimaryButton-84eba42e.js";

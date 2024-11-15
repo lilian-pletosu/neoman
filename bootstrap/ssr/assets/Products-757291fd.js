@@ -1,6 +1,6 @@
 import { ref, defineComponent, mergeProps, withCtx, createTextVNode, toDisplayString, createVNode, openBlock, createBlock, createCommentVNode, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./AdminLayout-6ca45c15.js";
+import { _ as _sfc_main$1 } from "./AdminLayout-fd678994.js";
 import { useForm, Link } from "@inertiajs/vue3";
 import { D as DataTable } from "./DataTable-dea1a98f.js";
 import { _ as _sfc_main$2 } from "./SecondaryButton-0974b11b.js";

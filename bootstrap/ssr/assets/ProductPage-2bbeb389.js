@@ -1,9 +1,9 @@
 import { mergeProps, unref, withCtx, openBlock, createBlock, createVNode, createTextVNode, toDisplayString, useSSRContext, renderSlot, useAttrs, ref, getCurrentInstance, resolveComponent, Fragment, renderList, withDirectives, vShow, vModelSelect, createCommentVNode, withModifiers } from "vue";
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderSlot, ssrRenderAttr, ssrRenderList, ssrRenderStyle, ssrRenderClass, ssrIncludeBooleanAttr, ssrLooseContain, ssrLooseEqual } from "vue/server-renderer";
-import { u as useCartStore, a as useWishlistStore, _ as _sfc_main$3, f as formatPrice, b as _sfc_main$4 } from "./FrontLayout-d4ebaafd.js";
+import { u as useCartStore, a as useWishlistStore, _ as _sfc_main$3, f as formatPrice, b as _sfc_main$4 } from "./FrontLayout-43d5da65.js";
 import { Link, router } from "@inertiajs/vue3";
 import { route } from "ziggy-js";
-import { _ as _sfc_main$5 } from "./ProductSection-ef70c81e.js";
+import { _ as _sfc_main$5 } from "./ProductSection-1fdf9caf.js";
 import { HeartIcon } from "@heroicons/vue/24/outline/index.js";
 import { DialogRoot, DialogPortal, DialogOverlay, DialogContent, DialogClose } from "radix-vue";
 import { Icon } from "@iconify/vue";

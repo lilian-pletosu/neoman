@@ -1,6 +1,6 @@
 import { defineComponent, mergeProps, withCtx, createVNode, toDisplayString, useSSRContext } from "vue";
 import { ssrRenderComponent, ssrInterpolate } from "vue/server-renderer";
-import { _ as _sfc_main$1 } from "./AdminLayout-6ca45c15.js";
+import { _ as _sfc_main$1 } from "./AdminLayout-fd678994.js";
 import { Link } from "@inertiajs/vue3";
 import "@heroicons/vue/20/solid/index.js";
 import "./Dropdown-7075589d.js";
