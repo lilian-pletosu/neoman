@@ -32,8 +32,13 @@ class ProductService
         foreach ($promotions as $promotion) {
             if (!$promotion->brands->isEmpty()) {
                 foreach ($promotion->brands as $brand) {
-                    foreach ($brand->products as $product) {
+
+                    $products = $brand->products()->take(15)->get();
+
+                    foreach ($products as $product) {
+
                         $attributesArray = [];
+
                         foreach ($product->attributes->take(15) as $attribute) {
                             foreach ($attribute->attributeValues as $attributeValue) {
                                 $translatedValue = $attributeValue->translate(session()->get('locale'));
@@ -42,6 +47,7 @@ class ProductService
                                 }
                             }
                         }
+
                         $brandName = $product->brand->name ?? null;
                         $brandLogo = $product->brand->image ?? null;
                         $image = $product->images()->first()->image1 ?? null;
@@ -64,7 +70,6 @@ class ProductService
                 }
             }
         }
-        //        dd($productsArray);
 
         return $productsArray;
     }
@@ -120,7 +125,7 @@ class ProductService
         $array = request()->session()->get('last');
         if (!empty(request()->session()->get('last'))) {
             foreach ($array as $id) {
-                foreach (Product::where('id', $id)->get() as $product) {
+                foreach (Product::where('id', $id)->take(15)->get() as $product) {
 
                     // Inițializează un array pentru atributele fiecărui produs
                     $attributesArray = [];

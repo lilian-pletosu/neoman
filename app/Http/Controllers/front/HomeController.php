@@ -38,20 +38,11 @@ class HomeController extends Controller
             });
         }
 
-//        if (Cache::has('latest_products')) {
-//            $latest_products = Cache::get('latest_products');
-//        } else {
-//            $latest_products = (new ProductService())->loadLatestProducts();
-//            Cache::remember('latest_products', 262656, function () {
-//                return (new ProductService())->loadLatestProducts();
-//            });
-//        }
 
 
         return inertia('User/HomePage', [
             'categories' => $categories,
             'sales_products' => $sales_products,
-//            'latest_products' => $latest_products
         ]);
     }
 }
