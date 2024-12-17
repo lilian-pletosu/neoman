@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -12,13 +13,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-//        $schedule->command('queue:work --tries=3 --timeout=10000')->dailyAt('23:58');
- 	$schedule->call(function () {
-    \Log::info('Un minut pana la start import');
-	})->dailyAt('11:59');      
- $schedule->command('run:import-ultra')->dailyAt('12:00');
-//        $schedule->job(new SeedInDatabaseUltraProducts())->dailyAt('02:30');
-
+        $schedule->call(function () {
+            Log::info('Un minut pana la start import');
+        })->dailyAt('05:59');
+        $schedule->command('run:import-ultra')->dailyAt('06:00');
     }
 
     /**
