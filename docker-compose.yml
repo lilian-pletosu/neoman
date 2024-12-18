@@ -27,11 +27,11 @@ services:
             - traff
         labels:
             - traefik.enable=true
-            - traefik.http.routers.neoman-nginx.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`)
+            - traefik.http.routers.neoman-nginx.rule=Host(`neoman.local`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-            - traefik.http.routers.neoman-nginx.tls=true
-            - traefik.http.routers.neoman-nginx.tls.certresolver=myresolver
+#            - traefik.http.routers.neoman-nginx.tls=true
+#            - traefik.http.routers.neoman-nginx.tls.certresolver=myresolver
 
     neoman-php:
         build:
@@ -69,7 +69,7 @@ services:
             - "3306:3306"
         volumes:
             - ./database-storage:/var/lib/mysql
-        restart: unless-stoped
+        restart: unless-stopped
         networks:
             - neoman
 
@@ -87,11 +87,11 @@ services:
             - traff
         labels:
             - traefik.enable=true
-            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}`) && Path(`/adminer`)
+            - traefik.http.routers.neoman.rule=Host(`neoman.local`) && Path(`/adminer`)
             #            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-            - traefik.http.routers.neoman.tls=true
-            - traefik.http.routers.neoman.tls.certresolver=myresolver
+#            - traefik.http.routers.neoman.tls=true
+#            - traefik.http.routers.neoman.tls.certresolver=myresolver
         volumes:
             - ./database-storage:/var/lib/mysql

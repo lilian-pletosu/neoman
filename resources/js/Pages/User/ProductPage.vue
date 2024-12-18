@@ -46,9 +46,8 @@ const images = ref({});
 const filteredImages = ref([]);
 
 function openImage() {
-    // console.log(props.product.images[0].image1)
     images.value = props.product.images[0];
-    openModalSlider.value = !openModalSlider.value;
+    openModalSlider.value = true;
     filteredImages.value = Object.values(images.value).filter(
         (image) =>
             (typeof image === "string" &&
@@ -56,6 +55,10 @@ function openImage() {
             (typeof image === "string" && image.startsWith("https"))
     );
 }
+
+const closeModalSlider = () => {
+    openModalSlider.value = false;
+};
 
 function openModal(type) {
     if (type === "cheaper") {
@@ -560,7 +563,10 @@ function buyProduct(productId) {
             :title="__('visited_products')"
         />
 
-        <custom-modal :is-open="openModalSlider" @close-modal="openImage">
+        <custom-modal
+            :is-open="openModalSlider"
+            @close-modal="closeModalSlider"
+        >
             <template v-slot:content>
                 <div class="w-full">
                     <carousel
