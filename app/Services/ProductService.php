@@ -33,7 +33,7 @@ class ProductService
             if (!$promotion->brands->isEmpty()) {
                 foreach ($promotion->brands as $brand) {
 
-                    $products = $brand->products()->take(15)->get();
+                    $products = $brand->products()->latest()->take(15)->get();
 
                     foreach ($products as $product) {
 
