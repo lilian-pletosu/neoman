@@ -353,6 +353,21 @@ class ProductService
         }
         $product->save();
     }
+    public function simpleUpdate($data, Product $product, Request $request)
+    {
+        $locale = app()->currentLocale();
+        if ($locale == 'ro') {
+            $data['slug'] = Str::slug($data["name $locale"], '_');
+        }
+
+
+        $product->update($data);
+
+        foreach ($this->translatedAttributes as $translatableAttribute) {
+            $product->translateOrNew($locale)->$translatableAttribute = $data["$translatableAttribute $locale"];
+        }
+        $product->save();
+    }
 
     private function ultraImportBrandSave($brand)
     {

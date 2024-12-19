@@ -9,7 +9,6 @@ import Modal from "@/Components/Modal.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import BlackInput from "@/Components/BlackInput.vue";
 import BlackSelector from "@/Components/BlackSelector.vue";
-import toast from "@/stores/toast";
 import VSelect from "vue-select";
 
 const props = defineProps({

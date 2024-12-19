@@ -32,19 +32,14 @@ class DashboardController extends Controller
         $endOfLastWeek = Carbon::now()->subWeek()->endOfWeek();
         $currentWeekCount = ImportedProduct::whereBetween('created_at', [$startOfWeek, $endOfWeek])->count();
         $lastWeekCount = ImportedProduct::whereBetween('created_at', [$startOfLastWeek, $endOfLastWeek])->count();
-        $percentageChange = $lastWeekCount > 0 ? (($currentWeekCount - $lastWeekCount) / $lastWeekCount) * 100 : 0;
-        $productImportedPercentage = [
-            'currentWeekCount' => $currentWeekCount,
-            'lastWeekCount' => $lastWeekCount,
-            'percentageChange' => $percentageChange
-        ];
+
 
 
         return inertia('Admin/Dashboard', [
             'route' => 'admin.dashboard',
             'orders' => $orders,
             'latestConfimerdOrders' => $latestConfimerdOrders,
-            'productImportedPercentage' => $productImportedPercentage,
+            'importedProductsLastWeek' => $currentWeekCount,
             'totalProducts' => Product::count(),
             'totalOrders' => Order::count(),
         ]);

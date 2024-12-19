@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\Brand;
 use App\Models\Credit;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\SubSubCategory;
 use App\Models\MeasurementUnit;
 use App\Services\ProductService;
 use App\Services\DataTableService;
@@ -101,9 +103,9 @@ class ProductController extends Controller
         $measurementUnit = MeasurementUnit::find($product->measurement_unit_id);
         $product['mu'] = $measurementUnit ? $measurementUnit->translate(app()->currentLocale())->symbol ?? '' : '';
 
-        $product->loadAggregate(['brand', 'subSubCategory'], "name");
+        $product->loadAggregate(['brand'], "name");
         $product->loadAggregate(['images'], "image1");
-        $product->load(['credits', 'images']); // Încarcă relația 'credits'
+        $product->load(['credits', 'images', 'subSubCategory']); // Încarcă relația 'credits'
 
 
         $credits = Credit::all();
@@ -114,6 +116,8 @@ class ProductController extends Controller
             'initialRoute' => 'admin.products',
             'resourceType' => 'product',
             'creditsSettings' => $credits,
+            'subSubCategories' => SubSubCategory::all()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'label'  => $f->name])->toArray(),
+            'brands' => Brand::all()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'label'  => $f->name])->toArray(),
         ]);
     }
 
@@ -130,17 +134,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $locale = app()->currentLocale();
         $data = $request->validate([
-            'form.name ro' => 'required|min:3|String',
-            'form.name ru' => 'required|min:3|String',
-            'form.description ro' => 'required',
-            'form.description ru' => 'required',
-            'form.brand_id' => 'required',
-            'form.sub_sub_category_id' => 'required',
-            'form.price' => 'required|numeric',
+            "name $locale" => 'required|min:3|String',
+            "description $locale" => 'required|min:3|String',
+            'sub_sub_category_id' => 'required',
+            'brand_id' => 'required',
+            'price' => 'required|numeric',
         ]);
-        (new ProductService())->update($data, $product, $request);
-        return to_route($this->route);
+        (new ProductService())->simpleUpdate($data, $product, $request);
     }
 
     /**

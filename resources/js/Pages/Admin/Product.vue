@@ -9,6 +9,8 @@ import BlackSelector from "@/Components/BlackSelector.vue";
 import { TrashIcon } from "@heroicons/vue/20/solid";
 import CustomInputFile from "@/Components/CustomInputFile.vue";
 import { useForm, router } from "@inertiajs/vue3";
+import { PencilSquareIcon } from "@heroicons/vue/16/solid/index.js";
+import { usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
     initialRoute: {
@@ -23,7 +25,15 @@ const props = defineProps({
     creditsSettings: {
         type: Object,
     },
+    subSubCategories: {
+        type: Array,
+    },
+    brands: {
+        type: Array,
+    },
 });
+
+const page = usePage();
 
 const closeModal = () => {
     isOpen.value = false;
@@ -163,6 +173,37 @@ const submitImage = () => {
     );
 };
 
+const productForm = useForm({
+    [`name ${page.props.current_locale}`]: props.product.name,
+    [`description ${page.props.current_locale}`]: props.product.description,
+    sub_sub_category_id: props.product.sub_sub_category_id,
+    brand_id: props.product.brand_id,
+    price: props.product.price,
+});
+const editProduct = ref(false);
+const startEditProduct = () => {
+    editProduct.value = true;
+};
+
+const closeEditProduct = () => {
+    editProduct.value = false;
+};
+
+const submitEditProduct = () => {
+    router.put(
+        route("admin.products.update", {
+            product: props.product,
+        }),
+        productForm,
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                editProduct.value = false;
+            },
+        }
+    );
+};
+
 watch(isOrderChanged, () => {
     submitSortedImages();
 });
@@ -171,7 +212,14 @@ watch(isOrderChanged, () => {
 <template>
     <admin-layout :current-route="initialRoute" title="Products">
         <div class="grid w-full grid-cols-1 gap-4">
-            <div class="container-rounded">
+            <div class="relative container-rounded">
+                <span class="absolute top-1 right-2">
+                    <PencilSquareIcon
+                        v-if="!editProduct"
+                        @click="startEditProduct"
+                        class="w-6 cursor-pointer text-slate-500 hover:text-slate-700"
+                    />
+                </span>
                 <div class="max-w-full px-4 mx-auto sm:px-6 lg:px-8">
                     <div class="flex flex-col -mx-4 md:flex-row">
                         <div class="px-4 md:flex-1">
@@ -231,6 +279,30 @@ watch(isOrderChanged, () => {
                             >
                                 {{ product.description }}
                             </p>
+                            <div class="flex mb-4">
+                                <div class="mr-4">
+                                    <span
+                                        class="font-bold text-gray-700 dark:text-gray-300"
+                                        >{{ __("sub_sub_category") }}:
+                                    </span>
+                                    <span
+                                        class="text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ product.sub_sub_category.name }}
+                                    </span>
+                                </div>
+                                <div class="mr-4">
+                                    <span
+                                        class="font-bold text-gray-700 dark:text-gray-300"
+                                        >{{ __("brand") }}:
+                                    </span>
+                                    <span
+                                        class="text-gray-600 dark:text-gray-300"
+                                    >
+                                        {{ product.brand_name }}
+                                    </span>
+                                </div>
+                            </div>
                             <div class="flex mb-4">
                                 <div class="mr-4">
                                     <span
@@ -350,6 +422,73 @@ watch(isOrderChanged, () => {
                             </SecondaryButton>
                             <PrimaryButton
                                 @click="submitCredits"
+                                class="mx-2"
+                                >{{ __("submit") }}</PrimaryButton
+                            >
+                        </div>
+                    </Modal>
+                    <Modal
+                        :show="editProduct"
+                        :closeable="true"
+                        @close="closeEditProduct"
+                        :actions="false"
+                    >
+                        <div class="flex flex-col w-full gap-2 p-4 mt-8 h-3/4">
+                            <div class="flex justify-between gap-2">
+                                <black-input
+                                    type="text"
+                                    class="w-full"
+                                    v-model="
+                                        productForm[
+                                            `name ${page.props.current_locale}`
+                                        ]
+                                    "
+                                    :label="__('title')"
+                                />
+                            </div>
+                            <black-input
+                                type="textarea"
+                                class="w-full h-auto"
+                                v-model="
+                                    productForm[
+                                        `description ${page.props.current_locale}`
+                                    ]
+                                "
+                                :label="__('description')"
+                            />
+                            <black-selector
+                                v-model="productForm.sub_sub_category_id"
+                                @update:status="
+                                    productForm.sub_sub_category_id = $event
+                                "
+                                :options="subSubCategories"
+                                :value="productForm.sub_sub_category_id"
+                                :error-message="
+                                    __(form.errors.sub_sub_category_id)
+                                "
+                                :label="__('sub_sub_category')"
+                            />
+                            <black-selector
+                                v-model="productForm.brand_id"
+                                @update:status="productForm.brand_id = $event"
+                                :options="brands"
+                                :value="productForm.brand_id"
+                                :error-message="__(form.errors.brand_id)"
+                                :label="__('brand')"
+                            />
+                            <black-input
+                                type="number"
+                                class="w-full h-auto"
+                                v-model="productForm.price"
+                                :label="__('price')"
+                            />
+                        </div>
+                        <div class="flex justify-end mt-6 mb-4">
+                            <SecondaryButton class="mx-2" @click="closeModal">
+                                {{ __("cancel") }}
+                            </SecondaryButton>
+                            <PrimaryButton
+                                @click="submitEditProduct"
                                 class="mx-2"
                                 >{{ __("submit") }}</PrimaryButton
                             >

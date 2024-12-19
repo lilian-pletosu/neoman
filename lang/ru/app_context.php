@@ -254,6 +254,9 @@ return [
     'orders_statistics' => 'Статистика заказов',
     'total_orders' => 'Всего заказов',
     'latest_customers' => 'Последние клиенты',
+    'total_products_imported_in_current_week' => 'Всего продуктов импортировано на этой неделе',
+    'latest_orders' => 'Последние заказы',
+    'no_customers' => 'Нет клиентов',
 
     //statuses
     'pending' => 'В ожидании',

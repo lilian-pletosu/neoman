@@ -258,6 +258,9 @@ return [
     'orders_statistics' => 'Statistici comenzi',
     'total_orders' => 'Total comenzi',
     'latest_customers' => 'Ultimii clienți',
+    'total_products_imported_in_current_week' => 'Total produse importate în această săptămână',
+    'latest_orders' => 'Ultimele comenzi',
+    'no_customers' => 'Nu sunt clienți',
 
     //statuses
     'pending' => 'Procesare',
