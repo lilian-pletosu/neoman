@@ -187,6 +187,7 @@ const startEditProduct = () => {
 
 const closeEditProduct = () => {
     editProduct.value = false;
+    productForm.reset();
 };
 
 const submitEditProduct = () => {
@@ -484,7 +485,10 @@ watch(isOrderChanged, () => {
                             />
                         </div>
                         <div class="flex justify-end mt-6 mb-4">
-                            <SecondaryButton class="mx-2" @click="closeModal">
+                            <SecondaryButton
+                                class="mx-2"
+                                @click="closeEditProduct"
+                            >
                                 {{ __("cancel") }}
                             </SecondaryButton>
                             <PrimaryButton
