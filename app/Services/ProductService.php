@@ -279,7 +279,6 @@ class ProductService
     public function saveUltraImportedProductInDB($product)
     {
         try {
-            // Convertim $product într-un array
             $productArray = json_decode(json_encode($product), true);
 
 
@@ -288,6 +287,7 @@ class ProductService
             if ($existProduct) {
 
                 try {
+                    Log::info('Product already exists in the database', ['product' => $existProduct]);
                     $existProduct->update([
                         'product_code' => $productArray['code'],
                         //                        'name' => $productArray['name'],
@@ -301,6 +301,7 @@ class ProductService
                     $this->assignAttributesToProduct($existProduct, $productArray['description'], $existProduct->sub_sub_category_id);
 
                     $existProduct->save();
+                    Log::info('Product updated in the database', ['product' => $existProduct]);
                     return $existProduct;
                 } catch (\Exception $exception) {
                     Log::error('----------------------------------------------------------------------------', [

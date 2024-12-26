@@ -27,8 +27,6 @@ class UltraImportProcessingService
         $this->priceList = json_decode(Redis::get('PRICELIST'));
         $this->brand = json_decode(Redis::get('BRAND'));
         $this->translations = json_decode(Redis::get('TRANSLATIONS'));
-
-
     }
 
     public function __invoke()
@@ -41,7 +39,7 @@ class UltraImportProcessingService
     {
         $allowedSubSubcategories = config('products_structure');
 
-        $products = collect($this->nomenclature)->take(20000)->map(function ($item) {
+        $products = collect($this->nomenclature)->map(function ($item) {
             $item->name = $this->getNomenclatureTranslation($item->UUID);
             $item->brand = $this->getBrand($item->brand)->first();
             $item->sub_subcategory = $this->getNomenclatureType($item->nomenclatureType) ?? null;
@@ -52,6 +50,7 @@ class UltraImportProcessingService
             $item->images = $this->getFirstFourImages($item->imageList);
             return $item;
         })->filter(function ($item) use ($allowedSubSubcategories) {
+            dd($item);
             return $item->price !== 'No price' &&
                 isset($item->sub_subcategory['translations']['ro']) &&
                 in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
@@ -90,7 +89,6 @@ class UltraImportProcessingService
         } catch (\Throwable $th) {
             return null;
         }
-
     }
 
     public function getBrand(string $brandUuid)
@@ -110,7 +108,6 @@ class UltraImportProcessingService
             'nomenclatureType' => $nomenclatureType->first(),
             'translations' => $this->getNomenclatureTypeTranslation($nomenclatureTypeUuid)
         ];
-
     }
 
     public function getNomenclatureTypeTranslation($nomenclatureTypeUuid)

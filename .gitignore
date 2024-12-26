@@ -12,6 +12,7 @@
 /.idea
 /storage/app/public/products
 /database-storage/
+/redis-storage/
 /proxy/docker-compose.yml
 /vendor
 .package-lock.json

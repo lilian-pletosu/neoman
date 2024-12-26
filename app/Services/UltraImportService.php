@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Log;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
 
 class UltraImportService
@@ -20,7 +19,6 @@ class UltraImportService
         $this->password = env('SOAP_PASS');
         $this->client = Soap::to($this->wsdl)
             ->withBasicAuth($this->username, $this->password);
-
     }
 
     public function requestData($service, $all = true, $additionalParameters = '', $compress = false)
@@ -49,7 +47,6 @@ class UltraImportService
 
         $simple_xml = simplexml_load_string($xml);
         return $simple_xml;
-//        return json_decode($simple_xml);
     }
 
     public function commitReceivingData($service)
@@ -81,6 +78,4 @@ class UltraImportService
 
         return $response->response->return;
     }
-
-
 }
