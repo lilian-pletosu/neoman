@@ -173,6 +173,23 @@ const submitImage = () => {
     );
 };
 
+const deleteImage = (image) => {
+    router.put(
+        route("admin.delete-product-image", {
+            product: props.product,
+        }),
+        {
+            image: image,
+        },
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                images.value = imageUrls();
+            },
+        }
+    );
+};
+
 const productForm = useForm({
     [`name ${page.props.current_locale}`]: props.product.name,
     [`description ${page.props.current_locale}`]: props.product.description,
@@ -245,11 +262,17 @@ watch(isOrderChanged, () => {
                                     @dragover.prevent="onOver($event)"
                                     @dragleave.prevent="onLeave($event)"
                                 >
-                                    <img
-                                        :src="image"
-                                        class="w-20 h-20"
-                                        :alt="`Image ${index + 1}`"
-                                    />
+                                    <div class="relative p-4">
+                                        <img
+                                            :src="image"
+                                            class="w-20 h-20"
+                                            :alt="`Image ${index + 1}`"
+                                        />
+                                        <TrashIcon
+                                            @click="deleteImage(image)"
+                                            class="absolute top-0 right-0 w-3.5 cursor-pointer"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <div

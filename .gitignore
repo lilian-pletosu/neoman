@@ -10,12 +10,14 @@
 /storage/framework/views/*
 /database
 /.idea
+/storage/app/public/products
 /database-storage/
+/proxy/docker-compose.yml
 /vendor
 .package-lock.json
 .env
-.env.backup
-.env.production
+.local.env
+.stg.env
 .phpactor.json
 .phpunit.result.cache
 Homestead.json

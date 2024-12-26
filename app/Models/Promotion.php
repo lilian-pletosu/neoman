@@ -9,8 +9,12 @@ class Promotion extends Model
 {
     use HasFactory;
 
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+
     protected $table = 'promotions';
     protected $fillable = ['name', 'description', 'start_date', 'end_date', 'discount', 'status'];
+
 
     public function products()
     {
@@ -19,7 +23,7 @@ class Promotion extends Model
 
     public function brands()
     {
-        return $this->belongsToMany(Brand::class, 'promotion_brand');
+        return $this->belongsToMany(Brand::class, 'promotion_brand')->withPivot('brand_id', 'promotion_id');
     }
 
     public function sub_subcategories()
@@ -27,4 +31,3 @@ class Promotion extends Model
         return $this->belongsToMany(SubSubCategory::class, 'promotion_sub_sub_category');
     }
 }
-

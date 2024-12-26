@@ -15,6 +15,15 @@ $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
+
+$env = $app->detectEnvironment(function () {
+    return getenv('APP_ENV') ?: 'local';
+});
+
+
+$app->loadEnvironmentFrom(".{$env}.env");
+
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces

@@ -2,12 +2,10 @@ networks:
     neoman:
         name: neoman
     traff:
-        name: '${TRAEFIK_NETWORK:-traff}'
+        name: "${TRAEFIK_NETWORK:-traff}"
         external: true
 
-
 services:
-
     neoman-nginx:
         build:
             context: ./docker-settings
@@ -30,14 +28,14 @@ services:
             - traefik.http.routers.neoman-nginx.rule=Host(`neoman.local`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-#            - traefik.http.routers.neoman-nginx.tls=true
-#            - traefik.http.routers.neoman-nginx.tls.certresolver=myresolver
+    #            - traefik.http.routers.neoman-nginx.tls=true
+    #            - traefik.http.routers.neoman-nginx.tls.certresolver=myresolver
 
     neoman-php:
         build:
             context: ./docker-settings
             args:
-                uuid: '${UID:-1000}'
+                uuid: "${UID:-1000}"
             dockerfile: php.dockerfile
         volumes:
             - .:/var/www/html
@@ -47,24 +45,23 @@ services:
 
     neoman-redis:
         image: redis:7.0.12-alpine3.18
-        command: redis-server --requirepass '${REDIS_PASSWORD:-secrets}'
-        restart: always
+        restart: unless-stopped
         networks:
             - neoman
         ports:
             - 6379:6379
         volumes:
-            - ./redis-storage:/var/list/redis
+            - ./redis-storage:/data
             - ./redis.conf:/usr/local/etc/redis/redis.conf
-
+        command: redis-server /usr/local/etc/redis/redis.conf
 
     neoman-mariadb:
         image: mariadb:11.0.2
         environment:
-            MYSQL_ROOT_PASSWORD: '${DB_ROOT_PASSWORD:-secrets}'
-            MYSQL_USER: '${DB_USERNAME:-root}'
-            MYSQL_PASSWORD: '${DB_PASSWORD:-secrets}'
-            MYSQL_DATABASE: '${DB_DATABASE:-neomandb}'
+            MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-secrets}"
+            MYSQL_USER: "${DB_USERNAME:-root}"
+            MYSQL_PASSWORD: "${DB_PASSWORD:-secrets}"
+            MYSQL_DATABASE: "${DB_DATABASE:-neomandb}"
         ports:
             - "3306:3306"
         volumes:
@@ -91,7 +88,7 @@ services:
             #            - traefik.http.routers.neoman.rule=Host(`${APP_DROPLET_DOMAIN:-neoman}-adminer`)
             - traefik.port=80
             - traefik.docker.network=${TRAEFIK_NETWORK:-traff}
-#            - traefik.http.routers.neoman.tls=true
-#            - traefik.http.routers.neoman.tls.certresolver=myresolver
+        #            - traefik.http.routers.neoman.tls=true
+        #            - traefik.http.routers.neoman.tls.certresolver=myresolver
         volumes:
             - ./database-storage:/var/lib/mysql

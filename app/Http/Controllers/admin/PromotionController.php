@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
+use Inertia\Inertia;
+use App\Models\Brand;
 use App\Models\Promotion;
-use App\Services\DataTableService;
 use Illuminate\Http\Request;
+use App\Services\DataTableService;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\SubCategory;
+use App\Models\SubSubCategory;
 
 class PromotionController extends Controller
 {
@@ -26,24 +31,31 @@ class PromotionController extends Controller
      */
     public function index()
     {
+        Inertia::share('brands', Brand::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('categories', Category::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('subcategories', SubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('sub_subcategories', SubSubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+
         $this->dataTableService
             ->setResource('Promotion')
             ->setResourceColumns(['id', 'name', 'description', 'start_date', 'end_date', 'discount', 'status'])
+            ->setRelationColumn('brands', 'brand', ['name'])
+            ->setRelationColumn('sub_subcategories', 'sub_subcategory', ['name'])
             ->paginate(10)
             ->sortBy('created_at', 'desc')
             ->setSearchRoute('admin.promotions');
 
 
-        return inertia('Admin/Promotions')->loadData($this->dataTableService);
+        return inertia('Admin/Promotions', [
+            'initialRoute' => 'admin.promotions',
+            'resourceType' => 'promotion',
+        ])->loadData($this->dataTableService);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -110,7 +122,22 @@ class PromotionController extends Controller
      */
     public function update(Request $request, Promotion $promotion)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'discount' => 'required|numeric|min:0|max:100',
+            'status' => 'required|boolean',
+            'brand' => 'nullable',
+            'sub_subcategory' => 'nullable',
+            'category' => 'nullable',
+            'subcategory' => 'nullable',
+        ]);
+
+        $validatedData['status'] = $request->input('status') == 1 ? Promotion::STATUS_ACTIVE : Promotion::STATUS_INACTIVE;
+
+        $promotion->update($validatedData);
     }
 
     /**

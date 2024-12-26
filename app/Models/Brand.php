@@ -18,7 +18,15 @@ class Brand extends Model implements TranslatableContract
     public array $translatedAttributes = ['description'];
 
     protected $fillable = [
-        'name', 'slug', 'website', 'description', 'position', 'is_enabled', 'seo_title', 'seo_description', 'image'
+        'name',
+        'slug',
+        'website',
+        'description',
+        'position',
+        'is_enabled',
+        'seo_title',
+        'seo_description',
+        'image'
     ];
 
 
@@ -45,7 +53,7 @@ class Brand extends Model implements TranslatableContract
     {
         return $query->where('is_enabled', 1);
     }
-    
+
     public function promotions()
     {
         return $this->belongsToMany(Promotion::class, 'promotion_brand')->withPivot('brand_id', 'promotion_id');

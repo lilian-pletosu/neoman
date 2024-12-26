@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Models\Brand;
 use App\Models\Credit;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Models\SubSubCategory;
 use App\Models\MeasurementUnit;
@@ -12,6 +13,7 @@ use App\Services\ProductService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -226,5 +228,23 @@ class ProductController extends Controller
     public function deleteCreditFromProduct(Product $product, Credit $credit)
     {
         $product->credits()->detach($credit->id);
+    }
+
+    public function deleteImage(Product $product, Request $request)
+    {
+        $data = $request->validate([
+            'image' => 'required|string',
+        ]);
+        // find in product_images the image that is equal to the image that we want to delete
+        try {
+            $productImages = $product->images()->get()->toArray();
+            $key = array_search($data['image'], $productImages[0]);
+            // delete the image from db knowing the key
+            $product->images()->update([$key => null]);
+            Storage::disk('products')->delete($data['image']);
+            Session::flash('toast', 'Imaginea a fost ștearsă cu succes');
+        } catch (\Exception $e) {
+            Session::flash('toast', 'Eroare la ștergerea imaginii');
+        }
     }
 }
