@@ -47,11 +47,10 @@ Route::delete('/cart/{productID}', function ($productID) {
 
 
 Route::get('/getCart', function () {
-    $products = [];
+    $cookieService = new CookieService();
 
-    if (json_decode(\Illuminate\Support\Facades\Redis::get('cart'))) {
-        $products = json_decode(\Illuminate\Support\Facades\Redis::get('cart'));
-    }
+    $products = [];
+    $products = $cookieService->getProducts('cart');
     $totalPrice = 0;
     foreach ($products as $product) {
 
@@ -60,7 +59,7 @@ Route::get('/getCart', function () {
         }
     }
 
-    $count = json_decode(\Illuminate\Support\Facades\Redis::get('cart')) ? count(json_decode(\Illuminate\Support\Facades\Redis::get('cart'))) : 0;
+    $count = count($products);
     return response()->json(['count' => $count, 'products' => $products, 'total_price' => $totalPrice]);
 })->name('api.getCart');
 
@@ -69,19 +68,17 @@ Route::get('/getCart', function () {
 Route::get('/wishlist/{productCode}', function ($productCode) {
     return (new CookieService())->addInWishlist($productCode);
 })->name('api.add_wishlist');
+
 Route::delete('/wishlistCount{productCode}', function ($productCode) {
     return (new CookieService())->removeProductFromWishlist($productCode);
 })->name('api.wishlistRemove');
-Route::get('/wishlistCount', function () {
-    $products = [];
 
-    if (json_decode(\Illuminate\Support\Facades\Redis::get('wishlist'))) {
-        foreach (json_decode(\Illuminate\Support\Facades\Redis::get('wishlist')) as $prod) {
-            $product = Product::where('id', $prod->id)->with(['images', 'brand', 'subSubCategory.subcategory.category'])->first();
-            $products[] = $product;
-        }
-    }
-    $count = json_decode(\Illuminate\Support\Facades\Redis::get('wishlist')) ? count(json_decode(\Illuminate\Support\Facades\Redis::get('wishlist'))) : 0;
+Route::get('/wishlistCount', function () {
+    $cookieService = new CookieService();
+
+    $products = [];
+    $products = $cookieService->getProducts('wishlist');
+    $count = count($products);
     return response()->json(['count' => $count, 'products' => $products]);
 })->name('api.wishlistCount');
 
