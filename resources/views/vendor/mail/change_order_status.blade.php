@@ -1,8 +1,8 @@
 @php
-    $productHeader = __('app_context.product');
-    $colorHeader = __('app_context.color');
-    $qtyHeader = __('app_context.qty');
-    $priceHeader = __('app_context.price');
+$productHeader = __('app_context.product');
+$colorHeader = __('app_context.color');
+$qtyHeader = __('app_context.qty');
+$priceHeader = __('app_context.price');
 @endphp
 
 <x-mail::layout>
