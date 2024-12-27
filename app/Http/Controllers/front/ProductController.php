@@ -48,10 +48,13 @@ class ProductController extends Controller
         $products = Product::withDiscountDetails()->where('sub_sub_category_id', $subSubcategory->id)
             ->with('brand', 'images');
 
+
         $attributesForFilter = [];
         foreach ($attributes as $item) {
             $attributesForFilter[] = $item['key'];
         }
+
+
 
 
         $products = $products->filtered($attributesForFilter)->paginate(12)->withQueryString();

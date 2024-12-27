@@ -5,7 +5,6 @@ namespace App\Http\Controllers\admin;
 use App\Models\Brand;
 use App\Models\Credit;
 use App\Models\Product;
-use App\Models\ProductImage;
 use Illuminate\Http\Request;
 use App\Models\SubSubCategory;
 use App\Models\MeasurementUnit;

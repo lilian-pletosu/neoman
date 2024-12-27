@@ -523,7 +523,7 @@ onBeforeUnmount(() => {
                                         >
                                             <span
                                                 class="text-xs text-gray-900 2xl:text-sm 4xl:text-base dark:text-slate-200"
-                                                >{{ brand.name }}</span
+                                                >{{ brand?.name }}</span
                                             >
                                             <span
                                                 class="flex items-center ml-6"
@@ -652,6 +652,9 @@ onBeforeUnmount(() => {
                                             class="container-rounded bg-3 relative group/card xl:min-h-[27.5rem]"
                                         >
                                             <div
+                                                v-if="
+                                                    product?.credits?.length > 0
+                                                "
                                                 class="absolute left-0 w-full -top-0"
                                             >
                                                 <div
@@ -662,11 +665,8 @@ onBeforeUnmount(() => {
                                                     >
                                                         <span
                                                             class="text-xs font-semibold text-white"
-                                                            >{{
-                                                                __("credit")
-                                                            }}
-                                                            0%</span
-                                                        >
+                                                            >{{ __("credit") }}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -681,13 +681,13 @@ onBeforeUnmount(() => {
                                                             <img
                                                                 :alt="
                                                                     product
-                                                                        .brand
-                                                                        .name
+                                                                        ?.brand
+                                                                        ?.name
                                                                 "
                                                                 :src="
                                                                     product
-                                                                        .brand
-                                                                        .image
+                                                                        ?.brand
+                                                                        ?.image
                                                                 "
                                                                 class="mix-blend-multiply"
                                                             />
@@ -724,10 +724,12 @@ onBeforeUnmount(() => {
                                                             <img
                                                                 :src="
                                                                     product
-                                                                        .images[0]
-                                                                        .image1
+                                                                        ?.images[0]
+                                                                        ?.image1
                                                                 "
-                                                                alt="Product Image"
+                                                                :alt="
+                                                                    product?.slug
+                                                                "
                                                                 class="object-contain w-56 h-56 mx-auto transition opacity-100 hover:scale-110 aspect-square mix-blend-multiply"
                                                             />
                                                         </div>
@@ -739,10 +741,10 @@ onBeforeUnmount(() => {
                                                             class="text-xs font-bold text-black font-mulish text-shadow-lg md:text-lg"
                                                         >
                                                             {{
-                                                                product.name.slice(
+                                                                product?.name?.slice(
                                                                     0,
                                                                     42
-                                                                ) + "..."
+                                                                ) + "..." ?? ""
                                                             }}
                                                         </p>
                                                     </div>
