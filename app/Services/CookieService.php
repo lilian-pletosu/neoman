@@ -150,6 +150,12 @@ class CookieService
         Redis::del($storageKey);
         return response('success');
     }
+    public function delCart()
+    {
+        $storageKey = $this->getStorageKey('cart');
+        Redis::del($storageKey);
+        return response('success');
+    }
 
     public function wishlistToCart()
     {

@@ -2,13 +2,14 @@
 
 namespace App\Listeners;
 
-use App\Enum\OrderTypeEnum;
-use App\Events\NewOrder;
-use App\Mail\NewOrderNotifyEmail;
 use App\Models\Order;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Events\NewOrder;
+use App\Enum\OrderTypeEnum;
+use App\Mail\NewOrderNotifyEmail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendEmailNotificationAboutNewOrder implements ShouldQueue
 {
@@ -32,9 +33,9 @@ class SendEmailNotificationAboutNewOrder implements ShouldQueue
         if ($event->order->type == OrderTypeEnum::FAST_ORDER->value) {
             return;
         } else {
+            Log::info('New order', ['order' => $event->order]);
             $email = $event->order->email;
             Mail::to($email)->send(new NewOrderNotifyEmail($event->order));
         }
-
     }
 }

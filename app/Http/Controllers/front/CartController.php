@@ -5,6 +5,7 @@ namespace App\Http\Controllers\front;
 use App\Enum\OrderTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Services\CookieService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
@@ -16,7 +17,6 @@ class CartController extends Controller
     {
 
         return inertia('User/CartPage');
-
     }
 
 
@@ -82,10 +82,9 @@ class CartController extends Controller
         try {
 
             Order::create($data);
-            Redis::del('cart');
+            (new CookieService())->delCart();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-
     }
 }
