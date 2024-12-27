@@ -125,24 +125,24 @@ watch(
                                 </svg>
                             </div>
                             <div class="col-span-2 mx-auto sm:col-span-1">
-                                <img
-                                    :src="product.image"
-                                    alt=""
-                                    class="object-contain w-24 h-24 mx-auto"
-                                />
-                            </div>
-                            <div
-                                class="col-span-2 mx-auto my-auto sm:col-span-3 sm:mx-0"
-                            >
                                 <Link
                                     :href="
                                         route('product_page', {
                                             slug: product.slug,
                                         })
                                     "
-                                    class="font-bold text-black dark:text-white hover:text-blue-700"
-                                    >{{ product.name }}</Link
                                 >
+                                    <img
+                                        :src="product.image"
+                                        alt=""
+                                        class="object-contain w-24 h-24 mx-auto"
+                                    />
+                                </Link>
+                            </div>
+                            <div
+                                class="col-span-2 mx-auto my-auto sm:col-span-3 sm:mx-0"
+                            >
+                                <p>{{ product.name }}</p>
                             </div>
                             <div class="my-auto sm:col-span-1">
                                 <div
