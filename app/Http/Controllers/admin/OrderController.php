@@ -142,10 +142,6 @@ class OrderController extends Controller
                 $order = Order::findOrFail($id);
                 $order->status = $request->status;
                 $order->save();
-
-                Mail::raw("test", function ($message) {
-                    $message->to('lilianpletosu7@gmail.com')->subject('test');
-                });
             } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage()], 500);
             }
