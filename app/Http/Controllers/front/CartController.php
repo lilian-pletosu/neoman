@@ -8,7 +8,6 @@ use App\Models\Order;
 use App\Services\CookieService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 
 
 class CartController extends Controller
@@ -80,9 +79,13 @@ class CartController extends Controller
             $data['type'] = OrderTypeEnum::FAST_ORDER->value;
         }
         try {
-
-            Order::create($data);
             (new CookieService())->delCart();
+            do {
+                $orderNumber = mt_rand(10000, 999999);
+            } while (Order::where('order_number', $orderNumber)->exists());
+
+            $data['order_number'] = "#$orderNumber";
+            Order::create($data);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

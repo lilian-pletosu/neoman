@@ -132,7 +132,7 @@ const deleteProductFromCart = (id) => {
                                                     2
                                                 ) * product.qty
                                             ).toFixed(1)
-                                        }}
+                                        }}  
                                         {{ __("lei") }}
                                     </p>
                                     <div>
