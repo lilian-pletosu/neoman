@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\AttributeValue;
 use App\Services\DataTableService;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {

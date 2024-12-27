@@ -27,7 +27,7 @@ class NewOrderNotifyEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('lilianpletosu7@gmail.com', 'Neoman'),
+            from: new Address('office.neoman@gmail.com', 'Neoman'),
             subject: 'Neoman - comandă recepționată',
         );
     }
@@ -38,7 +38,7 @@ class NewOrderNotifyEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-//            view: 'emails.new_order',
+            //            view: 'emails.new_order',
             markdown: 'vendor.mail.new_order',
             with: ['order' => $this->order],
         );

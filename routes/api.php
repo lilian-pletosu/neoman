@@ -52,12 +52,10 @@ Route::get('/getCart', function () {
     $products = [];
     $products = $cookieService->getProducts('cart');
     $totalPrice = 0;
-    foreach ($products as $product) {
 
-        if (isset($product->total_price)) {
-            $totalPrice += $product->total_price;
-        }
-    }
+    $totalPrice = array_sum(array_column($products, 'total_price'));
+
+
 
     $count = count($products);
     return response()->json(['count' => $count, 'products' => $products, 'total_price' => $totalPrice]);
