@@ -141,7 +141,7 @@ watch(
                                         })
                                     "
                                     class="font-bold text-black dark:text-white hover:text-blue-700"
-                                    ><p>{{ product.name }}</p></Link
+                                    >{{ product.name }}</Link
                                 >
                             </div>
                             <div class="my-auto sm:col-span-1">
