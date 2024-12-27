@@ -260,6 +260,7 @@ return [
     'latest_customers' => 'Ultimii clienți',
     'total_products_imported_in_current_week' => 'Total produse importate în această săptămână',
     'latest_orders' => 'Ultimele comenzi',
+    'latest_confirmed_orders' => 'Ultimele comenzi confirmate',
     'no_customers' => 'Nu sunt clienți',
 
     //statuses

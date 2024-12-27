@@ -8,12 +8,12 @@ class OrderService
 {
     function getOrders()
     {
-        return Order::select('id', 'status')
+        $orders = Order::select('id', 'status')
             ->get()
             ->groupBy('status')
             ->mapWithKeys(function ($group, $status) {
                 return [$status => $group->count()];
             });
+        return $orders;
     }
-
 }

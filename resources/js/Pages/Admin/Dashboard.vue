@@ -4,15 +4,17 @@ import { BarChart } from "vue-chart-3";
 import { Chart, registerables } from "chart.js";
 import { getCurrentInstance } from "vue";
 import { useDateFormat } from "@vueuse/core";
+import { usePage } from "@inertiajs/vue3";
 
 const app = getCurrentInstance();
+const page = usePage();
 
 Chart.register(...registerables);
 
 const props = defineProps({
     route: String,
     orders: Object,
-    latestConfimerdOrders: Object,
+    latestConfirmedOrders: Object,
     importedProductsLastWeek: Number,
     totalProducts: Number,
     totalOrders: Number,
@@ -30,21 +32,11 @@ let testData = {
         {
             label: app.appContext.config.globalProperties.__("comenzi"),
             data: [
-                app.appContext.config.globalProperties.$page.props.orders[
-                    "pending"
-                ],
-                app.appContext.config.globalProperties.$page.props.orders[
-                    "confirmed"
-                ],
-                app.appContext.config.globalProperties.$page.props.orders[
-                    "shipped"
-                ],
-                app.appContext.config.globalProperties.$page.props.orders[
-                    "delivered"
-                ],
-                app.appContext.config.globalProperties.$page.props.orders[
-                    "canceled"
-                ],
+                page.props.ordersBar["pending"],
+                page.props.ordersBar["confirmed"],
+                page.props.ordersBar["shipped"],
+                page.props.ordersBar["delivered"],
+                page.props.ordersBar["canceled"],
             ],
             backgroundColor: [
                 "#77CEFF",
@@ -75,7 +67,9 @@ let testData = {
             <div class="p-4 bg-white rounded-lg shadow sm:p-6 xl:p-8">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h3 class="primary-text">{{ __("latest_orders") }}</h3>
+                        <h3 class="primary-text">
+                            {{ __("latest_confirmed_orders") }}
+                        </h3>
                     </div>
                 </div>
                 <div class="flex flex-col mt-8">
@@ -83,7 +77,7 @@ let testData = {
                         <div class="inline-block min-w-full align-middle">
                             <div class="overflow-hidden shadow sm:rounded-lg">
                                 <table
-                                    v-if="latestConfimerdOrders.length > 0"
+                                    v-if="latestConfirmedOrders.length > 0"
                                     class="min-w-full divide-y divide-gray-200"
                                 >
                                     <thead class="bg-gray-50">
@@ -110,7 +104,7 @@ let testData = {
                                     </thead>
                                     <tbody class="bg-white">
                                         <tr
-                                            v-for="transaction in latestConfimerdOrders"
+                                            v-for="transaction in latestConfirmedOrders"
                                             :key="transaction.id"
                                         >
                                             <td
@@ -119,7 +113,7 @@ let testData = {
                                                 {{ __("payment_from") }}
                                                 <span class="font-semibold">{{
                                                     transaction?.full_name ??
-                                                    "-"
+                                                    "N/A"
                                                 }}</span>
                                             </td>
                                             <td

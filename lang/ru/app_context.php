@@ -256,6 +256,7 @@ return [
     'latest_customers' => 'Последние клиенты',
     'total_products_imported_in_current_week' => 'Всего продуктов импортировано на этой неделе',
     'latest_orders' => 'Последние заказы',
+    'latest_confirmed_orders' => 'Последние подтвержденные заказы',
     'no_customers' => 'Нет клиентов',
 
     //statuses
