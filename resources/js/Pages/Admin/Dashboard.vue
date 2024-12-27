@@ -118,7 +118,8 @@ let testData = {
                                             >
                                                 {{ __("payment_from") }}
                                                 <span class="font-semibold">{{
-                                                    transaction.full_name
+                                                    transaction?.full_name ??
+                                                    "-"
                                                 }}</span>
                                             </td>
                                             <td
@@ -217,14 +218,16 @@ let testData = {
                                 <div class="flex items-center flex-shrink-0">
                                     <span
                                         class="flex items-center justify-center w-8 h-8 p-2 font-semibold rounded-full bg-slate-200 text-slate-600"
-                                        >{{ order.full_name[0] }}</span
+                                        >{{
+                                            order?.full_name[0] ?? "N/A"
+                                        }}</span
                                     >
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p
                                         class="text-sm font-medium text-gray-900 truncate"
                                     >
-                                        {{ order.full_name }}
+                                        {{ order?.full_name ?? "N/A" }}
                                     </p>
                                     <p class="text-sm text-gray-500 truncate">
                                         {{ order.email ?? "" }}
