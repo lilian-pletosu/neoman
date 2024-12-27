@@ -61,9 +61,9 @@ class Order extends Model
     {
         parent::boot();
 
-        // static::created(function ($order) {
-        //     event(new \App\Events\NewOrder($order));
-        // });
+        static::created(function ($order) {
+            event(new \App\Events\NewOrder($order));
+        });
 
         // static::updated(function ($order) {
         //     if ($order->isDirty('status')) {
