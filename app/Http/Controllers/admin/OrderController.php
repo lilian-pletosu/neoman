@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\AttributeValue;
 use App\Models\Order;
-use App\Services\DataTableService;
 use Illuminate\Http\Request;
+use App\Models\AttributeValue;
+use App\Services\DataTableService;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -84,7 +85,6 @@ class OrderController extends Controller
 
 
         return $order;
-
     }
 
 
@@ -131,17 +131,24 @@ class OrderController extends Controller
                 'value' => 'required|string'
             ]);
 
-           
+
             $order = Order::findOrFail($id);
             $order[$request->field] = $request->value;
             $order->save();
         }
 
         if ($request->type == 'updateStatus') {
-            $order = Order::findOrFail($id);
-            $newStatus = $request->status;
-            $order->status = $newStatus;
-            $order->save();
+            try {
+                $order = Order::findOrFail($id);
+                $order->status = $request->status;
+                $order->save();
+
+                Mail::raw("test", function ($message) {
+                    $message->to('lilianpletosu7@gmail.com')->subject('test');
+                });
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
         }
         if ($request->type == 'updateDeliveryPrice') {
             $order = Order::findOrFail($id);
@@ -150,7 +157,6 @@ class OrderController extends Controller
             $order->save();
         }
         return to_route($this->route);
-
     }
 
     /**

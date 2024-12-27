@@ -26,10 +26,14 @@ class NotifyEmailAboutChangeOrderStatus extends Mailable
      */
     public function envelope(): Envelope
     {
-        return new Envelope(
-            from: new Address('lilianpletosu7@gmail.com', 'Neoman'),
-            subject: 'Neoman - status comandă actualizat',
-        );
+        try {
+            return new Envelope(
+                from: new Address('lilianpletosu7@gmail.com', 'Neoman'),
+                subject: 'Neoman - status comandă actualizat',
+            );
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     /**
