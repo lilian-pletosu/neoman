@@ -85,8 +85,24 @@ class PrivacyController extends Controller
      */
     public function update(Request $request, Privacy $privacy)
     {
-        dd($request->all());
+        $data = $request->validate([
+            'form.title ro' => 'required',
+            'form.title ru' => 'required',
+            'form.content ro' => 'required',
+            'form.content ru' => 'required',
+        ]);
 
+        $formData = $request->form;
+        $privacy->slug = Str::slug($formData['title ro'], '_');
+
+        foreach (config('translatable.locales') as $locale) {
+            $privacy->translateOrNew($locale)->title = $formData["title {$locale}"];
+            $privacy->translateOrNew($locale)->content = $formData["content {$locale}"];
+        }
+
+        $privacy->save();
+
+        return redirect()->back();
     }
 
     /**
@@ -97,8 +113,5 @@ class PrivacyController extends Controller
         $privacy = Privacy::find($id);
         $privacy->delete();
         return to_route($this->route);
-
     }
-
-
 }

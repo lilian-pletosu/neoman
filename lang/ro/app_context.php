@@ -262,6 +262,8 @@ return [
     'latest_orders' => 'Ultimele comenzi',
     'latest_confirmed_orders' => 'Ultimele comenzi confirmate',
     'no_customers' => 'Nu sunt clienți',
+    'view_privacy' => 'Vezi politica de confidențialitate',
+    'edit_privacy' => 'Editează politica de confidențialitate',
 
     //statuses
     'pending' => 'Procesare',

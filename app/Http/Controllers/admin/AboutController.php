@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\About;
+use App\Models\AboutTranslation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -15,16 +16,17 @@ class AboutController extends Controller
 
     function index()
     {
+
         return inertia('Admin/About', [
             'initialRoute' => 'admin.privacy',
-            'resources' => About::first(),
+            'resources' => About::first()?->translate() ?? null,
             'resourceType' => 'about',
         ]);
     }
 
     public function create()
     {
-//        return (new SchemaFormBuilder)('Privacy', 'post', 'admin.privacy.store');
+        //        return (new SchemaFormBuilder)('Privacy', 'post', 'admin.privacy.store');
     }
 
     public function store(Request $request)
@@ -33,24 +35,19 @@ class AboutController extends Controller
             'title' => 'required|string',
             'content.*' => 'required',
         ]);
-        $data['slug'] = Str::slug($data['title'], '_');
 
-        $about = About::create(['slug' => $data['slug']]);
+        $about = About::create([
+            'slug' => Str::slug($data['title'], '_')
+        ]);
 
         foreach (config('app.available_locales') as $locale) {
-            // Iterează prin fiecare atribut tradus
-            foreach ($data['content'] as $lang => $content) {
-                // Verifică dacă limba curentă corespunde limbii din iterația curentă
-                if ($lang === $locale) {
-                    // Setează conținutul pentru atributul tradus corespunzător limbii
-                    $about->translateOrNew($locale)->content = $content;
-                    // Salvează modificările pentru această limbă
-                    $about->save();
-                }
-            }
+            $about->translateOrNew($locale)->title = $data['title'];
+            $about->translateOrNew($locale)->content = $data['content'][$locale];
         }
-        return to_route($this->route);
+
+        $about->save();
     }
+
 
     public function show(About $about)
     {
@@ -70,22 +67,25 @@ class AboutController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $about = About::find($id);
+        $about = About::findOrFail($id);
+        $currentLocale = app()->currentLocale();
+
         $data = $request->validate([
             'title' => 'required|string',
             'content' => 'required',
         ]);
-        $data['slug'] = Str::slug($data['title'], '_');
-        $about->update($data);
-        foreach (config('app.available_locales') as $locale) {
-            foreach ($this->translatedAttributes as $translatedAttribute) {
-                $about->translateOrNew($locale)->$translatedAttribute = $data[$translatedAttribute];
-            }
-            $about->save();
-        }
 
+        $about->update([
+            'slug' => Str::slug($data['title'], '_')
+        ]);
+
+        $about->translateOrNew($currentLocale)->title = $data['title'];
+        $about->translateOrNew($currentLocale)->content = $data['content'];
+
+        $about->save();
+
+        return to_route($this->route);
     }
-
     /**
      * Remove the specified resource from storage.
      */
@@ -94,8 +94,5 @@ class AboutController extends Controller
         $about = About::find($id);
         $about->delete();
         return to_route($this->route);
-
     }
-
-
 }
