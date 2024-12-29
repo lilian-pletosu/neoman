@@ -190,6 +190,23 @@ const deleteImage = (image) => {
     );
 };
 
+const deleteProduct = () => {
+    const choise = confirm("Ești sigur că vrei să ștergi acest produs?");
+    if (choise) {
+        router.delete(
+            route("admin.products.destroy", {
+                product: props.product,
+            }),
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    router.visit(route("admin.products.index"));
+                },
+            }
+        );
+    }
+};
+
 const productForm = useForm({
     [`name ${page.props.current_locale}`]: props.product.name,
     [`description ${page.props.current_locale}`]: props.product.description,
@@ -231,11 +248,17 @@ watch(isOrderChanged, () => {
     <admin-layout :current-route="initialRoute" title="Products">
         <div class="grid w-full grid-cols-1 gap-4">
             <div class="relative container-rounded">
-                <span class="absolute top-1 right-2">
+                <span
+                    class="absolute flex items-center justify-center gap-3 top-1 right-2"
+                >
                     <PencilSquareIcon
                         v-if="!editProduct"
                         @click="startEditProduct"
                         class="w-6 cursor-pointer text-slate-500 hover:text-slate-700"
+                    />
+                    <TrashIcon
+                        @click="deleteProduct"
+                        class="w-6 cursor-pointer text-slate-500 hover:text-red-700"
                     />
                 </span>
                 <div class="max-w-full px-4 mx-auto sm:px-6 lg:px-8">
