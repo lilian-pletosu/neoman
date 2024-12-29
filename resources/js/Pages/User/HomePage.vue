@@ -43,16 +43,20 @@ const props = defineProps({
             :seasons_products="true"
             :title="__('season_products')"
         />
-        <section
-            :class="`relative bg-gray-900 text-white h-[600px] flex rounded text-center bg-[(${page.props.ziggy.url}${page.props.call_action.image})] bg-cover bg-center bg-no-repeat`"
-        >
+        <section class="relative h-[600px] flex rounded text-center">
+            <img
+                :src="`${page.props.ziggy.url}${page.props.call_action.image}`"
+                class="absolute object-cover object-center w-full h-full rounded"
+                alt="Neoman background"
+            />
             <div class="absolute inset-0 bg-black bg-opacity-50 rounded"></div>
-            <div class="relative flex flex-col mx-4 my-auto md:mx-auto">
+            <div
+                class="relative flex flex-col mx-4 my-auto text-white md:mx-auto"
+            >
                 <h1
                     class="text-3xl font-extrabold text-transparent bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text sm:text-5xl"
                 >
                     Neoman
-
                     <span class="sm:block">
                         Alături la fiecare etapă în viață
                     </span>
@@ -64,7 +68,6 @@ const props = defineProps({
                     >
                         {{ __("get_started") }}
                     </Link>
-
                     <Link
                         :href="route('about_page')"
                         class="block w-full px-12 py-3 text-sm font-medium text-white border border-blue-600 rounded hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
@@ -74,6 +77,7 @@ const props = defineProps({
                 </div>
             </div>
         </section>
+
         <product-section
             :products="sales_products"
             :title="__('top_products')"
