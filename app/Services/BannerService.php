@@ -64,7 +64,13 @@ class BannerService
 
     public function getHomeBanners()
     {
-        return Banner::active()->page('home')->get();
+        // get all banner for home page where title contains 'banner' string
+        return Banner::active()->page('home')->where('title', 'LIKE', '%banner%')->get();
     }
 
+    public function getCallActionBanner()
+    {
+        // get all banner for home page where title contains 'call to action' string
+        return Banner::active()->page('home')->where('title', 'LIKE', '%action%')->first();
+    }
 }

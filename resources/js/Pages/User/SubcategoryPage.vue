@@ -46,8 +46,8 @@ const props = defineProps({
                                     <img
                                         :src="subSubcategory.image"
                                         class="m-auto mt-6 w-80 h-44 mix-blend-multiply"
-                                        alt="Automotive"
-                                        title="Automotive"
+                                        :alt="subSubcategory.name"
+                                        :title="subSubcategory.name"
                                         loading="lazy"
                                         width="200"
                                         height="200"

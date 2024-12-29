@@ -43,7 +43,6 @@ class BannerController extends Controller
     public function create()
     {
         return (new SchemaFormBuilder)('Banner', 'post', 'admin.banners.store');
-
     }
 
     /**
@@ -57,12 +56,11 @@ class BannerController extends Controller
             'link' => 'required',
             'is_active' => 'required',
             'page' => 'required',
-            'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+            'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg,jpeg'
         ]);
 
         (new BannerService)->createBanner($request);
         return to_route($this->route);
-
     }
 
     /**
@@ -79,7 +77,6 @@ class BannerController extends Controller
     public function edit($id)
     {
         return (new SchemaFormBuilder)('Banner', 'put', 'admin.banners.update', $id, null, true);
-
     }
 
     /**
@@ -105,7 +102,6 @@ class BannerController extends Controller
         }
         (new BannerService)->updateBanner($request, $banner);
         return to_route($this->route);
-
     }
 
     /**
@@ -117,7 +113,5 @@ class BannerController extends Controller
         Storage::delete($imagePath);
         $banner->delete();
         return to_route($this->route);
-
-
     }
 }
