@@ -10,9 +10,13 @@ class CategoryController extends Controller
     public function index($categorySlug)
     {
 
-        $category = Category::where('slug', $categorySlug)->with(['subcategory'])->first();
+        $category = Category::where('slug', $categorySlug)
+            ->with(['subcategory' => function ($query) {
+                $query->active();
+            }])
+            ->first();
 
-//        dd($category);
+        //        dd($category);
 
         return inertia('User/CategoryPage', ['category' => $category]);
     }
@@ -47,5 +51,4 @@ class CategoryController extends Controller
 
         return $groupedWords;
     }
-
 }
