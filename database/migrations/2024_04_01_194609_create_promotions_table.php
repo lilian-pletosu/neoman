@@ -28,7 +28,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-// În migration pentru promotion_brand
+        // În migration pentru promotion_brand
         Schema::create('promotion_brand', function (Blueprint $table) {
             $table->id();
             $table->foreignId('promotion_id')->constrained();
@@ -36,7 +36,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-// În migration pentru promotion_subsubcategory
+        // În migration pentru promotion_subsubcategory
         Schema::create('promotion_sub_sub_category', function (Blueprint $table) {
             $table->id();
             $table->foreignId('promotion_id')->constrained();
@@ -54,6 +54,5 @@ return new class extends Migration {
         Schema::dropIfExists('promotion_product');
         Schema::dropIfExists('promotion_brand');
         Schema::dropIfExists('promotion_sub_sub_category');
-
     }
 };

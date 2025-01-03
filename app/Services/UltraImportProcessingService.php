@@ -54,7 +54,8 @@ class UltraImportProcessingService
             return $item->price !== 'No price' &&
                 isset($item->sub_subcategory['translations']['ro']) &&
                 in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
-                $item->name !== null;
+                $item->sub_subcategory['nomenclatureType']->quantity > 0;
+            $item->name !== null;
         });
 
         $products->map(function ($item) {

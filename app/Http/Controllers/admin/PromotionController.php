@@ -31,16 +31,18 @@ class PromotionController extends Controller
      */
     public function index()
     {
-        Inertia::share('brands', Brand::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
-        Inertia::share('categories', Category::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
-        Inertia::share('subcategories', SubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
-        Inertia::share('sub_subcategories', SubSubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('brands', Brand::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('categories', Category::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('subcategories', SubCategory::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('sub_subcategories', SubSubCategory::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
 
         $this->dataTableService
             ->setResource('Promotion')
             ->setResourceColumns(['id', 'name', 'description', 'start_date', 'end_date', 'discount', 'status'])
             ->setRelationColumn('brands', 'brand', ['name'])
             ->setRelationColumn('sub_subcategories', 'sub_subcategory', ['name'])
+            ->setRelationColumn('categories', 'category', ['name'])
+            ->setRelationColumn('subcategories', 'subcategory', ['name'])
             ->paginate(10)
             ->sortBy('created_at', 'desc')
             ->setSearchRoute('admin.promotions');
@@ -88,10 +90,10 @@ class PromotionController extends Controller
             $promotion->brands()->attach($validatedData['brand']);
         }
         if (isset($validatedData['subcategory'])) {
-            $promotion->brands()->attach($validatedData['subcategory']);
+            $promotion->subcategories()->attach($validatedData['subcategory']);
         }
         if (isset($validatedData['category'])) {
-            $promotion->brands()->attach($validatedData['category']);
+            $promotion->categories()->attach($validatedData['category']);
         }
         if (isset($validatedData['sub_subcategory'])) {
             $promotion->sub_subcategories()->attach($validatedData['sub_subcategories']);
@@ -112,16 +114,14 @@ class PromotionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Promotion $promotion)
-    {
-        //
-    }
+    public function edit(request $request, Promotion $promotion) {}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Promotion $promotion)
     {
+        // 1. Validează datele
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'description' => 'required',
@@ -135,9 +135,22 @@ class PromotionController extends Controller
             'subcategory' => 'nullable',
         ]);
 
-        $validatedData['status'] = $request->input('status') == 1 ? Promotion::STATUS_ACTIVE : Promotion::STATUS_INACTIVE;
-
+        // 2. Actualizează instanța de Promotion cu datele validate
         $promotion->update($validatedData);
+        if (isset($validatedData['brand'])) {
+            $promotion->brands()->sync($validatedData['brand']);
+        }
+        if (isset($validatedData['subcategory'])) {
+            $promotion->subcategories()->sync($validatedData['subcategory']);
+        }
+        if (isset($validatedData['category'])) {
+            $promotion->categories()->sync($validatedData['category']);
+        }
+        if (isset($validatedData['sub_subcategory'])) {
+            $promotion->sub_subcategories()->sync($validatedData['sub_subcategory']);
+        }
+
+        $validatedData['status'] = $request->input('status') == 1 ? Promotion::STATUS_ACTIVE : Promotion::STATUS_INACTIVE;
     }
 
     /**
@@ -145,6 +158,13 @@ class PromotionController extends Controller
      */
     public function destroy(Promotion $promotion)
     {
-        //
+        // Delete the promotion and its relationships
+        $promotion->brands()->detach();
+        $promotion->sub_subcategories()->detach();
+        $promotion->subcategories()->detach();
+        $promotion->categories()->detach();
+        $promotion->products()->detach();
+
+        $promotion->delete();
     }
 }

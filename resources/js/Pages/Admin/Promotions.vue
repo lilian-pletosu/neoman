@@ -4,7 +4,7 @@ import DataTable from "@/Components/DataTable.vue";
 import Modal from "@/Components/Modal.vue";
 import { getCurrentInstance, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import BlackSelector from "@/Components/BlackSelector.vue";
 
 const app = getCurrentInstance();
@@ -18,6 +18,7 @@ const props = defineProps({
 
 let isModalOpen = ref(false);
 let isOpenEditModal = ref(false);
+const selectedPromotion = ref(null);
 
 const form = useForm({
     name: null,
@@ -67,19 +68,36 @@ const startEdit = (promotion) => {
     form.discount = promotion.discount;
     form.status = promotion.status === "active" ? 1 : 0;
     form.sub_subcategory = promotion.sub_subcategories[0]?.id;
-    // form.subcategory = promotion.subcategories[0].id;
-    // form.category = promotion.categories[0].id;
+    form.subcategory = promotion?.subcategories[0]?.id;
+    form.category = promotion?.categories[0]?.id;
     form.brand = promotion.brands[0]?.id;
 };
 
 const submitEditPromotion = async (promotionId) => {
-    console.log(promotionId);
     form.put(route("admin.promotions.update", promotionId), {
         preserveScroll: true,
         onSuccess: () => {
             closeEditModal();
         },
     });
+};
+
+const deletePromotion = async () => {
+    console.log(selectedPromotion);
+    if (confirm("Are you sure you want to delete this promotion?")) {
+        router.delete(
+            route("admin.promotions.destroy", {
+                promotion: selectedPromotion.value,
+            }),
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    selectedPromotion.value = null;
+                    closeEditModal();
+                },
+            }
+        );
+    }
 };
 </script>
 <template>
@@ -106,7 +124,10 @@ const submitEditPromotion = async (promotionId) => {
                                 <div class="overflow-x-auto rounded-lg">
                                     <data-table
                                         @emit-click="
-                                            (order) => startEdit(order)
+                                            (order) => {
+                                                startEdit(order);
+                                                selectedPromotion = order;
+                                            }
                                         "
                                         :resources="resources"
                                         :columnsOrder="$page.props.columnsOrder"
@@ -388,9 +409,10 @@ const submitEditPromotion = async (promotionId) => {
 
                     <Modal
                         :show="isOpenEditModal"
-                        :actions="false"
+                        :actions="true"
                         @close="closeEditModal"
                         max-width="6xl"
+                        @delete="deletePromotion(form.promotionId)"
                         :margin-top="0"
                     >
                         <div class="grid grid-cols-2 gap-2 p-4 mt-5">
@@ -527,11 +549,30 @@ const submitEditPromotion = async (promotionId) => {
                             <black-selector
                                 v-model="form.sub_subcategory"
                                 @update:status="form.sub_subcategory = $event"
-                                :options="$page.props.sub_subcategory"
+                                :options="$page.props.subcategories"
                                 :value="form.sub_subcategory"
                                 :selected="form.sub_subcategory"
                                 :error-message="__(form.errors.sub_subcategory)"
                                 :label="__('sub_subcategory')"
+                            />
+
+                            <black-selector
+                                v-model="form.subcategory"
+                                @update:status="form.subcategory = $event"
+                                :options="$page.props.subcategories"
+                                :value="form.subcategory"
+                                :selected="form.subcategory"
+                                :error-message="__(form.errors.subcategory)"
+                                :label="__('subcategory')"
+                            />
+                            <black-selector
+                                v-model="form.category"
+                                @update:status="form.category = $event"
+                                :options="$page.props.categories"
+                                :value="form.category"
+                                :selected="form.category"
+                                :error-message="__(form.errors.category)"
+                                :label="__('category')"
                             />
 
                             <hr class="col-span-2 mt-1 mb-4" />

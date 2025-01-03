@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
             Log::info('Un minut pana la start import');
         })->dailyAt('05:59');
         $schedule->command('run:import-ultra')->dailyAt('06:00');
+        $schedule->command('promotions:check-expired')->daily();
     }
 
     /**

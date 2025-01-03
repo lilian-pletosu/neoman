@@ -17,7 +17,7 @@ class Category extends Model implements TranslatableContract
         'name', 'slug', 'icon', 'is_active'
     ];
 
-    
+
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);
@@ -29,5 +29,10 @@ class Category extends Model implements TranslatableContract
     public function subcategory()
     {
         return $this->hasMany(SubCategory::class, 'category_id');
+    }
+
+    public function promotions()
+    {
+        return $this->belongsToMany(Promotion::class, 'promotion_category');
     }
 }
