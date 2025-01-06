@@ -28,51 +28,105 @@ class ProductService
     {
         $productsArray = [];
 
-        $promotions = Promotion::where('status', 1)->with(['brands'])->get();
-        foreach ($promotions as $promotion) {
-            if (!$promotion->brands->isEmpty()) {
-                foreach ($promotion->brands as $brand) {
+        $promotions = Promotion::where('status', 1)
+            ->with([
+                'brands.products' => function ($query) {
+                    $query->latest()->take(25)->with([
+                        'attributes.attributeValues.translations',
+                        'brand:id,name,image',
+                        'images:id,product_id,image1',
+                        'measurementUnit.translations'
+                    ]);
+                },
+                'categories.subcategories.subsubcategories.products' => function ($query) {
+                    $query->latest()->take(15)->with([
+                        'attributes.attributeValues.translations',
+                        'brand:id,name,image',
+                        'images:id,product_id,image1',
+                        'measurementUnit.translations'
+                    ]);
+                }
 
-                    $products = $brand->products()->latest()->take(15)->get();
+            ])
+            ->get();
 
-                    foreach ($products as $product) {
+        $promotions = $promotions->map(function ($promotion) {
+            $promotion->categories->each(function ($category) {
 
-                        $attributesArray = [];
+                $category->subcategories->each(function ($subcategory) use (&$products) {
+                    $subcategory->subsubcategories->each(function ($subsubcategory) use (&$products) {
+                        $products = $products->merge($subsubcategory->products);
+                    });
+                });
 
-                        foreach ($product->attributes->take(15) as $attribute) {
-                            foreach ($attribute->attributeValues as $attributeValue) {
-                                $translatedValue = $attributeValue->translate(session()->get('locale'));
-                                if ($translatedValue) {
-                                    $attributesArray[$attribute->name] = $translatedValue->value;
-                                }
-                            }
+                $category->products = $products;
+            });
+
+            return $promotion;
+        });
+
+
+
+        $productsArray = collect($promotions)
+            ->flatMap(function ($promotion) {
+                $products = collect(); // Inițializăm o colecție goală
+
+                // Procesăm produsele din brand-uri
+                if ($promotion->brands->isNotEmpty()) {
+                    $products = $promotion->brands->flatMap(function ($brand) use ($promotion) {
+                        return $brand->products->map(function ($product) use ($promotion) {
+                            return $this->formatProduct($product, $promotion);
+                        });
+                    });
+                }
+
+                // Procesăm sub-sub-categoriile și produsele
+                foreach ($promotion->categories as $category) {
+                    foreach ($category->subcategories as $subcategory) {
+                        foreach ($subcategory->subsubcategories as $subsubcategory) {
+                            $products = $products->merge($subsubcategory->products->map(function ($product) use ($promotion) {
+                                return $this->formatProduct($product, $promotion);
+                            }));
                         }
-
-                        $brandName = $product->brand->name ?? null;
-                        $brandLogo = $product->brand->image ?? null;
-                        $image = $product->images()->first()->image1 ?? null;
-
-                        $productArray = [
-                            'id' => $product->id,
-                            'slug' => $product->slug,
-                            'name' => $product->translateOrDefault()->name,
-                            'image' => $image,
-                            'price' => $product->price,
-                            'credits' => $product->credits,
-                            'final_price' => $product->price - ($product->price * $promotion->discount / 100), // 'discount' => $promotion->discount . '%',
-                            'sale' => $promotion->discount . '%',
-                            'brand' => ['name' => $brandName, 'image' => $brandLogo],
-                            'attributes' => $attributesArray,
-                            'mu' => MeasurementUnit::find($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol
-                        ];
-                        $productsArray[] = $productArray;
                     }
                 }
-            }
-        }
+
+                return $products;
+            })
+            ->shuffle()
+            ->shuffle()
+            ->all();
 
         return $productsArray;
     }
+
+    private function formatProduct($product, $promotion)
+    {
+        $attributesArray = $product->attributes->flatMap(function ($attribute) {
+            return $attribute->attributeValues->mapWithKeys(function ($attributeValue) use ($attribute) {
+                $translatedValue = $attributeValue->translate(session()->get('locale'));
+                return $translatedValue ? [$attribute->name => $translatedValue->value] : [];
+            });
+        });
+
+        return [
+            'id' => $product->id,
+            'slug' => $product->slug,
+            'name' => $product->translateOrDefault()->name,
+            'image' => $product->images->first()->image1 ?? null,
+            'price' => $product->price,
+            'credits' => $product->credits,
+            'final_price' => $product->price - ($product->price * $promotion->discount / 100),
+            'sale' => $promotion->discount . '%',
+            'brand' => [
+                'name' => $product->brand->name ?? null,
+                'image' => $product->brand->image ?? null,
+            ],
+            'attributes' => $attributesArray,
+            'mu' => $product->measurementUnit->translate(session()->get('locale'))->symbol ?? null,
+        ];
+    }
+
 
     public function loadLatestProducts()
     {

@@ -36,8 +36,9 @@ class Promotion extends Model
         return $this->belongsToMany(SubCategory::class, 'promotion_sub_category');
     }
 
+
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'promotion_category')->withPivot('category_id', 'promotion_id');;
+        return $this->belongsToMany(Category::class, 'promotion_category');
     }
 }

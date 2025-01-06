@@ -42,14 +42,12 @@ class HomeController extends Controller
         Inertia::share('brands', $brands);
         Inertia::share('call_action', (new BannerService())->getCallActionBanner());
 
-        if (Cache::has('sales_products')) {
-            $sales_products = Cache::get('sales_products');
-        } else {
-            $sales_products = (new ProductService())->loadSalesProducts();
-            Cache::remember('sales_products', 262656, function () {
-                return (new ProductService())->loadSalesProducts();
-            });
-        }
+        $sales_products = Cache::remember('sales_products', 262656, function () {
+            return (new ProductService())->loadSalesProducts();
+        });
+
+
+        // dd($sales_products);
 
 
 

@@ -7,14 +7,19 @@ use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Category extends Model implements TranslatableContract
 {
     use HasFactory;
     use Translatable;
 
+
     protected $table = 'categories';
     protected $fillable = [
-        'name', 'slug', 'icon', 'is_active'
+        'name',
+        'slug',
+        'icon',
+        'is_active'
     ];
 
 
@@ -27,6 +32,10 @@ class Category extends Model implements TranslatableContract
     public $translatedAttributes = ['name'];
 
     public function subcategory()
+    {
+        return $this->hasMany(SubCategory::class, 'category_id');
+    }
+    public function subcategories()
     {
         return $this->hasMany(SubCategory::class, 'category_id');
     }

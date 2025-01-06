@@ -16,7 +16,9 @@ class CategoryController extends Controller
             }])
             ->first();
 
-        //        dd($category);
+        
+
+
 
         return inertia('User/CategoryPage', ['category' => $category]);
     }

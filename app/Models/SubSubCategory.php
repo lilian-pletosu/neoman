@@ -33,5 +33,8 @@ class SubSubCategory extends Model implements TranslatableContract
         return $this->belongsTo(SubCategory::class, 'subcategory_id');
     }
 
-
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'sub_sub_category_id');
+    }
 }

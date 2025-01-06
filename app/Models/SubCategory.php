@@ -16,7 +16,11 @@ class SubCategory extends Model implements TranslatableContract
 
 
     protected $fillable = [
-        'slug', 'category_id', 'image', 'name', 'is_active'
+        'slug',
+        'category_id',
+        'image',
+        'name',
+        'is_active'
     ];
     public $translatedAttributes = ['name'];
 
@@ -43,6 +47,10 @@ class SubCategory extends Model implements TranslatableContract
     }
 
     public function subSubcategory()
+    {
+        return $this->hasMany(SubSubCategory::class, 'subcategory_id');
+    }
+    public function subSubcategories()
     {
         return $this->hasMany(SubSubCategory::class, 'subcategory_id');
     }

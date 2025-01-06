@@ -99,7 +99,6 @@ class Product extends Model implements TranslatableContract
             ]);
         })->when(request('brands'), function (Builder $q) {
             $q->whereIn('brand_id', request('brands'));
-
         })->when(request(), function (Builder $q) use ($queryBy) {
             foreach ($queryBy as $attributeName) {
                 $attributeValues = request($attributeName);
@@ -110,8 +109,6 @@ class Product extends Model implements TranslatableContract
                 }
             }
         });
-
-
     }
 
     public function scopeSort(Builder $query)
@@ -142,5 +139,10 @@ class Product extends Model implements TranslatableContract
     public function credits()
     {
         return $this->belongsToMany(Credit::class, 'product_credits');
+    }
+
+    public function category()
+    {
+        return $this->subSubCategory->subCategory->category;
     }
 }
