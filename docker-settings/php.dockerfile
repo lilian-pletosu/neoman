@@ -18,26 +18,30 @@ RUN apk --no-cache add shadow && usermod -u $uuid www-data
 # Instalare extensii PDO
 RUN docker-php-ext-install pdo pdo_mysql
 
+# Instalare extensie pcntl
+RUN docker-php-ext-install pcntl
+
 # Copiază fișierul php.ini
 COPY ./php.ini /usr/local/etc/php/php.ini
 
 # Instalarea librăriilor necesare și a extensiilor PHP
 RUN apk update && \
-     apk add --no-cache \
-         libzip-dev \
-         libxml2-dev \
-         libpng-dev \
-         libjpeg-turbo-dev \
-         libwebp-dev \
-         libxpm-dev \
-         freetype-dev \
-         icu-dev \
-         oniguruma-dev \
-         g++ \
-         autoconf \
-         make && \
-     docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm && \
-     docker-php-ext-install -j$(nproc) gd zip exif soap bcmath intl
+    apk add --no-cache \
+    libzip-dev \
+    libxml2-dev \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    libxpm-dev \
+    freetype-dev \
+    icu-dev \
+    oniguruma-dev \
+    g++ \
+    autoconf \
+    make && \
+
+    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm && \
+    docker-php-ext-install -j$(nproc) gd zip exif soap bcmath intl
 
 # Instalare și configurare extensie Redis
 ENV EXT_REDIS_VERSION=5.3.4

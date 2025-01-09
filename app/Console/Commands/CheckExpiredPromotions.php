@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Promotion;
+use App\Jobs\CheckExpiredPromotions as JobsCheckExpiredPromotions;
 use Illuminate\Console\Command;
 
 class CheckExpiredPromotions extends Command
@@ -16,10 +16,8 @@ class CheckExpiredPromotions extends Command
      */
     public function handle()
     {
-        Promotion::where('end_date', '<', now())
-            ->where('status', Promotion::STATUS_ACTIVE)
-            ->update(['status' => Promotion::STATUS_INACTIVE]);
-
+        $this->info('Expired promotions have been activated');
+        JobsCheckExpiredPromotions::dispatch();
         $this->info('Expired promotions have been deactivated');
     }
 }
