@@ -31,15 +31,41 @@ class UltraImportProcessingService
 
     public function __invoke()
     {
-        return $this->getNomenclature();
+        return $this->processAllNomenclature();
     }
 
 
-    public function getNomenclature()
+    public function processAllNomenclature()
     {
-        $allowedSubSubcategories = config('products_structure');
+        $totalBatches = 4; // Numărul de batch-uri în care vrei să împarți
+        $batchSize = 10000; // Mărimea unui batch
 
-        $products = collect($this->nomenclature)->map(function ($item) {
+        for ($batch = 1; $batch <= $totalBatches; $batch++) {
+            try {
+                $this->getNomenclature($batch, $batchSize);
+                Log::info("Processed batch {$batch} of {$totalBatches}");
+            } catch (\Throwable $th) {
+                Log::error("Error processing batch {$batch}", [
+                    'error' => $th->getMessage(),
+                    'trace' => $th->getTraceAsString()
+                ]);
+            }
+        }
+    }
+
+    public function getNomenclature($batch = 1, $batchSize = 5000)
+    {
+        // $allowedSubSubcategories = config('products_structure');
+
+        // Calculate offset based on batch number
+        $offset = ($batch - 1) * $batchSize;
+
+        // Get only the specific chunk of products
+        $nomenclature = collect($this->nomenclature)
+            ->skip($offset)
+            ->take($batchSize);
+
+        $products = $nomenclature->map(function ($item) {
             $item->name = $this->getNomenclatureTranslation($item->UUID);
             $item->brand = $this->getBrand($item->brand)->first();
             $item->sub_subcategory = $this->getNomenclatureType($item->nomenclatureType) ?? null;
@@ -50,12 +76,11 @@ class UltraImportProcessingService
             $item->images = $this->getFirstFourImages($item->imageList);
             return $item;
         })->filter(function ($item) use ($allowedSubSubcategories) {
-            dd($item);
             return $item->price !== 'No price' &&
                 isset($item->sub_subcategory['translations']['ro']) &&
-                in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
-                $item->sub_subcategory['nomenclatureType']->quantity > 0;
-            $item->name !== null;
+                // in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
+                $item->sub_subcategory['nomenclatureType']->quantity > 0 &&
+                $item->name !== null;
         });
 
         $products->map(function ($item) {
