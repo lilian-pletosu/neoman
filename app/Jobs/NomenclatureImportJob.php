@@ -19,6 +19,8 @@ class NomenclatureImportJob implements ShouldQueue
 
     public $tries = 5; // Numărul de încercări
     public $backoff = [60, 90, 110]; // Timpul de așteptare între încercări în secunde
+    public $timeout = 3600; // 1 hour timeout
+
 
     protected $guid;
     protected $requestParams;
@@ -57,7 +59,7 @@ class NomenclatureImportJob implements ShouldQueue
         $request->merge($this->requestParams);
         $this->guid = $ultraImportController->requestData($request);
 
-        Log::info('Guid is:', [$this->guid]);
+        // Log::info('Guid is:', [$this->guid]);
 
 
         do {

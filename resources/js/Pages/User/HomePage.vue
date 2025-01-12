@@ -17,9 +17,6 @@ const props = defineProps({
     all_products: {
         type: Object,
     },
-    latest_products: {
-        type: Object,
-    },
 });
 </script>
 
@@ -32,17 +29,22 @@ const props = defineProps({
             <carousel-front />
         </template>
 
-        <product-section
-            :products="sales_products"
-            :sale="true"
-            :title="__('sales_products')"
-            @addProductInCart="(args) => addProductIncart(args)"
-        />
-        <product-section
-            :products="sales_products"
-            :seasons_products="true"
-            :title="__('season_products')"
-        />
+        <template v-if="sales_products.length > 0">
+            <product-section
+                :products="sales_products"
+                :sale="true"
+                :title="__('sales_products')"
+                @addProductInCart="(args) => addProductIncart(args)"
+            />
+        </template>
+        <template v-if="page.props.last_products.length > 0">
+            <product-section
+                :new_products="true"
+                :products="page.props.last_products"
+                :title="__('latest_products')"
+            />
+        </template>
+
         <section class="relative h-[600px] flex rounded text-center">
             <img
                 :src="`${page.props.ziggy.url}${page.props.call_action.image}`"
@@ -78,16 +80,19 @@ const props = defineProps({
             </div>
         </section>
 
-        <product-section
-            :products="sales_products"
-            :title="__('top_products')"
-            :top_products="true"
-        />
-        <product-section
-            v-if="latest_products"
-            :new_products="true"
-            :products="latest_products"
-            :title="__('latest_products')"
-        />
+        <template v-if="sales_products.length > 0">
+            <product-section
+                :products="sales_products"
+                :title="__('top_products')"
+                :top_products="true"
+            />
+        </template>
+        <template v-if="page.props.season_products.length > 0">
+            <product-section
+                :products="page.props.season_products"
+                :seasons_products="true"
+                :title="__('season_products')"
+            />
+        </template>
     </front-layout>
 </template>

@@ -224,15 +224,18 @@ class ProductService
         return $productsArray;
     }
 
-    public function loadAllProducts()
+    public function loadAllProducts($limit = 50)
     {
         $productsArray = [];
 
         // Utilizăm metoda with() pentru a încărca în prealabil relațiile necesare
         $productsChunks = Product::with(['attributes.attributeValues', 'brand', 'images', 'measurementUnit'])
             ->select('id', 'slug', 'price', 'brand_id', 'measurement_unit_id') // Selectăm doar câmpurile necesare
-            ->limit(50) // Limităm numărul de produse la 50
+            ->limit($limit) // Limităm numărul de produse la 50
+            ->orderBy('id', 'asc')  // Order by ID ascending to get from start
             ->get()
+            ->shuffle()
+            ->shuffle()
             ->chunk(5);
 
 
@@ -319,6 +322,53 @@ class ProductService
                         'image' => $product->brand->image ?? null
                     ],
                     'attributes' => $attributesArray,
+                ];
+
+                $productsArray[] = $productArray;
+            }
+        }
+
+        return $productsArray;
+    }
+
+
+    public function loadLastProducts($limit = 15): array
+    {
+        $productsArray = [];
+
+        $productsChunks = Product::with(['attributes.attributeValues', 'brand', 'images', 'measurementUnit'])
+            ->select('id', 'slug', 'price', 'brand_id', 'measurement_unit_id')
+            ->latest()
+            ->limit($limit)
+            ->get()
+            ->chunk(5);
+
+        foreach ($productsChunks as $products) {
+            foreach ($products as $product) {
+                $attributesArray = [];
+
+                foreach ($product->attributes as $attribute) {
+                    foreach ($attribute->attributeValues as $attributeValue) {
+                        $translatedValue = $attributeValue->translate(session()->get('locale'));
+                        if ($translatedValue) {
+                            $attributesArray[$attribute->name] = $translatedValue->value;
+                        }
+                    }
+                }
+
+                $brandName = $product->brand->name ?? null;
+                $brandLogo = $product->brand->image ?? null;
+                $image = $product->images()->first()->image1 ?? null;
+
+                $productArray = [
+                    'id' => $product->id,
+                    'slug' => $product->slug,
+                    'name' => $product->translate(session()->get('locale'))->name,
+                    'image' => $image,
+                    'price' => $product->price,
+                    'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                    'attributes' => $attributesArray,
+                    'mu' => $product->measurement_unit->symbol ?? ''
                 ];
 
                 $productsArray[] = $productArray;

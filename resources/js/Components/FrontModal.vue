@@ -9,7 +9,7 @@ import FastOrderForm from "@/Components/FastOrderForm.vue";
 const body = ref(document.body);
 const isLocked = useScrollLock(body);
 
-const emit = defineEmits(["close", "select"]);
+const emit = defineEmits(["close", "select", "call"]);
 
 const props = defineProps({
     title: {
@@ -55,6 +55,14 @@ function close() {
     isLocked.value = false;
     emit("close");
     success.value = false;
+}
+
+function handleSubmitCall() {
+    emit("call", {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+    });
+    close();
 }
 
 const selectedTab = ref("credit");
@@ -150,7 +158,7 @@ onUnmounted(() => {
                 <!-- Modal body -->
                 <div class="p-4 md:px-5">
                     <template v-if="type === 'call'">
-                        <form class="space-y-4" action="#">
+                        <form class="space-y-4">
                             <div>
                                 <label
                                     for="name"
@@ -182,6 +190,7 @@ onUnmounted(() => {
 
                             <PrimaryButton
                                 type="submit"
+                                @click="handleSubmitCall"
                                 class="flex justify-center w-full h-10 hover:bg-slate-400"
                             >
                                 {{ __("wait_call") }}

@@ -8,6 +8,7 @@
  */
 
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\front\UltraImportController;
 
 Route::prefix('front')->group(function () {
@@ -30,5 +31,6 @@ Route::prefix('front')->group(function () {
     Route::post('/commit-receiving-data', [UltraImportController::class, 'commitReceivingData']);
 
     Route::post('post_order', [\App\Http\Controllers\front\CartController::class, 'checkout'])->name('set_order');
-});
 
+    Route::post('callback', [\App\Http\Controllers\front\HomeController::class, 'callWait'])->name('call.store');
+});

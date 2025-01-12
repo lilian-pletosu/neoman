@@ -2,15 +2,17 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Bus\Batch;
 use App\Jobs\BrandImportJob;
-use App\Jobs\NomenclatureImportJob;
-use App\Jobs\NomenclatureTypeImportJob;
 use App\Jobs\ParentImportJob;
-use App\Jobs\PricelistImportJob;
-use App\Jobs\SeedInDatabaseUltraProducts;
 use App\Jobs\TranslationsUltra;
 use Illuminate\Console\Command;
+use App\Jobs\PricelistImportJob;
+use App\Jobs\NomenclatureImportJob;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\NomenclatureTypeImportJob;
+use App\Jobs\SeedInDatabaseUltraProducts;
 
 class RunSoapController extends Command
 {
@@ -75,16 +77,26 @@ class RunSoapController extends Command
         ];
 
         try {
+            $jobs = [];
             foreach ($services as $service => $details) {
                 $requestParams = $details['params'];
                 $jobClass = $details['job'];
 
                 $jobClass::dispatch($requestParams);
 
-                Log::info("$service import job was successfully dispatched.");
+                Log::info("$service import job was prepared.");
             }
-            SeedInDatabaseUltraProducts::dispatch();
-            $this->info('Ultra products have been seeded in the database');
+
+            Bus::batch($jobs)
+                ->then(function (Batch $batch) {
+                    // This will only run after all jobs in the batch have completed
+                    SeedInDatabaseUltraProducts::dispatch();
+                    Log::info('Starting database seeding after all imports completed');
+                })
+                ->catch(function (Batch $batch, \Throwable $e) {
+                    Log::error('Batch failed: ' . $e->getMessage());
+                })
+                ->dispatch();
 
             $this->info('All import jobs were successfully dispatched.');
         } catch (\Exception $e) {
