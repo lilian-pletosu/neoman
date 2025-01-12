@@ -59,7 +59,7 @@ class TranslationsUltra implements ShouldQueue
         $request->merge($this->requestParams);
         $this->guid = $ultraImportController->requestData($request);
 
-        Log::info('Guid is for TRANSLATIONS:', [$this->guid]);
+        // Log::info('Guid is for TRANSLATIONS:', [$this->guid]);
 
 
         $status = false;
@@ -92,7 +92,7 @@ class TranslationsUltra implements ShouldQueue
         $encodedData = json_encode($responseBody);
         $data = json_decode($encodedData, true);
         if (empty($data)) {
-            Log::error('Data is empty, re-dispatching job');
+            Log::error('Data is empty, re-dispatching TRANSLATIONS job');
             self::dispatch($this->requestParams)->delay(now()->addSeconds($this->backoff));
             return;
         }

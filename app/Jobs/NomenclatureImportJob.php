@@ -17,13 +17,11 @@ class NomenclatureImportJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 3; // Numărul de încercări
-    public $backoff = 10; // Timpul de așteptare între încercări în secunde
+    public $tries = 5; // Numărul de încercări
+    public $backoff = [60, 90, 110]; // Timpul de așteptare între încercări în secunde
 
     protected $guid;
     protected $requestParams;
-    protected $maxRetries = 5; // Maximum number of retries
-    protected $retryDelay = 2; // Delay between retries in seconds
 
     /**
      * Create a new job instance.
@@ -64,19 +62,18 @@ class NomenclatureImportJob implements ShouldQueue
 
         do {
             $status = $this->isReady($client, $this->guid);
-            Log::info("Status for NOMENCLATURE is: ", (array)$status);
+            // Log::info("Status for NOMENCLATURE is: ", (array)$status);
 
             if (!$status) {
-                Log::info('Service not yet ready', ['status' => $status]);
-                sleep(7); // Așteaptă 2 secunde înainte de a verifica din nou
+                // Log::info('Service not yet ready', ['status' => $status]);
+                sleep(15); // Așteaptă 2 secunde înainte de a verifica din nou
             }
         } while ($status === false);
 
 
-        Log::info('Service is ready, proceeding with the next steps. Dispatching NomenclatureImportFetchProductsJob.');
+        Log::info('Service NOMENCLATURE is ready, proceeding with the next steps. Dispatching NomenclatureImportFetchProductsJob.');
 
         NomenclatureImportFetchProductsJob::dispatch($this->guid);
-
     }
 
     protected function isReady(Client $client, $guid)
@@ -96,6 +93,4 @@ class NomenclatureImportJob implements ShouldQueue
     {
         Log::error("Job failed after {$this->attempts()} attempts for GUID: {$this->guid}. Exception: {$exception->getMessage()}");
     }
-
-
 }

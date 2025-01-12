@@ -57,45 +57,43 @@ class PricelistImportJob implements ShouldQueue
         $request->merge($this->requestParams);
         $this->guid = $ultraImportController->requestData($request);
 
-        Log::info('Guid is:', [$this->guid]);
+        // Log::info('Guid is:', [$this->guid]);
 
         $status = false;
 
 
         do {
             $status = $this->isReady($client, $this->guid);
-            Log::info("Status for PRICELIST is: ", (array)$status);
+            // Log::info("Status for PRICELIST is: ", (array)$status);
 
             if (!$status) {
-                Log::info('Service not yet ready', ['status' => $status]);
-                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
+                // Log::info('Service not yet ready', ['status' => $status]);
+                sleep(15); // Așteaptă 2 secunde înainte de a verifica din nou
             }
         } while ($status === false);
 
 
-        Log::info('Service is ready, proceeding with the next steps');
+        Log::info('Service "PRICELIST" is ready, proceeding with the next steps');
 
         // Obține datele pe baza GUID-ului
         try {
             ini_set('max_execution_time', 600);
 
             $responseBody = (new UltraImportService())->getDataByID($this->guid);
-
         } catch (\Exception $exception) {
-            Log::error('We have an error: ' . $exception->getMessage());
+            Log::error('We have an error for PRICELIST job: ' . $exception->getMessage());
             throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
         }
-// //
+        // //
         $this->isCommit();
         $encodedData = json_encode($responseBody);
         $data = json_decode($encodedData, true);
-// //        // Salvăm datele în Redis
+        // //        // Salvăm datele în Redis
 
 
         Redis::set("PRICELIST", json_encode($data['price']));
-// //
-        Log::info('NOMENCLATURE process is done!');
-
+        // //
+        Log::info('PRICELIST process is done!');
     }
 
     protected function isReady(Client $client, $guid)
@@ -125,5 +123,4 @@ class PricelistImportJob implements ShouldQueue
     {
         return $ultraImportController->getData($guid);
     }
-
 }
