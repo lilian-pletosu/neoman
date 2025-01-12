@@ -212,10 +212,8 @@ let testData = {
                                 <div class="flex items-center flex-shrink-0">
                                     <span
                                         class="flex items-center justify-center w-8 h-8 p-2 font-semibold rounded-full bg-slate-200 text-slate-600"
-                                        >{{
-                                            order?.full_name?[0] ?? "N/A"
-                                        }}</span
-                                    >
+                                        >{{ order?.full_name?.[0] ?? "N/A" }}
+                                    </span>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <p
