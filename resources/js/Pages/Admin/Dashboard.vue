@@ -219,7 +219,9 @@ let testData = {
                                     <p
                                         class="text-sm font-medium text-gray-900 truncate"
                                     >
-                                        {{ order?.full_name ?? "N/A" }}
+                                        {{
+                                            order?.full_name ?? __("fast_order")
+                                        }}
                                     </p>
                                     <p class="text-sm text-gray-500 truncate">
                                         {{ order.email ?? "" }}
