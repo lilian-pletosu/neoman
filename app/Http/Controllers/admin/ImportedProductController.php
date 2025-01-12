@@ -28,7 +28,7 @@ class ImportedProductController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('ImportedProduct')
-            ->setResourceColumns(['id', 'name', 'price', 'description', 'images'])
+            ->setResourceColumns(['id', 'name', 'price', 'description', 'images', 'updated_at'])
             ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
             ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
@@ -37,7 +37,7 @@ class ImportedProductController extends Controller
             ->paginate(15)
             ->setSearchRoute('admin.imported-products')
             ->setResourceRoute('admin.imported-products')
-            ->sortBy('created_at');
+            ->sortBy('updated_at');
 
         return inertia('Admin/ImportedProducts', [
             'initialRoute' => 'admin.products',
@@ -73,7 +73,6 @@ class ImportedProductController extends Controller
                             'image1' => 'https://banner2.cleanpng.com/20180815/sit/a1fff69c4e6de4ea9f7a7f388f4b51cb.webp',
                         ]);
                     }
-
                 }
 
                 foreach ((new Product())->translatedAttributes as $translatableAttribute) {
@@ -102,13 +101,9 @@ class ImportedProductController extends Controller
         //
     }
 
-    public function edit(string $id)
-    {
-    }
+    public function edit(string $id) {}
 
-    public function update(Request $request)
-    {
-    }
+    public function update(Request $request) {}
 
     public function destroy(Request $request)
     {

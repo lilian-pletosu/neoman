@@ -333,67 +333,90 @@ class ProductService
     public function saveUltraImportedProductInDB($product)
     {
         try {
-            $productArray = json_decode(json_encode($product), true);
-
-
+            $productArray = $this->normalizeProductData($product);
             $slug = Str::slug($productArray['name']['ro'], '_');
-            $existProduct = Product::where('product_code', $productArray['code'])->first();
-            if ($existProduct) {
 
-                try {
-                    Log::info('Product already exists in the database', ['product' => $existProduct]);
-                    $existProduct->update([
-                        'product_code' => $productArray['code'],
-                        //                        'name' => $productArray['name'],
-                        'slug' => $slug,
-                        //                        'description' => json_encode($productArray['description']),
-                        'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
-                        'price' => $productArray['price'],
-                    ]);
-                    $existProduct->images()->create($product['images']);
-
-                    $this->assignAttributesToProduct($existProduct, $productArray['description'], $existProduct->sub_sub_category_id);
-
-                    $existProduct->save();
-                    Log::info('Product updated in the database', ['product' => $existProduct]);
-                    return $existProduct;
-                } catch (\Exception $exception) {
-                    Log::error('----------------------------------------------------------------------------', [
-                        'error' => $exception->getMessage(),
-                        'product' => $product,
-                        'trace' => $exception->getTraceAsString()
-                    ]);
-                }
-            } else {
-                $newProd = ImportedProduct::updateOrCreate(['product_code' => $productArray['code'],], [
-                    'name' => $productArray['name'],
-                    'slug' => $slug,
-                    'description' => json_encode($productArray['description']),
-                    'price' => $productArray['price'],
-                    'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
-                    'sub_sub_category_id' => $this->ultraImportSubSubcategory($productArray['sub_subcategory'], $productArray['subcategory'], $productArray['category']),
-                    'specifications_id' => null,
-                    'images' => $productArray['images'],
-                    'for_searching' => $productArray['name']['ro'] . ' ' . $productArray['description']['ro']
-                ]);
-                return $newProd;
-            }
-        } catch (\Error $error) {
-            Log::error('Error occurred while saving the product', [
-                'error' => $error->getMessage(),
-                'product' => $product,
-                'trace' => $error->getTraceAsString()
-            ]);
-            return null;
-        } catch (\Exception $exception) {
-            Log::error('Exception occurred while saving the product', [
-                'error' => $exception->getMessage(),
-                'product' => $product,
-                'trace' => $exception->getTraceAsString()
-            ]);
+            return Product::where('product_code', $productArray['code'])->first()
+                ? $this->updateExistingProduct($productArray, $slug)
+                : $this->createNewProduct($productArray, $slug);
+        } catch (\Throwable $exception) {
+            $this->logError('Failed to save/update product', $exception, $product);
             return null;
         }
     }
+
+    private function normalizeProductData($product): array
+    {
+        return json_decode(json_encode($product), true);
+    }
+
+    private function updateExistingProduct(array $productArray, string $slug)
+    {
+        try {
+            $product = Product::where('product_code', $productArray['code'])->first();
+
+            if ($productArray['sub_subcategory']['nomenclatureType']->quantity <= 0) {
+                return $this->deleteProduct($product);
+            }
+
+            $product->update([
+                'product_code' => $productArray['code'],
+                'slug' => $slug,
+                'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
+                'price' => $productArray['price'],
+            ]);
+
+            $product->images()->create($productArray['images']);
+            $this->assignAttributesToProduct($product, $productArray['description'], $product->sub_sub_category_id);
+
+            Log::info('Product updated successfully', ['product_code' => $product->product_code]);
+
+            return $product;
+        } catch (\Exception $e) {
+            $this->logError('Failed to update existing product', $e, $productArray);
+            return null;
+        }
+    }
+
+    private function deleteProduct($product)
+    {
+        $product->images()->delete();
+        $product->delete();
+        Log::info('Product deleted due to zero quantity', ['product_code' => $product->product_code]);
+        return null;
+    }
+
+    private function createNewProduct(array $productArray, string $slug)
+    {
+        return ImportedProduct::updateOrCreate(
+            ['product_code' => $productArray['code']],
+            [
+                'name' => $productArray['name'],
+                'slug' => $slug,
+                'description' => json_encode($productArray['description']),
+                'price' => $productArray['price'],
+                'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
+                'sub_sub_category_id' => $this->ultraImportSubSubcategory(
+                    $productArray['sub_subcategory'],
+                    $productArray['subcategory'],
+                    $productArray['category']
+                ),
+                'specifications_id' => null,
+                'images' => $productArray['images'],
+                'for_searching' => $productArray['name']['ro'] . ' ' . $productArray['description']['ro']
+            ]
+        );
+    }
+
+    private function logError(string $message, \Throwable $exception, $context)
+    {
+        Log::error($message, [
+            'error' => $exception->getMessage(),
+            'context' => $context,
+            'trace' => $exception->getTraceAsString()
+        ]);
+    }
+
 
     public function update($data, Product $product, Request $request)
     {

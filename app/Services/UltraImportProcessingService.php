@@ -75,11 +75,11 @@ class UltraImportProcessingService
             $item->description = $this->parseDescription($item->UUID);
             $item->images = $this->getFirstFourImages($item->imageList);
             return $item;
-        })->filter(function ($item) use ($allowedSubSubcategories) {
+        })->filter(function ($item) {
             return $item->price !== 'No price' &&
                 isset($item->sub_subcategory['translations']['ro']) &&
                 // in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
-                $item->sub_subcategory['nomenclatureType']->quantity > 0 &&
+                // $item->sub_subcategory['nomenclatureType']->quantity > 0 &&
                 $item->name !== null;
         });
 

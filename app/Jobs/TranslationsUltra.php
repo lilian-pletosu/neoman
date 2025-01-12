@@ -18,8 +18,8 @@ class TranslationsUltra implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $tries = 3; // Numărul de încercări
-    public $backoff = 10; // Timpul de așteptare între încercări în secunde
+    public $tries = 5; // Numărul de încercări
+    public $backoff = [60, 90, 110]; // Timpul de așteptare între încercări în secunde
     protected $guid;
     protected $requestParams;
 
@@ -59,27 +59,28 @@ class TranslationsUltra implements ShouldQueue
         $request->merge($this->requestParams);
         $this->guid = $ultraImportController->requestData($request);
 
-        Log::info('Guid is:', [$this->guid]);
+        Log::info('Guid is for TRANSLATIONS:', [$this->guid]);
 
 
         $status = false;
 
         do {
             $status = $this->isReady($client, $this->guid);
-            Log::info("Status for TRANSLATIONS is: ", (array)$status);
+            // Log::info("Status for TRANSLATIONS is: ", (array)$status);
 
             if (!$status) {
-                Log::info('Service not yet ready', ['status' => $status]);
-                sleep(2); // Așteaptă 2 secunde înainte de a verifica din nou
+                // Log::info('Service not yet ready', ['status' => $status]);
+                sleep(15); // Așteaptă 2 secunde înainte de a verifica din nou
             }
         } while ($status === false);
 
-        Log::info('Service is ready, proceeding with the next steps');
+        Log::info('Service TRANSLATIONS is ready, proceeding with the next steps');
 
 
         // Obține datele pe baza GUID-ului
         try {
-            ini_set('max_execution_time', 600);
+            ini_set('max_execution_time', 900);
+            set_time_limit(900);
 
             $responseBody = (new UltraImportService())->getDataByID($this->guid);
         } catch (\Exception $exception) {
