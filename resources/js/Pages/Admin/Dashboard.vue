@@ -213,7 +213,7 @@ let testData = {
                                     <span
                                         class="flex items-center justify-center w-8 h-8 p-2 font-semibold rounded-full bg-slate-200 text-slate-600"
                                         >{{
-                                            order?.full_name[0] ?? "N/A"
+                                            order?.full_name?[0] ?? "N/A"
                                         }}</span
                                     >
                                 </div>
