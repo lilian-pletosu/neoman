@@ -68,6 +68,6 @@ class HomeController extends Controller
             'phone' => 'required',
         ]);
 
-        Mail::to('office.neoman@gmail.com')->send(new CallWaitForm($data));
+        Mail::to('lilianpletosu7@gmail.com')->send(new CallWaitForm($data));
     }
 }
