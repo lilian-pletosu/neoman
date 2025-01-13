@@ -22,6 +22,8 @@ class TranslationsUltra implements ShouldQueue
     public $backoff = [60, 90, 110]; // Timpul de așteptare între încercări în secunde
     protected $guid;
     protected $requestParams;
+    public $timeout = 900; // 15 minutes in seconds
+
 
     /**
      * Create a new job instance.

@@ -2,7 +2,6 @@
 import FrontHeader from "@/Components/FrontHeader.vue";
 import FrontNavBar from "@/Components/FrontNavBar.vue";
 import { Head } from "@inertiajs/vue3";
-import { ChatBubbleLeftRightIcon } from "@heroicons/vue/24/solid/index.js";
 
 import { useColorMode, useDark, useToggle } from "@vueuse/core";
 import {
@@ -392,21 +391,14 @@ onMounted(() => {
                                     </svg>
                                     <span class="sr-only">Download</span>
                                 </button>
-                                <div
-                                    id="tooltip-download"
-                                    role="tooltip"
-                                    class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-                                >
-                                    Download
-                                    <div
-                                        class="tooltip-arrow"
-                                        data-popper-arrow
-                                    ></div>
-                                </div>
+
                                 <button
+                                    v-tooltip="{
+                                        value: 'Confirm to proceed',
+                                        showDelay: 1000,
+                                        hideDelay: 300,
+                                    }"
                                     type="button"
-                                    data-tooltip-target="tooltip-copy"
-                                    data-tooltip-placement="left"
                                     class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 dark:hover:text-white shadow-sm dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400"
                                 >
                                     <svg
@@ -423,32 +415,59 @@ onMounted(() => {
                                             d="M11.066 4H7v5a2 2 0 0 1-2 2H0v7a1.969 1.969 0 0 0 1.933 2h9.133A1.97 1.97 0 0 0 13 18V6a1.97 1.97 0 0 0-1.934-2Z"
                                         />
                                     </svg>
-                                    <span class="sr-only">Copy</span>
                                 </button>
-                                <div
-                                    id="tooltip-copy"
-                                    role="tooltip"
-                                    class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
-                                >
-                                    Copy
-                                    <div
-                                        class="tooltip-arrow"
-                                        data-popper-arrow
-                                    ></div>
-                                </div>
                             </div>
                             <a
-                                href="https://www.facebook.com/neoman.online/"
+                                href="https://www.facebook.com/messages/t/110912380742445"
                                 type="button"
                                 data-dial-toggle="speed-dial-menu-default"
                                 aria-controls="speed-dial-menu-default"
                                 aria-expanded="false"
-                                class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ring-4 ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
+                                class="flex items-center justify-center w-12 h-12 text-white bg-blue-700 rounded-full hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ring-2 ring-blue-300 focus:outline-none dark:focus:ring-blue-800"
                             >
-                                <ChatBubbleLeftRightIcon
-                                    class="w-6 animate-pulse"
-                                />
-                                <span class="sr-only">Open actions menu</span>
+                                <svg
+                                    class="animate-pulse"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="200"
+                                    height="200"
+                                    viewBox="0 0 256 256"
+                                >
+                                    <defs>
+                                        <radialGradient
+                                            id="logosMessenger0"
+                                            cx="19.247%"
+                                            cy="99.465%"
+                                            r="108.96%"
+                                            fx="19.247%"
+                                            fy="99.465%"
+                                        >
+                                            <stop
+                                                offset="0%"
+                                                stop-color="#09f"
+                                            />
+                                            <stop
+                                                offset="60.975%"
+                                                stop-color="#a033ff"
+                                            />
+                                            <stop
+                                                offset="93.482%"
+                                                stop-color="#ff5280"
+                                            />
+                                            <stop
+                                                offset="100%"
+                                                stop-color="#ff7061"
+                                            />
+                                        </radialGradient>
+                                    </defs>
+                                    <path
+                                        fill="url(#logosMessenger0)"
+                                        d="M128 0C55.894 0 0 52.818 0 124.16c0 37.317 15.293 69.562 40.2 91.835c2.09 1.871 3.352 4.493 3.438 7.298l.697 22.77c.223 7.262 7.724 11.988 14.37 9.054L84.111 243.9a10.22 10.22 0 0 1 6.837-.501c11.675 3.21 24.1 4.92 37.052 4.92c72.106 0 128-52.818 128-124.16S200.106 0 128 0"
+                                    />
+                                    <path
+                                        fill="#fff"
+                                        d="m51.137 160.47l37.6-59.653c5.98-9.49 18.788-11.853 27.762-5.123l29.905 22.43a7.68 7.68 0 0 0 9.252-.027l40.388-30.652c5.39-4.091 12.428 2.36 8.82 8.085l-37.6 59.654c-5.981 9.489-18.79 11.852-27.763 5.122l-29.906-22.43a7.68 7.68 0 0 0-9.25.027l-40.39 30.652c-5.39 4.09-12.427-2.36-8.818-8.085"
+                                    />
+                                </svg>
                             </a>
                         </div>
                         <front-modal
