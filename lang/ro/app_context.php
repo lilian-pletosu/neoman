@@ -265,6 +265,7 @@ return [
     'view_privacy' => 'Vezi politica de confidențialitate',
     'edit_privacy' => 'Editează politica de confidențialitate',
     'updated_at' => 'Actualizat la',
+    'order' => 'Număr de ordine',
 
     //statuses
     'pending' => 'Procesare',

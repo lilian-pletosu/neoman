@@ -27,39 +27,40 @@ class HomeController extends Controller
 
     public function index()
     {
-        if (Cache::has('categories')) {
-            $categories = Cache::get('categories');
-        } else {
-            $categories = Category::all();
-            Cache::remember('categories', 262656, function () {
-                return Category::all();
-            });
-        }
-        $brands = Cache::has('brands') ? Cache::get('brands') : Cache::remember('brands', 10000, function () {
-            return Brand::whereNotNull('image')->active()->orderBy('name')->limit(15)->get();
+        $categories = Cache::remember('categories', 262656, function () {
+            return Category::orderBy('name')->active()->get();
         });
 
-        $homeBanners = Cache::has('home_banners') ? Cache::get('home_banners') : Cache::remember('home_banners', 10000, function () {
+        $brands = Cache::remember('brands', 10000, function () {
+            return Brand::whereNotNull('image')
+                ->active()
+                ->orderBy('name')
+                ->limit(15)
+                ->get();
+        });
+
+        $homeBanners = Cache::remember('home_banners', 10000, function () {
             return (new BannerService())->getHomeBanners();
         });
 
-
-        Inertia::share('home_banners', $homeBanners);
-        Inertia::share('brands', $brands);
-        Inertia::share('call_action', (new BannerService())->getCallActionBanner());
-        Inertia::share('season_products', (new ProductService())->loadAllProducts(15));
-        Inertia::share('last_products', (new ProductService())->loadLastProducts(15));
-
-        $sales_products = Cache::remember('sales_products', 262656, function () {
+        $salesProducts = Cache::remember('sales_products', 262656, function () {
             return (new ProductService())->loadSalesProducts();
         });
 
+        Inertia::share([
+            'home_banners' => $homeBanners,
+            'brands' => $brands,
+            'call_action' => (new BannerService())->getCallActionBanner(),
+            'season_products' => (new ProductService())->loadAllProducts(15),
+            'last_products' => (new ProductService())->loadLastProducts(15)
+        ]);
 
         return inertia('User/HomePage', [
             'categories' => $categories,
-            'sales_products' => $sales_products,
+            'sales_products' => $salesProducts
         ]);
     }
+
 
     public function callWait(Request  $request)
     {

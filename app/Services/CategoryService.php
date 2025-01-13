@@ -32,7 +32,6 @@ class CategoryService
                 $category->translateOrNew($locale)->$translatedAttribute = $data["$translatedAttribute $locale"] ?? $data[$translatedAttribute];
                 $category->save();
             }
-
         }
 
 
@@ -47,7 +46,8 @@ class CategoryService
         $category->update([
             'slug' => $data['slug'],
             'icon' => $data['icon'],
-            'is_active' => $data['is_active']
+            'is_active' => $data['is_active'],
+            'order' => $data['order'],
         ]);
         foreach ($this->translatedAttributes as $translatableAttribute) {
             foreach (config('translatable.locales') as $locale) {
@@ -55,6 +55,5 @@ class CategoryService
             }
         }
         $category->save();
-
     }
 }

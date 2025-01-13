@@ -19,7 +19,8 @@ class Category extends Model implements TranslatableContract
         'name',
         'slug',
         'icon',
-        'is_active'
+        'is_active',
+        'order'
     ];
 
 

@@ -9,7 +9,6 @@ const currentInstance = getCurrentInstance();
 
 const isDark = ref()
 
-const attr = useAttrs();
 
 
 const locale = ref();
@@ -55,18 +54,18 @@ onMounted(() => {
 <template>
     <template v-if="!loading">
         <div
-            class="flex justify-center sm:px-4    md:justify-end md:px-2 items-center  h-10 xl:px-60 2xl:px-60">
-            <div class="hidden md:flex w-full pb-1 border-b justify-end">
-                <label class="mx-4 relative cursor-pointer">
+            class="flex items-center justify-center h-10 sm:px-4 md:justify-end md:px-2 xl:px-60 2xl:px-60">
+            <div class="justify-end hidden w-full pb-1 border-b md:flex">
+                <label class="relative mx-4 cursor-pointer">
                     <input type="checkbox" :checked="checkLang" :value="locale" class="sr-only peer"
                            @change="changeLanguage()">
                     <div
-                        class="w-11 h-6  rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-gray-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] border  after:bg-white after:border after:border-gray-500  after:rounded-full after:w-5 after:h-5 after:transition-all bg-none border  border-gray-500">
+                        class="w-11 h-6  rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-gray-500 after:content-[''] after:absolute after:top-[2px] after:start-[2px] border  after:bg-white after:border after:border-gray-500  after:rounded-full after:w-5 after:h-5 after:transition-all bg-none   border-gray-500">
                         <div class="flex flex-row items-center justify-between px-1">
-                    <span class="text-3 font-xs text-black dark:text-white">
+                    <span class="text-black text-3 font-xs dark:text-white">
                         ro
                     </span>
-                            <span class="text-3 font-xs text-black dark:text-white">
+                            <span class="text-black text-3 font-xs dark:text-white">
                         ru
                     </span>
                         </div>
@@ -99,7 +98,7 @@ onMounted(() => {
                 </label>
             </div>
             <div>
-                <div class="flex flex-row space-x-3 justify-center items-center">
+                <div class="flex flex-row items-center justify-center space-x-3">
                     <div
                         class="flex flex-row space-x-1 text-[#868686] text-[10px] py-1  sm:text-sm md:hidden">
                         <p>Lu - Vi: <p class="font-semibold"> 08.00 - 19.00 /</p></p>
@@ -114,7 +113,7 @@ onMounted(() => {
     <template v-else>
         <!-- component -->
         <div
-            class="inset-0 bg-gray-800 fixed flex w-full h-full items-center justify-center duration-300 transition-opacity"
+            class="fixed inset-0 flex items-center justify-center w-full h-full transition-opacity duration-300 bg-gray-800"
             style="z-index: 6000">
             <div class="flex-col">
                 <x-loading class="w-24 h-24">
@@ -150,7 +149,7 @@ onMounted(() => {
                         />
                     </svg>
                 </x-loading>
-                <div class="mt-3 text-gray-200 font-mono text-sm sm:text-xs">Loading...</div>
+                <div class="mt-3 font-mono text-sm text-gray-200 sm:text-xs">Loading...</div>
             </div>
         </div>
     </template>

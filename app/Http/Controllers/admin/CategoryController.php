@@ -28,13 +28,13 @@ class CategoryController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Category')
-            ->setResourceColumns(['id', 'name', 'slug', 'icon', 'is_active'])
-            ->setColumnsOrder(['id', 'name'])
+            ->setResourceColumns(['id', 'order', 'name', 'slug', 'icon', 'is_active'])
+            ->setColumnsOrder(['id', 'order', 'name'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.categories')
             ->setResourceRoute('admin.categories')
-            ->sortBy('id');
+            ->sortBy('order');
 
         return inertia('Admin/Categories', [
             'initialRoute' => 'admin.categories',
@@ -48,7 +48,6 @@ class CategoryController extends Controller
     public function create()
     {
         return (new SchemaFormBuilder)('Category', 'post', 'admin.category.store');
-
     }
 
     /**
@@ -60,11 +59,11 @@ class CategoryController extends Controller
             'name ro' => 'required|min:3',
             'name ru' => 'required|min:3',
             'icon' => 'required',
-            'is_active' => 'required|boolean'
+            'is_active' => 'required|boolean',
+            'order' => 'required|integer'
         ]);
         (new CategoryService())->create($request, $data);
         return to_route($this->route);
-
     }
 
     /**
@@ -81,7 +80,6 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         return (new SchemaFormBuilder)('Category', 'put', 'admin.categories.update', $category->id, null, true);
-
     }
 
     /**
@@ -93,11 +91,10 @@ class CategoryController extends Controller
             'form.name ro' => 'required|min:3',
             'form.name ru' => 'required|min:3',
             'form.icon' => 'required',
-            'form.is_active' => 'required'
+            'form.is_active' => 'required',
+            'form.order' => 'required|integer'
         ]);
         (new CategoryService())->update($data['form'], $category, $request);
-
-
     }
 
     /**
@@ -107,6 +104,5 @@ class CategoryController extends Controller
     {
         $category->delete();
         return to_route($this->route);
-
     }
 }
