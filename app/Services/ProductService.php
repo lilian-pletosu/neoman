@@ -51,8 +51,10 @@ class ProductService
             ->get();
 
         $promotions = $promotions->map(function ($promotion) {
-            $promotion->categories->each(function ($category) {
+            // Initialize $products collection at the start
+            $products = collect();
 
+            $promotion->categories->each(function ($category) use (&$products) {
                 $category->subcategories->each(function ($subcategory) use (&$products) {
                     $subcategory->subsubcategories->each(function ($subsubcategory) use (&$products) {
                         $products = $products->merge($subsubcategory->products);
@@ -64,6 +66,7 @@ class ProductService
 
             return $promotion;
         });
+
 
 
 
