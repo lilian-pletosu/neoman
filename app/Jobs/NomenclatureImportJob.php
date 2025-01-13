@@ -73,9 +73,14 @@ class NomenclatureImportJob implements ShouldQueue
         } while ($status === false);
 
 
-        Log::info('Service NOMENCLATURE is ready, proceeding with the next steps. Dispatching NomenclatureImportFetchProductsJob.');
+        Log::info('Service NOMENCLATURE is ready, proceeding with the next steps. Dispatching NomenclatureImportFetchProductsJob with GUID:', [$this->guid ?? 'N/A']);
 
-        NomenclatureImportFetchProductsJob::dispatch($this->guid);
+        if ($this->guid) {
+            dispatch(new NomenclatureImportFetchProductsJob($this->guid));
+        } else {
+            Log::error('GUID is null. Dispatching NomenclatureImportFetchProductsJob with GUID: N/A');
+            return;
+        }
     }
 
     protected function isReady(Client $client, $guid)
