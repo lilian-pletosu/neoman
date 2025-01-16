@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
+
 
 class NomenclatureImportJob implements ShouldQueue
 {
@@ -70,10 +72,28 @@ class NomenclatureImportJob implements ShouldQueue
         } while ($status === false);
 
 
-        Log::info('Service NOMENCLATURE is ready, proceeding with the next steps. Dispatching NomenclatureImportFetchProductsJob with GUID:', [$this->guid ?? 'N/A']);
+        Log::info('Service NOMENCLATURE is ready, proceeding with the next steps.');
 
         if ($this->guid) {
-            dispatch(new NomenclatureImportFetchProductsJob($this->guid));
+            try {
+                logger()->info('Now NOMENCLATURE wil be fetching data', ['guid' => $this->guid]);
+
+                ini_set('max_execution_time', 900);
+                set_time_limit(900); // Setăm timpul maxim de execuție la 15 minute
+
+                $responseBody = (new UltraImportService())->getDataByID($this->guid);
+            } catch (\Exception $exception) {
+                Log::error('We have an error: ' . $exception->getMessage());
+                throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
+            }
+            // //
+            $this->isCommit();
+            $encodedData = json_encode($responseBody);
+            $data = json_decode($encodedData, true);
+            // //        // Salvăm datele în Redis
+            Redis::set("NOMENCLATURE", json_encode($data['nomenclature']));
+            // //
+            Log::info('NOMENCLATURE process is done!');
         } else {
             Log::error('GUID is null. Dispatching NomenclatureImportFetchProductsJob with GUID: N/A');
             return;
@@ -96,5 +116,10 @@ class NomenclatureImportJob implements ShouldQueue
     public function failed(\Throwable $exception)
     {
         Log::error("Job failed after {$this->attempts()} attempts for GUID: {$this->guid}. Exception: {$exception->getMessage()}");
+    }
+
+    protected function isCommit()
+    {
+        (new UltraImportService())->commitReceivingData('NOMENCLATURE');
     }
 }

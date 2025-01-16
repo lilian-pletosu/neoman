@@ -38,23 +38,7 @@ class NomenclatureImportFetchProductsJob implements ShouldQueue
     public function handle()
     {
 
-        try {
-            ini_set('max_execution_time', 900);
-            set_time_limit(900); // Setăm timpul maxim de execuție la 15 minute
-
-            $responseBody = (new UltraImportService())->getDataByID($this->guid);
-        } catch (\Exception $exception) {
-            Log::error('We have an error: ' . $exception->getMessage());
-            throw $exception; // Aruncăm din nou excepția pentru a declanșa retry logic
-        }
-        // //
-        $this->isCommit();
-        $encodedData = json_encode($responseBody);
-        $data = json_decode($encodedData, true);
-        // //        // Salvăm datele în Redis
-        Redis::set("NOMENCLATURE", json_encode($data['nomenclature']));
-        // //
-        Log::info('NOMENCLATURE process is done!');
+       
     }
 
     protected function isCommit()
