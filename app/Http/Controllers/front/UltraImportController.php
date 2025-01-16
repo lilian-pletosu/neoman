@@ -21,11 +21,10 @@ class UltraImportController extends Controller
     {
 
         $guid = $this->ultraImportService->requestData(
-            $request->input('service'),
-            $request->input('all'),
-            $request->input('additionalParams')
+            $request['service'],
+            $request['all'],
+            $request['additionalParams']
         );
-
 
         return $guid;
     }
@@ -47,5 +46,4 @@ class UltraImportController extends Controller
     {
         $this->ultraImportService->commitReceivingData($service);
     }
-
 }

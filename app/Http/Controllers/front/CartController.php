@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Enum\OrderTypeEnum;
-use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Services\CookieService;
+use App\Enum\OrderTypeEnum;
 use Illuminate\Http\Request;
+use App\Services\CookieService;
 use Illuminate\Support\Facades\Log;
-
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\NewOrderNotification;
+use Illuminate\Support\Facades\Notification;
 
 class CartController extends Controller
 {
@@ -86,6 +88,9 @@ class CartController extends Controller
 
             $data['order_number'] = "#$orderNumber";
             Order::create($data);
+
+            Notification::route('mail', 'office.neoman@gmail.com')
+                ->notify(new NewOrderNotification());
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }

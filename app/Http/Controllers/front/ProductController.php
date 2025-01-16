@@ -5,11 +5,9 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Brand;
-use App\Models\Credit;
 use App\Models\Product;
 use App\Models\SubSubCategory;
 use App\Services\SessionService;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller

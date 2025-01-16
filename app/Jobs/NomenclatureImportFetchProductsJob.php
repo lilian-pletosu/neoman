@@ -40,7 +40,7 @@ class NomenclatureImportFetchProductsJob implements ShouldQueue
 
         try {
             ini_set('max_execution_time', 900);
-            set_time_limit(900);
+            set_time_limit(900); // Setăm timpul maxim de execuție la 15 minute
 
             $responseBody = (new UltraImportService())->getDataByID($this->guid);
         } catch (\Exception $exception) {

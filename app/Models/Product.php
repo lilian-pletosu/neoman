@@ -53,22 +53,85 @@ class Product extends Model implements TranslatableContract
     {
         return $query->addSelect([
             'has_discount' => Brand::select('is_enabled')
+                ->where('is_enabled', true)
                 ->whereIn('id', function ($query) {
                     $query->select('brand_id')
                         ->from('promotion_brand')
-                        ->whereColumn('brand_id', 'products.brand_id')
-                        ->where('is_enabled', 1);
+                        ->join('promotions', 'promotions.id', '=', 'promotion_brand.promotion_id')
+                        ->where('promotions.status', 'active')
+                        ->unionAll(
+                            $query->newQuery()
+                                ->select('category_id')
+                                ->from('promotion_category')
+                                ->join('promotions', 'promotions.id', '=', 'promotion_category.promotion_id')
+                                ->where('promotions.status', 'active')
+                        )
+                        ->unionAll(
+                            $query->newQuery()
+                                ->select('sub_category_id')
+                                ->from('promotion_sub_category')
+                                ->join('promotions', 'promotions.id', '=', 'promotion_sub_category.promotion_id')
+                                ->where('promotions.status', 'active')
+                        )
+                        ->unionAll(
+                            $query->newQuery()
+                                ->select('sub_sub_category_id')
+                                ->from('promotion_sub_sub_category')
+                                ->join('promotions', 'promotions.id', '=', 'promotion_sub_sub_category.promotion_id')
+                                ->where('promotions.status', 'active')
+                        );
                 }),
             'promotion_price' => Brand::selectRaw('products.price - (products.price * promotions.discount / 100)')
                 ->join('promotion_brand', 'brands.id', '=', 'promotion_brand.brand_id')
                 ->join('promotions', 'promotions.id', '=', 'promotion_brand.promotion_id')
                 ->whereColumn('brands.id', 'products.brand_id')
-                ->where('promotions.status', 1),
+                ->where('promotions.status', 'active')
+                ->union(
+                    Category::selectRaw('products.price - (products.price * promotions.discount / 100)')
+                        ->join('promotion_category', 'categories.id', '=', 'promotion_category.category_id')
+                        ->join('promotions', 'promotions.id', '=', 'promotion_category.promotion_id')
+                        ->where('promotions.status', 'active')
+                )
+                ->union(
+                    SubCategory::selectRaw('products.price - (products.price * promotions.discount / 100)')
+                        ->join('promotion_sub_category', 'subcategories.id', '=', 'promotion_sub_category.sub_category_id')
+                        ->join('promotions', 'promotions.id', '=', 'promotion_sub_category.promotion_id')
+                        // ->whereColumn('subcategories.id', 'products.sub_category_id')
+                        ->where('promotions.status', 'active')
+                )
+                ->union(
+                    SubSubCategory::selectRaw('products.price - (products.price * promotions.discount / 100)')
+                        ->join('promotion_sub_sub_category', 'sub_subcategories.id', '=', 'promotion_sub_sub_category.sub_sub_category_id')
+                        ->join('promotions', 'promotions.id', '=', 'promotion_sub_sub_category.promotion_id')
+                        // ->whereColumn('sub_sub_categories.id', 'products.sub_sub_category_id')
+                        ->where('promotions.status', 'active')
+                ),
             'sale' => Brand::selectRaw('promotions.discount')
                 ->join('promotion_brand', 'brands.id', '=', 'promotion_brand.brand_id')
                 ->join('promotions', 'promotions.id', '=', 'promotion_brand.promotion_id')
                 ->whereColumn('brands.id', 'products.brand_id')
-                ->where('promotions.status', 1)
+                ->where('promotions.status', 'active')
+                ->union(
+                    Category::selectRaw('promotions.discount')
+                        ->join('promotion_category', 'categories.id', '=', 'promotion_category.category_id')
+                        ->join('promotions', 'promotions.id', '=', 'promotion_category.promotion_id')
+                        // ->whereColumn('categories.id', 'products.category_id')
+                        ->where('promotions.status', 'active')
+                )
+                ->union(
+                    SubCategory::selectRaw('promotions.discount')
+                        ->join('promotion_sub_category', 'subcategories.id', '=', 'promotion_sub_category.sub_category_id')
+                        ->join('promotions', 'promotions.id', '=', 'promotion_sub_category.promotion_id')
+                        // ->whereColumn('sub_categories.id', 'products.sub_category_id')
+                        ->where('promotions.status', 'active')
+                )
+                ->union(
+                    SubSubCategory::selectRaw('promotions.discount')
+                        ->join('promotion_sub_sub_category', 'sub_subcategories.id', '=', 'promotion_sub_sub_category.sub_sub_category_id')
+                        ->join('promotions', 'promotions.id', '=', 'promotion_sub_sub_category.promotion_id')
+                        ->whereColumn('sub_subcategories.id', 'products.sub_sub_category_id')
+                        ->where('promotions.status', 'active')
+                )
         ]);
     }
 

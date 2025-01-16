@@ -63,13 +63,10 @@ class NomenclatureImportJob implements ShouldQueue
 
 
         do {
-            $status = $this->isReady($client, $this->guid);
-            // Log::info("Status for NOMENCLATURE is: ", (array)$status);
+            sleep(50);
 
-            if (!$status) {
-                // Log::info('Service not yet ready', ['status' => $status]);
-                sleep(15); // Așteaptă 2 secunde înainte de a verifica din nou
-            }
+            $status = $this->isReady($client, $this->guid);
+            logger()->info('isReady response', ['isReady' => $status, 'guid' => $this->guid]);
         } while ($status === false);
 
 

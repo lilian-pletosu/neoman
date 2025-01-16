@@ -2,19 +2,20 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Log;
 use RicorocksDigitalAgency\Soap\Facades\Soap;
+use SimpleXMLElement;
 
 class UltraImportService
 {
 
+    protected $wsdl = 'https://web1c.it-ultra.com/b2b/ws/b2b.1cws?wsdl';
     protected $client;
-    protected $wsdl;
     protected $username;
     protected $password;
 
     public function __construct()
     {
-        $this->wsdl = 'https://web1c.it-ultra.com/b2b/ws/b2b.1cws?wsdl';
         $this->username = env('SOAP_USERNAME');
         $this->password = env('SOAP_PASS');
         $this->client = Soap::to($this->wsdl)
@@ -23,22 +24,46 @@ class UltraImportService
 
     public function requestData($service, $all = true, $additionalParameters = '', $compress = false)
     {
-        $response = $this->client->call('requestData', [
-            'Service' => $service,
-            'all' => $all,
-            'additionalParameters' => $additionalParameters,
-            'compress' => $compress
-        ]);
+        if (empty($service)) {
+            throw new \InvalidArgumentException('Service parameter is required');
+        }
 
+        try {
+            $response = $this->client->call('requestData', [
+                'Service' => $service,
+                'all' => (bool)$all,
+                'additionalParameters' => (string)$additionalParameters,
+                'compress' => (bool)$compress
+            ]);
 
-        return $response->response->return;
+            if (!isset($response->response->return)) {
+                throw new \RuntimeException('Invalid response format');
+            }
+
+            return $response->response->return;
+        } catch (\Throwable $th) {
+            Log::error('UltraImport requestData failed', [
+                'service' => $service,
+                'error' => $th->getMessage()
+            ]);
+            throw $th;
+        }
     }
 
-    public function getDataByID($GUID)
+    public function getDataByID($GUID): SimpleXMLElement
     {
-        $response = $this->client->call('getDataByID', ['ID' => $GUID]);
-        $xml = $this->prepareResponse($response->response);
-        return $xml;
+        try {
+            Log::info('Fetching data by ID', ['GUID' => $GUID]);
+            $response = $this->client->call('getDataByID', ['ID' => $GUID]);
+            $xml = $this->prepareResponse($response->response);
+            return $xml;
+        } catch (\Throwable $th) {
+            Log::error('Failed to get data by ID', [
+                'GUID' => $GUID,
+                'error' => $th->getMessage()
+            ]);
+            throw $th;
+        }
     }
 
     public function prepareResponse($response)

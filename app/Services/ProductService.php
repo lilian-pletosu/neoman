@@ -126,7 +126,7 @@ class ProductService
                 'image' => $product->brand->image ?? null,
             ],
             'attributes' => $attributesArray,
-            'mu' => $product->measurementUnit->translate(session()->get('locale'))->symbol ?? null,
+            'mu' => $product->measurementUnit?->translate(session()->get('locale'))?->symbol ?? null,
         ];
     }
 

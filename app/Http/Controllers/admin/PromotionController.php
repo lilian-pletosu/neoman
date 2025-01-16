@@ -135,6 +135,9 @@ class PromotionController extends Controller
             'subcategory' => 'nullable',
         ]);
 
+        $validatedData['status'] = $validatedData['status'] == 1 ? 'active' : 'inactive';
+
+
         // 2. Actualizează instanța de Promotion cu datele validate
         $promotion->update($validatedData);
         if (isset($validatedData['brand'])) {

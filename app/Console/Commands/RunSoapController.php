@@ -3,14 +3,15 @@
 namespace App\Console\Commands;
 
 use App\Jobs\BrandImportJob;
-use App\Jobs\NomenclatureImportJob;
-use App\Jobs\NomenclatureTypeImportJob;
 use App\Jobs\ParentImportJob;
-use App\Jobs\PricelistImportJob;
-use App\Jobs\SeedInDatabaseUltraProducts;
 use App\Jobs\TranslationsUltra;
 use Illuminate\Console\Command;
+use App\Jobs\PricelistImportJob;
+use App\Jobs\NomenclatureImportJob;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\NomenclatureTypeImportJob;
+use App\Jobs\SeedInDatabaseUltraProducts;
 
 class RunSoapController extends Command
 {
@@ -24,14 +25,6 @@ class RunSoapController extends Command
     {
         // Parametrii pentru diferite servicii
         $services = [
-            'NOMENCLATURE' => [
-                'params' => [
-                    "service" => "NOMENCLATURE",
-                    "all" => true,
-                    "additionalParams" => ""
-                ],
-                'job' => NomenclatureImportJob::class
-            ],
             'PARENTLIST' => [
                 'params' => [
                     "service" => "PARENTLIST",
@@ -56,6 +49,14 @@ class RunSoapController extends Command
                 ],
                 'job' => BrandImportJob::class
             ],
+            'NOMENCLATURE' => [
+                'params' => [
+                    "service" => "NOMENCLATURE",
+                    "all" => true,
+                    "additionalParams" => ""
+                ],
+                'job' => NomenclatureImportJob::class
+            ],
             'PRICELIST' => [
                 'params' => [
                     "service" => "PRICELIST",
@@ -75,23 +76,24 @@ class RunSoapController extends Command
         ];
 
         try {
+            $chain = [
+                new ParentImportJob($services['PARENTLIST']['params']),
+                new NomenclatureTypeImportJob($services['NOMENCLATURETYPELIST']['params']),
+                new BrandImportJob($services['BRAND']['params']),
+                new NomenclatureImportJob($services['NOMENCLATURE']['params']),
+                new PricelistImportJob($services['PRICELIST']['params']),
+                new TranslationsUltra($services['TRANSLATIONS']['params']),
+                new SeedInDatabaseUltraProducts()
+            ];
 
-            foreach ($services as $service => $details) {
-                $requestParams = $details['params'];
-                $jobClass = $details['job'];
+            Bus::chain($chain)->dispatch();
 
-                $jobClass::dispatch($requestParams);
-
-                Log::info("$service import job was prepared.");
-            }
-            SeedInDatabaseUltraProducts::dispatch();
-            $this->info('Ultra products have been seeded in the database');
-
-            $this->info('All import jobs were successfully dispatched.');
+            Log::info('Job chain was successfully dispatched');
+            $this->info('All import jobs were successfully chained and dispatched.');
         } catch (\Exception $e) {
             $this->error('An error occurred while dispatching the import jobs.');
             Log::error('Error dispatching import jobs: ' . $e->getMessage());
-            throw $e; // Re-aruncăm excepția pentru a permite retry logic (dacă există)
+            throw $e;
         }
     }
 }
