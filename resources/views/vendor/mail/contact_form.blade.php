@@ -1,13 +1,13 @@
 @component('mail::message')
-{{ __('you_have_new_message') }}
+# Mesaj recepționat din formularul de contact
+
+Detalii client:
+- Nume: {{ $data['name'] }}
+- Telefon: {{ $data['phone'] }}
+- Email: {{ $data['email'] }}
+- Mesaj: {{ $data['message'] }}
+- Opțiune: {{ $data['option']  }}
 
 
-{{ __('If you already have an account, you may accept this invitation by clicking the button below:') }}
-
-{{ __('You may accept this invitation by clicking the button below:') }}
-
-
-
-
-{{ __('If you did not expect to receive an invitation to this team, you may discard this email.') }}
+{{ config('app.name') }}
 @endcomponent

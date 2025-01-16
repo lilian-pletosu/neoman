@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ContactForm;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
@@ -41,13 +42,10 @@ class ContactController extends Controller
 
 
         try {
-            Mail::to('lilianpletosu7@gmail.com')->send(new ContactForm($data));
-
-
+            Mail::to('office.neoman@gmail.com')->send(new ContactForm($data));
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            Log::error($e->getMessage());
         }
-
     }
 
     /**

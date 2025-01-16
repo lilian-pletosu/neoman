@@ -26,7 +26,7 @@ class ContactForm extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Recepționat - Mesaj din formularul de contact',
+            subject: 'Neoman.md - Mesaj recepționat din formularul de contact',
         );
     }
 

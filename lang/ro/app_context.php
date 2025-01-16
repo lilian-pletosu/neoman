@@ -321,7 +321,8 @@ return [
     'hello_user' => 'Bună ziua,',
     'received_order' => 'Comanda dvs. a fost recepționată',
     'thanks_for_order' => 'Vă mulțumim pentru comandă! Cererea dvs. este acceptată. Vă vom contacta în curând pentru confirmare.',
-
+    'you_have_new_message' => 'Aveți un nou mesaj din formularul de contact',
+    
 
     //categories
     '1. Mobile Phones & Gadgets' => 'Smartphone-uri și Gadget-uri',
