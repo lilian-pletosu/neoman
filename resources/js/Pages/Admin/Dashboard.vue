@@ -21,30 +21,32 @@ const props = defineProps({
 });
 
 let testData = {
-    labels: [
-        app.appContext.config.globalProperties.__("pending"),
-        app.appContext.config.globalProperties.__("confirmed"),
-        app.appContext.config.globalProperties.__("shipped"),
-        app.appContext.config.globalProperties.__("delivered"),
-        app.appContext.config.globalProperties.__("canceled"),
-    ],
+    labels: [app.appContext.config.globalProperties.__("orders_statistics")],
     datasets: [
         {
-            label: app.appContext.config.globalProperties.__("comenzi"),
-            data: [
-                page.props.ordersBar["pending"],
-                page.props.ordersBar["confirmed"],
-                page.props.ordersBar["shipped"],
-                page.props.ordersBar["delivered"],
-                page.props.ordersBar["canceled"],
-            ],
-            backgroundColor: [
-                "#77CEFF",
-                "#0079AF",
-                "#123E6B",
-                "#97B0C4",
-                "#A5C8ED",
-            ],
+            label: app.appContext.config.globalProperties.__("pending"),
+            data: [page.props.ordersBar["pending"] || 0],
+            backgroundColor: "#77CEFF",
+        },
+        {
+            label: app.appContext.config.globalProperties.__("confirmed"),
+            data: [page.props.ordersBar["confirmed"] || 0],
+            backgroundColor: "#0079AF",
+        },
+        {
+            label: app.appContext.config.globalProperties.__("shipped"),
+            data: [page.props.ordersBar["shipped"] || 0],
+            backgroundColor: "#123E6B",
+        },
+        {
+            label: app.appContext.config.globalProperties.__("delivered"),
+            data: [page.props.ordersBar["delivered"] || 0],
+            backgroundColor: "#97B0C4",
+        },
+        {
+            label: app.appContext.config.globalProperties.__("canceled"),
+            data: [page.props.ordersBar["canceled"] || 0],
+            backgroundColor: "#A5C8ED",
         },
     ],
 };
