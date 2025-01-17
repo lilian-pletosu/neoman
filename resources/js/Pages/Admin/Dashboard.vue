@@ -26,27 +26,27 @@ let testData = {
         {
             label: app.appContext.config.globalProperties.__("pending"),
             data: [page.props.ordersBar["pending"] || 0],
-            backgroundColor: "#77CEFF",
+            backgroundColor: "#FF6B6B", // Bright coral red
         },
         {
             label: app.appContext.config.globalProperties.__("confirmed"),
             data: [page.props.ordersBar["confirmed"] || 0],
-            backgroundColor: "#0079AF",
+            backgroundColor: "#4ECDC4", // Bright turquoise
         },
         {
             label: app.appContext.config.globalProperties.__("shipped"),
             data: [page.props.ordersBar["shipped"] || 0],
-            backgroundColor: "#123E6B",
+            backgroundColor: "#45B7D1", // Bright blue
         },
         {
             label: app.appContext.config.globalProperties.__("delivered"),
             data: [page.props.ordersBar["delivered"] || 0],
-            backgroundColor: "#97B0C4",
+            backgroundColor: "#96CEB4", // Fresh mint green
         },
         {
             label: app.appContext.config.globalProperties.__("canceled"),
             data: [page.props.ordersBar["canceled"] || 0],
-            backgroundColor: "#A5C8ED",
+            backgroundColor: "#FFD93D", // Bright yellow
         },
     ],
 };
