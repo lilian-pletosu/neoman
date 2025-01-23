@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Models\Brand;
 use App\Models\Credit;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\SubSubCategory;
 use App\Models\MeasurementUnit;
@@ -36,7 +37,7 @@ class ProductController extends Controller
         $builder = $this->dataTableService
             ->setResource('Product')
             ->setResourceColumns(['id', 'product_code', 'name', 'price', 'description', 'slug'])
-            ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
+            ->setRelationColumn('category', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
             ->setRelationColumn('images', 'image', ['image1', 'image2', 'image3', 'image4'])
             ->setColumnsOrder(['id', 'product_code', 'name', 'description', 'price'])
@@ -61,7 +62,7 @@ class ProductController extends Controller
                 'description_ro' => 'required',
                 'description_ru' => 'required',
                 'brand_id' => 'required',
-                'sub_sub_category_id' => 'required',
+                'category_id' => 'required',
                 'price' => 'required|decimal:2',
                 'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
             ]);
@@ -72,7 +73,7 @@ class ProductController extends Controller
                 'description ro' => 'required|min:15',
                 'description ru' => 'required|min:15',
                 'brand_id' => 'required',
-                'sub_sub_category_id' => 'required',
+                'category_id' => 'required',
                 'price' => 'required|decimal:2',
                 'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
             ]);
@@ -106,7 +107,7 @@ class ProductController extends Controller
 
         $product->loadAggregate(['brand'], "name");
         $product->loadAggregate(['images'], "image1");
-        $product->load(['credits', 'images', 'subSubCategory']); // Încarcă relația 'credits'
+        $product->load(['credits', 'images', 'category']); // Încarcă relația 'credits'
 
 
         $credits = Credit::all();
@@ -117,7 +118,7 @@ class ProductController extends Controller
             'initialRoute' => 'admin.products',
             'resourceType' => 'product',
             'creditsSettings' => $credits,
-            'subSubCategories' => SubSubCategory::all()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'label'  => $f->name])->toArray(),
+            'subSubCategories' => Category::where('level', 3)->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'label'  => $f->name])->toArray(),
             'brands' => Brand::all()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'label'  => $f->name])->toArray(),
         ]);
     }
@@ -139,7 +140,7 @@ class ProductController extends Controller
         $data = $request->validate([
             "name $locale" => 'required|min:3|String',
             "description $locale" => 'required|min:3|String',
-            'sub_sub_category_id' => 'required',
+            'category_id' => 'required',
             'brand_id' => 'required',
             'price' => 'required|numeric',
         ]);

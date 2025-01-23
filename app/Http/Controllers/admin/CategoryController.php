@@ -34,7 +34,8 @@ class CategoryController extends Controller
             ->paginate(10)
             ->setSearchRoute('admin.categories')
             ->setResourceRoute('admin.categories')
-            ->sortBy('order');
+            ->sortBy('is_active', 'desc')
+            ->where(['level', '=', 1]);
 
         return inertia('Admin/Categories', [
             'initialRoute' => 'admin.categories',
@@ -62,7 +63,7 @@ class CategoryController extends Controller
             'is_active' => 'required|boolean',
             'order' => 'required|integer'
         ]);
-        (new CategoryService())->create($request, $data);
+        (new CategoryService())->createParent($request, $data);
         return to_route($this->route);
     }
 
@@ -94,7 +95,7 @@ class CategoryController extends Controller
             'form.is_active' => 'required',
             'form.order' => 'required|integer'
         ]);
-        (new CategoryService())->update($data['form'], $category, $request);
+        (new CategoryService())->updateParent($data['form'], $category, $request);
     }
 
     /**

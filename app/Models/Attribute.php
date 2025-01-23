@@ -17,7 +17,7 @@ class Attribute extends Model implements TranslatableContract
 
     protected $fillable = [
         'slug',
-        'sub_sub_category_id'
+        'category_id'
     ];
 
     public function attributeValues()
@@ -27,7 +27,7 @@ class Attribute extends Model implements TranslatableContract
 
     public function subSubcategory()
     {
-        return $this->belongsTo(SubSubCategory::class, 'sub_sub_category_id');
+        return $this->belongsTo(SubSubCategory::class, 'category_id');
     }
 
     public function products()

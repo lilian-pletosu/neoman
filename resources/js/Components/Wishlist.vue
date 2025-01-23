@@ -5,6 +5,7 @@ import { onClickOutside } from "@vueuse/core";
 import { useCartStore } from "@/stores/cartStore.js";
 import ReusableSidebar from "@/Components/ReusableSidebar.vue";
 import EmptyCartSvg from "@/Svg/EmptyCartSvg.vue";
+import { Link } from "@inertiajs/vue3";
 
 const wishlistStore = useWishlistStore();
 const cartStore = useCartStore();
@@ -51,21 +52,38 @@ const transferProductsToCart = () => {
                                 <div
                                     class="col-span-1 p-0.5 overflow-hidden rounded-md border border-gray-200"
                                 >
-                                    <img
-                                        :src="product.image"
-                                        :alt="product.name"
-                                        class="object-contain w-24 h-24 mx-auto"
-                                    />
+                                    <Link
+                                        :href="
+                                            route('product_page', {
+                                                slug: product.slug,
+                                            })
+                                        "
+                                    >
+                                        <img
+                                            :src="product.image"
+                                            :alt="product.name"
+                                            class="object-contain w-24 h-24 mx-auto"
+                                        />
+                                    </Link>
                                 </div>
                                 <div
                                     class="flex flex-col justify-between col-span-2"
                                 >
-                                    <p
-                                        class="text-xs font-medium text-gray-900 md:text-base"
+                                    <Link
+                                        :href="
+                                            route('product_page', {
+                                                slug: product.slug,
+                                            })
+                                        "
                                     >
-                                        {{ product.name }}
-                                    </p>
+                                        <p
+                                            class="text-xs font-medium text-gray-900 md:text-base"
+                                        >
+                                            {{ product.name }}
+                                        </p>
+                                    </Link>
                                 </div>
+
                                 <div
                                     class="flex flex-col items-end justify-between col-span-1"
                                 >

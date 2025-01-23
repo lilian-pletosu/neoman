@@ -215,7 +215,7 @@ function buyProduct(productId) {
                     </div>
 
                     <div class="lg:col-span-2 lg:row-span-2 lg:row-end-2">
-                        <div class="flex items-start">
+                        <div class="flex items-start justify-between">
                             <h1
                                 class="text-2xl font-bold text-gray-900 dark:text-slate-300 sm:text-3xl"
                             >
@@ -323,7 +323,10 @@ function buyProduct(productId) {
 
                         <div class="flex items-end py-6 my-1 space-x-2">
                             <h1
-                                v-if="!product.has_discount"
+                                v-if="
+                                    !product.has_discount &&
+                                    !product.promotion_price
+                                "
                                 class="text-3xl font-bold dark:text-slate-300"
                             >
                                 {{ formatPrice(product.price) }}

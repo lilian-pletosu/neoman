@@ -414,6 +414,29 @@
                         <li>
                             <Link
                                 :class="
+                                    checkRoute(route('admin.terms.index'))
+                                        ? 'bg-gray-100 text-gray-900'
+                                        : 'hover:bg-gray-100'
+                                "
+                                :href="route('admin.terms.index')"
+                                class="flex items-center p-2 text-base font-normal rounded-lg group"
+                            >
+                                <shield-exclamation-icon
+                                    :class="
+                                        checkRoute(route('admin.terms.index'))
+                                            ? 'text-gray-900'
+                                            : 'group-hover:text-gray-900'
+                                    "
+                                    class="flex-shrink-0 w-6 text-gray-500 transition duration-75"
+                                />
+                                <span class="flex-1 ml-3 whitespace-nowrap">{{
+                                    __("terms")
+                                }}</span>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                :class="
                                     checkRoute(route('admin.about_us.index'))
                                         ? 'bg-gray-100 text-gray-900'
                                         : 'hover:bg-gray-100'

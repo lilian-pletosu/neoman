@@ -2,7 +2,7 @@
 
 namespace App\SchemaForms;
 
-use App\Models\SubCategory;
+use App\Models\Category;
 
 class SubSubCategorySchema
 {
@@ -33,13 +33,13 @@ class SubSubCategorySchema
             ],
 
             [
-                'name' => 'subcategory_id',
+                'name' => 'parent_id',
                 'value' => '',
                 'type' => 'select',
                 'placeholder' => 'name',
                 'label' => 'subcategory',
                 'hydrated_by' => 'name',
-                'options' => SubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
+                'options' => Category::active()->where('level', 2)->orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
                 'rules' => [
                     'required'
                 ],

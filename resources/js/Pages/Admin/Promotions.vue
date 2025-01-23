@@ -2,7 +2,7 @@
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import DataTable from "@/Components/DataTable.vue";
 import Modal from "@/Components/Modal.vue";
-import { getCurrentInstance, ref } from "vue";
+import { getCurrentInstance, ref, computed, watch } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { useForm, router } from "@inertiajs/vue3";
 import BlackSelector from "@/Components/BlackSelector.vue";
@@ -48,6 +48,60 @@ const closeEditModal = () => {
     isOpenEditModal.value = false;
     form.reset();
 };
+// Add watchers to reset other fields when one is selected
+watch(
+    () => form.brand,
+    (newValue) => {
+        if (newValue) {
+            form.sub_subcategory = null;
+            form.subcategory = null;
+            form.category = null;
+        }
+    }
+);
+
+watch(
+    () => form.sub_subcategory,
+    (newValue) => {
+        if (newValue) {
+            form.brand = null;
+            form.subcategory = null;
+            form.category = null;
+        }
+    }
+);
+
+watch(
+    () => form.subcategory,
+    (newValue) => {
+        if (newValue) {
+            form.brand = null;
+            form.sub_subcategory = null;
+            form.category = null;
+        }
+    }
+);
+
+watch(
+    () => form.category,
+    (newValue) => {
+        if (newValue) {
+            form.brand = null;
+            form.sub_subcategory = null;
+            form.subcategory = null;
+        }
+    }
+);
+
+// Add computed property for disabled states
+const isDisabled = computed(() => {
+    return !!(
+        form.brand ||
+        form.sub_subcategory ||
+        form.subcategory ||
+        form.category
+    );
+});
 
 const addPromotion = async () => {
     form.post(route("admin.promotions.store"), {
@@ -67,10 +121,19 @@ const startEdit = (promotion) => {
     form.end_date = promotion.end_date;
     form.discount = promotion.discount;
     form.status = promotion.status === "active" ? 1 : 0;
-    form.sub_subcategory = promotion.sub_subcategories[0]?.id;
-    form.subcategory = promotion?.subcategories[0]?.id;
-    form.category = promotion?.categories[0]?.id;
-    form.brand = promotion.brands[0]?.id;
+    form.sub_subcategory =
+        promotion?.categories[0]?.level === 3
+            ? promotion?.categories[0]?.id
+            : null;
+    form.subcategory =
+        promotion?.categories[0]?.level === 2
+            ? promotion?.categories[0]?.id
+            : null;
+    form.category =
+        promotion?.categories[0]?.level === 1
+            ? promotion?.categories[0]?.id
+            : null;
+    form.brand = promotion?.brands[0]?.id;
 };
 
 const submitEditPromotion = async (promotionId) => {
@@ -278,122 +341,72 @@ const deletePromotion = async () => {
 
                             <!-- Select pentru branduri -->
                             <div class="w-full col-span-1">
-                                <label
-                                    for="status"
-                                    class="block mt-1 mb-2 text-sm font-medium text-gray-900"
-                                    >{{ __("brands") }}</label
-                                >
-
-                                <select
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    @change="form.brand = $event.target.value"
-                                    :class="{
-                                        'border-2 dark:border-red-600':
-                                            form.errors.brand,
-                                    }"
-                                >
-                                    <option selected disabled>
-                                        {{ __("select_brand") }}
-                                    </option>
-                                    <option
-                                        v-for="brand in app.appContext.config
-                                            .globalProperties.$page.props
-                                            .brands"
-                                        :value="brand.id"
-                                    >
-                                        {{ brand.name }}
-                                    </option>
-                                </select>
+                                <black-selector
+                                    v-model="form.brand"
+                                    @update:status="form.brand = $event"
+                                    :options="$page.props.brands"
+                                    :value="form.brand"
+                                    :selected="form.brand"
+                                    :error-message="__(form.errors.brand)"
+                                    :label="__('brand')"
+                                    :disabled="
+                                        isDisabled &&
+                                        !!form.sub_subcategory === false
+                                    "
+                                />
                             </div>
 
                             <!-- Select pentru subsubcategorii -->
                             <div class="w-full col-span-1">
-                                <label
-                                    for="status"
-                                    class="block mt-1 mb-2 text-sm font-medium text-gray-900"
-                                    >{{ __("sub_subcategory") }}</label
-                                >
-                                <select
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    @change="
-                                        form.sub_subcategory =
-                                            $event.target.value
+                                <black-selector
+                                    v-model="form.sub_subcategory"
+                                    @update:status="
+                                        form.sub_subcategory = $event
                                     "
-                                    :class="{
-                                        'border-2 dark:border-red-600':
-                                            form.errors.sub_subcategory,
-                                    }"
-                                >
-                                    <option selected disabled>
-                                        {{ __("select_sub_subcategory") }}
-                                    </option>
-                                    <option
-                                        v-for="sub_subcategory in app.appContext
-                                            .config.globalProperties.$page.props
-                                            .sub_subcategories"
-                                        :value="sub_subcategory.id"
-                                    >
-                                        {{ sub_subcategory.name }}
-                                    </option>
-                                </select>
+                                    :options="$page.props.subcategories"
+                                    :value="form.sub_subcategory"
+                                    :selected="form.sub_subcategory"
+                                    :error-message="
+                                        __(form.errors.sub_subcategory)
+                                    "
+                                    :label="__('sub_subcategory')"
+                                    :disabled="
+                                        isDisabled &&
+                                        !!form.subcategory === false
+                                    "
+                                />
                             </div>
                             <div class="w-full col-span-1">
-                                <label
-                                    for="status"
-                                    class="block mt-1 mb-2 text-sm font-medium text-gray-900"
-                                    >{{ __("subcategory") }}</label
-                                >
-                                <select
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    @change="
-                                        form.subcategory = $event.target.value
+                                <black-selector
+                                    v-model="form.subcategory"
+                                    @update:status="form.subcategory = $event"
+                                    :options="$page.props.subcategories"
+                                    :value="form.subcategory"
+                                    :selected="form.subcategory"
+                                    :error-message="__(form.errors.subcategory)"
+                                    :label="__('subcategory')"
+                                    :disabled="
+                                        isDisabled && !!form.category === false
                                     "
-                                    :class="{
-                                        'border-2 dark:border-red-600':
-                                            form.errors.subcategory,
-                                    }"
-                                >
-                                    <option selected disabled>
-                                        {{ __("select_subcategory") }}
-                                    </option>
-                                    <option
-                                        v-for="subcategory in app.appContext
-                                            .config.globalProperties.$page.props
-                                            .subcategories"
-                                        :value="subcategory.id"
-                                    >
-                                        {{ subcategory.name }}
-                                    </option>
-                                </select>
+                                />
                             </div>
                             <div class="w-full col-span-1">
-                                <label
-                                    for="status"
-                                    class="block mt-1 mb-2 text-sm font-medium text-gray-900"
-                                    >{{ __("category") }}</label
-                                >
-                                <select
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                    @change="
-                                        form.category = $event.target.value
+                                <black-selector
+                                    v-model="form.category"
+                                    @update:status="form.category = $event"
+                                    :options="$page.props.categories"
+                                    :value="form.category"
+                                    :selected="form.category"
+                                    :error-message="__(form.errors.category)"
+                                    :label="__('category')"
+                                    :disabled="
+                                        isDisabledExceptCategory
+                                            ? false
+                                            : isDisabledExceptBrand ||
+                                              isDisabledExceptSubSubcategory ||
+                                              isDisabledExceptSubcategory
                                     "
-                                    :class="{
-                                        'border-2 dark:border-red-600':
-                                            form.errors.category,
-                                    }"
-                                >
-                                    <option selected disabled>
-                                        {{ __("select_category") }}
-                                    </option>
-                                    <option
-                                        v-for="category in app.appContext.config
-                                            .globalProperties.$page.props
-                                            .categories"
-                                        :value="category.id"
-                                    >
-                                        {{ category.name }}
-                                    </option>
-                                </select>
+                                />
                             </div>
                             <hr class="col-span-2 mt-1 mb-4" />
 

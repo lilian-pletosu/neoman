@@ -44,7 +44,6 @@ class ProductsImport
             $columns[$rowIndex + 2] = array_combine($trimmedKeys, $row);
         }
         return $columns;
-
     }
 
     public function processImages()
@@ -90,17 +89,17 @@ class ProductsImport
             $imageContents = ob_get_contents();
             ob_end_clean();
             switch ($drawing->getMimeType()) {
-                case MemoryDrawing::MIMETYPE_PNG :
+                case MemoryDrawing::MIMETYPE_PNG:
                     $extension = 'png';
                     break;
-                case MemoryDrawing::MIMETYPE_JPEG :
+                case MemoryDrawing::MIMETYPE_JPEG:
                     $extension = 'jpg';
                     break;
             }
         } else {
             $zipReader = fopen($drawing->getPath(), 'r');
 
-//            Redis::set('drawing', $drawing->getName());
+            //            Redis::set('drawing', $drawing->getName());
 
             $imageContents = '';
             while (!feof($zipReader)) {
@@ -111,7 +110,7 @@ class ProductsImport
 
 
             $fileName = uniqid('prod') . '.' . $extension;
-//            Storage::put('public/products/' . $fileName, $imageContents);
+            //            Storage::put('public/products/' . $fileName, $imageContents);
             Storage::disk('products')->put($fileName, $imageContents);
             return '/storage/products/' . $fileName;
         }
@@ -134,7 +133,7 @@ class ProductsImport
                         'product_code' => (new GenerateProductCode)((new Product())),
                         'specifications_id' => null,
                         'brand_id' => $brand->id,
-                        'sub_sub_category_id' => $subSubcategory->id,
+                        'category_id' => $subSubcategory->id,
                         'measurement_unit_id' => $mu->id,
                     ];
 
@@ -162,7 +161,6 @@ class ProductsImport
         }
 
         return $product;
-
     }
 
     private function associateImagesWithProduct($product, $item)
@@ -186,46 +184,46 @@ class ProductsImport
         }
     }
 
-//    public function associateAttributes($product, $subSubcategory, $item)
-//    {
-//        // TODO:// Here need to fix probelem when update product and update or create attribute value
-//
-//
-////        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get()->toArray();
-////
-////        foreach ($attributes as $attribute) {
-////            if ($attribute['slug'] == 'cantitate') {
-////
-////                $attributeObj = Attribute::find($attribute['id']);
-////                if (array_key_exists($attribute['name'], $item)) {
-////                    $quantities = json_decode($item[$attribute['name']], true);
-////                    foreach ($quantities as $qty) {
-////                        $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
-////                        $valueAttribute->value = $qty;
-////                        $valueAttribute->save();
-////                        $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
-////                    }
-////                }
-////
-////            }
-////            if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
-////                $attributeObj = Attribute::find($attribute['id']);
-////
-////                foreach (config('app.available_locales') as $locale) {
-////                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute['name'] . ' ' . 'ro']]);
-////                    $valueAttribute->translateOrNew($locale)->value = $item[$attribute['name'] . ' ' . $locale];
-////                    $valueAttribute->save();
-////                }
-////                // Attach the attribute value to the product
-////                $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
-////            }
-////        }
-//    }
+    //    public function associateAttributes($product, $subSubcategory, $item)
+    //    {
+    //        // TODO:// Here need to fix probelem when update product and update or create attribute value
+    //
+    //
+    ////        $attributes = Attribute::where('category_id', $subSubcategory->id)->get()->toArray();
+    ////
+    ////        foreach ($attributes as $attribute) {
+    ////            if ($attribute['slug'] == 'cantitate') {
+    ////
+    ////                $attributeObj = Attribute::find($attribute['id']);
+    ////                if (array_key_exists($attribute['name'], $item)) {
+    ////                    $quantities = json_decode($item[$attribute['name']], true);
+    ////                    foreach ($quantities as $qty) {
+    ////                        $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
+    ////                        $valueAttribute->value = $qty;
+    ////                        $valueAttribute->save();
+    ////                        $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+    ////                    }
+    ////                }
+    ////
+    ////            }
+    ////            if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
+    ////                $attributeObj = Attribute::find($attribute['id']);
+    ////
+    ////                foreach (config('app.available_locales') as $locale) {
+    ////                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute['name'] . ' ' . 'ro']]);
+    ////                    $valueAttribute->translateOrNew($locale)->value = $item[$attribute['name'] . ' ' . $locale];
+    ////                    $valueAttribute->save();
+    ////                }
+    ////                // Attach the attribute value to the product
+    ////                $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
+    ////            }
+    ////        }
+    //    }
 
     public function associateAttributes($product, $subSubcategory, $item)
     {
         // Obține toate atributele existente pentru subcategoria specificată
-        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->get();
+        $attributes = Attribute::where('category_id', $subSubcategory->id)->get();
 
         foreach ($attributes as $attribute) {
             if ($attribute->slug == 'cantitate') {
@@ -281,38 +279,37 @@ class ProductsImport
 
 
 
-//    public function associateAttributes($product, $subSubcategory, $item)
-//    {
-//        $attributes = Attribute::where('sub_sub_category_id', $subSubcategory->id)->pluck('slug', 'id')->toArray();
-//        foreach ($attributes as $id => $attributeSlug) {
-//
-//            $product->attributes()->syncWithoutDetaching($id);
-////-------------------------------------------------------------------------------------
-//            $attribute = Attribute::find($id);
-//
-////
-//
-//
-//            if (isset($item["$attributeSlug ro"])) {
-//                $valueAttribute = $attribute->attributeValues()->create([
-//                    'slug' => Str::slug($item["$attributeSlug ro"], '_')
-//                ]);
-//            } else if (isset($item[ucfirst($attributeSlug) . ' ro'])) {
-//                Session::put('cart', 'test');
-//                $valueAttribute = $attribute->attributeValues()->create([
-//                    'slug' => Str::slug($item[ucfirst($attributeSlug) . ' ro'], '_')
-//                ]);
-//            } else {
-//                session(['cart' => $item]);
-//                return null;
-//            }
-//            foreach ((new AttributeValue())->translatedAttributes as $translatedAttribute) {
-//                foreach (config('app.available_locales') as $locale) {
-//                    $valueAttribute->translateOrNew($locale)->$translatedAttribute = $item["$attributeSlug $locale"] ?? $item[ucfirst($attributeSlug) . ' ' . $locale];
-//                    $valueAttribute->save();
-//                }
-//            }
-//        }
-//    }
+    //    public function associateAttributes($product, $subSubcategory, $item)
+    //    {
+    //        $attributes = Attribute::where('category_id', $subSubcategory->id)->pluck('slug', 'id')->toArray();
+    //        foreach ($attributes as $id => $attributeSlug) {
+    //
+    //            $product->attributes()->syncWithoutDetaching($id);
+    ////-------------------------------------------------------------------------------------
+    //            $attribute = Attribute::find($id);
+    //
+    ////
+    //
+    //
+    //            if (isset($item["$attributeSlug ro"])) {
+    //                $valueAttribute = $attribute->attributeValues()->create([
+    //                    'slug' => Str::slug($item["$attributeSlug ro"], '_')
+    //                ]);
+    //            } else if (isset($item[ucfirst($attributeSlug) . ' ro'])) {
+    //                Session::put('cart', 'test');
+    //                $valueAttribute = $attribute->attributeValues()->create([
+    //                    'slug' => Str::slug($item[ucfirst($attributeSlug) . ' ro'], '_')
+    //                ]);
+    //            } else {
+    //                session(['cart' => $item]);
+    //                return null;
+    //            }
+    //            foreach ((new AttributeValue())->translatedAttributes as $translatedAttribute) {
+    //                foreach (config('app.available_locales') as $locale) {
+    //                    $valueAttribute->translateOrNew($locale)->$translatedAttribute = $item["$attributeSlug $locale"] ?? $item[ucfirst($attributeSlug) . ' ' . $locale];
+    //                    $valueAttribute->save();
+    //                }
+    //            }
+    //        }
+    //    }
 }
-

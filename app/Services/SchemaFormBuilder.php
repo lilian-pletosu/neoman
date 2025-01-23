@@ -6,14 +6,15 @@ class SchemaFormBuilder
 {
 
 
-    public function __invoke(string $model,
-                             string $method,
-                             string $endpoint,
-                             int    $resourceId = null,
-                             string $relation = null,
-                             bool   $hasTranslate = false,
-                             string $routeParamName = null)
-    {
+    public function __invoke(
+        string $model,
+        string $method,
+        string $endpoint,
+        int    $resourceId = null,
+        string $relation = null,
+        bool   $hasTranslate = false,
+        string $routeParamName = null
+    ) {
         //for lang
         $currentLocale = app()->currentLocale();
         $reserveLanguage = $currentLocale == 'ru' ? 'ro' : 'ru';
@@ -21,7 +22,8 @@ class SchemaFormBuilder
 
         //input, textarea, select, checkbox, radio,
 
-        $schemaClass = new ("\App\SchemaForms\\{$model}Schema");
+        $schemaName = $routeParamName ?? $model;
+        $schemaClass = new ("\App\SchemaForms\\{$schemaName}Schema");
 
         $relations = [];
 
@@ -52,12 +54,9 @@ class SchemaFormBuilder
 
 
             $relations = $resource->$relation?->toArray();
-
-
         } else {
             $schema = $schemaClass();
         }
-
         return [
             'resourceName' => $routeParamName ? strtolower($routeParamName) : strtolower($model),
             'method' => $method,
@@ -89,5 +88,4 @@ class SchemaFormBuilder
        ];
 
        */
-
 }

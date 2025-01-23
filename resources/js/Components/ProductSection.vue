@@ -347,7 +347,11 @@ p .swiper-button-prev.swiper-button-disabled,
                                 <p
                                     class="text-xs font-bold text-black font-mulish text-shadow-lg md:text-lg"
                                 >
-                                    {{ product.name.slice(0, 42) + "..." }}
+                                    {{
+                                        product?.name
+                                            ? product.name.slice(0, 42) + "..."
+                                            : "N/A"
+                                    }}
                                 </p>
                             </div>
                         </Link>

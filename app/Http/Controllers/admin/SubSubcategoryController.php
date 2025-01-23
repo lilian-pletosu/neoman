@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\SubSubCategory;
+use App\Services\CategoryService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use App\Services\SubSubcategoryService;
@@ -29,15 +31,16 @@ class SubSubcategoryController extends Controller
     public function index()
     {
         $builder = $this->dataTableService
-            ->setResource('SubSubCategory')
+            ->setResource('Category')
             ->setResourceColumns(['id', 'name', 'slug', 'image', 'is_active'])
-            ->setColumnsOrder(['id', 'name', 'slug', 'image'])
-            ->setRelationColumn('subcategory', 'subcategory', ['name'])
+            ->setRelationColumn('parent', 'subcategory', ['name'])
+            ->setColumnsOrder(['id', 'name'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.categories.subSubcategories')
             ->setResourceRoute('admin.categories.subSubcategories')
-            ->sortBy('id');
+            ->sortBy('is_active', 'desc')
+            ->where(['level', '=', 3]);
 
         return inertia('Admin/SubSubcategories', [
             'initialRoute' => 'admin.categories.subSubcategories',
@@ -48,7 +51,6 @@ class SubSubcategoryController extends Controller
     public function create()
     {
         return (new SchemaFormBuilder)('SubSubCategory', 'post', 'admin.categories.subSubcategories.store');
-
     }
 
 
@@ -59,7 +61,7 @@ class SubSubcategoryController extends Controller
             $data = $request->validate([
                 'name_ro' => 'required|min:3|String',
                 'name_ru' => 'required|min:3|String',
-                'subcategory_id' => 'required',
+                'parent_id' => 'required',
                 'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg',
                 'is_active' => 'required|boolean'
             ]);
@@ -67,25 +69,23 @@ class SubSubcategoryController extends Controller
             $data = $request->validate([
                 'name ro' => 'required|min:3|String',
                 'name ru' => 'required|min:3|String',
-                'subcategory_id' => 'required',
+                'parent_id' => 'required',
                 'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg',
                 'is_active' => 'required|boolean'
             ]);
         }
-        (new SubSubcategoryService())->create($request, $data);
+        (new CategoryService())->createChildren($request, $data, 3);
         return to_route($this->route);
-
     }
 
     public function show(string $id)
     {
-        $subSubCategory = SubSubCategory::findOrfail($id);
-        return $subSubCategory->loadAggregate(['subcategory'], 'name');
+        //
     }
 
     public function edit(string $id): array
     {
-        return (new SchemaFormBuilder)('SubSubCategory', 'put', 'admin.categories.subSubcategories.update', $id, null, true);
+        return (new SchemaFormBuilder)('Category', 'put', 'admin.categories.subSubcategories.update', $id, null, true, 'SubSubCategory');
     }
 
     public function update(Request $request, string $id)
@@ -94,7 +94,7 @@ class SubSubcategoryController extends Controller
             $data = $request->validate([
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
-                'form.subcategory_id' => 'required',
+                'form.parent_id' => 'required',
                 'image._value' => 'nullable|image',
                 'form.is_active' => 'required|boolean'
             ]);
@@ -103,15 +103,14 @@ class SubSubcategoryController extends Controller
             $data = $request->validate([
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
-                'form.subcategory_id' => 'required',
+                'form.parent_id' => 'required',
                 'form.is_active' => 'required|boolean'
             ]);
             $data['image'] = null;
         }
-        $subSubCategory = SubSubcategory::find($id);
-        (new SubSubcategoryService())->update($data, $subSubCategory);
+        $category = Category::find($id);
+        (new CategoryService())->updateChildren($data, $category, $request);
         return to_route($this->route);
-
     }
 
     /**
@@ -119,17 +118,16 @@ class SubSubcategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $subSubcategory = SubSubCategory::find($id);
+        $category = Category::find($id);
 
         // Ștergem imaginea asociată
-        $imagePath = str_replace('/storage', 'public', $subSubcategory->image);
+        $imagePath = str_replace('/storage', 'public', $category->image);
         Storage::delete($imagePath);
 
 
         // Ștergem subcategoria
-        $subSubcategory->delete();
+        $category->delete();
+
         return to_route($this->route);
-
-
     }
 }

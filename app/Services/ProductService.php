@@ -26,8 +26,6 @@ class ProductService
 
     public function loadSalesProducts(): array
     {
-        $productsArray = [];
-
         $promotions = Promotion::where('status', 1)
             ->with([
                 'brands.products' => function ($query) {
@@ -38,70 +36,55 @@ class ProductService
                         'measurementUnit.translations'
                     ]);
                 },
-                'categories.subcategories.subsubcategories.products' => function ($query) {
-                    $query->latest()->take(15)->with([
+                'categories.children.products' => function ($query) {
+                    $query->latest()->take(25)->with([
                         'attributes.attributeValues.translations',
                         'brand:id,name,image',
                         'images:id,product_id,image1',
                         'measurementUnit.translations'
                     ]);
-                }
-
+                },
+                'categories.products' => function ($query) {
+                    $query->latest()->take(25)->with([
+                        'attributes.attributeValues.translations',
+                        'brand:id,name,image',
+                        'images:id,product_id,image1',
+                        'measurementUnit.translations'
+                    ]);
+                },
             ])
             ->get();
 
-        $promotions = $promotions->map(function ($promotion) {
-            // Initialize $products collection at the start
-            $products = collect();
 
-            $promotion->categories->each(function ($category) use (&$products) {
-                $category->subcategories->each(function ($subcategory) use (&$products) {
-                    $subcategory->subsubcategories->each(function ($subsubcategory) use (&$products) {
-                        $products = $products->merge($subsubcategory->products);
-                    });
-                });
-
-                $category->products = $products;
-            });
-
-            return $promotion;
-        });
-
-
-
-
-        $productsArray = collect($promotions)
+        return collect($promotions)
             ->flatMap(function ($promotion) {
-                $products = collect(); // Inițializăm o colecție goală
 
-                // Procesăm produsele din brand-uri
+                $products = collect();
+
+                // Process brand products
                 if ($promotion->brands->isNotEmpty()) {
                     $products = $promotion->brands->flatMap(function ($brand) use ($promotion) {
-                        return $brand->products->map(function ($product) use ($promotion) {
+                        return $brand->products->take(15)->map(function ($product) use ($promotion) {
                             return $this->formatProduct($product, $promotion);
                         });
                     });
                 }
 
-                // Procesăm sub-sub-categoriile și produsele
-                foreach ($promotion->categories as $category) {
-                    foreach ($category->subcategories as $subcategory) {
-                        foreach ($subcategory->subsubcategories as $subsubcategory) {
-                            $products = $products->merge($subsubcategory->products->map(function ($product) use ($promotion) {
-                                return $this->formatProduct($product, $promotion);
-                            }));
-                        }
-                    }
-                }
+                // Process category products (both parent and children)
+                $categoryProducts = $promotion->categories->load('children.products')->flatMap(function ($category) use ($promotion) {
+                    // Get all products from both the category and its children
+                    $allProducts = collect($category->products)
+                        ->merge($category->children->flatMap(fn($child) => $child->products));
+                    return $allProducts->take(15)->map(fn($product) => $this->formatProduct($product, $promotion));
+                });
 
-                return $products;
+                return $products->merge($categoryProducts);
             })
             ->shuffle()
             ->shuffle()
             ->all();
-
-        return $productsArray;
     }
+
 
     private function formatProduct($product, $promotion)
     {
@@ -115,7 +98,7 @@ class ProductService
         return [
             'id' => $product->id,
             'slug' => $product->slug,
-            'name' => $product->translateOrDefault()->name,
+            'name' => $product->name,
             'image' => $product->images->first()->image1 ?? null,
             'price' => $product->price,
             'credits' => $product->credits,
@@ -420,7 +403,7 @@ class ProductService
             ]);
 
             $product->images()->create($productArray['images']);
-            $this->assignAttributesToProduct($product, $productArray['description'], $product->sub_sub_category_id);
+            $this->assignAttributesToProduct($product, $productArray['description'], $product->category_id);
 
             Log::info('Product updated successfully', ['product_code' => $product->product_code]);
 
@@ -449,7 +432,7 @@ class ProductService
                 'description' => json_encode($productArray['description']),
                 'price' => $productArray['price'],
                 'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
-                'sub_sub_category_id' => $this->ultraImportSubSubcategory(
+                'category_id' => $this->ultraImportSubSubcategory(
                     $productArray['sub_subcategory'],
                     $productArray['subcategory'],
                     $productArray['category']
@@ -550,7 +533,7 @@ class ProductService
                 'slug' => $data['slug'],
                 'price' => $data['price'],
                 'brand_id' => $data['brand_id'],
-                'sub_sub_category_id' => $data['sub_sub_category_id'],
+                'category_id' => $data['category_id'],
                 'product_code' => (new GenerateProductCode)((new Product())),
                 'specifications_id' => null,
                 'image' => 'image'
@@ -589,16 +572,16 @@ class ProductService
                 // Generează slug-ul folosind numele atributului
                 $slug = Str::slug($attributeName, '_');
 
-                // Caută atributul folosind slug-ul și sub_sub_category_id
+                // Caută atributul folosind slug-ul și category_id
                 $attribute = Attribute::where('slug', $slug)
-                    ->where('sub_sub_category_id', $subSubCategoryId)
+                    ->where('category_id', $subSubCategoryId)
                     ->first();
 
                 // Dacă atributul nu există, creează-l
                 if (!$attribute) {
                     $attribute = Attribute::create([
                         'slug' => $slug,
-                        'sub_sub_category_id' => $subSubCategoryId,
+                        'category_id' => $subSubCategoryId,
                     ]);
                 }
 

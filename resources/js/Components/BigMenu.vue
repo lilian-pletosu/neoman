@@ -1,5 +1,5 @@
 <script setup>
-import { getCurrentInstance, ref } from "vue";
+import { ref } from "vue";
 import {
     DropdownMenuArrow,
     DropdownMenuContent,
@@ -15,17 +15,9 @@ import { Icon } from "@iconify/vue";
 import { route } from "ziggy-js";
 import { router, usePage } from "@inertiajs/vue3";
 
-const app = getCurrentInstance();
 const page = usePage();
 
 const toggleState = ref(false);
-const checkboxOne = ref(false);
-const checkboxTwo = ref(false);
-const person = ref("pedro");
-
-function handleClick() {
-    alert("hello!");
-}
 </script>
 
 <template>
@@ -47,7 +39,7 @@ function handleClick() {
                     @scroll="console.log('scroll')"
                 >
                     <DropdownMenuItem
-                        v-if="category.subcategory.length <= 0"
+                        v-if="category.children.length <= 0"
                         :value="category.slug"
                         class="z-50 py-6 cursor-pointer group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
                         @click="
@@ -64,7 +56,7 @@ function handleClick() {
                         <p class="text-lg">{{ category.name }}</p>
                     </DropdownMenuItem>
                     <DropdownMenuSubTrigger
-                        v-if="category.subcategory.length > 0"
+                        v-if="category.children.length > 0"
                         class="z-50 py-6 cursor-pointer group w-full text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[state=open]:bg-green4 data-[state=open]:text-grass11 data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1 data-[highlighted]:data-[state=open]:bg-green9 data-[highlighted]:data-[state=open]:text-green1"
                         value="more toolsz"
                         @click="
@@ -94,13 +86,11 @@ function handleClick() {
                             >
                                 <div class="columns-3">
                                     <div
-                                        v-for="subcategory in category.subcategory"
+                                        v-for="subcategory in category.children"
                                         class="mb-4 break-inside-avoid"
                                     >
                                         <DropdownMenuItem
-                                            v-if="
-                                                category.subcategory.length <= 0
-                                            "
+                                            v-if="category.children.length <= 0"
                                             class="py-4 group text-[13px] leading-none text-grass11 rounded-[3px] flex items-center h-[25px] relative px-3 select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-green9 data-[highlighted]:text-green1"
                                             @click="
                                                 router.get(
@@ -145,7 +135,7 @@ function handleClick() {
                                                 </p>
                                             </div>
                                             <DropdownMenuItem
-                                                v-for="sub_subcategory in subcategory.sub_subcategory"
+                                                v-for="sub_subcategory in subcategory.children"
                                                 class="group text-[13px] py-4 leading-none text-grass11 rounded-[3px] flex items-center h-[25px] relative"
                                                 @click="
                                                     router.get(

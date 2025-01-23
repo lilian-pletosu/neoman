@@ -25,7 +25,7 @@ class ProductRequest extends FormRequest
             'name' => 'required|min:3|String',
             'description' => 'required',
             'brand_id' => 'required',
-            'sub_sub_category_id' => 'required',
+            'category_id' => 'required',
             'price' => 'required|decimal:2',
             'image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
 

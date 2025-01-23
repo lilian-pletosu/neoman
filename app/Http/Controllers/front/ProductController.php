@@ -5,18 +5,22 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 use App\Models\Attribute;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
-use App\Models\SubSubCategory;
 use App\Services\SessionService;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function index($subSubcategorySlug)
+    public function index($categorySlug)
     {
-        $subSubcategory = SubSubCategory::where('slug', $subSubcategorySlug)->first();
-        $brandQuery = Brand::brandsOfSubsubCategory($subSubcategory->id)->get();
-        $attributesQuery = Attribute::where('sub_sub_category_id', $subSubcategory->id)->with('attributeValues')->get();
+        $category = Category::where([
+            ['slug', $categorySlug],
+            ['level', 3]
+        ])->first();
+
+        $brandQuery = Brand::brandsOfSubsubCategory($category->id)->get();
+        $attributesQuery = Attribute::where('category_id', $category->id)->with('attributeValues')->get();
 
         $brands[] = [
             'key' => 'brand',
@@ -43,7 +47,7 @@ class ProductController extends Controller
             ];
         })->all();
 
-        $products = Product::withDiscountDetails()->where('sub_sub_category_id', $subSubcategory->id)
+        $products = Product::withDiscountDetails()->where('category_id', $category->id)
             ->with('brand', 'images');
 
 
@@ -59,7 +63,7 @@ class ProductController extends Controller
 
         return inertia('User/ProductsPage', [
             'products' => $products,
-            'subSubcategory' => $subSubcategory,
+            'subSubcategory' => $category,
             'brands' => $brands,
             'attributes' => $attributes,
         ]);
@@ -85,8 +89,7 @@ class ProductController extends Controller
             $mu_unit = '';
         }
 
-        $product = Product::withDiscountDetails()->where('slug', $productSlug)->with(['images', 'brand', 'subSubCategory.subcategory.category', 'attributeValues'])->first();
-
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'attributeValues', 'category.promotions', 'category.parent.promotions', 'category.parent.parent'])->withDiscountDetails()->first();
 
         (new SessionService())->AddVisitedProductInSession($product);
 

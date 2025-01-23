@@ -11,12 +11,10 @@ class CategoryController extends Controller
     {
 
         $category = Category::where('slug', $categorySlug)
-            ->with(['subcategory' => function ($query) {
+            ->with(['children' => function ($query) {
                 $query->active();
             }])
             ->first();
-
-        
 
 
 

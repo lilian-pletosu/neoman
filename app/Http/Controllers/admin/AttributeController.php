@@ -66,11 +66,11 @@ class AttributeController extends Controller
         $data = $request->validate([
             'name ro' => 'required|min:3',
             'name ru' => 'required|min:3',
-            'sub_sub_category_id' => 'required',
+            'category_id' => 'required',
         ]);
         $data['slug'] = Str::slug($data['name ro'], '_');
 
-        $attribute = Attribute::firstOrCreate(['slug' => $data['slug'], 'sub_sub_category_id' => $data['sub_sub_category_id']], []);
+        $attribute = Attribute::firstOrCreate(['slug' => $data['slug'], 'category_id' => $data['category_id']], []);
 
         foreach (config('app.available_locales') as $locale) {
             foreach ($this->translatedAttributes as $translatedAttribute) {
@@ -79,8 +79,6 @@ class AttributeController extends Controller
         }
         $attribute->save();
         return to_route($this->route);
-
-
     }
 
     /**
@@ -92,13 +90,11 @@ class AttributeController extends Controller
             'id' => $attribute->id,
             "name $this->currentLocale" => $attribute->translate($this->currentLocale)->name,
             "name $this->reserveLanguage" => $attribute->translate($this->reserveLanguage)->name,
-            "sub_sub_category_id" => $attribute->sub_sub_category_id,
+            "category_id" => $attribute->category_id,
             'slug' => $attribute->slug
         ];
 
         return $data;
-
-
     }
 
     /**
@@ -117,13 +113,13 @@ class AttributeController extends Controller
         $data = $request->validate([
             'form.name ro' => 'required|min:3',
             'form.name ru' => 'required|min:3',
-            'form.sub_sub_category_id' => 'required'
+            'form.category_id' => 'required'
         ]);
         $data['slug'] = Str::slug($data['form']['name ro'], '_');
 
         $attribute->update([
             'slug' => $data['slug'],
-            'sub_sub_category_id' => $data['form']['sub_sub_category_id']
+            'category_id' => $data['form']['category_id']
         ]);
 
         foreach (config('app.available_locales') as $locale) {
@@ -133,8 +129,6 @@ class AttributeController extends Controller
         }
         $attribute->save();
         return to_route($this->route);
-
-
     }
 
     /**
@@ -144,6 +138,5 @@ class AttributeController extends Controller
     {
         $attribute->delete();
         return to_route($this->route);
-
     }
 }

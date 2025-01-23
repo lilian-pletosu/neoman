@@ -35,13 +35,13 @@ class SubCategorySchema
             ],
 
             [
-                'name' => 'category_id',
+                'name' => 'parent_id',
                 'value' => '',
                 'type' => 'select',
                 'placeholder' => 'name',
                 'label' => 'category',
                 'hydrated_by' => 'name',
-                'options' => Category::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
+                'options' => Category::active()->where('level', 1)->orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
                 'rules' => [
                     'required'
                 ],

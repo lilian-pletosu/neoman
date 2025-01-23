@@ -27,8 +27,36 @@ class HomeController extends Controller
 
     public function index()
     {
+
+
+        // $params = [
+        //     "service" => "NOMENCLATURE",
+        //     "all" => true,
+        //     "additionalParams" => ""
+        // ];
+
+        // $request = new Request();
+        // $request->merge($params);
+
+
+
+        // // dd($this->requestData($request));
+        // dd($this->checkStatus('2c92c2ff-0fbb-4d33-97c7-204d2f6d5301')->getData()->status);
+        // // dd($this->getData('1c505081-1197-4d7b-87ca-3761d4179db8'));
+
+
+
+
+
+
+
+
+
+
+
+
         $categories = Cache::remember('categories', 262656, function () {
-            return Category::orderBy('name')->active()->get();
+            return Category::where('level', 1)->orderBy('name')->active()->get();
         });
 
         $brands = Cache::remember('brands', 10000, function () {
@@ -46,6 +74,7 @@ class HomeController extends Controller
         $salesProducts = Cache::remember('sales_products', 262656, function () {
             return (new ProductService())->loadSalesProducts();
         });
+
 
         Inertia::share([
             'home_banners' => $homeBanners,
@@ -70,5 +99,39 @@ class HomeController extends Controller
         ]);
 
         Mail::to('office.neoman@gmail.com')->send(new CallWaitForm($data));
+    }
+
+
+
+
+    public function requestData(Request $request)
+    {
+
+        $guid = $this->ultraImportService->requestData(
+            $request->input('service'),
+            $request->input('all'),
+            $request->input('additionalParams')
+        );
+
+
+        return $guid;
+    }
+
+    public function checkStatus($guid)
+    {
+        $status = $this->ultraImportService->isReady($guid);
+        return response()->json(['status' => $status]);
+    }
+
+
+    public function getData($guid)
+    {
+        $data = $this->ultraImportService->getDataByID($guid);
+        return response()->json($data);
+    }
+
+    public function commitReceivingData(string $service): void
+    {
+        $this->ultraImportService->commitReceivingData($service);
     }
 }

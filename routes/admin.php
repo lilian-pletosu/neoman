@@ -34,6 +34,7 @@ Route::group([], function () {
             Route::resource('/associations', \App\Http\Controllers\admin\AssociationController::class);
             Route::resource('/banners', \App\Http\Controllers\admin\BannerController::class);
             Route::resource('/privacy', \App\Http\Controllers\admin\PrivacyController::class);
+            Route::resource('/terms', \App\Http\Controllers\admin\TermsController::class);
             Route::resource('/about_us', \App\Http\Controllers\admin\AboutController::class);
             Route::resource('/settings', \App\Http\Controllers\admin\SettingsController::class);
             Route::get('fetch_products', [\App\Http\Controllers\admin\SettingsController::class, 'fetchProducts'])->name('fetch_products');

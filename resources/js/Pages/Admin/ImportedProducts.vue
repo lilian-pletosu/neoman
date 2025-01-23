@@ -48,153 +48,33 @@
                         </secondary-button>
                     </Link>
                 </div>
-                <div
-                    v-if="resources.data.length !== 0"
-                    class="flex flex-col mt-8"
+                <DataTest
+                    :data="filterData"
+                    :columns="columns"
+                    :selectable="true"
+                    :pagination="resources.links"
+                    @selection-change="handleSelectionChange"
                 >
-                    <div class="border">
-                        <div class="overflow-x-auto">
-                            <table
-                                class="min-w-full text-sm bg-white divide-y-2 divide-gray-200"
-                            >
-                                <thead class="">
-                                    <tr class="flex-1 text-base text-left">
-                                        <th
-                                            class="sticky inset-y-0 flex px-4 py-2 bg-white start-0"
-                                        >
-                                            <label
-                                                class="sr-only"
-                                                for="SelectAll"
-                                                >Select All</label
-                                            >
-
-                                            <input
-                                                id="SelectAll"
-                                                :checked="
-                                                    selectedProduct.length ===
-                                                    resources.data.length
-                                                "
-                                                class="border-gray-300 rounded size-5"
-                                                type="checkbox"
-                                                @change="selectAll"
-                                            />
-                                        </th>
-                                        <th
-                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                        >
-                                            {{ __("image") }}
-                                        </th>
-                                        <th
-                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                        >
-                                            {{ __("name") }}
-                                        </th>
-                                        <th
-                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                        >
-                                            {{ __("sub_subcategory") }}
-                                        </th>
-
-                                        <th
-                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                        >
-                                            {{ __("brand") }}
-                                        </th>
-                                        <th
-                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                        >
-                                            {{ __("price") }}
-                                        </th>
-                                        <th
-                                            class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap"
-                                        >
-                                            {{ __("updated_at") }}
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <tbody class="divide-y divide-gray-200">
-                                    <tr
-                                        v-for="(resource, key) in filterData"
-                                        :key="key"
-                                    >
-                                        <td
-                                            class="sticky inset-y-0 px-4 py-2 bg-white start-0"
-                                        >
-                                            <input
-                                                id="Row1"
-                                                :checked="isSelected(resource)"
-                                                class="border-gray-300 rounded size-5"
-                                                type="checkbox"
-                                                @change="
-                                                    selectProducts(resource)
-                                                "
-                                            />
-                                        </td>
-                                        <td
-                                            class="px-4 py-2 font-medium text-gray-900 cursor-default whitespace-nowrap"
-                                            @click="selectProducts(resource)"
-                                        >
-                                            <img
-                                                :src="
-                                                    resource.images?.image1 ??
-                                                    'https://banner2.cleanpng.com/20180815/sit/a1fff69c4e6de4ea9f7a7f388f4b51cb.webp'
-                                                "
-                                                alt="no"
-                                                class="w-10 h-10"
-                                            />
-                                        </td>
-                                        <td
-                                            class="px-4 py-2 font-medium text-gray-900 cursor-default whitespace-nowrap"
-                                            @click="selectProducts(resource)"
-                                        >
-                                            {{ resource.name.ro }}
-                                        </td>
-                                        <td
-                                            class="px-4 py-2 text-gray-700 whitespace-nowrap"
-                                        >
-                                            {{
-                                                resource.sub_sub_category?.name
-                                            }}
-                                        </td>
-
-                                        <td
-                                            class="px-4 py-2 text-gray-700 whitespace-nowrap"
-                                        >
-                                            {{ resource.brand?.name }}
-                                        </td>
-                                        <td
-                                            class="px-4 py-2 text-gray-700 whitespace-nowrap"
-                                        >
-                                            {{ resource.price }}
-                                        </td>
-                                        <td
-                                            class="px-4 py-2 text-gray-700 whitespace-wrap"
-                                        >
-                                            <div
-                                                class="flex items-center gap-1"
-                                            >
-                                                <ClockIcon
-                                                    class="w-5 h-5 text-gray-400"
-                                                    aria-hidden="true"
-                                                />
-                                                {{
-                                                    formatDate(
-                                                        resource.updated_at
-                                                    )
-                                                }}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <template #image="{ item }">
+                        <img
+                            :src="
+                                item.images?.image1 ??
+                                'https://banner2.cleanpng.com/20180815/sit/a1fff69c4e6de4ea9f7a7f388f4b51cb.webp'
+                            "
+                            alt="no"
+                            class="w-10 h-10"
+                        />
+                    </template>
+                    <template #updated_at="{ item }">
+                        <div class="flex items-center gap-1">
+                            <ClockIcon
+                                class="w-5 h-5 text-gray-400"
+                                aria-hidden="true"
+                            />
+                            {{ formatDate(item.updated_at) }}
                         </div>
-
-                        <div class="flex mt-4 place-content-start">
-                            <pagination :links="resources.links" />
-                        </div>
-                    </div>
-                </div>
+                    </template>
+                </DataTest>
                 <div>
                     <h2
                         v-if="resources.data.length === 0"
@@ -213,20 +93,6 @@
                     <div class="h-auto p-4 bg-gray-100">
                         <BlackSelectorImport
                             :column="name"
-                            :label="__('select_category_where_save_products')"
-                            :options="page.props.categories"
-                            @update:status="(val) => (form.category = val)"
-                        />
-                        <BlackSelectorImport
-                            :column="name"
-                            :label="
-                                __('select_subcategory_where_save_products')
-                            "
-                            :options="page.props.subcategories"
-                            @update:status="(val) => (form.subcategory = val)"
-                        />
-                        <BlackSelectorImport
-                            :column="name"
                             :label="
                                 __('select_sub_subcategory_where_save_products')
                             "
@@ -235,7 +101,14 @@
                                 (val) => (form.sub_subcategory = val)
                             "
                         />
-
+                        <div class="flex items-center text-yellow-800">
+                            <ExclamationCircleIcon class="w-5 h-5" />
+                            <span class="text-xs">{{
+                                __(
+                                    "if_dont_select_subcategory_will_be_setted_automatically"
+                                )
+                            }}</span>
+                        </div>
                         <div class="flex justify-end mt-4 space-x-2">
                             <secondary-button @click="isOpen = !isOpen"
                                 >{{ __("cancel") }}
@@ -265,7 +138,8 @@ import DangerButton from "@/Components/DangerButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import { Inertia } from "@inertiajs/inertia";
 import { formatDate } from "@/helper";
-import { ClockIcon } from "@heroicons/vue/24/outline";
+import { ClockIcon, ExclamationCircleIcon } from "@heroicons/vue/24/outline";
+import DataTest from "@/Components/DataTest.vue";
 
 const app = getCurrentInstance();
 
@@ -281,13 +155,22 @@ const props = defineProps({
     },
 });
 const isOpen = ref(false);
-const modalIsOpen = ref(false);
-const res = ref();
 const selectedProduct = ref([]);
 const page = usePage();
 const dt = ref("");
 const search = ref(false);
 
+const columns = [
+    { key: "image", label: "image" },
+    { key: "name.ro", label: "name" },
+    { key: "category.name", label: "sub_subcategory" },
+    { key: "brand.name", label: "brand" },
+    { key: "price", label: "price" },
+    { key: "updated_at", label: "updated_at" },
+];
+const handleSelectionChange = (selected) => {
+    selectedProduct.value = selected;
+};
 const isSelected = (product) => {
     return selectedProduct.value.includes(product);
 };
@@ -315,8 +198,6 @@ watch(selectedProduct, (newState, oldState) => {
 
 const form = useForm({
     products: [],
-    category: null,
-    subcategory: null,
     sub_subcategory: null,
 });
 
@@ -324,11 +205,11 @@ const submit = () => {
     form.post(route("admin.imported-products.store"), {
         preserveScroll: true,
         onSuccess: () => {
-            toast.add({ message: page.props.toast });
+            // toast.add({ message: page.props.toast });
             isOpen.value = false;
             selectedProduct.value = [];
-            form.category = null;
-            form.subcategory = null;
+            // form.category = null;
+            // form.subcategory = null;
             form.sub_subcategory = null;
         },
         onError: (e) => console.log(e),
@@ -348,7 +229,7 @@ function deleteSelectedProducts() {
             {
                 preserveScroll: true,
                 onSuccess: () => {
-                    toast.add({ message: page.props.toast });
+                    // toast.add({ message: page.props.toast });
                     selectedProduct.value = [];
                 },
                 onError: (e) => toast.add({ message: e }),

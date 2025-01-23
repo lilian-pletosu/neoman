@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\ImportedProduct;
+use Inertia\Inertia;
 use App\Models\Product;
-use App\Services\DataTableService;
-use App\Services\ProductService;
+use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use App\Models\SubSubCategory;
+use App\Models\ImportedProduct;
+use App\Services\ProductService;
+use App\Services\DataTableService;
+use App\Http\Controllers\Controller;
+use App\Models\Category;
 
 class ImportedProductController extends Controller
 {
@@ -26,11 +30,15 @@ class ImportedProductController extends Controller
 
     public function index()
     {
+
+        Inertia::share('categories', Category::where('level', 1)->orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('subcategories', Category::where('level', 2)->orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('sub_subcategories', Category::where('level', 3)->orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+
         $builder = $this->dataTableService
             ->setResource('ImportedProduct')
             ->setResourceColumns(['id', 'name', 'price', 'description', 'images', 'updated_at'])
-            ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
-            ->setRelationColumn('subSubCategory', 'subSubCategory', ['name'])
+            ->setRelationColumn('category', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
             //            ->setRelationColumn('images', 'image', ['image1', 'image2', 'image3', 'image4'])
             ->editInModal(true)
@@ -51,7 +59,7 @@ class ImportedProductController extends Controller
             /// need to clone all products from imported products to products with selected sub_subcategory_id
             collect($request->products)->each(function ($product) use ($request) {
                 $product = ImportedProduct::find($product['id']);
-                $product['sub_sub_category_id'] = $request->sub_subcategory ?? $product['sub_sub_category_id'];
+                $product['category_id'] = $request->sub_subcategory ?? $product['category_id'];
                 $product['description'] = json_decode($product['description'], true);
                 $array = [];
                 $array['name'] = $product['name'];
@@ -62,7 +70,7 @@ class ImportedProductController extends Controller
                     'slug' => $product['slug'],
                     'price' => $product['price'],
                     'brand_id' => $product['brand_id'],
-                    'sub_sub_category_id' => $product['sub_sub_category_id'],
+                    'category_id' => $product['category_id'],
                     'specifications_id' => null,
                 ]);
                 if ($newProduct->images()->count() == 0) {
@@ -80,7 +88,7 @@ class ImportedProductController extends Controller
                         $newProduct->translateOrNew($locale)->$translatableAttribute = $product[$translatableAttribute][$locale] ?? null;
                     }
                 }
-                (new ProductService())->assignAttributesToProduct($newProduct, $array['description'], $newProduct->sub_sub_category_id);
+                (new ProductService())->assignAttributesToProduct($newProduct, $array['description'], $newProduct->category_id);
                 $newProduct->save();
                 $product->delete();
             });

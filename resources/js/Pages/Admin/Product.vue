@@ -335,7 +335,7 @@ watch(isOrderChanged, () => {
                                     <span
                                         class="text-gray-600 dark:text-gray-300"
                                     >
-                                        {{ product.sub_sub_category.name }}
+                                        {{ product.category.name }}
                                     </span>
                                 </div>
                                 <div class="mr-4">
@@ -374,6 +374,7 @@ watch(isOrderChanged, () => {
                                 >
                                     <span
                                         v-for="credit in credits"
+                                        v-if="credits.length"
                                         :key="credit.id"
                                         class="relative px-4 py-2 mr-2 font-bold text-gray-700 bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 group/credit"
                                     >
@@ -385,6 +386,7 @@ watch(isOrderChanged, () => {
                                             class="absolute top-0 right-0 hidden w-3.5 h-3.5 cursor-pointer group-hover/credit:flex group-hover/credit:text-red-400"
                                         />
                                     </span>
+                                    <span v-else >N/A</span>
                                 </div>
                             </div>
                             <div class="mb-4">
@@ -395,6 +397,7 @@ watch(isOrderChanged, () => {
                                 <div class="flex items-center mt-2">
                                     <span
                                         v-for="installment in installments"
+                                        v-if="installments.length"
                                         :key="installment.id"
                                         class="relative px-4 py-2 mr-2 font-bold text-gray-700 bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 group/installment"
                                     >
@@ -408,6 +411,7 @@ watch(isOrderChanged, () => {
                                             class="absolute top-0 right-0 hidden w-3.5 h-3.5 cursor-pointer group-hover/installment:flex group-hover/installment:text-red-400"
                                         />
                                     </span>
+                                    <span v-else>N/A</span>
                                 </div>
                                 <div class="flex mt-6 mb-4 -mx-2">
                                     <div class="w-full px-2">

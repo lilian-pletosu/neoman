@@ -261,6 +261,9 @@ return [
     'view_privacy' => 'Просмотр политики конфиденциальности',
     'edit_privacy' => 'Редактировать политику конфиденциальности',
     'updated_at' => 'Обновлено',
+    'create_subSubcategories' => 'Создать подкатегорию',
+    'if_dont_select_subcategory_will_be_setted_automatically' => 'Если не выбрать подкатегорию, она будет установлена автоматически',
+
 
     //statuses
     'pending' => 'В ожидании',

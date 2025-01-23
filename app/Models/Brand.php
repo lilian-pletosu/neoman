@@ -35,16 +35,16 @@ class Brand extends Model implements TranslatableContract
         return $this->hasMany(Product::class, 'brand_id');
     }
 
-    public function scopeBrandsOfSubsubCategory($query, $sub_sub_category_id)
+    public function scopeBrandsOfSubsubCategory($query, $category_id)
     {
-        return $query->whereHas('products', function ($query) use ($sub_sub_category_id) {
-            $query->whereHas('subSubCategory', function ($query) use ($sub_sub_category_id) {
-                $query->where('id', $sub_sub_category_id);
+        return $query->whereHas('products', function ($query) use ($category_id) {
+            $query->whereHas('category', function ($query) use ($category_id) {
+                $query->where('id', $category_id);
             });
             // get count of products for this brand of this subsubcategory
-        })->withCount(['products' => function (Builder $query) use ($sub_sub_category_id) {
-            $query->whereHas('subSubCategory', function ($query) use ($sub_sub_category_id) {
-                $query->where('id', $sub_sub_category_id);
+        })->withCount(['products' => function (Builder $query) use ($category_id) {
+            $query->whereHas('category', function ($query) use ($category_id) {
+                $query->where('id', $category_id);
             });
         }]);
     }

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Services\CookieService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
 use App\Notifications\NewOrderNotification;
 use Illuminate\Support\Facades\Notification;
 

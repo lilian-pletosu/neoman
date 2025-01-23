@@ -14,15 +14,20 @@ class Category extends Model implements TranslatableContract
     use Translatable;
 
 
-    protected $table = 'categories';
-    protected $fillable = [
-        'name',
-        'slug',
-        'icon',
-        'is_active',
-        'order'
-    ];
 
+    protected $fillable = ['parent_id', 'level', 'is_active', 'icon', 'order', 'slug', 'image'];
+    public $translatedAttributes = ['name'];
+
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
+    }
 
     public function scopeActive($query)
     {
@@ -30,19 +35,13 @@ class Category extends Model implements TranslatableContract
     }
 
 
-    public $translatedAttributes = ['name'];
-
-    public function subcategory()
-    {
-        return $this->hasMany(SubCategory::class, 'category_id');
-    }
-    public function subcategories()
-    {
-        return $this->hasMany(SubCategory::class, 'category_id');
-    }
-
     public function promotions()
     {
-        return $this->belongsToMany(Promotion::class, 'promotion_category');
+        return $this->belongsToMany(Promotion::class, 'promotion_category')->withPivot('category_id', 'promotion_id');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id');
     }
 }

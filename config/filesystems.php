@@ -71,6 +71,13 @@ return [
             'visibility' => 'public',
             'throw' => false,
         ],
+        'categories' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/categories'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+            'throw' => false,
+        ],
         'subSubcategories' => [
             'driver' => 'local',
             'root' => storage_path('app/public/subSubcategories'),

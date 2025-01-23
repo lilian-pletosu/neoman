@@ -18,7 +18,7 @@ class ImportedProduct extends Model
         'product_code',
         'slug',
         'brand_id',
-        'sub_sub_category_id',
+        'category_id',
         'measurement_unit_id',
         'images',
         'for_searching'
@@ -30,15 +30,13 @@ class ImportedProduct extends Model
         'images' => 'json'
     ];
 
-    public function subSubCategory()
+    public function category()
     {
-        return $this->belongsTo(SubSubCategory::class, 'sub_sub_category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function brand()
     {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
-
-
 }

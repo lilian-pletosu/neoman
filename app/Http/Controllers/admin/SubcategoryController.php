@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\SubCategory;
+use App\Services\CategoryService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
 use App\Services\SubcategoryService;
@@ -29,15 +31,16 @@ class SubcategoryController extends Controller
     public function index()
     {
         $builder = $this->dataTableService
-            ->setResource('SubCategory')
-            ->setResourceColumns(['id', 'name', 'slug', 'image', 'is_active'])
-            ->setColumnsOrder(['id', 'name', 'slug', 'image'])
-            ->setRelationColumn('category', 'category', ['name'])
+            ->setResource('Category')
+            ->setResourceColumns(['id', 'name', 'image', 'is_active'])
+            ->setRelationColumn('parent', 'category', ['name'])
+            ->setColumnsOrder(['id', 'name'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.categories.subcategories')
             ->setResourceRoute('admin.categories.subcategories')
-            ->sortBy('id');
+            ->sortBy('is_active', 'desc')
+            ->where(['level', '=', 2]);
 
         return inertia('Admin/Subcategories', [
             'initialRoute' => 'admin.categories.subcategories',
@@ -48,7 +51,6 @@ class SubcategoryController extends Controller
     public function create()
     {
         return (new SchemaFormBuilder)('SubCategory', 'post', 'admin.categories.subcategories.store');
-
     }
 
 
@@ -58,7 +60,7 @@ class SubcategoryController extends Controller
             $data = $request->validate([
                 'name_ro' => 'required|min:3',
                 'name_ru' => 'required|min:3',
-                'category_id' => 'required',
+                'parent_id' => 'required',
                 'image' => 'nullable|image|mimes:jpg,bmp,png,svg',
                 'is_active' => 'required|boolean',
             ]);
@@ -66,26 +68,25 @@ class SubcategoryController extends Controller
             $data = $request->validate([
                 'name ro' => 'required|min:3',
                 'name ru' => 'required|min:3',
-                'category_id' => 'required',
+                'parent_id' => 'required',
                 'image' => 'nullable|image|mimes:jpg,bmp,png,svg',
                 'is_active' => 'required|boolean',
             ]);
         }
 
-        (new SubcategoryService())->create($request, $data);
-        return to_route($this->route);
 
+        (new CategoryService())->createChildren($request, $data, 2);
+        return to_route($this->route);
     }
 
     public function show(SubCategory $subCategory)
     {
         return $subCategory->translations;
-
     }
 
     public function edit(string $id): array
     {
-        return (new SchemaFormBuilder)('SubCategory', 'put', 'admin.categories.subcategories.update', $id, null, true);
+        return (new SchemaFormBuilder)('Category', 'put', 'admin.categories.subcategories.update', $id, null, true, 'SubCategory');
     }
 
     public function update(Request $request, string $id)
@@ -95,25 +96,24 @@ class SubcategoryController extends Controller
             $data = $request->validate([
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
-                'form.category_id' => 'required',
                 'image._value' => 'nullable|image',
-                'form.is_active' => 'required|boolean'
+                'form.is_active' => 'required|boolean',
+                'form.parent_id' => 'required'
             ]);
             $data['image'] = $request->file('image');
         } else {
             $data = $request->validate([
                 'form.name ro' => 'required|min:3',
                 'form.name ru' => 'required|min:3',
-                'form.category_id' => 'required',
-//                'image._value' => 'nullable|image',
+                'form.parent_id' => 'required',
+                //                'image._value' => 'nullable|image',
                 'form.is_active' => 'required|boolean'
             ]);
             $data['image'] = null;
         }
-        $subCategory = SubCategory::find($id);
-        (new SubcategoryService())->update($data, $subCategory);
+        $category = Category::find($id);
+        (new CategoryService())->updateChildren($data, $category, $request);
         return to_route($this->route);
-
     }
 
     /**
@@ -121,18 +121,16 @@ class SubcategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        $subcategory = SubCategory::find($id);
+        $category = Category::find($id);
 
         // Ștergem imaginea asociată
-        $imagePath = str_replace('/storage', 'public', $subcategory->image);
+        $imagePath = str_replace('/storage', 'public', $category->image);
         Storage::delete($imagePath);
 
 
         // Ștergem subcategoria
-        $subcategory->delete();
+        $category->delete();
 
         return to_route($this->route);
-
-
     }
 }

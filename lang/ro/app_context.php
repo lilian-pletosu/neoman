@@ -266,6 +266,8 @@ return [
     'edit_privacy' => 'Editează politica de confidențialitate',
     'updated_at' => 'Actualizat la',
     'order' => 'Număr de ordine',
+    'create_subSubcategories' => 'Crează sub-subcategorie',
+    'if_dont_select_subcategory_will_be_setted_automatically' => 'Dacă lăsați câmpul gol, pentru fiecare produs se va seta categoria venită din import!',
 
     //statuses
     'pending' => 'Procesare',
@@ -322,7 +324,7 @@ return [
     'received_order' => 'Comanda dvs. a fost recepționată',
     'thanks_for_order' => 'Vă mulțumim pentru comandă! Cererea dvs. este acceptată. Vă vom contacta în curând pentru confirmare.',
     'you_have_new_message' => 'Aveți un nou mesaj din formularul de contact',
-    
+
 
     //categories
     '1. Mobile Phones & Gadgets' => 'Smartphone-uri și Gadget-uri',

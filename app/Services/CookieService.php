@@ -59,7 +59,7 @@ class CookieService
 
         $productDb = Product::withDiscountDetails()
             ->where('id', $productId)
-            ->with(['images', 'brand', 'subSubCategory.subcategory.category'])
+            ->with(['images', 'brand', 'category'])
             ->first();
 
         $newProduct = [

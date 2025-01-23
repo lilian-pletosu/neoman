@@ -1,28 +1,31 @@
 <script setup>
-import {onMounted, ref} from 'vue';
-import {useScroll} from '@vueuse/core'
+import { onMounted, ref } from "vue";
+import { useScroll } from "@vueuse/core";
 
 const props = defineProps({
     brands: {
         required: true,
         type: Object,
-    }
-})
+    },
+});
 
 const duplicatedBrands = ref([...props.brands, ...props.brands]);
 
 onMounted(() => {
-    const trackElement = document.querySelector('.carousel-track');
+    const trackElement = document.querySelector(".carousel-track");
+    if (trackElement) {
+        trackElement.addEventListener("scroll", () => {
+            const { scrollLeft, scrollWidth, clientWidth } = trackElement;
 
-    trackElement.addEventListener('scroll', () => {
-        const {scrollLeft, scrollWidth, clientWidth} = trackElement;
-
-        if (scrollLeft + clientWidth >= scrollWidth) {
-            duplicatedBrands.value = [...duplicatedBrands.value, ...props.brands];
-        }
-    });
+            if (scrollLeft + clientWidth >= scrollWidth) {
+                duplicatedBrands.value = [
+                    ...duplicatedBrands.value,
+                    ...props.brands,
+                ];
+            }
+        });
+    }
 });
-
 
 let intervalId;
 
@@ -33,7 +36,7 @@ onMounted(() => {
 });
 
 const el = ref(null);
-const {x, y} = useScroll(el)
+const { x, y } = useScroll(el);
 //
 
 let isDragging = ref(false);
@@ -59,11 +62,13 @@ const drag = (e) => {
 </script>
 
 <template>
-    <div ref="el" class="carousel-track gap-3 pt-3 w-full hide-scrollbar"
-         @mousedown="startDrag"
-         @mouseleave="endDrag"
-         @mouseup="endDrag"
-         @mousemove="drag"
+    <div
+        ref="el"
+        class="w-full gap-3 pt-3 carousel-track hide-scrollbar"
+        @mousedown="startDrag"
+        @mouseleave="endDrag"
+        @mouseup="endDrag"
+        @mousemove="drag"
     >
         <img
             v-for="(brand, index) in duplicatedBrands"
@@ -71,7 +76,7 @@ const drag = (e) => {
             :src="brand.image"
             :alt="brand.name"
             @click="alert('click')"
-            class="bg-3 p-3 object-contain flex-none border rounded-xl w-24 h-16 md:w-32 md:h-24 pointer-events-none"
+            class="flex-none object-contain w-24 h-16 p-3 border pointer-events-none bg-3 rounded-xl md:w-32 md:h-24"
         />
     </div>
 </template>
@@ -82,6 +87,4 @@ const drag = (e) => {
     animation: scroll 20s linear infinite;
     overflow-x: auto;
 }
-
-
 </style>

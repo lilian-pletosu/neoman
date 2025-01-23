@@ -51,20 +51,36 @@ const deleteProductFromCart = (id) => {
                                 <div
                                     class="col-span-1 p-0.5 overflow-hidden rounded-md border border-gray-200"
                                 >
-                                    <img
-                                        :alt="product.name"
-                                        :src="product.image"
-                                        class="object-contain w-24 h-24 mx-auto"
-                                    />
+                                    <Link
+                                        :href="
+                                            route('product_page', {
+                                                slug: product.slug,
+                                            })
+                                        "
+                                    >
+                                        <img
+                                            :alt="product.name"
+                                            :src="product.image"
+                                            class="object-contain w-24 h-24 mx-auto"
+                                        />
+                                    </Link>
                                 </div>
                                 <div
                                     class="flex flex-col justify-between col-span-2"
                                 >
-                                    <p
-                                        class="text-xs font-medium text-gray-900 md:text-base"
+                                    <Link
+                                        :href="
+                                            route('product_page', {
+                                                slug: product.slug,
+                                            })
+                                        "
                                     >
-                                        {{ product.name }}
-                                    </p>
+                                        <p
+                                            class="text-xs font-medium text-gray-900 md:text-base"
+                                        >
+                                            {{ product.name }}
+                                        </p>
+                                    </Link>
                                     <div class="flex items-end flex-1 text-sm">
                                         <div
                                             class="flex items-center space-x-2"
@@ -132,7 +148,7 @@ const deleteProductFromCart = (id) => {
                                                     2
                                                 ) * product.qty
                                             ).toFixed(1)
-                                        }}  
+                                        }}
                                         {{ __("lei") }}
                                     </p>
                                     <div>

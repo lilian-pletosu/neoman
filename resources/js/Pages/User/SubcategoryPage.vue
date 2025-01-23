@@ -14,7 +14,6 @@ const props = defineProps({
 
 <template>
     <front-layout title="Pagina principală">
-        <!--        <breadcrumb :product="product"/>-->
         <hr />
         <!-- component -->
         <section class="py-6 bg-white">
@@ -28,7 +27,7 @@ const props = defineProps({
                     class="grid grid-cols-1 pt-12 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-28 lg:gap-y-16"
                 >
                     <div
-                        v-for="subSubcategory in subcategory.sub_subcategory"
+                        v-for="subSubcategory in subcategory.children"
                         class="relative flex flex-col h-48 text-gray-700 bg-white shadow-md group rounded-xl bg-clip-border"
                     >
                         <Link

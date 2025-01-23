@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 use App\Services\DataTableService;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\SubCategory;
-use App\Models\SubSubCategory;
 
 class PromotionController extends Controller
 {
@@ -31,18 +29,16 @@ class PromotionController extends Controller
      */
     public function index()
     {
-        Inertia::share('brands', Brand::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
-        Inertia::share('categories', Category::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
-        Inertia::share('subcategories', SubCategory::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
-        Inertia::share('sub_subcategories', SubSubCategory::orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('brands', Brand::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('categories', Category::where('level', 1)->orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('subcategories', Category::where('level', 2)->orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
+        Inertia::share('sub_subcategories', Category::where('level', 3)->orderBy('name')->active()->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'name' => $f->name])->toArray());
 
         $this->dataTableService
             ->setResource('Promotion')
             ->setResourceColumns(['id', 'name', 'description', 'start_date', 'end_date', 'discount', 'status'])
             ->setRelationColumn('brands', 'brand', ['name'])
-            ->setRelationColumn('sub_subcategories', 'sub_subcategory', ['name'])
-            ->setRelationColumn('categories', 'category', ['name'])
-            ->setRelationColumn('subcategories', 'subcategory', ['name'])
+            ->setRelationColumn('categories', 'category', ['name', 'level'])
             ->paginate(10)
             ->sortBy('created_at', 'desc')
             ->setSearchRoute('admin.promotions');
@@ -64,7 +60,7 @@ class PromotionController extends Controller
      */
     public function store(Request $request)
     {
-
+        // dd($request->all());
         // 1. Validează datele
         $validatedData = $request->validate([
             'name' => 'required|max:255',
@@ -79,6 +75,8 @@ class PromotionController extends Controller
             'subcategory' => 'nullable',
         ]);
 
+        // dd($validatedData);
+
         // 2. Creează o nouă instanță de Promotion
         $promotion = new Promotion($validatedData);
 
@@ -89,14 +87,20 @@ class PromotionController extends Controller
         if (isset($validatedData['brand'])) {
             $promotion->brands()->attach($validatedData['brand']);
         }
-        if (isset($validatedData['subcategory'])) {
-            $promotion->subcategories()->attach($validatedData['subcategory']);
+
+        $categoryIds = [];
+        if (!empty($validatedData['category'])) {
+            $categoryIds[] = $validatedData['category'];
         }
-        if (isset($validatedData['category'])) {
-            $promotion->categories()->attach($validatedData['category']);
+        if (!empty($validatedData['subcategory'])) {
+            $categoryIds[] = $validatedData['subcategory'];
         }
-        if (isset($validatedData['sub_subcategory'])) {
-            $promotion->sub_subcategories()->attach($validatedData['sub_subcategories']);
+        if (!empty($validatedData['sub_subcategory'])) {
+            $categoryIds[] = $validatedData['sub_subcategory'];
+        }
+
+        if (!empty($categoryIds)) {
+            $promotion->categories()->attach($categoryIds);
         }
 
         // 5. Redirecționează utilizatorul înapoi la pagina de listă a promoțiilor cu un mesaj de succes

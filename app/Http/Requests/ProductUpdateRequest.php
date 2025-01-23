@@ -25,9 +25,9 @@ class ProductUpdateRequest extends FormRequest
             'form.name' => 'required|min:3|String',
             'form.description' => 'required',
             'form.brand_id' => 'required',
-            'form.sub_sub_category_id' => 'required',
+            'form.category_id' => 'required',
             'form.price' => 'required|numeric',
-//            'form.image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
+            //            'form.image' => 'nullable|file|image|mimes:jpg,bmp,png,svg'
 
         ];
     }

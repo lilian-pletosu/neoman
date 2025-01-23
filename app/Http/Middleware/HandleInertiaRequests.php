@@ -61,20 +61,20 @@ class HandleInertiaRequests extends Middleware
                 return __('app_context');
             },
             'availableLanguages' => config('availableLanguages'),
-            'categories' => Cache::has('categories') ? Cache::get('categories') : Cache::remember('categories', 10000, function () {
-                return Category::orderBy('name')->active()->get();
-            }),
             'menu' => Cache::remember('menu', 10000, function () {
                 return Category::query()
-                    ->active()
+                    ->where('level', 1)
+                    ->where('is_active', true)
                     ->orderBy('order')
-                    ->with(['subcategory' => function ($query) {
-                        $query->active()
-                            ->orderBy('name')
-                            ->with(['subSubcategory' => function ($query) {
-                                $query->active();
-                            }]);
-                    }])
+                    ->with(['children' => function ($query) {
+                        $query->where('is_active', true)
+                            ->orderBy('slug')
+                            ->with(['children' => function ($query) {
+                                $query->where('is_active', true)
+                                    ->orderBy('slug')
+                                    ->with('translations');
+                            }, 'translations']);
+                    }, 'translations'])
                     ->get();
             }),
 

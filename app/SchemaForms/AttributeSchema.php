@@ -33,7 +33,7 @@ class AttributeSchema
                 ],
             ],
             [
-                'name' => 'sub_sub_category_id',
+                'name' => 'category_id',
                 'value' => '',
                 'type' => 'select',
                 'label' => 'sub_sub_category',
@@ -46,4 +46,3 @@ class AttributeSchema
         ];
     }
 }
-

@@ -75,7 +75,7 @@ class ProductSchema
                 ],
             ],
             [
-                'name' => 'sub_sub_category_id',
+                'name' => 'category_id',
                 'value' => '',
                 'type' => 'select',
                 'label' => 'sub_sub_category',
@@ -86,27 +86,27 @@ class ProductSchema
                 ],
             ],
 
-//            [
-//                'name' => 'image',
-//                'value' => '',
-//                'type' => 'file',
-//                'placeholder' => 'image',
-//                'options' => [],
-//                'rules' => [
-//                    'required'
-//                ],
-//            ],
+            //            [
+            //                'name' => 'image',
+            //                'value' => '',
+            //                'type' => 'file',
+            //                'placeholder' => 'image',
+            //                'options' => [],
+            //                'rules' => [
+            //                    'required'
+            //                ],
+            //            ],
 
-//            [
-//                'name' => 'currency',
-//                'value' => '',
-//                'type' => 'select',
-//                'placeholder' => 'currency',
-//                'options' => array_map(fn($c) => ['id' => $c, 'value' => $c], config('currencies')),
-//                'rules' => [
-//                    'required'
-//                ],
-//            ],
+            //            [
+            //                'name' => 'currency',
+            //                'value' => '',
+            //                'type' => 'select',
+            //                'placeholder' => 'currency',
+            //                'options' => array_map(fn($c) => ['id' => $c, 'value' => $c], config('currencies')),
+            //                'rules' => [
+            //                    'required'
+            //                ],
+            //            ],
 
 
         ];

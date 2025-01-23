@@ -3,18 +3,23 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Models\SubCategory;
+use App\Models\Category;
 
 class SubcategoryController extends Controller
 {
     public function index($subcategorySlug)
     {
 
-        $subcategory = SubCategory::where('slug', $subcategorySlug)
-            ->with(['subSubcategory' => function ($query) {
+        $subcategory = Category::where([
+            ['slug', $subcategorySlug],
+            ['level', 2]
+        ])
+            ->with(['children' => function ($query) {
                 $query->active();
             }])
             ->first();
+
+
 
 
         return inertia('User/SubcategoryPage', ['subcategory' => $subcategory]);
