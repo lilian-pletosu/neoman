@@ -88,6 +88,7 @@ class TermsController extends Controller
      */
     public function update(Request $request, Terms $terms)
     {
+        $terms = Terms::findOrFail($terms->id);
         $data = $request->validate([
             'form.title ro' => 'required',
             'form.title ru' => 'required',
@@ -96,7 +97,10 @@ class TermsController extends Controller
         ]);
 
         $formData = $request->form;
-        $terms->slug = Str::slug($formData['title ro'], '_');
+        $terms->update([
+            'slug' => Str::slug($formData['title ro'], '_')
+        ]);
+
 
         foreach (config('translatable.locales') as $locale) {
             $terms->translateOrNew($locale)->title = $formData["title {$locale}"];
