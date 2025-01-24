@@ -86,9 +86,9 @@ class TermsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Terms $terms)
+    public function update(Request $request, $id)
     {
-        $terms = Terms::findOrFail($terms->id);
+        $terms = Terms::find($id);
         $data = $request->validate([
             'form.title ro' => 'required',
             'form.title ru' => 'required',
