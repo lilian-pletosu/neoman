@@ -433,24 +433,33 @@ class ProductService
 
     private function createNewProduct(array $productArray, string $slug)
     {
-        return ImportedProduct::updateOrCreate(
-            ['product_code' => $productArray['code']],
-            [
-                'name' => $productArray['name'],
-                'slug' => $slug,
-                'description' => json_encode($productArray['description']),
-                'price' => $productArray['price'],
-                'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
-                'category_id' => $this->ultraImportSubSubcategory(
-                    $productArray['sub_subcategory'],
-                    $productArray['subcategory'],
-                    $productArray['category']
-                ),
-                'specifications_id' => null,
-                'images' => $productArray['images'],
-                'for_searching' => $productArray['name']['ro'] . ' ' . $productArray['description']['ro']
-            ]
-        );
+
+        if (intval($productArray['quantity']) == 0) {
+            return null;
+        }
+        try {
+            return ImportedProduct::updateOrCreate(
+                ['product_code' => $productArray['code']],
+                [
+                    'name' => $productArray['name'],
+                    'slug' => $slug,
+                    'description' => json_encode($productArray['description']),
+                    'price' => $productArray['price'],
+                    'brand_id' => $this->ultraImportBrandSave($productArray['brand'])->id ?? null,
+                    'category_id' => $this->ultraImportSubSubcategory(
+                        $productArray['sub_subcategory'],
+                        $productArray['subcategory'],
+                        $productArray['category']
+                    ),
+                    'specifications_id' => null,
+                    'images' => $productArray['images'],
+                    'for_searching' => $productArray['name']['ro'] . ' ' . $productArray['description']['ro']
+                ]
+            );
+        } catch (\Exception $e) {
+            $this->logError('Failed to create new product', $e, $productArray);
+            return null;
+        }
     }
 
     private function logError(string $message, \Throwable $exception, $context)
