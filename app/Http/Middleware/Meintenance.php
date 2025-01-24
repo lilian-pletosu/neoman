@@ -17,7 +17,7 @@ class Meintenance
     {
 
         if (env('MEINTENANCE_MODE') == true) {
-            if ($request->routeIs('meintenance')) {
+            if ($request->routeIs('meintenance') || $request->routeIs('admin.*')) {
                 return $next($request);
             }
             return redirect()->route('meintenance');
