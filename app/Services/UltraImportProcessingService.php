@@ -65,7 +65,7 @@ class UltraImportProcessingService
             ->skip($offset)
             ->take($batchSize);
 
-        $products = $nomenclature->take(20)->map(function ($item) {
+        $products = $nomenclature->map(function ($item) {
             $item->name = $this->getNomenclatureTranslation($item->UUID);
             $item->brand = $this->getBrand($item->brand)->first();
             $item->sub_subcategory = $this->getNomenclatureType($item->nomenclatureType) ?? null;
