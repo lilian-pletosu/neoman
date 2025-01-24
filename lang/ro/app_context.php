@@ -268,6 +268,9 @@ return [
     'order' => 'Număr de ordine',
     'create_subSubcategories' => 'Crează sub-subcategorie',
     'if_dont_select_subcategory_will_be_setted_automatically' => 'Dacă lăsați câmpul gol, pentru fiecare produs se va seta categoria venită din import!',
+    'no_terms' => 'Nu sunt termeni',
+    'create_terms' => 'Crează termeni',
+    'editt_terms' => 'Editează termeni',
 
     //statuses
     'pending' => 'Procesare',

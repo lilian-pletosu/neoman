@@ -263,7 +263,9 @@ return [
     'updated_at' => 'Обновлено',
     'create_subSubcategories' => 'Создать подкатегорию',
     'if_dont_select_subcategory_will_be_setted_automatically' => 'Если не выбрать подкатегорию, она будет установлена автоматически',
-
+    'create_terms' => 'Создать условия',
+    'edit_terms' => 'Редактировать условия',
+    'no_terms' => 'Нет условий',
 
     //statuses
     'pending' => 'В ожидании',
