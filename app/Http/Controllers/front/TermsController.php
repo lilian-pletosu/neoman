@@ -13,7 +13,8 @@ class TermsController extends Controller
      */
     public function index()
     {
-        return inertia('User/TermsPage');
+        $terms = Terms::all();
+        return inertia('User/TermsPage', ['content' => $terms]);
     }
 
     /**

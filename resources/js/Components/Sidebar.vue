@@ -411,7 +411,7 @@
                                 }}</span>
                             </Link>
                         </li>
-                        <!-- <li>
+                        <li>
                             <Link
                                 disabled
                                 :class="
@@ -422,7 +422,7 @@
                                 :href="route('admin.terms.index')"
                                 class="flex items-center p-2 text-base font-normal rounded-lg group"
                             >
-                                <shield-exclamation-icon
+                                <ExclamationCircleIcon
                                     :class="
                                         checkRoute(route('admin.terms.index'))
                                             ? 'text-gray-900'
@@ -434,7 +434,7 @@
                                     __("terms")
                                 }}</span>
                             </Link>
-                        </li> -->
+                        </li>
                         <li>
                             <Link
                                 :class="
@@ -511,7 +511,7 @@
 import { Link } from "@inertiajs/vue3";
 import {
     AdjustmentsHorizontalIcon,
-    ArrowLeftOnRectangleIcon,
+    ExclamationCircleIcon,
     ArrowRightIcon,
     CloudArrowDownIcon,
     Cog6ToothIcon,
