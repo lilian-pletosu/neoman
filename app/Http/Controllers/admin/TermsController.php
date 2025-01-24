@@ -101,9 +101,9 @@ class TermsController extends Controller
         foreach (config('translatable.locales') as $locale) {
             $terms->translateOrNew($locale)->title = $formData["title {$locale}"];
             $terms->translateOrNew($locale)->content = $formData["content {$locale}"];
+            $terms->save();
         }
 
-        $terms->save();
 
         return redirect()->back();
     }
