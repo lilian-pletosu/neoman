@@ -167,8 +167,6 @@ class PromotionController extends Controller
     {
         // Delete the promotion and its relationships
         $promotion->brands()->detach();
-        $promotion->sub_subcategories()->detach();
-        $promotion->subcategories()->detach();
         $promotion->categories()->detach();
         $promotion->products()->detach();
 
