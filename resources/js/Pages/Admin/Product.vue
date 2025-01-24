@@ -285,15 +285,15 @@ watch(isOrderChanged, () => {
                                     @dragover.prevent="onOver($event)"
                                     @dragleave.prevent="onLeave($event)"
                                 >
-                                    <div class="relative p-4">
+                                    <div class="relative p-3 space-x-3">
                                         <img
                                             :src="image"
-                                            class="w-20 h-20"
+                                            class="w-auto m-4 rounded-md"
                                             :alt="`Image ${index + 1}`"
                                         />
                                         <TrashIcon
                                             @click="deleteImage(image)"
-                                            class="absolute top-0 right-0 w-3.5 cursor-pointer"
+                                            class="absolute w-4 text-red-500 cursor-pointer bottom-6 left-3"
                                         />
                                     </div>
                                 </div>
@@ -319,12 +319,12 @@ watch(isOrderChanged, () => {
                             <h2
                                 class="mb-2 text-2xl font-bold text-gray-800 dark:text-white"
                             >
-                                {{ product.name }}
+                                {{ product?.name }}
                             </h2>
                             <p
                                 class="mb-4 text-sm text-gray-600 dark:text-gray-300"
                             >
-                                {{ product.description }}
+                                {{ product?.description }}
                             </p>
                             <div class="flex mb-4">
                                 <div class="mr-4">
@@ -335,7 +335,7 @@ watch(isOrderChanged, () => {
                                     <span
                                         class="text-gray-600 dark:text-gray-300"
                                     >
-                                        {{ product.category.name }}
+                                        {{ product?.category?.name }}
                                     </span>
                                 </div>
                                 <div class="mr-4">
@@ -346,7 +346,7 @@ watch(isOrderChanged, () => {
                                     <span
                                         class="text-gray-600 dark:text-gray-300"
                                     >
-                                        {{ product.brand_name }}
+                                        {{ product?.brand_name }}
                                     </span>
                                 </div>
                             </div>
@@ -359,7 +359,7 @@ watch(isOrderChanged, () => {
                                     <span
                                         class="text-gray-600 dark:text-gray-300"
                                     >
-                                        {{ product.price }} MDL</span
+                                        {{ product?.price }} MDL</span
                                     >
                                 </div>
                             </div>
@@ -386,7 +386,7 @@ watch(isOrderChanged, () => {
                                             class="absolute top-0 right-0 hidden w-3.5 h-3.5 cursor-pointer group-hover/credit:flex group-hover/credit:text-red-400"
                                         />
                                     </span>
-                                    <span v-else >N/A</span>
+                                    <span v-else>N/A</span>
                                 </div>
                             </div>
                             <div class="mb-4">

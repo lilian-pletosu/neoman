@@ -65,7 +65,7 @@ class UltraImportProcessingService
             ->skip($offset)
             ->take($batchSize);
 
-        $products = $nomenclature->map(function ($item) {
+        $products = $nomenclature->take(20)->map(function ($item) {
             $item->name = $this->getNomenclatureTranslation($item->UUID);
             $item->brand = $this->getBrand($item->brand)->first();
             $item->sub_subcategory = $this->getNomenclatureType($item->nomenclatureType) ?? null;
@@ -74,12 +74,12 @@ class UltraImportProcessingService
             $item->price = $this->getPrice($item->UUID)->Price ?? 'No price';
             $item->description = $this->parseDescription($item->UUID);
             $item->images = $this->getFirstFourImages($item->imageList);
+            $item->quantity = $item->sub_subcategory['nomenclatureType']->quantity;
             return $item;
         })->filter(function ($item) {
             return $item->price !== 'No price' &&
                 isset($item->sub_subcategory['translations']['ro']) &&
                 // in_array($item->sub_subcategory['translations']['ro'], $allowedSubSubcategories) &&
-                // $item->sub_subcategory['nomenclatureType']->quantity > 0 &&
                 $item->name !== null;
         });
 
@@ -208,14 +208,22 @@ class UltraImportProcessingService
     public function getFirstFourImages($imageList)
     {
         $result = [];
-        for ($i = 0; $i < 4; $i++) {
-            try {
-                if (isset($imageList->image[$i])) {
-                    $result["image" . ($i + 1)] = $imageList->image[$i]->pathGlobal;
-                }
-            } catch (\Throwable $th) {
-                return null;
+        try {
+            $sortedImages = collect($imageList->image)
+                ->sortBy(function ($image) {
+                    preg_match('/_(\d+)\./', $image->name, $matches);
+                    return (int) ($matches[1] ?? 999);
+                })
+                ->values()
+                ->take(4);
+
+            foreach ($sortedImages as $index => $image) {
+                $result["image" . ($index + 1)] = $image->pathGlobal;
             }
+
+            return $result;
+        } catch (\Throwable $th) {
+            return null;
         }
         return $result;
     }

@@ -395,7 +395,7 @@ class ProductService
         try {
             $product = Product::where('product_code', $productArray['code'])->first();
 
-            if ($productArray['sub_subcategory']['nomenclatureType']->quantity <= 0) {
+            if (intval($productArray['quantity']) == 0) {
                 return $this->deleteProduct($product);
             }
 
@@ -406,7 +406,12 @@ class ProductService
                 'price' => $productArray['price'],
             ]);
 
-            $product->images()->create($productArray['images']);
+
+
+            if (!empty($productArray['images'])) {
+                $product->images()->delete();
+                $product->images()->create($productArray['images']);
+            }
             $this->assignAttributesToProduct($product, $productArray['description'], $product->category_id);
 
             Log::info('Product updated successfully', ['product_code' => $product->product_code]);
@@ -649,22 +654,26 @@ class ProductService
         }
 
         try {
-            $dbSubsubcategory = SubSubCategory::where('slug', Str::slug($sub_subcategory['translations']['ro'], '_'))->first();
+            $dbSubsubcategory = Category::where([
+                ['slug', Str::slug($sub_subcategory['translations']['ro'], '_')],
+                ['level', 3]
+            ])->first();
 
             if (!$dbSubsubcategory) {
 
-                $subsubcategory = SubSubCategory::create([
+                $subsubcategory = Category::create([
                     'slug' => Str::slug($sub_subcategory['translations']['ro'], '_') ?? '',
                     'website' => $sub_subcategory['translations']['ro'] ?? '',
                     'seo_title' => $sub_subcategory['translations']['ro'] ?? '',
                     'seo_description' => 'description',
                     'is_enabled' => 1,
+                    'level' => 3,
                     'image' => 'image',
-                    'subcategory_id' => $this->ultraImportSubcategory($subcategory, $category),
+                    'sparent_id' => $this->ultraImportSubcategory($subcategory, $category),
                 ]);
 
                 foreach (config('app.available_locales') as $locale) {
-                    foreach ((new SubSubCategory())->translatedAttributes as $translatedAttribute) {
+                    foreach ((new Category())->translatedAttributes as $translatedAttribute) {
                         $subsubcategory->translateOrNew($locale)->$translatedAttribute = $sub_subcategory['translations'][$locale] ?? $sub_subcategory['translations']['ro'];
                         $subsubcategory->save();
                     }
@@ -686,18 +695,22 @@ class ProductService
     private function ultraImportSubcategory($ultraSubcategory, $category)
     {
         try {
-            $dbSubcategory = SubCategory::where('slug', Str::slug($ultraSubcategory['ro'], '_'))->first();
+            $dbSubcategory = Category::where([
+                ['slug', Str::slug($ultraSubcategory['ro'], '_')],
+                ['level', 2]
+            ])->first();
 
             if (!$dbSubcategory) {
-                $subcategory = SubCategory::create([
+                $subcategory = Category::create([
                     'slug' => Str::slug($ultraSubcategory['ro'], '_') ?? '',
                     'is_active' => 1,
+                    'level' => 2,
                     'image' => 'image',
-                    'category_id' => $this->ultraImportCategory($category),
+                    'parent_id' => $this->ultraImportCategory($category),
                 ]);
 
                 foreach (config('app.available_locales') as $locale) {
-                    foreach ((new SubCategory())->translatedAttributes as $translatedAttribute) {
+                    foreach ((new Category())->translatedAttributes as $translatedAttribute) {
                         $subcategory->translateOrNew($locale)->$translatedAttribute = $ultraSubcategory[$locale] ?? $ultraSubcategory['ro'];
                         $subcategory->save();
                     }
@@ -718,12 +731,16 @@ class ProductService
     private function ultraImportCategory($ultraCategory)
     {
         try {
-            $dbCategory = Category::where('slug', Str::slug($ultraCategory['ro'], '_'))->first();
+            $dbCategory = Category::where([
+                ['slug', Str::slug($ultraCategory['ro'], '_')],
+                ['level', 1]
+            ])->first();
 
             if (!$dbCategory) {
                 $category = Category::create([
                     'slug' => Str::slug($ultraCategory['ro'], '_') ?? '',
                     'is_active' => 1,
+                    'level' => 1,
                     'icon' => 'icon',
                 ]);
                 foreach (config('app.available_locales') as $locale) {
