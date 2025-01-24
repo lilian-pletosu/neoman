@@ -411,8 +411,9 @@
                                 }}</span>
                             </Link>
                         </li>
-                        <li>
+                        <!-- <li>
                             <Link
+                                disabled
                                 :class="
                                     checkRoute(route('admin.terms.index'))
                                         ? 'bg-gray-100 text-gray-900'
@@ -433,7 +434,7 @@
                                     __("terms")
                                 }}</span>
                             </Link>
-                        </li>
+                        </li> -->
                         <li>
                             <Link
                                 :class="
