@@ -42,6 +42,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\RedirectToAdmin::class,
             \App\Http\Middleware\CancelRegister::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
+            \App\Http\Middleware\Meintenance::class,
         ],
 
         'api' => [

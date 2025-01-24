@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Row;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,10 @@ Route::get('language/{locale}', function ($locale) {
     return redirect()->back();
 })->name('language');
 
+Route::get('/meintenance', function () {
+    return Inertia::render('MeintenancePage');
+})->name('meintenance');
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -31,7 +36,6 @@ Route::get('/', function () {
     ]);
 });
 
+require __DIR__ . '/front.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin.php';
-require __DIR__ . '/front.php';
-
