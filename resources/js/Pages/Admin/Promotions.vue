@@ -363,7 +363,7 @@ const deletePromotion = async () => {
                                     @update:status="
                                         form.sub_subcategory = $event
                                     "
-                                    :options="$page.props.subcategories"
+                                    :options="$page.props.sub_subcategories"
                                     :value="form.sub_subcategory"
                                     :selected="form.sub_subcategory"
                                     :error-message="

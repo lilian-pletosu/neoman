@@ -340,7 +340,7 @@ function buyProduct(productId) {
                                     </h1>
                                     <span
                                         class="px-1 my-auto text-sm font-semibold text-white bg-red-400 rounded"
-                                        >-{{ product.sale }}%</span
+                                        >-{{ product.sale }}</span
                                     >
                                 </span>
                                 <h1

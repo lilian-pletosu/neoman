@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\DataTableService;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Support\Facades\Artisan;
 
 class PromotionController extends Controller
 {
@@ -142,22 +143,23 @@ class PromotionController extends Controller
         $validatedData['status'] = $validatedData['status'] == 1 ? 'active' : 'inactive';
 
 
-        // 2. Actualizează instanța de Promotion cu datele validate
         $promotion->update($validatedData);
-        if (isset($validatedData['brand'])) {
-            $promotion->brands()->sync($validatedData['brand']);
-        }
-        if (isset($validatedData['subcategory'])) {
-            $promotion->subcategories()->sync($validatedData['subcategory']);
-        }
-        if (isset($validatedData['category'])) {
-            $promotion->categories()->sync($validatedData['category']);
-        }
-        if (isset($validatedData['sub_subcategory'])) {
-            $promotion->sub_subcategories()->sync($validatedData['sub_subcategory']);
-        }
+
+        // Handle brands sync
+        $promotion->brands()->sync($validatedData['brand'] ?? []);
+
+        // Handle categories sync
+        $categoryIds = array_filter([
+            $validatedData['category'] ?? null,
+            $validatedData['subcategory'] ?? null,
+            $validatedData['sub_subcategory'] ?? null
+        ]);
+
+        $promotion->categories()->sync($categoryIds);
 
         $validatedData['status'] = $request->input('status') == 1 ? Promotion::STATUS_ACTIVE : Promotion::STATUS_INACTIVE;
+
+        Artisan::call('cache:clear');
     }
 
     /**
@@ -171,5 +173,6 @@ class PromotionController extends Controller
         $promotion->products()->detach();
 
         $promotion->delete();
+        Artisan::call('cache:clear');
     }
 }

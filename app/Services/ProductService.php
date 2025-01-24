@@ -24,67 +24,71 @@ class ProductService
         $this->translatedAttributes = (new Product())->translatedAttributes;
     }
 
-    public function loadSalesProducts(): array
+    public function loadSalesProducts($productId = null): array
     {
         $promotions = Promotion::where('status', 1)
             ->with([
-                'brands.products' => function ($query) {
-                    $query->latest()->take(25)->with([
-                        'attributes.attributeValues.translations',
-                        'brand:id,name,image',
-                        'images:id,product_id,image1',
-                        'measurementUnit.translations'
-                    ]);
-                },
-                'categories.children.products' => function ($query) {
-                    $query->latest()->take(25)->with([
-                        'attributes.attributeValues.translations',
-                        'brand:id,name,image',
-                        'images:id,product_id,image1',
-                        'measurementUnit.translations'
-                    ]);
-                },
-                'categories.products' => function ($query) {
-                    $query->latest()->take(25)->with([
-                        'attributes.attributeValues.translations',
-                        'brand:id,name,image',
-                        'images:id,product_id,image1',
-                        'measurementUnit.translations'
-                    ]);
-                },
+                'brands.products' => fn($query) => $this->productQuery($query),
+                'categories.children.products' => fn($query) => $this->productQuery($query),
+                'categories.children.children.products' => fn($query) => $this->productQuery($query),
+                'categories.products' => fn($query) => $this->productQuery($query),
             ])
             ->get();
 
+        $products = collect();
 
-        return collect($promotions)
-            ->flatMap(function ($promotion) {
+        foreach ($promotions as $promotion) {
+            // Procesare produse din branduri
+            if ($promotion->brands->isNotEmpty()) {
+                $brandProducts = $promotion->brands->flatMap(
+                    fn($brand) =>
+                    $brand->products->take(15)->map(
+                        fn($product) =>
+                        $this->formatProduct($product, $promotion)
+                    )
+                );
+                $products = $products->merge($brandProducts);
+            }
 
-                $products = collect();
+            // Procesare produse din categorii și subcategorii
+            $categoryProducts = $promotion->categories->load('children.children.products')->flatMap(function ($category) use ($promotion) {
+                $allProducts = collect($category->products)
+                    ->merge($category->children->flatMap(fn($child) => $child->products))
+                    ->merge($category->children->flatMap(
+                        fn($child) =>
+                        $child->children->flatMap(fn($subChild) => $subChild->products)
+                    ));
 
-                // Process brand products
-                if ($promotion->brands->isNotEmpty()) {
-                    $products = $promotion->brands->flatMap(function ($brand) use ($promotion) {
-                        return $brand->products->take(15)->map(function ($product) use ($promotion) {
-                            return $this->formatProduct($product, $promotion);
-                        });
-                    });
-                }
+                return $allProducts->take(15)->map(fn($product) => $this->formatProduct($product, $promotion));
+            });
 
-                // Process category products (both parent and children)
-                $categoryProducts = $promotion->categories->load('children.products')->flatMap(function ($category) use ($promotion) {
-                    // Get all products from both the category and its children
-                    $allProducts = collect($category->products)
-                        ->merge($category->children->flatMap(fn($child) => $child->products));
-                    return $allProducts->take(15)->map(fn($product) => $this->formatProduct($product, $promotion));
-                });
+            $products = $products->merge($categoryProducts);
+        }
 
-                return $products->merge($categoryProducts);
-            })
-            ->shuffle()
-            ->shuffle()
-            ->all();
+        if ($productId) {
+            $products = $products->where('id', $productId)->values();
+            return $products->map(function ($product) {
+                return [
+                    'has_discount' => $product['sale'] ? true : false,
+                    'sale' => $product['sale'],
+                    'promotion_price' => $product['final_price'],
+                ];
+            })->toArray();
+        } else {
+            $products = $products->shuffle()->all();
+            return $products;
+        }
     }
 
+    private function productQuery($query)
+    {
+        $query->latest()->take(25)->with([
+            'attributes.attributeValues.translations',
+            'brand:id,name,image',
+            'images:id,product_id,image1',
+            'measurementUnit.translations'
+        ]);
+    }
 
     private function formatProduct($product, $promotion)
     {

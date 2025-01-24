@@ -7,6 +7,7 @@ use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ProductService;
 use App\Services\SessionService;
 use Illuminate\Support\Str;
 
@@ -89,7 +90,15 @@ class ProductController extends Controller
             $mu_unit = '';
         }
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'attributeValues', 'category.promotions', 'category.parent.promotions', 'category.parent.parent'])->withDiscountDetails()->first();
+        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'attributeValues', 'category.promotions', 'category.parent.promotions', 'category.parent.parent'])->first();
+
+        $productService = new ProductService();
+        $salesDetails = $productService->loadSalesProducts($product->id);
+        $product['has_discount'] = $salesDetails ? true : false;
+        $product['sale'] = $salesDetails ? $salesDetails[0]['sale'] : null;
+        $product['promotion_price'] = $salesDetails ? $salesDetails[0]['promotion_price'] : null;
+
+
 
         (new SessionService())->AddVisitedProductInSession($product);
 
