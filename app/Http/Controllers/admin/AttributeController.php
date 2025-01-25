@@ -37,7 +37,7 @@ class AttributeController extends Controller
         $builder = $this->dataTableService
             ->setResource('attribute')
             ->setResourceColumns(['id', 'name', 'slug'])
-            ->setRelationColumn('subSubcategory', 'subSubCategory', ['name'])
+            ->setRelationColumn('category', 'subSubCategory', ['name'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.attributes')
@@ -69,6 +69,7 @@ class AttributeController extends Controller
             'category_id' => 'required',
         ]);
         $data['slug'] = Str::slug($data['name ro'], '_');
+
 
         $attribute = Attribute::firstOrCreate(['slug' => $data['slug'], 'category_id' => $data['category_id']], []);
 

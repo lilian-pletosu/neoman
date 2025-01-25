@@ -2,7 +2,7 @@
 
 namespace App\SchemaForms;
 
-use App\Models\SubSubCategory;
+use App\Models\Category;
 
 class AttributeSchema
 {
@@ -38,7 +38,7 @@ class AttributeSchema
                 'type' => 'select',
                 'label' => 'sub_sub_category',
                 'placeholder' => 'sub_sub_category',
-                'options' => SubSubCategory::orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->getTranslation()->name ?? $f->getTranslation($reserveLanguage)->name])->toArray(),
+                'options' => Category::where('level', 3)->orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->getTranslation()->name ?? $f->getTranslation($reserveLanguage)->name])->toArray(),
                 'rules' => [
                     'required'
                 ],

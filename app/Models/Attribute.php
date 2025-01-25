@@ -25,9 +25,9 @@ class Attribute extends Model implements TranslatableContract
         return $this->hasMany(AttributeValue::class, 'attribute_id', 'id');
     }
 
-    public function subSubcategory()
+    public function category()
     {
-        return $this->belongsTo(SubSubCategory::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function products()
