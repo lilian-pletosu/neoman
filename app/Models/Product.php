@@ -47,45 +47,7 @@ class Product extends Model implements TranslatableContract
         return $this->belongsToMany(AttributeValue::class, 'product_attributes')->withPivot('product_id')->with('attribute');
     }
 
-    public function scopeWithDiscountDetails($query)
-    {
-        return $query->addSelect([
-            'has_discount' => $query->with('category', function ($categoryQuery) {
-                $categoryQuery->whereHas('promotions', function ($promotionQuery) {
-                    dd($promotionQuery->where('status', 'active')->first());
-                });
-            })->first()->dd(),
 
-            'promotion_price' => Brand::selectRaw('products.price - (products.price * promotions.discount / 100)')
-                ->join('promotion_brand', 'brands.id', '=', 'promotion_brand.brand_id')
-                ->join('promotions', 'promotions.id', '=', 'promotion_brand.promotion_id')
-                ->whereColumn('brands.id', 'products.brand_id')
-                ->where('promotions.status', 'active')
-                ->union(
-                    Category::selectRaw('products.price - (products.price * promotions.discount / 100)')
-                        ->join('promotion_category', 'categories.id', '=', 'promotion_category.category_id')
-                        ->join('promotions', 'promotions.id', '=', 'promotion_category.promotion_id')
-                        ->where('promotions.status', 'active')
-                )
-                ->limit(1), // Adăugăm LIMIT 1 aici
-
-            'sale' => Promotion::select('discount')
-                ->where('status', 'active')
-                ->where(function ($query) {
-                    $query->whereHas('brands', function ($brandQuery) {
-                        $brandQuery->whereHas('products', function ($productQuery) {
-                            $productQuery->whereColumn('products.brand_id', 'brands.id');
-                        });
-                    })->orWhereHas('categories', function ($categoryQuery) {
-                        $categoryQuery->whereHas('products', function ($productQuery) {
-                            $productQuery->whereColumn('products.category_id', 'categories.id')
-                                ->orWhereColumn('products.category_id', 'categories.parent_id');
-                        });
-                    });
-                })
-                ->limit(1) // Adăugăm LIMIT 1 aici
-        ]);
-    }
 
 
 
