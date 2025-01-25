@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\SubSubCategory;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class SubSubcategoryService
 {
@@ -14,7 +14,7 @@ class SubSubcategoryService
 
     public function __construct()
     {
-        $this->translatedAttributes = (new SubSubCategory())->translatedAttributes;
+        $this->translatedAttributes = (new Category())->translatedAttributes;
     }
 
 
@@ -26,16 +26,16 @@ class SubSubcategoryService
 
             $fileName = $data['slug'] . now()->toDateString() . '.' . $request->file('image')->extension();
 
-            $data['image'] = '/storage/subSubcategories/' . $fileName;
+            $data['image'] = '/storage/categories/' . $fileName;
             $imageContents = $request->file('image')->getContent();
-            Storage::disk('subSubcategories')->put($fileName, $imageContents);
+            Storage::disk('categories')->put($fileName, $imageContents);
         } else {
             $data['slug'] = array_key_exists('name ro', $data) ? Str::slug($data['name ro'], '_') : Str::slug('No name', '_');
 
             $data['image'] = '/img/no_image.svg';
         }
 
-        $subSubcategory = SubSubCategory::create($data);
+        $subSubcategory = Category::create($data);
 
 
         if ($request->hasFile('image')) {
@@ -61,9 +61,10 @@ class SubSubcategoryService
         $data['image'] = '/img/no_image.svg';
 
 
-        $subSubcategory = SubSubCategory::firstOrCreate(['slug' => Str::slug($data['sub_subcategory'], '_')], [
+        $subSubcategory = Category::firstOrCreate(['slug' => Str::slug($data['sub_subcategory'], '_')], [
             'slug' => Str::slug($data['sub_subcategory'], '_'),
-            'image' => $data['image']
+            'image' => $data['image'],
+            'level' => 3,
         ]);
 
         foreach (config('app.available_locales') as $locale) {
@@ -79,7 +80,7 @@ class SubSubcategoryService
         return $subSubcategory;
     }
 
-    public function update(array $data, SubSubCategory $subSubCategory)
+    public function update(array $data, Category $subSubCategory)
     {
         $data['form']['slug'] = Str::slug($data['form']['name ro'], '_');
 
@@ -95,7 +96,6 @@ class SubSubcategoryService
             }
             Storage::disk('subSubcategories')->put($fileName, $imageContents);
             $data['form']['image'] = '/storage/subSubcategories/' . $fileName;
-
         }
 
         $subSubCategory->update($data['form']);
@@ -105,6 +105,5 @@ class SubSubcategoryService
             }
         }
         $subSubCategory->save();
-
     }
 }

@@ -57,10 +57,15 @@ class CookieService
         $storageKey = $this->getStorageKey($storageName);
         $items = $this->getProducts($storageName);
 
-        $productDb = Product::withDiscountDetails()
-            ->where('id', $productId)
+        $productDb = Product::where('id', $productId)
             ->with(['images', 'brand', 'category'])
             ->first();
+
+        $productService = new ProductService();
+        $salesDetails = $productService->loadSalesProducts($productDb->id);
+        $productDb['has_discount'] = $salesDetails ? true : false;
+        $productDb['sale'] = $salesDetails ? $salesDetails[0]['sale'] : null;
+        $productDb['promotion_price'] = $salesDetails ? $salesDetails[0]['promotion_price'] : null;
 
         $newProduct = [
             'id' => $productDb->id,

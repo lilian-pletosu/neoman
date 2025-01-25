@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Services\ProductService;
+use App\Http\Controllers\Controller;
 
 class SearchController extends Controller
 {
@@ -23,6 +24,14 @@ class SearchController extends Controller
             ->with('brand', 'images', 'credits')
             ->paginate(12)
             ->withQueryString();
+
+        $productService = new ProductService();
+        $products->each(function ($product) use ($productService) {
+            $salesDetails = $productService->loadSalesProducts($product->id);
+            $product->has_discount = $salesDetails ? true : false;
+            $product->sale = $salesDetails ? $salesDetails[0]['sale'] : null;
+            $product->promotion_price = $salesDetails ? $salesDetails[0]['promotion_price'] : null;
+        });
 
 
         return inertia('User/AllProductsPage', [
