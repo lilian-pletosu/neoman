@@ -99,7 +99,6 @@ class ProductsImport
         } else {
             $zipReader = fopen($drawing->getPath(), 'r');
 
-            //            Redis::set('drawing', $drawing->getName());
 
             $imageContents = '';
             while (!feof($zipReader)) {
@@ -110,7 +109,6 @@ class ProductsImport
 
 
             $fileName = uniqid('prod') . '.' . $extension;
-            //            Storage::put('public/products/' . $fileName, $imageContents);
             Storage::disk('products')->put($fileName, $imageContents);
             return '/storage/products/' . $fileName;
         }
@@ -184,42 +182,6 @@ class ProductsImport
         }
     }
 
-    //    public function associateAttributes($product, $subSubcategory, $item)
-    //    {
-    //        // TODO:// Here need to fix probelem when update product and update or create attribute value
-    //
-    //
-    ////        $attributes = Attribute::where('category_id', $subSubcategory->id)->get()->toArray();
-    ////
-    ////        foreach ($attributes as $attribute) {
-    ////            if ($attribute['slug'] == 'cantitate') {
-    ////
-    ////                $attributeObj = Attribute::find($attribute['id']);
-    ////                if (array_key_exists($attribute['name'], $item)) {
-    ////                    $quantities = json_decode($item[$attribute['name']], true);
-    ////                    foreach ($quantities as $qty) {
-    ////                        $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $qty]);
-    ////                        $valueAttribute->value = $qty;
-    ////                        $valueAttribute->save();
-    ////                        $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
-    ////                    }
-    ////                }
-    ////
-    ////            }
-    ////            if (isset($item[$attribute['name'] . ' ' . 'ro'])) {
-    ////                $attributeObj = Attribute::find($attribute['id']);
-    ////
-    ////                foreach (config('app.available_locales') as $locale) {
-    ////                    $valueAttribute = $attributeObj->attributeValues()->firstOrCreate(['slug' => $item[$attribute['name'] . ' ' . 'ro']]);
-    ////                    $valueAttribute->translateOrNew($locale)->value = $item[$attribute['name'] . ' ' . $locale];
-    ////                    $valueAttribute->save();
-    ////                }
-    ////                // Attach the attribute value to the product
-    ////                $product->attributes()->attach($attribute['id'], ['attribute_value_id' => $valueAttribute->id]);
-    ////            }
-    ////        }
-    //    }
-
     public function associateAttributes($product, $subSubcategory, $item)
     {
         // Obține toate atributele existente pentru subcategoria specificată
@@ -263,53 +225,4 @@ class ProductsImport
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //    public function associateAttributes($product, $subSubcategory, $item)
-    //    {
-    //        $attributes = Attribute::where('category_id', $subSubcategory->id)->pluck('slug', 'id')->toArray();
-    //        foreach ($attributes as $id => $attributeSlug) {
-    //
-    //            $product->attributes()->syncWithoutDetaching($id);
-    ////-------------------------------------------------------------------------------------
-    //            $attribute = Attribute::find($id);
-    //
-    ////
-    //
-    //
-    //            if (isset($item["$attributeSlug ro"])) {
-    //                $valueAttribute = $attribute->attributeValues()->create([
-    //                    'slug' => Str::slug($item["$attributeSlug ro"], '_')
-    //                ]);
-    //            } else if (isset($item[ucfirst($attributeSlug) . ' ro'])) {
-    //                Session::put('cart', 'test');
-    //                $valueAttribute = $attribute->attributeValues()->create([
-    //                    'slug' => Str::slug($item[ucfirst($attributeSlug) . ' ro'], '_')
-    //                ]);
-    //            } else {
-    //                session(['cart' => $item]);
-    //                return null;
-    //            }
-    //            foreach ((new AttributeValue())->translatedAttributes as $translatedAttribute) {
-    //                foreach (config('app.available_locales') as $locale) {
-    //                    $valueAttribute->translateOrNew($locale)->$translatedAttribute = $item["$attributeSlug $locale"] ?? $item[ucfirst($attributeSlug) . ' ' . $locale];
-    //                    $valueAttribute->save();
-    //                }
-    //            }
-    //        }
-    //    }
 }
