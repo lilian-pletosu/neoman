@@ -402,7 +402,7 @@ onMounted(async () => {
                             .globalProperties.$page.props.menu"
                     >
                         <Link
-                            v-if="category.subcategory <= 0"
+                            v-if="category.children <= 0"
                             :href="
                                 route('category_page', { slug: category.slug })
                             "
@@ -416,7 +416,7 @@ onMounted(async () => {
 
                         <details
                             class="group [&_summary::-webkit-details-marker]:hidden"
-                            v-if="category.subcategory.length > 0"
+                            v-if="category.children.length > 0"
                         >
                             <summary
                                 class="flex items-center justify-between px-4 py-2 text-gray-500 rounded-lg group hover:bg-gray-100 hover:text-gray-700"
@@ -454,12 +454,9 @@ onMounted(async () => {
                             </summary>
 
                             <ul class="px-4 mt-2 space-y-1">
-                                <li v-for="subcategory in category.subcategory">
+                                <li v-for="subcategory in category.children">
                                     <Link
-                                        v-if="
-                                            subcategory.sub_subcategory
-                                                .length <= 0
-                                        "
+                                        v-if="subcategory.children.length <= 0"
                                         :href="
                                             route('subcategory_page', {
                                                 slug: subcategory.slug,
@@ -474,10 +471,7 @@ onMounted(async () => {
 
                                     <details
                                         class="group/two"
-                                        v-if="
-                                            subcategory.sub_subcategory.length >
-                                            0
-                                        "
+                                        v-if="subcategory.children.length > 0"
                                     >
                                         <summary
                                             class="flex items-center justify-between px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700"
@@ -519,7 +513,7 @@ onMounted(async () => {
 
                                         <ul class="px-4 mt-2 space-y-1">
                                             <li
-                                                v-for="subSubcategory in subcategory.sub_subcategory"
+                                                v-for="subSubcategory in subcategory.children"
                                             >
                                                 <Link
                                                     :href="
