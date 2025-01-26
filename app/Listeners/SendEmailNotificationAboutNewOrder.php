@@ -35,7 +35,7 @@ class SendEmailNotificationAboutNewOrder implements ShouldQueue
         } else {
             Log::info('New order', ['order' => $event->order]);
             $email = $event->order->email;
-            Mail::from('office.neoman@gmail.com')->to($email)->send(new NewOrderNotifyEmail($event->order));
+            Mail::to($email)->send(new NewOrderNotifyEmail($event->order));
         }
     }
 }
