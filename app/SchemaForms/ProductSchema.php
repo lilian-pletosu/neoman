@@ -3,6 +3,7 @@
 namespace App\SchemaForms;
 
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\SubSubCategory;
 
 class ProductSchema
@@ -80,7 +81,7 @@ class ProductSchema
                 'type' => 'select',
                 'label' => 'sub_sub_category',
                 'placeholder' => 'sub_sub_category',
-                'options' => SubSubCategory::all()->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
+                'options' => Category::where('level', 3)->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
                 'rules' => [
                     'required'
                 ],
