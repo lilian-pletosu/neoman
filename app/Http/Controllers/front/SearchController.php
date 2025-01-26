@@ -15,13 +15,12 @@ class SearchController extends Controller
             $attributesForFilter[] = $item['key'];
         }
 
-        $products = Product::withDiscountDetails()
-            ->sort()
-            ->where('name', 'like', '%' . $search . '%')
+        $products = Product::where('name', 'like', '%' . $search . '%')
             ->orWhere('description', 'like', '%' . $search . '%')
             ->orWhere('slug', 'like', '%' . $search . '%')
             ->orWhere('product_code', 'like', '%' . $search . '%')
             ->with('brand', 'images', 'credits')
+            ->sort()
             ->paginate(12)
             ->withQueryString();
 

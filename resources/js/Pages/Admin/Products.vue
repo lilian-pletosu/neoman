@@ -39,7 +39,6 @@ const showNotify = (type) => {
 };
 
 function schemaForm(resource = null, sendType, sendMethod) {
-    console.log(resource);
     method.value = sendMethod;
     type.value = sendType;
     modalIsOpen.value = !modalIsOpen.value;
