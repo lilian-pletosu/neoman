@@ -7,11 +7,6 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="{{ config('app.name', 'Laravel') }}">
     <meta name="author" content="Neoman">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="googlebot" content="noindex, nofollow">
-    <meta name="bingbot" content="noindex, nofollow">
-    <meta name="yandex" content="noindex, nofollow">
-
 
     <title inertia>{{ config('app.name', 'Neoman') }}</title>
 
@@ -29,25 +24,3 @@
 @inertia
 </body>
 </html>
-
-{{--<!DOCTYPE html>--}}
-{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
-{{--<head>--}}
-{{--    <meta charset="utf-8">--}}
-{{--    <meta name="viewport" content="width=device-width, initial-scale=1">--}}
-
-{{--    <title inertia>{{ config('app.name', 'Laravel') }}</title>--}}
-
-{{--    <!-- Fonts -->--}}
-{{--    <link rel="preconnect" href="https://fonts.bunny.net">--}}
-{{--    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>--}}
-
-{{--    <!-- Scripts -->--}}
-{{--    @routes--}}
-{{--    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])--}}
-{{--    @inertiaHead--}}
-{{--</head>--}}
-{{--<body class="font-sans antialiased">--}}
-{{--@inertia--}}
-{{--</body>--}}
-{{--</html>--}}
