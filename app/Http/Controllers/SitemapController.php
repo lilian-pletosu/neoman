@@ -10,8 +10,14 @@ class SitemapController extends Controller
 {
     public function index()
     {
+        $categories = Category::where('level', 1)->active()->get();
+        $subcategories = Category::where('level', 2)->active()->get();
+        $subSubcategories = Category::where('level', 3)->active()->get();
+
         $content = view('sitemap', [
-            'categories' => Category::all(),
+            'categories' => $categories,
+            'subcategories' => $subcategories,
+            'subSubcategories' => $subSubcategories,
             'products' => Product::all(),
         ])->render();
 
