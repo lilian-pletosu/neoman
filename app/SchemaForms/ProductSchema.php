@@ -81,7 +81,7 @@ class ProductSchema
                 'type' => 'select',
                 'label' => 'sub_sub_category',
                 'placeholder' => 'sub_sub_category',
-                'options' => Category::where('level', 3)->map(fn($f) => ['id' => $f->id, 'value' => $f->name])->toArray(),
+                'options' => Category::where('level', 3)->get()->map(fn($f) => ['id' => $f->id, 'value' => $f->name, 'label'  => $f->name])->toArray(),
                 'rules' => [
                     'required'
                 ],
