@@ -45,7 +45,7 @@ class ProductController extends Controller
             ->paginate(10)
             ->setSearchRoute('admin.products')
             ->setResourceRoute('admin.products')
-            ->sortBy('id');
+            ->sortBy('updated_at', 'desc');
 
         return inertia('Admin/Products', [
             'initialRoute' => 'admin.products',
