@@ -36,12 +36,12 @@
             | {{ $productHeader }} | {{ $colorHeader }} | {{ $qtyHeader }} | {{ $priceHeader }} |
             |:-----------|:----------------:|:------------:| --------:|
             @foreach($order['products'] as $product)
-                | {{$product['name']}} | {{$product['color_value']}} | {{$product['qty']}} | {{$product['price']}} |
+                | {{$product['name']}} | {{$product['color_value'] === 'default' ? '---' : $product['color_value']}} | {{$product['qty']}} | {{$product['price']}} |
             @endforeach
         </x-mail::table>
         <hr>
         <h2>Preț produse: {{$order['total_price']}} {{__('app_context.lei')}}</h2>
-        <h2>Livrare: {{$order['delivery_price']}} {{__('app_context.lei')}}</h2>
+        <h2>Livrare: {{$order['delivery_price'] ??  "---"}} {{__('app_context.lei')}}</h2>
         <h1>Total: {{$order['total_price'] + $order['delivery_price']}} {{__('app_context.lei')}}</h1>
 
         <x-mail::subcopy>
