@@ -40,12 +40,11 @@ class ImportedProductController extends Controller
             ->setResourceColumns(['id', 'name', 'price', 'description', 'images', 'updated_at'])
             ->setRelationColumn('category', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
-            //            ->setRelationColumn('images', 'image', ['image1', 'image2', 'image3', 'image4'])
             ->editInModal(true)
             ->paginate(15)
             ->setSearchRoute('admin.imported-products')
             ->setResourceRoute('admin.imported-products')
-            ->sortBy('updated_at');
+            ->sortBy('updated_at', 'desc');
 
         return inertia('Admin/ImportedProducts', [
             'initialRoute' => 'admin.products',

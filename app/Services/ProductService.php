@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Imports\Import;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
@@ -9,8 +10,6 @@ use App\Models\ImportedProduct;
 use App\Models\MeasurementUnit;
 use App\Models\Product;
 use App\Models\Promotion;
-use App\Models\SubCategory;
-use App\Models\SubSubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -435,7 +434,7 @@ class ProductService
     {
 
         if (intval($productArray['quantity']) == 0) {
-            return null;
+            ImportedProduct::where('product_code', $productArray['code'])->delete();
         }
         try {
             return ImportedProduct::updateOrCreate(
@@ -517,22 +516,25 @@ class ProductService
                     'is_enabled' => 1,
                     'image' => $imagePath,
                 ]);
-            } else
-                return $dbBrand;
+            }
+            return $dbBrand;
         } catch (\Error $error) {
             Log::error('Error when trying to create new brand', [
                 'error' => $error->getMessage(),
                 'brand' => $brand,
                 'trace' => $error->getTraceAsString()
             ]);
+            return null;
         } catch (\Exception $exception) {
-            Log::error('Exception occurred while  create new brand', [
+            Log::error('Exception occurred while create new brand', [
                 'error' => $exception->getMessage(),
                 'brand' => $brand,
                 'trace' => $exception->getTraceAsString()
             ]);
+            return null;
         }
     }
+
 
     public function create(Request $request, $data)
     {
