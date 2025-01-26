@@ -46,7 +46,7 @@ class Order extends Model
          * The 'created' event is dispatched when a new model is saved for the first time using the `save` method or the `create` method.
          * The \App\Events\NewOrder::class event class is dispatched for this event.
          */
-        // 'created' => \App\Events\NewOrder::class,
+        'created' => \App\Events\NewOrder::class,
 
         /**
          * The 'updated' event is dispatched when an existing model is saved using the `save` method.
@@ -61,9 +61,9 @@ class Order extends Model
     {
         parent::boot();
 
-        static::created(function ($order) {
-            event(new \App\Events\NewOrder($order));
-        });
+        // static::created(function ($order) {
+        //     event(new \App\Events\NewOrder($order));
+        // });
 
         // static::updated(function ($order) {
         //     if ($order->isDirty('status')) {

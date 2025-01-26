@@ -36,11 +36,11 @@ class ProductController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('Product')
-            ->setResourceColumns(['id', 'product_code', 'name', 'price', 'description', 'slug', 'updated_at'])
+            ->setResourceColumns(['id', 'product_code', 'name', 'price', 'updated_at'])
             ->setRelationColumn('category', 'subSubCategory', ['name'])
             ->setRelationColumn('brand', 'brand', ['name'])
             ->setRelationColumn('images', 'image', ['image1', 'image2', 'image3', 'image4'])
-            ->setColumnsOrder(['id', 'product_code', 'name', 'description', 'price'])
+            ->setColumnsOrder(['id', 'product_code', 'name', 'price'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.products')
