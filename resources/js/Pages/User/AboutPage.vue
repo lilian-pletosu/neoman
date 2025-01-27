@@ -8,7 +8,14 @@ const props = defineProps({
 </script>
 
 <template>
-    <FrontLayout>
+    <FrontLayout
+        :title="__('about_us')"
+        meta-description="Neoman.md este un magazin online specializat în materiale de finisare și produse esențiale pentru reparația și amenajarea locuinței tale.
+Oferim tot ce ai nevoie pentru a transforma spațiul tău într-un cămin perfect."
+        meta-keywords="magazin online moldova, materiale finisare, electrocasnice, amenajari interioare, reparatii casa, neoman chisinau, produse calitate, livrare moldova"
+        :current-url="route('about_page')"
+        :current-language="$page.props.locale"
+    >
         <div class="py-4">
             <h1 class="text-2xl font-bold font-mulish dark:text-white">
                 {{ __("about_us") }}

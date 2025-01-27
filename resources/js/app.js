@@ -15,7 +15,13 @@ const appDescription = "Alături la fiecare etapă în viață";
 const pinia = createPinia();
 
 createInertiaApp({
-    title: (title) => `${appName}.md - ${appDescription}`,
+    title: (title) => {
+        // Default title fallback
+        if (!title) return `${appName}.md - ${appDescription}`;
+
+        // Custom title for each page
+        return `${title} | ${appName}.md`;
+    },
     description: (description) => description,
     resolve: (name) =>
         resolvePageComponent(

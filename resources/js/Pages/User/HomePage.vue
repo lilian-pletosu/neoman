@@ -22,8 +22,10 @@ const props = defineProps({
 
 <template>
     <front-layout
-        :current-language="attrs.current_locale"
-        title="Pagina principală"
+        meta-description=" Alături la fiecare etapă în viață | Confortul tău - prioritatea noastră!"
+        meta-keywords="magazin online moldova, electrocasnice, tehnica, climatizare, electronice, livrare chisinau, neoman, aparate casnice, preturi avantajoase"
+        :current-url="route('home')"
+        :current-language="$page.props.locale"
     >
         <template v-slot:carousel>
             <carousel-front />

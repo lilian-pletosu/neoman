@@ -114,7 +114,20 @@ function buyProduct(productId) {
 </script>
 
 <template>
-    <front-layout title="Pagina principală">
+    <front-layout
+        :title="product.name"
+        :meta-description="`${product.name} - ${product.description?.substring(
+            0,
+            150
+        )}... Cumpără online pe Neoman.md cu livrare rapidă în toată Moldova.`"
+        :meta-keywords="`${product.name}, ${product.category.name}, ${
+            product.brand?.name || ''
+        }, ${product.product_code}, cumpara online, pret ${formatPrice(
+            product.price
+        )}, ${product.category.name} moldova`"
+        :current-url="route('product_page', product.slug)"
+        :current-language="$page.props.locale"
+    >
         <breadcrumb :product="product" />
 
         <hr />

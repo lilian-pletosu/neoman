@@ -13,8 +13,14 @@ const props = defineProps({
 </script>
 
 <template>
-    <front-layout title="Pagina principală">
-        <!--        <breadcrumb :product="product"/>-->
+    <front-layout
+        :title="category.name"
+        :meta-description="`Cumpără ${category.name} la cele mai bune prețuri pe Neoman.md. Livrare rapidă în toată Moldova, garanție și calitate garantată.`"
+        :meta-keywords="`${category.name}, ${category.name} moldova, ${category.name} chisinau, cumpara ${category.name}, pret ${category.name}, ${category.name} online`"
+        :current-url="route('category_page', category.slug)"
+        :current-language="$page.props.locale"
+    >
+        <!-- <breadcrumb :product="product" /> -->
         <hr />
         <!-- component -->
         <section class="py-6 bg-white">

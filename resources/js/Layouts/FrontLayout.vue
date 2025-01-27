@@ -46,6 +46,9 @@ const props = defineProps({
     currentRoute: String,
     title: String,
     currentLanguage: String,
+    metaDescription: String,
+    metaKeywords: String,
+    currentUrl: String,
 });
 
 const isModalVisible = ref(false);
@@ -97,6 +100,7 @@ onMounted(() => {
                     name="description"
                     content="Alături la fiecare etapă în viață!"
                 />
+                <meta property="og:title" :content="title" />
             </Head>
 
             <FrontNavBar @darkMode="toggleDark" :current-locale="null" />
@@ -125,11 +129,13 @@ onMounted(() => {
                             "
                         />
                         <!--                    main content -->
-                        <div
-                            class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60"
-                        >
-                            <slot />
-                        </div>
+                        <article>
+                            <div
+                                class="dark:bg-dark px-4 sm:px-[80px] md:px-[100px] lg:px-6 xl:px-60"
+                            >
+                                <slot />
+                            </div>
+                        </article>
                         <!--                    // mobile-->
                         <div
                             class="z-50 hidden w-full h-16 max-w-lg -translate-x-1/2 bg-white border border-gray-200 rounded-full bottom-4 left-1/2 dark:bg-gray-700 dark:border-gray-600"

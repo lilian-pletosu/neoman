@@ -32,7 +32,13 @@ const submitForm = () => {
 </script>
 
 <template>
-    <FrontLayout>
+    <FrontLayout
+        :title="__('contact')"
+        meta-description="Părerea ta este importantă pentru noi și ne dorim să știm ce părere ai despre noi."
+        meta-keywords="contact neoman, suport clienti, reclamatii, livrare moldova, colaborare, asistenta tehnica, service chisinau, contact magazin online"
+        :current-url="route('contacts.index')"
+        :current-language="$page.props.locale"
+    >
         <div class="py-4">
             <h1 class="text-2xl font-bold font-mulish dark:text-white">
                 {{ __("contact") }}

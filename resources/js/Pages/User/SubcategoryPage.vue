@@ -13,7 +13,13 @@ const props = defineProps({
 </script>
 
 <template>
-    <front-layout title="Pagina principală">
+    <front-layout
+        :title="subcategory.name"
+        :meta-description="`Explorează gama completă de ${subcategory.name} pe Neoman.md. Produse de calitate, prețuri competitive și livrare în toată Moldova.`"
+        :meta-keywords="`${subcategory.name}, ${subcategory.name} moldova, ${subcategory.name} chisinau, catalog ${subcategory.name}, ${subcategory.name} online, magazin ${subcategory.name}, pret ${subcategory.name}`"
+        :current-url="route('subcategory_page', subcategory.slug)"
+        :current-language="$page.props.locale"
+    >
         <hr />
         <!-- component -->
         <section class="py-6 bg-white">
@@ -21,7 +27,7 @@ const props = defineProps({
                 <h1
                     class="pb-10 text-lg font-bold border-b font-mulish md:text-xl lg:text-2xl"
                 >
-                    {{ subcategory.name }}
+                    {{ subcategory?.name }}
                 </h1>
                 <div
                     class="grid grid-cols-1 pt-12 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-28 lg:gap-y-16"

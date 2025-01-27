@@ -159,7 +159,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <FrontLayout>
+    <FrontLayout
+        :title="subSubcategory.name"
+        :meta-description="`Cumpără ${subSubcategory.name} la cele mai bune prețuri pe Neoman.md. Catalog complet de produse, livrare în toată Moldova și garanție de calitate.`"
+        :meta-keywords="`${subSubcategory.name}, ${subSubcategory.name} moldova, catalog ${subSubcategory.name}, pret ${subSubcategory.name}, ${subSubcategory.name} online, magazin ${subSubcategory.name}`"
+        :current-url="route('products_page', subSubcategory.slug)"
+        :current-language="$page.props.locale"
+    >
         <div class="bg-white">
             <div>
                 <!-- Mobile filter dialog -->

@@ -19,9 +19,6 @@ class SubcategoryController extends Controller
             }])
             ->first();
 
-
-
-
         return inertia('User/SubcategoryPage', ['subcategory' => $subcategory]);
     }
 }

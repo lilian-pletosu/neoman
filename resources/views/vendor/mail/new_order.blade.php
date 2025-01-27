@@ -41,7 +41,9 @@
         </x-mail::table>
         <hr>
         <h2>Preț produse: {{$order['total_price']}} {{__('app_context.lei')}}</h2>
+        @if($order['delivery_price'])
         <h2>Livrare: {{$order['delivery_price'] ??  "---"}} {{__('app_context.lei')}}</h2>
+        @endif
         <h1>Total: {{$order['total_price'] + $order['delivery_price']}} {{__('app_context.lei')}}</h1>
 
         <x-mail::subcopy>
