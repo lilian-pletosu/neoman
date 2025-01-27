@@ -301,6 +301,8 @@ p .swiper-button-prev.swiper-button-disabled,
                             <div class="static">
                                 <div class="absolute z-10 w-12 left-2 top-2">
                                     <img
+                                        :srcset="`${product.brand.image}?width=400 400w, ${product.brand.image}?width=800 800w`"
+                                        sizes="(max-width: 400px) 400px, 800px"
                                         :alt="product.brand.name"
                                         :src="product.brand.image"
                                         class="mix-blend-multiply"
@@ -334,8 +336,11 @@ p .swiper-button-prev.swiper-button-disabled,
                             <div>
                                 <div class="mt-2">
                                     <img
+                                        loading="lazy"
+                                        :srcset="`${product.image}?width=400 400w, ${product.image}?width=800 800w`"
+                                        sizes="(max-width: 400px) 400px, 800px"
                                         :src="product.image"
-                                        alt="Product Image"
+                                        :alt="product.name"
                                         class="object-contain transition opacity-100 hover:scale-110 aspect-square mix-blend-multiply"
                                     />
                                 </div>

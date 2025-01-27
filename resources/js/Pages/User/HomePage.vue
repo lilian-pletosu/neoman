@@ -5,7 +5,6 @@ import ProductSection from "@/Components/ProductSection.vue";
 import { useAttrs } from "vue";
 import { Link } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
-
 const page = usePage();
 
 const attrs = useAttrs();
@@ -49,6 +48,7 @@ const props = defineProps({
 
         <section class="relative h-[600px] flex rounded text-center">
             <img
+                loading="lazy"
                 :src="`${page.props.ziggy.url}${page.props.call_action.image}`"
                 class="absolute object-cover object-center w-full h-full rounded"
                 alt="Neoman background"

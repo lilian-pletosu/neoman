@@ -143,6 +143,8 @@ function buyProduct(productId) {
                                     class="overflow-hidden w-full h-[300px] md:h-[500px] rounded-lg"
                                 >
                                     <img
+                                        loading="lazy"
+                                        sizes="(max-width: 400px) 400px, 800px"
                                         :src="selectedImage"
                                         alt=""
                                         class="object-contain w-full h-[300px] md:h-[500px] cursor-pointer"
@@ -169,8 +171,10 @@ function buyProduct(productId) {
                                         @click="selectImage(image?.image1)"
                                     >
                                         <img
+                                            loading="lazy"
+                                            sizes="(max-width: 400px) 400px, 800px"
                                             :src="image?.image1"
-                                            alt=""
+                                            :alt="product.name"
                                             class="object-cover w-full h-full"
                                         />
                                     </button>
@@ -185,8 +189,9 @@ function buyProduct(productId) {
                                         @click="selectImage(image?.image2)"
                                     >
                                         <img
+                                            loading="lazy"
                                             :src="image?.image2"
-                                            alt=""
+                                            :alt="product.name"
                                             class="object-cover w-full h-full"
                                         />
                                     </button>
@@ -201,8 +206,9 @@ function buyProduct(productId) {
                                         @click="selectImage(image?.image3)"
                                     >
                                         <img
+                                            loading="lazy"
                                             :src="image.image3"
-                                            alt=""
+                                            :alt="product.name"
                                             class="object-cover w-full h-full"
                                         />
                                     </button>
@@ -217,8 +223,9 @@ function buyProduct(productId) {
                                         @click="selectImage(image?.image4)"
                                     >
                                         <img
+                                            loading="lazy"
                                             :src="image?.image4"
-                                            alt=""
+                                            :alt="product.name"
                                             class="object-cover w-full h-full"
                                         />
                                     </button>

@@ -685,6 +685,9 @@ onBeforeUnmount(() => {
                                                             class="absolute w-12 left-2 top-2 z-80"
                                                         >
                                                             <img
+                                                                :srcset="`${product?.brand?.image}?width=400 400w, ${product?.brand?.image}?width=800 800w`"
+                                                                sizes="(max-width: 400px) 400px, 800px"
+                                                                loading="lazy"
                                                                 :alt="
                                                                     product
                                                                         ?.brand
@@ -728,6 +731,9 @@ onBeforeUnmount(() => {
                                                     <div>
                                                         <div class="mt-2">
                                                             <img
+                                                                loading="lazy"
+                                                                :srcset="`${product?.images[0]?.image1}?width=400 400w, ${product?.images[0]?.image1}?width=800 800w`"
+                                                                sizes="(max-width: 400px) 400px, 800px"
                                                                 :src="
                                                                     product
                                                                         ?.images[0]
