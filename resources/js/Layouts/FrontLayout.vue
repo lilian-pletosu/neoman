@@ -82,6 +82,15 @@ onBeforeMount(() => {
 onMounted(() => {
     isLoading.value = false;
 });
+
+const openMessenger = () => {
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        window.location.href = "fb-messenger://user-thread/110912380742445";
+    } else {
+        window.location.href = "https://www.facebook.com/messages/t/110912380742445";
+    }
+}
+
 </script>
 
 <template>
@@ -209,10 +218,9 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <div data-dial-init class="fixed block z-100 end-6 bottom-6 group">
-                            <a href="https://www.facebook.com/messages/t/110912380742445" type="button"
-                                data-dial-toggle="speed-dial-menu-default" aria-controls="speed-dial-menu-default"
-                                aria-expanded="false"
+                        <div data-dial-init class="fixed block z-60 end-6 bottom-6 group">
+                            <a @click="openMessenger" type="button" data-dial-toggle="speed-dial-menu-default"
+                                aria-controls="speed-dial-menu-default" aria-expanded="false"
                                 class="flex items-center justify-center w-8 h-8 text-white bg-blue-700 rounded-full md:h-12 md:w-12 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 ring-2 ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
                                 <svg class="animate-pulse" xmlns="http://www.w3.org/2000/svg" width="200" height="200"
                                     viewBox="0 0 256 256">
