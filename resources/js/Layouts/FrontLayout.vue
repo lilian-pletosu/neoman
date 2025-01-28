@@ -209,7 +209,7 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <div data-dial-init class="fixed block end-6 bottom-6 group">
+                        <div data-dial-init class="fixed block z-100 end-6 bottom-6 group">
                             <a href="https://www.facebook.com/messages/t/110912380742445" type="button"
                                 data-dial-toggle="speed-dial-menu-default" aria-controls="speed-dial-menu-default"
                                 aria-expanded="false"
