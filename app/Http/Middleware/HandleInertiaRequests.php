@@ -3,13 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Enum\StatusEnum;
-use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Order;
-use App\Models\SubCategory;
-use App\Models\SubSubCategory;
-use App\Services\BannerService;
-use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -78,24 +73,10 @@ class HandleInertiaRequests extends Middleware
                     ->get();
             }),
 
-            // 'subcategories' => Cache::has('subcategories') ? Cache::get('subcategories') : Cache::remember('subcategories', 10000, function () {
-            //     return SubCategory::active()->orderBy('name')->get();
-            // }),
-            // 'sub_subcategories' => Cache::has('sub_subcategories') ? Cache::get('sub_subcategories') : Cache::remember('sub_subcategories', 10000, function () {
-            //     return SubSubCategory::active()->orderBy('name')->get();
-            // }),
-            // 'brands' => Cache::has('brands') ? Cache::get('brands') : Cache::remember('brands', 10000, function () {
-            //     return Brand::whereNotNull('image')->active()->orderBy('name')->limit(15)->get();
-            // }),
+
             'order_count' => Order::where('status', StatusEnum::PENDING)->count(),
             'last_visited' => (new ProductService())->loadLastVisitedProduct(request()) ?? [],
             'all_products' => [],
-            // 'home_banners' => Cache::has('home_banners') ? Cache::get('home_banners') : Cache::remember('home_banners', 10000, function () {
-            //     return (new BannerService())->getHomeBanners();
-            // }),
-            // 'orders' => Cache::has('orders') ? Cache::get('orders') : Cache::remember('orders', 10000, function () {
-            //     return (new OrderService())->getOrders();
-            // }),
             'toast' => session('toast'),
         ]);
     }

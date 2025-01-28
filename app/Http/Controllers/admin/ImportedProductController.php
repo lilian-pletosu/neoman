@@ -4,9 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use Inertia\Inertia;
 use App\Models\Product;
-use App\Models\SubCategory;
 use Illuminate\Http\Request;
-use App\Models\SubSubCategory;
 use App\Models\ImportedProduct;
 use App\Services\ProductService;
 use App\Services\DataTableService;

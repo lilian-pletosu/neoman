@@ -36,8 +36,7 @@ class AttributeController extends Controller
     {
         $builder = $this->dataTableService
             ->setResource('attribute')
-            ->setResourceColumns(['id', 'name', 'slug'])
-            ->setRelationColumn('category', 'subSubCategory', ['name'])
+            ->setResourceColumns(['id', 'name'])
             ->editInModal(true)
             ->paginate(10)
             ->setSearchRoute('admin.attributes')
@@ -65,13 +64,12 @@ class AttributeController extends Controller
     {
         $data = $request->validate([
             'name ro' => 'required|min:3',
-            'name ru' => 'required|min:3',
-            'category_id' => 'required',
+            'name ru' => 'required|min:3'
         ]);
         $data['slug'] = Str::slug($data['name ro'], '_');
 
 
-        $attribute = Attribute::firstOrCreate(['slug' => $data['slug'], 'category_id' => $data['category_id']], []);
+        $attribute = Attribute::firstOrCreate(['slug' => $data['slug']], []);
 
         foreach (config('app.available_locales') as $locale) {
             foreach ($this->translatedAttributes as $translatedAttribute) {
@@ -91,7 +89,6 @@ class AttributeController extends Controller
             'id' => $attribute->id,
             "name $this->currentLocale" => $attribute->translate($this->currentLocale)->name,
             "name $this->reserveLanguage" => $attribute->translate($this->reserveLanguage)->name,
-            "category_id" => $attribute->category_id,
             'slug' => $attribute->slug
         ];
 
@@ -114,13 +111,11 @@ class AttributeController extends Controller
         $data = $request->validate([
             'form.name ro' => 'required|min:3',
             'form.name ru' => 'required|min:3',
-            'form.category_id' => 'required'
         ]);
         $data['slug'] = Str::slug($data['form']['name ro'], '_');
 
         $attribute->update([
             'slug' => $data['slug'],
-            'category_id' => $data['form']['category_id']
         ]);
 
         foreach (config('app.available_locales') as $locale) {

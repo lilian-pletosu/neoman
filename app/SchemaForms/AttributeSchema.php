@@ -32,17 +32,17 @@ class AttributeSchema
                     'required'
                 ],
             ],
-            [
-                'name' => 'category_id',
-                'value' => '',
-                'type' => 'select',
-                'label' => 'sub_sub_category',
-                'placeholder' => 'sub_sub_category',
-                'options' => Category::where('level', 3)->orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f?->getTranslation()?->name ?? $f?->getTranslation($reserveLanguage)?->name])->toArray(),
-                'rules' => [
-                    'required'
-                ],
-            ],
+            // [
+            //     'name' => 'category_id',
+            //     'value' => '',
+            //     'type' => 'select',
+            //     'label' => 'sub_sub_category',
+            //     'placeholder' => 'sub_sub_category',
+            //     'options' => Category::where('level', 3)->orderBy('name')->get()->map(fn($f) => ['id' => $f->id, 'value' => $f?->getTranslation()?->name ?? $f?->getTranslation($reserveLanguage)?->name])->toArray(),
+            //     'rules' => [
+            //         'required'
+            //     ],
+            // ],
         ];
     }
 }
