@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -21,7 +20,6 @@ class ProductController extends Controller
         ])->first();
 
         $brandQuery = Brand::brandsOfSubsubCategory($category->id)->get();
-        $attributesQuery = Attribute::where('category_id', $category->id)->with('attributeValues')->get();
 
         $brands[] = [
             'key' => 'brand',
@@ -35,21 +33,28 @@ class ProductController extends Controller
             })->toArray(),
         ];
 
-        $attributes = $attributesQuery->map(function ($attribute) {
-            return [
-                'key' => $attribute->slug,
-                'name' => $attribute->translateOrDefault()->name ?? null,
-                'options' => $attribute->attributeValues->map(function ($item) {
-                    return [
-                        'id' => $item->id,
-                        'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value ?? null
-                    ];
-                })->all()
-            ];
-        })->all();
+
 
         $products = Product::where('category_id', $category->id)
             ->with('brand', 'images');
+
+        $attributes = $products->with('attributeValues.attribute')->get()
+            ->pluck('attributeValues')
+            ->flatten()
+            ->groupBy('attribute.slug')
+            ->map(function ($group) {
+                return [
+                    'key' => $group[0]->attribute->slug,
+                    'name' => $group[0]->attribute->translateOrDefault()->name ?? null,
+                    'options' => $group->unique('id')->map(function ($item) {
+                        return [
+                            'id' => $item->id,
+                            'value' => $item->translateOrDefault()->value ?? $item->translate('ro')->value ?? null
+                        ];
+                    })->values()->all()
+                ];
+            })->values()->all();
+
 
 
         $attributesForFilter = [];
@@ -57,10 +62,8 @@ class ProductController extends Controller
             $attributesForFilter[] = $item['key'];
         }
 
-
-
-
         $products = $products->filtered($attributesForFilter)->paginate(12)->withQueryString();
+
 
         return inertia('User/ProductsPage', [
             'products' => $products,
