@@ -12,7 +12,9 @@ import CustomModal from "@/Components/CustomModal.vue";
 import "vue3-carousel/dist/carousel.css";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import { formatPrice } from "@/helpers/helper.js";
+import { usePage } from "@inertiajs/vue3";
 
+const page = usePage();
 const attrs = useAttrs();
 
 const emit = defineEmits(["productCart"]);
@@ -404,10 +406,10 @@ function buyProduct(productId) {
                 @close="isOpen = false" @select="console.log($event)" />
         </section>
         <hr />
-        <!--        <product-section :products="latest_products" :title="__('latest_products')" :top_products="true"/>-->
         <product-section v-if="attrs.last_visited.length !== 0" :new_products="true" :products="attrs.last_visited"
             :title="__('visited_products')" />
 
+        <product-section :products="page.props.relatedProducts" :title="__('related_products')" :top_products="true" />
         <custom-modal :is-open="openModalSlider" @close-modal="closeModalSlider">
             <template v-slot:content>
                 <div class="w-full">

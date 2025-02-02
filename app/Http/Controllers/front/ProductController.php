@@ -10,6 +10,7 @@ use App\Models\MeasurementUnit;
 use App\Services\ProductService;
 use App\Services\SessionService;
 use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -102,6 +103,11 @@ class ProductController extends Controller
             abort(404);
             return redirect()->back();
         }
+
+
+        $relatedProducts = ProductService::getRelatedProducts($product->category_id);
+
+        Inertia::share('relatedProducts', $relatedProducts);
 
         $productService = new ProductService();
         $salesDetails = $productService->loadSalesProducts($product->id);

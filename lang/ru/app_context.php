@@ -266,6 +266,7 @@ return [
     'create_terms' => 'Создать условия',
     'edit_terms' => 'Редактировать условия',
     'no_terms' => 'Нет условий',
+    'related_products' => 'Связанные продукты',
 
     //statuses
     'pending' => 'В ожидании',

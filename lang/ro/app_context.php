@@ -271,6 +271,7 @@ return [
     'no_terms' => 'Nu sunt termeni',
     'create_terms' => 'Crează termeni',
     'editt_terms' => 'Editează termeni',
+    'related_products' => 'Produse asemănătoare',
 
     //statuses
     'pending' => 'Procesare',

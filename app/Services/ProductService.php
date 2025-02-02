@@ -92,7 +92,7 @@ class ProductService
     {
         $attributesArray = $product->attributes->flatMap(function ($attribute) {
             return $attribute->attributeValues->mapWithKeys(function ($attributeValue) use ($attribute) {
-                $translatedValue = $attributeValue->translate(session()->get('locale'));
+                $translatedValue = $attributeValue->translate(app()->getLocale());
                 return $translatedValue ? [$attribute->name => $translatedValue->value] : [];
             });
         });
@@ -111,7 +111,7 @@ class ProductService
                 'image' => $product->brand->image ?? null,
             ],
             'attributes' => $attributesArray,
-            'mu' => $product->measurementUnit?->translate(session()->get('locale'))?->symbol ?? null,
+            'mu' => $product->measurementUnit?->translate(app()->getLocale())?->symbol ?? null,
         ];
     }
 
@@ -151,7 +151,59 @@ class ProductService
                 'price' => $product->price,
                 'brand' => ['name' => $brandName, 'image' => $brandLogo],
                 'attributes' => $attributesArray,
-                'mu' => MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(session()->get('locale'))->symbol ?? 'buc'
+                'mu' => MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->getLocale())->symbol ?? 'buc'
+            ];
+
+            // Adaugă array-ul produsului în array-ul general de produse
+            $productsArray[] = $productArray;
+        }
+        return $productsArray;
+    }
+
+    static public function getRelatedProducts($categoryId)
+    {
+        $productsArray = [];
+        $category = Category::find($categoryId);
+        $products = $category->products()->take(30)->get()->shuffle();
+
+        foreach ($products as $product) {
+
+            // Inițializează un array pentru atributele fiecărui produs
+            $attributesArray = [];
+
+            // Parcurge fiecare atribut al produsului
+            foreach ($product->attributes as $attribute) {
+                foreach ($attribute->attributeValues as $attributeValue) {
+                    // Obține valoarea tradusă a atributului
+                    $translatedValue = $attributeValue->translate(app()->getLocale());
+                    if ($translatedValue) {
+                        // Adaugă valoarea tradusă a atributului în array-ul de atribute
+                        $attributesArray[$attribute->name] = $translatedValue->value;
+                    }
+                }
+            }
+
+            // Obține brandul produsului și adaugă numele său în array-ul produsului
+            $brandName = $product->brand->name ?? null;
+            $brandLogo = $product->brand->image ?? null;
+            if ($product->images()->first()?->image1 === null) {
+                // if image is null skip product
+                continue;
+            } else {
+                $image = $product->images()->first()->image1;
+            }
+
+
+            // Adaugă array-urile de atribute și numele brandului în array-ul produsului
+            $productArray = [
+                'id' => $product->id,
+                'slug' => $product->slug,
+                'name' => $product->translate(app()->getLocale())->name ?? '',
+                'image' => $image,
+                'price' => $product->price,
+                'brand' => ['name' => $brandName, 'image' => $brandLogo],
+                'attributes' => $attributesArray,
+                'mu' => null
             ];
 
             // Adaugă array-ul produsului în array-ul general de produse
@@ -176,7 +228,7 @@ class ProductService
                     foreach ($product->attributes as $attribute) {
                         foreach ($attribute->attributeValues as $attributeValue) {
                             // Obține valoarea tradusă a atributului
-                            $translatedValue = $attributeValue->translate(session()->get('locale'));
+                            $translatedValue = $attributeValue->translate(app()->getLocale());
                             if ($translatedValue) {
                                 // Adaugă valoarea tradusă a atributului în array-ul de atribute
                                 $attributesArray[$attribute->name] = $translatedValue->value;
@@ -194,7 +246,7 @@ class ProductService
                     $productArray = [
                         'id' => $product->id,
                         'slug' => $product->slug,
-                        'name' => $product->translateOrDefault('ro')->name ?? '',
+                        'name' => $product->translate(app()->getLocale())->name ?? '',
                         'image' => $image,
                         'price' => $product->price,
                         'brand' => ['name' => $brandName, 'image' => $brandLogo],
@@ -234,7 +286,7 @@ class ProductService
 
                 foreach ($product->attributes as $attribute) {
                     foreach ($attribute->attributeValues as $attributeValue) {
-                        $translatedValue = $attributeValue->translate(session()->get('locale'));
+                        $translatedValue = $attributeValue->translate(app()->getLocale());
                         if ($translatedValue) {
                             $attributesArray[$attribute->name] = $translatedValue->value;
                         }
@@ -248,8 +300,8 @@ class ProductService
                 $productArray = [
                     'id' => $product->id,
                     'slug' => $product->slug,
-                    'name' => $product->translate(session()->get('locale'))->name,
-                    'description' => $product->translate(session()->get('locale'))->description,
+                    'name' => $product->translate(app()->getLocale())->name,
+                    'description' => $product->translate(app()->getLocale())->description,
                     'image' => $image,
                     'price' => $product->price,
                     'brand' => ['name' => $brandName, 'image' => $brandLogo],
@@ -266,7 +318,7 @@ class ProductService
 
     public function searchProduct($query = null)
     {
-        $locale = session()->get('locale');
+        $locale = app()->getLocale();
         $productsArray = [];
 
         if ($query) {
@@ -337,7 +389,7 @@ class ProductService
 
                 foreach ($product->attributes as $attribute) {
                     foreach ($attribute->attributeValues as $attributeValue) {
-                        $translatedValue = $attributeValue->translate(session()->get('locale'));
+                        $translatedValue = $attributeValue->translate(app()->getLocale());
                         if ($translatedValue) {
                             $attributesArray[$attribute->name] = $translatedValue->value;
                         }
@@ -351,7 +403,7 @@ class ProductService
                 $productArray = [
                     'id' => $product->id,
                     'slug' => $product->slug,
-                    'name' => $product->translate(session()->get('locale'))->name,
+                    'name' => $product->translate(app()->getLocale())->name,
                     'image' => $image,
                     'price' => $product->price,
                     'brand' => ['name' => $brandName, 'image' => $brandLogo],
