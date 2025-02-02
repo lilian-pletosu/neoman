@@ -124,6 +124,8 @@ class ProductsImport
     public function createProduct()
     {
         $data = $this->combineImagesWithText();
+        $createdProducts = [];
+
 
 
         foreach ($data as $item) {
@@ -162,9 +164,7 @@ class ProductsImport
                     }
                     $this->associateImagesWithProduct($product, $item);
                     $product->save();
-
-
-                    return $product;
+                    $createdProducts[] = $product;
                 } catch (\Exception $e) {
                     return redirect()->back()->withErrors([
                         'import' => $e->getMessage()
