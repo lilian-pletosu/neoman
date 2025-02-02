@@ -127,7 +127,7 @@ class ProductController extends Controller
 
 
 
-        $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? null;
+        // $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? '';
 
         $product['credits'] = $product->credits()->get();
 
