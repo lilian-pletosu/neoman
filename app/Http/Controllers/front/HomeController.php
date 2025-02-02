@@ -9,6 +9,7 @@ use App\Mail\CallWaitForm;
 use Illuminate\Http\Request;
 use App\Services\BannerService;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\UltraImportService;
 use Illuminate\Support\Facades\Mail;
@@ -27,33 +28,6 @@ class HomeController extends Controller
 
     public function index()
     {
-
-
-        // $params = [
-        //     "service" => "NOMENCLATURE",
-        //     "all" => true,
-        //     "additionalParams" => ""
-        // ];
-
-        // $request = new Request();
-        // $request->merge($params);
-
-
-
-        // // dd($this->requestData($request));
-        // dd($this->checkStatus('2c92c2ff-0fbb-4d33-97c7-204d2f6d5301')->getData()->status);
-        // // dd($this->getData('1c505081-1197-4d7b-87ca-3761d4179db8'));
-
-
-
-
-
-
-
-
-
-
-
 
         $categories = Cache::remember('categories', 262656, function () {
             return Category::where('level', 1)->orderBy('name')->active()->get();

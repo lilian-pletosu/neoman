@@ -357,11 +357,13 @@ class DataTableService
             });
 
 
+
             $this->query->orWhere(function (Builder $query) use ($attributes, $searchTerm) {
                 foreach ($attributes as $attribute) {
                     $query->orWhere($attribute, 'LIKE', "%{$searchTerm}%");
                 }
             });
+
 
 
             //build the search on relations

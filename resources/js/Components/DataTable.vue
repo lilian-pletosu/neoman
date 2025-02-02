@@ -98,11 +98,12 @@ const applyFormat = (columnName, columnValue) => {
         return useDateFormat(columnValue, "DD-MM-YYYY", { locales: "rum" })
             .value;
     }
+
     return columnValue;
 };
 
 function applyTypeInput(columnName) {
-    if (columnName === "image" || columnName === "file") {
+    if (["image", "image1", "file"].includes(columnName)) {
         return "file";
     }
     return "text";
@@ -149,16 +150,16 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-col mt-8">
-        <div class="flex overflow-x-auto rounded-lg md:overflow-hidden">
-            <div class="inline-block w-full align-middle">
-                <div class="overflow-hidden shadow sm:rounded-lg">
-                    <table class="w-full divide-y divide-gray-200">
+        <div class="w-full overflow-x-auto border rounded-lg shadow">
+            <div class="inline-block min-w-full align-middle">
+                <div class="overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <template v-for="column in columnsOrder">
                                     <th
                                         scope="col"
-                                        class="flex-1 p-4 text-xs font-medium tracking-wider text-gray-500 uppercase"
+                                        class="p-4 text-xs font-medium tracking-wider text-left text-gray-500 uppercase whitespace-nowrap"
                                         :class="{
                                             'hidden xl:block':
                                                 column === 'description',
@@ -488,10 +489,64 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.sticky-column {
+    position: sticky;
+    left: 0;
+    background: inherit;
+    z-index: 10;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
 .flexible-text {
-    @apply overflow-hidden
-    whitespace-normal
-    break-words;
-    /* sau poate folosiți overflow-ellipsis pentru a afișa puncte de suspensie (...) când textul depășește containerul */
+    @apply overflow-hidden whitespace-normal break-words;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+th,
+td {
+    @apply px-4 py-3;
+}
+
+.table-wrapper {
+    @apply relative;
+    max-width: 100%;
+}
+
+@media (max-width: 640px) {
+    .table-wrapper {
+        @apply -mx-4;
+    }
+}
+
+.status-active {
+    @apply bg-green-500;
+}
+
+.status-inactive {
+    @apply bg-red-500;
+}
+
+.status-pending {
+    @apply bg-yellow-500;
+}
+
+.status-confirmed {
+    @apply bg-blue-500;
+}
+
+.status-shipped {
+    @apply bg-purple-500;
+}
+
+.status-delivered {
+    @apply bg-green-600;
+}
+
+.status-canceled {
+    @apply bg-red-600;
 }
 </style>

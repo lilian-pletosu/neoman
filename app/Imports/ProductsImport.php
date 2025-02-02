@@ -69,6 +69,9 @@ class ProductsImport
         $combinedColumns = [];
 
         foreach ($texts as $key => $text) {
+            if (!$text['name ro'] && !$text['name ru']) {
+                continue;
+            }
             if (isset($images[$key])) {
                 foreach ($images[$key] as $index => $image) {
                     $text['image' . ($index + 1)] = $image;
@@ -109,7 +112,11 @@ class ProductsImport
 
 
             $fileName = uniqid('prod') . '.' . $extension;
-            Storage::disk('products')->put($fileName, $imageContents);
+            try {
+                Storage::disk('products')->put($fileName, $imageContents);
+            } catch (\Throwable $th) {
+                throw $th;
+            }
             return '/storage/products/' . $fileName;
         }
     }
@@ -117,6 +124,7 @@ class ProductsImport
     public function createProduct()
     {
         $data = $this->combineImagesWithText();
+
 
         foreach ($data as $item) {
             if ($item['name ro'] || $item['name ru']) {
@@ -145,11 +153,18 @@ class ProductsImport
                         }
                     }
 
-
+                    try {
+                        $this->associateAttributes($product, $item);
+                    } catch (\Exception $e) {
+                        return redirect()->back()->withErrors([
+                            'import' => $e->getMessage()
+                        ]);
+                    }
+                    $this->associateImagesWithProduct($product, $item);
                     $product->save();
 
-                    $this->associateAttributes($product, $subSubcategory, $item);
-                    $this->associateImagesWithProduct($product, $item);
+
+                    return $product;
                 } catch (\Exception $e) {
                     return redirect()->back()->withErrors([
                         'import' => $e->getMessage()
@@ -157,8 +172,6 @@ class ProductsImport
                 }
             }
         }
-
-        return $product;
     }
 
     private function associateImagesWithProduct($product, $item)
@@ -182,10 +195,10 @@ class ProductsImport
         }
     }
 
-    public function associateAttributes($product, $subSubcategory, $item)
+    public function associateAttributes($product, $item)
     {
         // Obține toate atributele existente pentru subcategoria specificată
-        $attributes = Attribute::where('category_id', $subSubcategory->id)->get();
+        $attributes = Attribute::all();
 
         foreach ($attributes as $attribute) {
             if ($attribute->slug == 'cantitate') {
@@ -220,9 +233,9 @@ class ProductsImport
                             $product->attributes()->attach($attribute->id, ['attribute_value_id' => $valueAttribute->id]);
                         }
                     }
+                    continue;
                 }
             }
         }
     }
-
 }

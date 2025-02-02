@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\front;
 
-use App\Http\Controllers\Controller;
 use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
+use App\Models\MeasurementUnit;
 use App\Services\ProductService;
 use App\Services\SessionService;
-use Illuminate\Support\Str;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
@@ -124,10 +125,9 @@ class ProductController extends Controller
             ];
         });
 
-        //        $latest_products = (new ProductService())->loadLatestProducts();
 
 
-        //        $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? '';
+        $product['mu'] = MeasurementUnit::findOrFail($product->measurement_unit_id)->first()->translate(app()->currentLocale())->symbol ?? null;
 
         $product['credits'] = $product->credits()->get();
 

@@ -60,7 +60,6 @@ class SubSubcategoryService
     {
         $data['image'] = '/img/no_image.svg';
 
-
         $subSubcategory = Category::firstOrCreate(['slug' => Str::slug($data['sub_subcategory'], '_')], [
             'slug' => Str::slug($data['sub_subcategory'], '_'),
             'image' => $data['image'],
@@ -69,14 +68,10 @@ class SubSubcategoryService
 
         foreach (config('app.available_locales') as $locale) {
             foreach ($this->translatedAttributes as $translatedAttribute) {
-                $xlsxKey = $translatedAttribute . ' ' . $locale;
-                if (isset($data[$xlsxKey])) {
-                    $subSubcategory->translateOrNew($locale)->$translatedAttribute = $data[$xlsxKey];
-                } else {
-                    $subSubcategory->translateOrNew($locale)->$translatedAttribute = $data['sub_subcategory'];
-                }
+                $subSubcategory->translateOrNew($locale)->$translatedAttribute = $data['sub_subcategory'];
             }
         }
+        $subSubcategory->save();
         return $subSubcategory;
     }
 

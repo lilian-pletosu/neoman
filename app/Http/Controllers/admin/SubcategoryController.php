@@ -4,11 +4,9 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\SubCategory;
 use App\Services\CategoryService;
 use App\Services\DataTableService;
 use App\Services\SchemaFormBuilder;
-use App\Services\SubcategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -79,7 +77,7 @@ class SubcategoryController extends Controller
         return to_route($this->route);
     }
 
-    public function show(SubCategory $subCategory)
+    public function show(Category $subCategory)
     {
         return $subCategory->translations;
     }

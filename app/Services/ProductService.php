@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Imports\Import;
 use App\Models\Attribute;
 use App\Models\Brand;
 use App\Models\Category;

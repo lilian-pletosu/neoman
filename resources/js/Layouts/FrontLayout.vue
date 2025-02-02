@@ -86,7 +86,7 @@ onMounted(() => {
 const openMessenger = () => {
     if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
         window.location.href = "fb-messenger://user-thread/110912380742445";
-    } else {
+    } else {    
         window.location.href = "https://www.facebook.com/messages/t/110912380742445";
     }
 }
