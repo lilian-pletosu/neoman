@@ -94,7 +94,14 @@ class ProductController extends Controller
             $mu_unit = '';
         }
 
-        $product = Product::where('slug', $productSlug)->with(['images', 'brand', 'attributeValues', 'category.promotions', 'category.parent.promotions', 'category.parent.parent'])->first();
+        $product = Product::where('slug', $productSlug)
+            ->with(['images', 'brand', 'attributeValues', 'category.promotions', 'category.parent.promotions', 'category.parent.parent'])
+            ->first();
+
+        if (!$product) {
+            abort(404);
+            return redirect()->back();
+        }
 
         $productService = new ProductService();
         $salesDetails = $productService->loadSalesProducts($product->id);

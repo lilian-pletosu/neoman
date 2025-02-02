@@ -118,9 +118,9 @@ function buyProduct(productId) {
         0,
         150
     )}... Cumpără online pe Neoman.md cu livrare rapidă în toată Moldova.`" :meta-keywords="`${product.name}, ${product.category.name}, ${product.brand?.name || ''
-            }, ${product.product_code}, cumpara online, pret ${formatPrice(
-                product.price
-            )}, ${product.category.name} moldova`" :current-url="route('product_page', product.slug)"
+        }, ${product.product_code}, cumpara online, pret ${formatPrice(
+            product.price
+        )}, ${product.category.name} moldova`" :current-url="route('product_page', product.slug)"
         :current-language="$page.props.locale">
         <!-- <breadcrumb :product="product" /> -->
 
@@ -132,8 +132,8 @@ function buyProduct(productId) {
                         <div class="lg:flex">
                             <div class="flex-1 lg:order-2 lg:ml-5">
                                 <div class="overflow-hidden w-full h-[300px] md:h-[500px] rounded-lg">
-                                    <img loading="lazy" sizes="(max-width: 400px) 400px, 800px" :src="selectedImage"
-                                        alt="" class="object-contain w-full h-[300px] md:h-[500px] cursor-pointer"
+                                    <img loading="lazy" :src="selectedImage" alt=""
+                                        class="object-contain w-full h-[300px] md:h-[500px] cursor-pointer"
                                         @click="openImage" />
                                 </div>
                             </div>
@@ -144,17 +144,15 @@ function buyProduct(productId) {
                                     <button v-show="image?.image1 != null" :class="{
                                         'border-gray-900':
                                             image?.image1 === selectedImage,
-                                    }"
-                                        class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
+                                    }" class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
                                         type="button" @click="selectImage(image?.image1)">
-                                        <img loading="lazy" sizes="(max-width: 400px) 400px, 800px" :src="image?.image1"
-                                            :alt="product.name" class="object-cover w-full h-full" />
+                                        <img loading="lazy" :src="image?.image1" :alt="product.name"
+                                            class="object-cover w-full h-full" />
                                     </button>
                                     <button v-show="image?.image2 != null" :class="{
                                         'border-gray-900':
                                             image?.image2 === selectedImage,
-                                    }"
-                                        class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
+                                    }" class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
                                         type="button" @click="selectImage(image?.image2)">
                                         <img loading="lazy" :src="image?.image2" :alt="product.name"
                                             class="object-cover w-full h-full" />
@@ -162,8 +160,7 @@ function buyProduct(productId) {
                                     <button v-show="image?.image3 != null" :class="{
                                         'border-gray-900':
                                             image?.image3 === selectedImage,
-                                    }"
-                                        class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
+                                    }" class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
                                         type="button" @click="selectImage(image?.image3)">
                                         <img loading="lazy" :src="image.image3" :alt="product.name"
                                             class="object-cover w-full h-full" />
@@ -171,8 +168,7 @@ function buyProduct(productId) {
                                     <button v-show="image?.image4 != null" :class="{
                                         'border-gray-900':
                                             image?.image4 === selectedImage,
-                                    }"
-                                        class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
+                                    }" class="h-20 mb-3 overflow-hidden text-center border-2 rounded-lg flex-0 aspect-square"
                                         type="button" @click="selectImage(image?.image4)">
                                         <img loading="lazy" :src="image?.image4" :alt="product.name"
                                             class="object-cover w-full h-full" />
@@ -197,8 +193,8 @@ function buyProduct(productId) {
                                 <heart-icon :class="wishlistStore.checkIfProductExistInWishlist(
                                     product.id
                                 )
-                                        ? 'text-red-500 fill-red-500'
-                                        : 'text-slate-700 dark:text-slate-300'
+                                    ? 'text-red-500 fill-red-500'
+                                    : 'text-slate-700 dark:text-slate-300'
                                     " class="w-6" />
                             </button>
                         </div>
@@ -343,8 +339,7 @@ function buyProduct(productId) {
                                     'transition delay-150 border-b-2 border-gray-500':
                                         specifications,
                                     'border-transparent': !specifications,
-                                }"
-                                    class="py-4 text-sm font-medium text-gray-900 dark:text-slate-300 hover:border-gray-400 hover:text-gray-800"
+                                }" class="py-4 text-sm font-medium text-gray-900 dark:text-slate-300 hover:border-gray-400 hover:text-gray-800"
                                     href="#" title="specifications" @click.prevent="
                                         setActiveTab('specifications')
                                         ">
@@ -354,8 +349,7 @@ function buyProduct(productId) {
                                     'transition delay-150 border-b-2 border-gray-500':
                                         description,
                                     'border-transparent': !description,
-                                }"
-                                    class="py-4 text-sm font-medium text-gray-900 dark:text-slate-300 hover:border-gray-400 hover:text-gray-800"
+                                }" class="py-4 text-sm font-medium text-gray-900 dark:text-slate-300 hover:border-gray-400 hover:text-gray-800"
                                     href="#" title="description" @click.prevent="setActiveTab('description')">
                                     {{ __("description") }}
                                 </a>
