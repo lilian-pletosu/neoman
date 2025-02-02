@@ -14,9 +14,10 @@
     <meta name="keywords" content="neoman, mobila, casa, confort, catalog produse, moldova">
 
 
-
     <title inertia>{{ config('app.name', 'Neoman') }}</title>
 
+
+    <link rel="canonical" href="{{ url()->current() }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
