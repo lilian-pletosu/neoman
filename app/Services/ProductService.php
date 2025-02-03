@@ -399,6 +399,9 @@ class ProductService
                 $brandName = $product->brand->name ?? null;
                 $brandLogo = $product->brand->image ?? null;
                 $image = $product->images()->first()->image1 ?? null;
+                if (!$product->translate(app()->getLocale())?->name) {
+                    continue;
+                }
 
                 $productArray = [
                     'id' => $product->id,

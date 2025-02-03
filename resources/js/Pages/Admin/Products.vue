@@ -72,67 +72,41 @@ defineComponent({
                             __("products_description_admin")
                         }}</span>
                         <br />
-                        <span class="secondary-text"
-                            >{{ __("in_total_products_is") }} :
-                            {{ resources.total }}</span
-                        >
+                        <span class="secondary-text">{{ __("in_total_products_is") }} :
+                            {{ resources.total }}</span>
                     </div>
                     <div class="flex-shrink-0">
-                        <primary-button
-                            class="mx-2"
-                            @click="schemaForm(null, 'create', 'POST')"
-                            >{{ __("create") }}
+                        <primary-button class="mx-2" @click="schemaForm(null, 'create', 'POST')">{{ __("create") }}
                         </primary-button>
-                        <secondary-button
-                            @click="schemaForm(null, 'import', 'POST')"
-                            >{{ __("import") }}
+                        <secondary-button @click="schemaForm(null, 'import', 'POST')">{{ __("import") }}
                         </secondary-button>
                     </div>
                 </div>
                 <div class="flex flex-col mt-8">
-                    <data-table
-                        :columns="$page.props.columns"
-                        :columnsOrder="$page.props.columnsOrder"
-                        :resource-type="resourceType"
-                        :resources="resources"
-                        :search-route="$page.props.searchRoute"
-                        @emit-click="
-                            (args) =>
-                                $inertia.get(route('admin.products.show', args))
-                        "
-                    />
+                    <data-table :columns="$page.props.columns" :columnsOrder="$page.props.columnsOrder"
+                        :resource-type="resourceType" :resources="resources" :search-route="$page.props.searchRoute"
+                        @emit-click="(args) =>
+                            $inertia.get(route('admin.products.show', args))
+                            " />
                 </div>
                 <div>
-                    <h2
-                        v-if="resources.data.length === 0"
-                        class="flex justify-center"
-                    >
+                    <h2 v-if="resources.data.length === 0" class="flex justify-center">
                         {{ __("no_products") }}...
                     </h2>
                 </div>
 
-                <schema-form-builder
-                    :columns="[
-                        'name',
-                        'description',
-                        'product_code',
-                        'price',
-                        'brand_name',
-                        'sub_sub_category_name',
-                        'attributes',
-                    ]"
-                    :endpoint="initialRoute"
-                    :fields="$page.props.columnsOrder"
-                    :method="method"
-                    :modal-is-open="modalIsOpen"
-                    :resource="res"
-                    :resource-route="$page.props.resourceRoute"
-                    :resource-type="resourceType"
-                    :type="type"
-                    @close="schemaForm"
-                    @showNotify="showNotify"
-                    @close-modal="schemaForm"
-                />
+                <schema-form-builder :columns="[
+                    'name',
+                    'description',
+                    'product_code',
+                    'price',
+                    'brand_name',
+                    'sub_sub_category_name',
+                    'attributes',
+                ]" :endpoint="initialRoute" :fields="$page.props.columnsOrder" :method="method"
+                    :modal-is-open="modalIsOpen" :resource="res" :resource-route="$page.props.resourceRoute"
+                    :resource-type="resourceType" :type="type" @close="schemaForm" @showNotify="showNotify"
+                    @close-modal="schemaForm" />
             </div>
         </div>
     </admin-layout>

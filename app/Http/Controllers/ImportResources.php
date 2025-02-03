@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Imports\BrandsImport;
 use App\Imports\CategoriesImport;
-use App\Imports\ProductsImport;
 use App\Imports\SubCategoriesImport;
+use App\Jobs\ExcelImportProductsJob;
 use App\Imports\SubSubCategoriesImport;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ImportResources extends Controller
 {
@@ -17,7 +18,10 @@ class ImportResources extends Controller
         //TODO: Make conditional case if resourceType is equal with product make productImport and the like
         switch (Str::lower($resourceType)) {
             case 'product':
-                (new ProductsImport())($request);
+                $originalName = now() . "-" . $request->file->getClientOriginalName();
+                $path = "imports/" . $originalName;
+                Storage::disk('public')->put($path, file_get_contents($request->file));
+                ExcelImportProductsJob::dispatch($originalName);
                 break;
             case 'category':
                 (new CategoriesImport())($request);
@@ -32,6 +36,5 @@ class ImportResources extends Controller
                 (new BrandsImport())($request);
                 break;
         }
-
     }
 }

@@ -8,7 +8,8 @@ use App\Services\BrandService;
 use App\Services\GenerateProductCode;
 use App\Services\MeasurementUnitService;
 use App\Services\SubSubcategoryService;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -19,20 +20,25 @@ class ProductsImport
 {
 
     private array $translatedAttributes;
+    public string $fileName;
 
     public function __construct()
     {
         $this->translatedAttributes = (new Product())->translatedAttributes;
     }
 
-    public function __invoke(Request $request)
+    public function __invoke($fileName)
     {
+        $this->fileName = $fileName;
+        ini_set('max_execution_time', 500); // 500 seconds =  8 minutes
         $this->createProduct();
     }
 
     public function processString(): array
     {
-        $worksheet = IOFactory::load(request()->file('file'))->getActiveSheet();
+        // $spreadsheet = IOFactory::load($this->filePath);
+
+        $worksheet = IOFactory::load(storage_path('app/public/imports/' . $this->fileName))->getActiveSheet();
 
         $firstRowKeys = $worksheet->rangeToArray('A1:' . $worksheet->getHighestColumn() . '1')[0];
         $rows = $worksheet->rangeToArray('A2:' . $worksheet->getHighestColumn() . $worksheet->getHighestRow());
@@ -48,7 +54,7 @@ class ProductsImport
 
     public function processImages()
     {
-        $spreadSheet = IOFactory::load(request()->file('file'));
+        $spreadSheet = IOFactory::load(storage_path('app/public/imports/' . $this->fileName));
         $productImages = [];
 
         if ($spreadSheet->getActiveSheet()->getDrawingCollection()->count() > 0) {
@@ -124,54 +130,60 @@ class ProductsImport
     public function createProduct()
     {
         $data = $this->combineImagesWithText();
-        $createdProducts = [];
+        Log::info('Starting import with ' . count($data) . ' products');
 
-
-
-        foreach ($data as $item) {
-            if ($item['name ro'] || $item['name ru']) {
+        foreach (array_chunk($data, 25) as $index => $chunk) {
+            Log::info('Processing chunk ' . $index);
+            foreach ($chunk as $item) {
                 try {
-                    $brand = (new BrandService)->createWithProduct($item);
-                    $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
-                    $mu = (new MeasurementUnitService())->associateToProduct($item);
+                    if ($item['name ro'] || $item['name ru']) {
 
-                    $productData = [
-                        'price' => floatval(str_replace(',', '', $item['price'])),
-                        'slug' => Str::slug($item['name ro'], '_'),
-                        'product_code' => (new GenerateProductCode)((new Product())),
-                        'specifications_id' => null,
-                        'brand_id' => $brand->id,
-                        'category_id' => $subSubcategory->id,
-                        'measurement_unit_id' => $mu->id,
-                    ];
+                        $brand = (new BrandService)->createWithProduct($item);
+                        $subSubcategory = (new SubSubcategoryService())->createWithProduct($item);
+                        $mu = (new MeasurementUnitService())->associateToProduct($item);
+
+                        $productData = [
+                            'price' => floatval(str_replace(',', '', $item['price'])),
+                            'slug' => Str::slug($item['name ro'], '_'),
+                            'product_code' => (new GenerateProductCode)((new Product())),
+                            'specifications_id' => null,
+                            'brand_id' => $brand->id,
+                            'category_id' => $subSubcategory->id,
+                            'measurement_unit_id' => $mu->id,
+                        ];
 
 
-                    $product = Product::updateOrCreate(['slug' => Str::slug($item['name ro'], '_')], $productData);
+                        $product = Product::updateOrCreate(['slug' => Str::slug($item['name ro'], '_')], $productData);
 
-                    foreach (config('app.available_locales') as $locale) {
-                        foreach ($this->translatedAttributes as $translatedAttribute) {
-                            $xlsxKey = $translatedAttribute . ' ' . $locale;
-                            $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey] ?? $item['name ro'];
+                        foreach (config('app.available_locales') as $locale) {
+                            foreach ($this->translatedAttributes as $translatedAttribute) {
+                                $xlsxKey = $translatedAttribute . ' ' . $locale;
+                                $product->translateOrNew($locale)->$translatedAttribute = $item[$xlsxKey] ?? $item['name ro'];
+                            }
                         }
-                    }
 
-                    try {
-                        $this->associateAttributes($product, $item);
-                    } catch (\Exception $e) {
-                        return redirect()->back()->withErrors([
-                            'import' => $e->getMessage()
-                        ]);
+                        try {
+                            $this->associateAttributes($product, $item);
+                        } catch (\Exception $e) {
+                            return redirect()->back()->withErrors([
+                                'import' => $e->getMessage()
+                            ]);
+                        }
+                        $this->associateImagesWithProduct($product, $item);
+                        $product->save();
+                        $createdProducts[] = $product;
                     }
-                    $this->associateImagesWithProduct($product, $item);
-                    $product->save();
-                    $createdProducts[] = $product;
+                    Log::info('Successfully processed product: ' . $item['name ro']);
                 } catch (\Exception $e) {
-                    return redirect()->back()->withErrors([
-                        'import' => $e->getMessage()
+                    Log::error('Failed processing product: ' . $item['name ro'], [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
                     ]);
+                    throw $e;
                 }
             }
         }
+        Log::info('Finished importing ' . count($createdProducts) . ' products');
     }
 
     private function associateImagesWithProduct($product, $item)
