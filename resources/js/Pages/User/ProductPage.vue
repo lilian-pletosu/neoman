@@ -409,7 +409,7 @@ function buyProduct(productId) {
         <product-section v-if="attrs.last_visited.length !== 0" :new_products="true" :products="attrs.last_visited"
             :title="__('visited_products')" />
 
-        <product-section :products="page.props.relatedProducts" :title="__('related_products')" :top_products="true" />
+        <!-- <product-section :products="page.props.relatedProducts" :title="__('related_products')" :top_products="true" /> -->
         <custom-modal :is-open="openModalSlider" @close-modal="closeModalSlider">
             <template v-slot:content>
                 <div class="w-full">
