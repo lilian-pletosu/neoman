@@ -105,9 +105,9 @@ class ProductController extends Controller
         }
 
 
-        $relatedProducts = ProductService::getRelatedProducts($product->category_id);
+        // $relatedProducts = ProductService::getRelatedProducts($product->category_id);
 
-        Inertia::share('relatedProducts', $relatedProducts);
+        // Inertia::share('relatedProducts', $relatedProducts);
 
         $productService = new ProductService();
         $salesDetails = $productService->loadSalesProducts($product->id);
