@@ -101,24 +101,19 @@ onMounted(async () => {
 <template>
     <Toast />
     <div id="header" class="px-2 md:px-0">
-        <div
-            class="flex items-center justify-between px-2 py-2 space-x-1 md:px-0 xl:px-60"
-        >
+        <div class="flex items-center justify-between px-2 py-2 space-x-1 md:px-0 xl:px-60">
             <div class="flex justify-center md:w-3/12">
                 <Link :href="route('home')">
-                    <application-logo class="flex w-56" />
+                <application-logo class="flex w-56" />
                 </Link>
             </div>
             <div class="flex-col flex-1 hidden text-center 3xs:flex">
-                <a href="tel:+37378107017"
-                    ><p class="text-sm text-1 3xs:text-lg dark:text-white">
+                <a href="tel:+37378107017">
+                    <p class="text-sm text-1 3xs:text-lg dark:text-white">
                         078 107 017
-                    </p></a
-                >
-                <p
-                    @click="$emit('call')"
-                    class="text-xs underline cursor-pointer text-b-link pointer md:text-sm"
-                >
+                    </p>
+                </a>
+                <p @click="$emit('call')" class="text-xs underline cursor-pointer text-b-link pointer md:text-sm">
                     {{ __("return_with_call") }}?
                 </p>
             </div>
@@ -128,17 +123,13 @@ onMounted(async () => {
                     <p>{{ __("saturday") }}</p>
                     <p>{{ __("sunday") }}</p>
                 </div>
-                <div
-                    class="grid items-center grid-cols-1 text-xs font-normal font-mulish dark:text-white"
-                >
+                <div class="grid items-center grid-cols-1 text-xs font-normal font-mulish dark:text-white">
                     <p class="">08.00 - 19.00</p>
                     <p>08.00 - 17.00</p>
                     <p>10.00 - 15.00</p>
                 </div>
             </div>
-            <div
-                class="flex-col flex-1 hidden text-center lg:flex dark:text-white"
-            >
+            <div class="flex-col flex-1 hidden text-center lg:flex dark:text-white">
                 <p class="text-sm text-1 2xl:text-xl">
                     Alături la fiecare etapă în viață
                 </p>
@@ -154,28 +145,20 @@ onMounted(async () => {
                 </div>
                 <div class="relative select-none">
                     <div @click="openWishlist = !openWishlist">
-                        <span
-                            v-if="wishlistStore.wishlistCount !== 0"
-                            class="absolute inline-flex items-center justify-center w-3 h-3 p-2.5 -right-2 -top-2 text-sm font-medium text-white bg-[#DB4444] rounded-full dark:bg-blue-900 dark:text-blue-200"
-                            >{{ wishlistStore.wishlistCount }}
+                        <span v-if="wishlistStore.wishlistCount !== 0"
+                            class="absolute inline-flex items-center justify-center w-3 h-3 p-2.5 -right-2 -top-2 text-sm font-medium text-white bg-[#DB4444] rounded-full dark:bg-blue-900 dark:text-blue-200">{{
+                                wishlistStore.wishlistCount }}
                         </span>
                         <heart-icon class="w-7" />
                     </div>
-                    <Wishlist
-                        :is-open="openWishlist"
-                        @fetchCart="cartStore.fetchCount()"
-                        @close="openWishlist = !openWishlist"
-                    />
+                    <Wishlist :is-open="openWishlist" @fetchCart="cartStore.fetchCount()"
+                        @close="openWishlist = !openWishlist" />
                 </div>
                 <div class="relative select-none">
-                    <div
-                        @click="openCart = !openCart"
-                        @focusout="openCart = !openCart"
-                    >
-                        <span
-                            v-if="cartStore.countCart !== 0"
-                            class="absolute cursor-pointer inline-flex items-center justify-center w-3 h-3 p-2.5 -right-1 -top-2 text-sm font-medium text-white bg-[#DB4444] rounded-full dark:bg-blue-900 dark:text-blue-200"
-                            >{{ cartStore.countCart }}
+                    <div @click="openCart = !openCart" @focusout="openCart = !openCart">
+                        <span v-if="cartStore.countCart !== 0"
+                            class="absolute cursor-pointer inline-flex items-center justify-center w-3 h-3 p-2.5 -right-1 -top-2 text-sm font-medium text-white bg-[#DB4444] rounded-full dark:bg-blue-900 dark:text-blue-200">{{
+                                cartStore.countCart }}
                         </span>
                         <shopping-cart-icon class="cursor-pointer w-7" />
                     </div>
@@ -189,153 +172,94 @@ onMounted(async () => {
         <div class="items-center p-2 sm:flex md:hidden">
             <div class="relative w-full h-10">
                 <div
-                    class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500"
-                >
+                    class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500">
                     <magnifying-glass-icon class="w-6 dark:text-white" />
                 </div>
-                <input
-                    @keydown.enter="
-                        router.get(
-                            route('search_page', { search: searchString })
-                        )
-                    "
-                    v-model="searchString"
+                <input @keydown.enter="
+                    router.get(
+                        route('search_page', { search: searchString })
+                    )
+                    " v-model="searchString" :enterkeyhint="__('search')"
                     class="h-full w-full rounded-md dark:border-slate-500 dark:bg-dark dark:text-white px-3 py-2.5 !pr-9 font-mulish text-sm font-normal focus:border-none focus:outline-none"
-                    :placeholder="__('search_product') + '...'"
-                />
+                    :placeholder="__('search_product') + '...'" />
             </div>
         </div>
         <div
-            class="relative hidden md:flex flex-row h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60"
-        >
+            class="relative hidden md:flex flex-row h-10 md:h-16 md:border-t bg-1 dark:bg-[#011212] dark:md:border-slate-500 xl:px-60">
             <BigMenu>
                 <template v-slot:children>
                     <div class="">
-                        <div
-                            class="flex items-center justify-center py-5 space-x-3"
-                        >
-                            <bars3-icon
-                                class="w-[25px] h-[25px] text-black md:text-white dark:text-white"
-                            />
+                        <div class="flex items-center justify-center py-5 space-x-3">
+                            <bars3-icon class="w-[25px] h-[25px] text-black md:text-white dark:text-white" />
                             <p
-                                class="flex items-center text-base text-black uppercase text-2 md:text-white dark:text-white"
-                            >
+                                class="flex items-center text-base text-black uppercase text-2 md:text-white dark:text-white">
                                 {{ __("catalog") }}
                             </p>
-                            <chevron-down-icon
-                                v-if="menu"
-                                class="w-5 text-blue-800 animate-rotateUp"
-                            />
-                            <chevron-up-icon
-                                v-if="!menu"
-                                class="w-5 text-blue-800 animate-rotateUp"
-                            />
+                            <chevron-down-icon v-if="menu" class="w-5 text-blue-800 animate-rotateUp" />
+                            <chevron-up-icon v-if="!menu" class="w-5 text-blue-800 animate-rotateUp" />
                         </div>
                     </div>
                 </template>
             </BigMenu>
-            <div
-                class="items-center justify-end flex-1 hidden pl-4 md:flex md:pr-2 xl:pr-0"
-            >
+            <div class="items-center justify-end flex-1 hidden pl-4 md:flex md:pr-2 xl:pr-0">
                 <div class="relative w-full h-10" ref="searchElement">
                     <div
-                        class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500"
-                    >
-                        <magnifying-glass-icon
-                            @click="
-                                router.get(
-                                    route('search_page', {
-                                        search: searchString,
-                                    })
-                                )
-                            "
-                            v-if="!loadSearch"
-                            class="w-6 dark:text-white"
-                        />
-                        <arrow-path-icon
-                            v-if="loadSearch"
-                            class="w-6 dark:text-white"
-                        />
-                    </div>
-                    <input
-                        @focus="openSearch = true"
-                        @change="openSearch = true"
-                        v-model="searchString"
-                        @keydown.enter="
+                        class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500">
+                        <magnifying-glass-icon @click="
                             router.get(
-                                route('search_page', { search: searchString })
+                                route('search_page', {
+                                    search: searchString,
+                                })
                             )
+                            " v-if="!loadSearch" class="w-6 dark:text-white" />
+                        <arrow-path-icon v-if="loadSearch" class="w-6 dark:text-white" />
+                    </div>
+                    <input @focus="openSearch = true" @change="openSearch = true" v-model="searchString" @keydown.enter="
+                        router.get(
+                            route('search_page', { search: searchString })
+                        )
                         "
                         class="h-full w-full rounded-md dark:border-slate-500 dark:bg-dark dark:text-white px-3 py-2.5 !pr-9 font-mulish text-sm font-normal focus:border-none focus:outline-none"
-                        :placeholder="__('search_product') + '...'"
-                    />
-                    <div
-                        v-show="openSearch"
-                        class="absolute w-full max-h-[500px] overflow-y-scroll z-50 shadow bg-white border rounded-b-lg"
-                    >
+                        :placeholder="__('search_product') + '...'" />
+                    <div v-show="openSearch"
+                        class="absolute w-full max-h-[500px] overflow-y-scroll z-50 shadow bg-white border rounded-b-lg">
                         <div class="flex flex-col p-4 space-y-2">
-                            <div
-                                v-for="product in searchedProducts.value"
-                                class="flex items-center space-x-2"
-                            >
+                            <div v-for="product in searchedProducts.value" class="flex items-center space-x-2">
                                 <div
-                                    class="flex w-full p-4 text-left text-gray-600 border border-gray-100 shadow-lg rounded-xl sm:p-8"
-                                >
-                                    <Link
-                                        :href="
-                                            route('product_page', {
+                                    class="flex w-full p-4 text-left text-gray-600 border border-gray-100 shadow-lg rounded-xl sm:p-8">
+                                    <Link :href="route('product_page', {
+                                        slug: product.slug,
+                                    })
+                                        ">
+                                    <img class="block w-8 h-8 max-w-full mr-5 text-left align-middle sm:h-16 sm:w-16"
+                                        :src="product.image" alt="Profile Picture" /></Link>
+                                    <div class="w-full text-left">
+                                        <div class="flex flex-col justify-between mb-2 text-gray-600 sm:flex-row">
+                                            <Link :href="route('product_page', {
                                                 slug: product.slug,
                                             })
-                                        "
-                                    >
-                                        <img
-                                            class="block w-8 h-8 max-w-full mr-5 text-left align-middle sm:h-16 sm:w-16"
-                                            :src="product.image"
-                                            alt="Profile Picture"
-                                    /></Link>
-                                    <div class="w-full text-left">
-                                        <div
-                                            class="flex flex-col justify-between mb-2 text-gray-600 sm:flex-row"
-                                        >
-                                            <Link
-                                                :href="
-                                                    route('product_page', {
-                                                        slug: product.slug,
-                                                    })
-                                                "
-                                            >
-                                                <h3 class="font-medium">
-                                                    {{ product.name }}
-                                                </h3>
+                                                ">
+                                            <h3 class="font-medium">
+                                                {{ product.name }}
+                                            </h3>
                                             </Link>
-                                            <time
-                                                class="text-xs"
-                                                datetime="2022-11-13T20:00Z"
-                                            >
+                                            <time class="text-xs" datetime="2022-11-13T20:00Z">
                                                 {{ product.brand.name }}
                                             </time>
                                         </div>
                                         <p class="text-sm">
                                             {{ product.description }}
                                         </p>
-                                        <div
-                                            class="flex items-center justify-between mt-5 text-gray-600"
-                                        >
-                                            <Link
-                                                :href="
-                                                    route('product_page', {
-                                                        slug: product.slug,
-                                                    })
+                                        <div class="flex items-center justify-between mt-5 text-gray-600">
+                                            <Link :href="route('product_page', {
+                                                slug: product.slug,
+                                            })
                                                 "
-                                                class="px-8 py-2 text-xs leading-tight text-center transition-colors duration-150 ease-in-out border rounded-lg cursor-pointer hover:border-gray-500"
-                                            >
-                                                {{ __("buy") }}
+                                                class="px-8 py-2 text-xs leading-tight text-center transition-colors duration-150 ease-in-out border rounded-lg cursor-pointer hover:border-gray-500">
+                                            {{ __("buy") }}
                                             </Link>
-                                            <a
-                                                title="Likes"
-                                                href="#"
-                                                class="flex items-center justify-around cursor-pointer group"
-                                            >
+                                            <a title="Likes" href="#"
+                                                class="flex items-center justify-around cursor-pointer group">
                                                 {{ product.price }}
                                                 {{ __("lei") }}
                                             </a>
@@ -343,16 +267,11 @@ onMounted(async () => {
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                v-if="
-                                    searchProducts &&
-                                    searchProducts.length === 0
-                                "
-                                class="flex items-center space-x-2"
-                            >
-                                <div
-                                    class="max-w-screen-xl px-4 mx-auto md:px-8"
-                                >
+                            <div v-if="
+                                searchProducts &&
+                                searchProducts.length === 0
+                            " class="flex items-center space-x-2">
+                                <div class="max-w-screen-xl px-4 mx-auto md:px-8">
                                     <!-- Heading -->
                                     <div class="text-center">
                                         <div class="flex flex-col p-4">
@@ -367,13 +286,8 @@ onMounted(async () => {
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                v-if="!searchString"
-                                class="flex items-center space-x-2"
-                            >
-                                <div
-                                    class="max-w-screen-xl px-4 mx-auto md:px-8"
-                                >
+                            <div v-if="!searchString" class="flex items-center space-x-2">
+                                <div class="max-w-screen-xl px-4 mx-auto md:px-8">
                                     <!-- Heading -->
                                     <div class="text-center">
                                         <div class="flex flex-col p-4">
@@ -397,134 +311,83 @@ onMounted(async () => {
         <template v-slot:content>
             <div class="flex flex-col h-screen">
                 <ul class="py-2 space-y-1 border-y">
-                    <li
-                        v-for="category in app.appContext.config
-                            .globalProperties.$page.props.menu"
-                    >
-                        <Link
-                            v-if="category.children <= 0"
-                            :href="
-                                route('category_page', { slug: category.slug })
+                    <li v-for="category in app.appContext.config
+                        .globalProperties.$page.props.menu">
+                        <Link v-if="category.children <= 0" :href="route('category_page', { slug: category.slug })
                             "
-                            class="flex items-center gap-2 px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700"
-                        >
-                            <span v-html="category.icon" />
-                            <span class="text-sm font-medium">
-                                {{ category.name }}</span
-                            >
+                            class="flex items-center gap-2 px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                        <span v-html="category.icon" />
+                        <span class="text-sm font-medium">
+                            {{ category.name }}</span>
                         </Link>
 
-                        <details
-                            class="group [&_summary::-webkit-details-marker]:hidden"
-                            v-if="category.children.length > 0"
-                        >
+                        <details class="group [&_summary::-webkit-details-marker]:hidden"
+                            v-if="category.children.length > 0">
                             <summary
-                                class="flex items-center justify-between px-4 py-2 text-gray-500 rounded-lg group hover:bg-gray-100 hover:text-gray-700"
-                            >
-                                <Link
-                                    :href="
-                                        route('category_page', {
-                                            slug: category.slug,
-                                        })
-                                    "
-                                >
-                                    <div class="flex items-center gap-2">
-                                        <span v-html="category.icon" />
-                                        <span class="text-sm font-medium"
-                                            >{{ category.name }}
-                                        </span>
-                                    </div>
+                                class="flex items-center justify-between px-4 py-2 text-gray-500 rounded-lg group hover:bg-gray-100 hover:text-gray-700">
+                                <Link :href="route('category_page', {
+                                    slug: category.slug,
+                                })
+                                    ">
+                                <div class="flex items-center gap-2">
+                                    <span v-html="category.icon" />
+                                    <span class="text-sm font-medium">{{ category.name }}
+                                    </span>
+                                </div>
                                 </Link>
-                                <span
-                                    class="transition duration-300 shrink-0 group-open:-rotate-180"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="w-5 h-5"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
+                                <span class="transition duration-300 shrink-0 group-open:-rotate-180">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
                                             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd"
-                                        />
+                                            clip-rule="evenodd" />
                                     </svg>
                                 </span>
                             </summary>
 
                             <ul class="px-4 mt-2 space-y-1">
                                 <li v-for="subcategory in category.children">
-                                    <Link
-                                        v-if="subcategory.children.length <= 0"
-                                        :href="
-                                            route('subcategory_page', {
-                                                slug: subcategory.slug,
-                                            })
+                                    <Link v-if="subcategory.children.length <= 0" :href="route('subcategory_page', {
+                                        slug: subcategory.slug,
+                                    })
                                         "
-                                        class="flex items-center gap-2 px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700"
-                                    >
-                                        <span class="text-sm font-medium">
-                                            {{ subcategory.name }}</span
-                                        >
+                                        class="flex items-center gap-2 px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                                    <span class="text-sm font-medium">
+                                        {{ subcategory.name }}</span>
                                     </Link>
 
-                                    <details
-                                        class="group/two"
-                                        v-if="subcategory.children.length > 0"
-                                    >
+                                    <details class="group/two" v-if="subcategory.children.length > 0">
                                         <summary
-                                            class="flex items-center justify-between px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700"
-                                        >
-                                            <Link
-                                                :href="
-                                                    route('subcategory_page', {
-                                                        slug: subcategory.slug,
-                                                    })
-                                                "
-                                            >
-                                                <div
-                                                    class="flex items-center gap-2"
-                                                >
-                                                    <span
-                                                        class="text-sm font-medium"
-                                                        >{{ subcategory.name }}
-                                                    </span>
-                                                </div>
+                                            class="flex items-center justify-between px-4 py-2 text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                                            <Link :href="route('subcategory_page', {
+                                                slug: subcategory.slug,
+                                            })
+                                                ">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-medium">{{ subcategory.name }}
+                                                </span>
+                                            </div>
                                             </Link>
 
-                                            <span
-                                                class="transition duration-300 shrink-0 group-open/two:-rotate-180"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    class="w-5 h-5"
-                                                    viewBox="0 0 20 20"
-                                                    fill="currentColor"
-                                                >
-                                                    <path
-                                                        fill-rule="evenodd"
+                                            <span class="transition duration-300 shrink-0 group-open/two:-rotate-180">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                                    viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd"
                                                         d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd"
-                                                    />
+                                                        clip-rule="evenodd" />
                                                 </svg>
                                             </span>
                                         </summary>
 
                                         <ul class="px-4 mt-2 space-y-1">
-                                            <li
-                                                v-for="subSubcategory in subcategory.children"
-                                            >
-                                                <Link
-                                                    :href="
-                                                        route('products_page', {
-                                                            subSubcategory:
-                                                                subSubcategory.slug,
-                                                        })
+                                            <li v-for="subSubcategory in subcategory.children">
+                                                <Link :href="route('products_page', {
+                                                    subSubcategory:
+                                                        subSubcategory.slug,
+                                                })
                                                     "
-                                                    class="block px-4 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700"
-                                                >
-                                                    {{ subSubcategory.name }}
+                                                    class="block px-4 py-2 text-sm font-medium text-gray-500 rounded-lg hover:bg-gray-100 hover:text-gray-700">
+                                                {{ subSubcategory.name }}
                                                 </Link>
                                             </li>
                                         </ul>
@@ -540,30 +403,18 @@ onMounted(async () => {
                         <Dropdown :align="left">
                             <template #trigger>
                                 <span class="inline-flex rounded-md">
-                                    <button
-                                        type="button"
-                                        class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none"
-                                    >
-                                        <img
-                                            :src="
-                                                '/flags/' +
-                                                $page.props.current_locale +
-                                                '_64.png'
-                                            "
-                                            class="inline w-5 mr-2"
-                                        />
+                                    <button type="button"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out bg-white border border-transparent rounded-md hover:text-gray-700 focus:outline-none">
+                                        <img :src="'/flags/' +
+                                            $page.props.current_locale +
+                                            '_64.png'
+                                            " class="inline w-5 mr-2" />
 
-                                        <svg
-                                            class="-mr-0.5 h-4 w-4"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20"
-                                            fill="currentColor"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
+                                        <svg class="-mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
                                                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd"
-                                            />
+                                                clip-rule="evenodd" />
                                         </svg>
                                     </button>
                                 </span>
@@ -571,29 +422,21 @@ onMounted(async () => {
                             <template #content>
                                 <ul class="flex flex-col px-2">
                                     <li class="hover:bg-gray-100">
-                                        <a
-                                            :href="
-                                                route('language', {
-                                                    locale: 'ru',
-                                                })
-                                            "
-                                            >Русский</a
-                                        >
+                                        <a :href="route('language', {
+                                            locale: 'ru',
+                                        })
+                                            ">Русский</a>
                                     </li>
                                     <li class="hover:bg-gray-100">
-                                        <a
-                                            :href="
-                                                route('language', {
-                                                    locale: 'ro',
-                                                })
-                                            "
-                                            >Română</a
-                                        >
+                                        <a :href="route('language', {
+                                            locale: 'ro',
+                                        })
+                                            ">Română</a>
                                     </li>
                                 </ul>
                             </template>
-                        </Dropdown></span
-                    >
+                        </Dropdown>
+                    </span>
                 </div>
             </div>
         </template>
