@@ -33,6 +33,7 @@ import Pagination from "@/Components/Pagination.vue";
 import ReusableSidebar from "@/Components/ReusableSidebar.vue";
 import { formatPrice } from "../../helpers/helper.js";
 import { getCurrentInstance } from "vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 
 const app = getCurrentInstance();
 
@@ -156,6 +157,29 @@ onMounted(() => {
 onBeforeUnmount(() => {
     localStorage.removeItem(STORAGE_KEY);
 });
+const steps = [{
+    category: {
+        name: props.subSubcategory.parent.parent.name,
+        url: route('category_page', {
+            slug: props.subSubcategory?.parent?.parent?.slug,
+        }),
+        type: "category",
+    },
+    subcategory: {
+        name: props.subSubcategory.parent.name,
+        url: route('subcategory_page', {
+            slug: props.subSubcategory.parent.slug,
+        }),
+        type: "subcategory",
+    },
+    products: {
+        name: props.subSubcategory.name,
+        url: route('products_page', {
+            subSubcategory: props.subSubcategory.slug,
+        }),
+        type: "products",
+    },
+}];
 </script>
 
 <template>
@@ -164,6 +188,7 @@ onBeforeUnmount(() => {
         :meta-keywords="`${subSubcategory.name}, ${subSubcategory.name} moldova, catalog ${subSubcategory.name}, pret ${subSubcategory.name}, ${subSubcategory.name} online, magazin ${subSubcategory.name}`"
         :current-url="route('products_page', subSubcategory.slug)" :current-language="$page.props.locale">
         <div class="bg-white">
+            <Breadcrumb :steps="steps" />
             <div>
                 <!-- Mobile filter dialog -->
                 <ReusableSidebar :open="mobileFiltersOpen" :title="__('filter')" class="lg:hidden"
@@ -209,14 +234,14 @@ onBeforeUnmount(() => {
                                     <DisclosurePanel class="pt-6">
                                         <div class="space-y-4">
                                             <div v-for="(
-                                                    option, optionIdx
+option, optionIdx
                                                 ) in brand.options" class="flex items-center">
                                                 <input v-model="brandsFilter" :name="option.value" :value="option.id"
                                                     class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                                                     type="checkbox" />
                                                 <label :for="option.value"
                                                     class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
-                                                    option.value }}</label>
+                                                        option.value }}</label>
                                             </div>
                                         </div>
                                     </DisclosurePanel>
@@ -251,7 +276,7 @@ onBeforeUnmount(() => {
                                                         " />
                                                 <label :for="option.value"
                                                     class="ml-3 text-sm text-gray-600 first-letter:uppercase">{{
-                                                    option.value }}</label>
+                                                        option.value }}</label>
                                             </div>
                                         </div>
                                     </DisclosurePanel>
@@ -303,9 +328,9 @@ onBeforeUnmount(() => {
                                                     : '',
                                                 'block px-4 py-2 text-sm',
                                             ]" class="cursor-pointer" @click="
-                                                        sortProducts =
-                                                        option.value
-                                                        ">{{ option.name }}</span>
+                                                sortProducts =
+                                                option.value
+                                                ">{{ option.name }}</span>
                                             </MenuItem>
                                         </div>
                                     </MenuItems>
@@ -334,7 +359,7 @@ onBeforeUnmount(() => {
                                             class="flex items-center justify-between w-full py-3 text-gray-400 bg-white hover:text-gray-500 dark:bg-dark">
                                             <span
                                                 class="text-xs text-gray-900 2xl:text-sm 4xl:text-base dark:text-slate-200">{{
-                                                __("price") }}</span>
+                                                    __("price") }}</span>
                                             <span class="flex items-center ml-6">
                                                 <PlusIcon v-if="!open" aria-hidden="true" class="w-5 h-5" />
                                                 <MinusIcon v-else aria-hidden="true" class="w-5 h-5" />
@@ -359,7 +384,7 @@ onBeforeUnmount(() => {
                                             class="flex items-center justify-between w-full py-3 text-gray-400 dark:bg-dark hover:text-gray-500">
                                             <span
                                                 class="text-xs text-gray-900 2xl:text-sm 4xl:text-base dark:text-slate-200">{{
-                                                brand?.name }}</span>
+                                                    brand?.name }}</span>
                                             <span class="flex items-center ml-6">
                                                 <PlusIcon v-if="!open" aria-hidden="true" class="w-5 h-5" />
                                                 <MinusIcon v-else aria-hidden="true" class="w-5 h-5" />
@@ -369,7 +394,7 @@ onBeforeUnmount(() => {
                                     <DisclosurePanel class="pt-6">
                                         <div class="space-y-4">
                                             <div v-for="(
-                                                    option, optionIdx
+option, optionIdx
                                                 ) in brand.options" class="flex items-center">
                                                 <input v-model="brandsFilter" :name="option.value" :value="option.id"
                                                     class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
@@ -389,7 +414,7 @@ onBeforeUnmount(() => {
                                             class="flex items-center justify-between w-full py-3 text-gray-400 dark:bg-dark hover:text-gray-500">
                                             <span
                                                 class="text-xs text-gray-900 2xl:text-sm 4xl:text-base dark:text-slate-200">{{
-                                                attribute.name }}</span>
+                                                    attribute.name }}</span>
                                             <span class="flex items-center ml-6">
                                                 <PlusIcon v-if="!open" aria-hidden="true" class="w-5 h-5" />
                                                 <MinusIcon v-else aria-hidden="true" class="w-5 h-5" />
@@ -449,12 +474,12 @@ onBeforeUnmount(() => {
                                                         <div class="absolute w-12 left-2 top-2 z-80">
                                                             <img sizes="(max-width: 400px) 400px, 800px" loading="lazy"
                                                                 :alt="product
-                                                                        ?.brand
-                                                                        ?.name
+                                                                    ?.brand
+                                                                    ?.name
                                                                     " :src="product
                                                                         ?.brand
                                                                         ?.image
-                                                                    " class="mix-blend-multiply" />
+                                                                        " class="mix-blend-multiply" />
                                                         </div>
                                                         <div class="absolute p-2 bg-white cursor-pointer group right-2 top-2 rounded-xl bg-opacity-40"
                                                             @click="
@@ -479,10 +504,10 @@ onBeforeUnmount(() => {
                                                 <div>
                                                     <div class="mt-2">
                                                         <img loading="lazy" :src="product
-                                                                ?.images[0]
-                                                                ?.image1
+                                                            ?.images[0]
+                                                            ?.image1
                                                             " :alt="product?.slug
-                                                                    "
+                                                                "
                                                             class="object-contain w-56 h-56 mx-auto transition opacity-100 hover:scale-110 aspect-square mix-blend-multiply" />
                                                     </div>
                                                 </div>
@@ -547,8 +572,8 @@ onBeforeUnmount(() => {
                                                 <div :class="cartStore.checkIfProductExistInCart(
                                                     product.id
                                                 )
-                                                        ? 'bg-[#1FC8F3]'
-                                                        : 'bg-white'
+                                                    ? 'bg-[#1FC8F3]'
+                                                    : 'bg-white'
                                                     "
                                                     class="shadow rounded-lg transition p-4 sm:p-4 hover:scale-110 hover:bg-[#1FC8F3] cursor-pointer group/cart"
                                                     @click="
@@ -560,8 +585,8 @@ onBeforeUnmount(() => {
                                                     <svg :class="cartStore.checkIfProductExistInCart(
                                                         product.id
                                                     )
-                                                            ? 'text-white'
-                                                            : 'text-black'
+                                                        ? 'text-white'
+                                                        : 'text-black'
                                                         " class="w-4 h-4 group-hover/cart:text-white"
                                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                         <path

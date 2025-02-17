@@ -19,7 +19,7 @@ class ProductController extends Controller
         $category = Category::where([
             ['slug', $categorySlug],
             ['level', 3]
-        ])->first();
+        ])->with('parent.parent')->first();
 
         $brandQuery = Brand::brandsOfSubsubCategory($category->id)->get();
 

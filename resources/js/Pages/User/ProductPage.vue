@@ -113,6 +113,37 @@ function buyProduct(productId) {
         clear(error);
     });
 }
+
+const steps = [{
+    category: {
+        name: props.product.category.parent.parent.name,
+        url: route('category_page', {
+            slug: props.product?.category?.parent?.parent?.slug,
+        }),
+        type: "category",
+        icon: "fa-solid fa-folder",
+    },
+    subcategory: {
+        name: props.product.category.parent.name,
+        url: route('subcategory_page', {
+            slug: props.product.category.parent.slug,
+        }),
+        type: "subcategory",
+    },
+    products: {
+        name: props.product.category.name,
+        url: route('products_page', {
+            subSubcategory: props.product.category.slug,
+        }),
+        type: "products",
+    },
+    product: {
+        name: props.product.name,
+        url: null,
+        type: "product",
+    },
+}];
+
 </script>
 
 <template>
@@ -124,7 +155,7 @@ function buyProduct(productId) {
             product.price
         )}, ${product.category.name} moldova`" :current-url="route('product_page', product.slug)"
         :current-language="$page.props.locale">
-        <!-- <breadcrumb :product="product" /> -->
+        <breadcrumb :steps="steps" />
 
         <hr />
         <section v-if="Object.keys(product)" class="py-12 mt-1 sm:py-16">
@@ -241,7 +272,7 @@ function buyProduct(productId) {
                                             {{ __("select_qty") }}
                                         </option>
                                         <option v-for="(
-                                                value, index
+value, index
                                             ) in attribute.values" :key="index" :value="value.link"
                                             class="dark:bg-slate-600" selected>
                                             {{ value.value }} {{ value.mu }}
@@ -372,7 +403,7 @@ function buyProduct(productId) {
                                     class="w-full text-sm text-left text-gray-500 bg-red-200 border dark:border-slate-600 rtl:text-right dark:text-gray-400">
                                     <tbody>
                                         <tr v-for="(
-                                                attribute, key
+attribute, key
                                             ) in product.attributes" :key="key"
                                             class="bg-white border dark:bg-gray-800 da odd:bg-white even:bg-slate-100 dark:odd:bg-slate-700 dark:even:bg-slate-800 dark:border-slate-600">
                                             <td v-if="attribute.name"

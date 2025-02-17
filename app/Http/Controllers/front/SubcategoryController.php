@@ -14,7 +14,7 @@ class SubcategoryController extends Controller
             ['slug', $subcategorySlug],
             ['level', 2]
         ])
-            ->with(['children' => function ($query) {
+            ->with(['parent', 'children' => function ($query) {
                 $query->active();
             }])
             ->first();
