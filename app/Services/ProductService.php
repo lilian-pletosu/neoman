@@ -323,17 +323,12 @@ class ProductService
 
         if ($query) {
             $products = Product::with([
-
-                'attributes.attributeValues.translations' => function ($q) use ($locale) {
-                    $q->where('locale', $locale);
-                },
                 'brand',
                 'images',
             ])
-                ->where('slug', 'like', '%' . $query . '%')
+                ->where('slug', 'like', '%%' . $query . '%%')
                 ->orWhereHas('translations', function ($q) use ($query) {
-                    $q->where('name', 'like', '%' . $query . '%')
-                        ->orWhere('description', 'like', '%' . $query . '%');
+                    $q->where('name', 'like', '%%' . $query . '%%');
                 })
                 ->limit(10)
                 ->get();

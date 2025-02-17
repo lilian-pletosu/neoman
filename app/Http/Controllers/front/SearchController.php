@@ -15,10 +15,11 @@ class SearchController extends Controller
             $attributesForFilter[] = $item['key'];
         }
 
-        $products = Product::where('name', 'like', '%' . $search . '%')
-            ->orWhere('description', 'like', '%' . $search . '%')
-            ->orWhere('slug', 'like', '%' . $search . '%')
-            ->orWhere('product_code', 'like', '%' . $search . '%')
+        $products = Product::where('slug', 'like', '%%' . $search . '%%')
+            ->orWhereHas('translations', function ($q) use ($search) {
+                $q->where('name', 'like', '%%' . $search . '%%');
+            })
+            // ->orWhere('product_code', 'like', '%' . $search . '%')
             ->with('brand', 'images', 'credits')
             ->sort()
             ->paginate(12)

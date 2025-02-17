@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
@@ -13,6 +14,8 @@ class Product extends Model implements TranslatableContract
 {
     use HasFactory;
     use Translatable;
+    use Searchable;
+
 
 
     public $translatedAttributes = ['name', 'description'];
