@@ -173,7 +173,13 @@ onMounted(async () => {
             <div class="relative w-full h-10">
                 <div
                     class="absolute grid w-5 h-5 top-2/4 right-3 -translate-y-2/4 place-items-center text-blue-gray-500">
-                    <magnifying-glass-icon class="w-6 dark:text-white" />
+                    <magnifying-glass-icon @click="
+                        router.get(
+                            route('search_page', {
+                                search: searchString,
+                            })
+                        )
+                        " class="w-6 dark:text-white" />
                 </div>
                 <input @keydown.enter="
                     router.get(
