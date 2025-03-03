@@ -2,34 +2,22 @@
 
 namespace App\Services;
 
-use Faker\Factory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 
 class GenerateProductCode
 {
-    private Factory $generator;
-
-    public function __construct()
-    {
-        $this->generator = new Factory();
-    }
-
     public function __invoke(Model $model)
     {
         $code = $this->generateCode();
         if ($model::where('product_code', $code)->first()) {
-            return $this->generateCode();
+            return $this->__invoke($model);
         }
         return $code;
     }
 
-    /**
-     * @return Factory
-     */
-    private function generateCode(): int
+    private function generateCode(): string
     {
-        $rand = random_int(0, 99999);
-        return str_pad($rand, 5, 0, STR_PAD_LEFT);
+        return substr(str_replace('-', '', Uuid::uuid4()->toString()), 0, 10);
     }
-
 }

@@ -83,6 +83,10 @@ function openModal(type) {
     }
 }
 
+function handleSubmitCheaper(details) {
+   router.post(route("found_cheaper"), details);
+}
+
 function closeModal() {
     isOpen.value = !isOpen.value;
 }
@@ -434,7 +438,7 @@ attribute, key
                 </div>
             </div>
             <front-modal :product="product" :title="modalTitle" :type="typeModal" :visible="isOpen"
-                @close="isOpen = false" @select="console.log($event)" />
+                @close="isOpen = false" @select="console.log($event)" @cheaper="handleSubmitCheaper" />
         </section>
         <hr />
         <product-section v-if="attrs.last_visited.length !== 0" :new_products="true" :products="attrs.last_visited"

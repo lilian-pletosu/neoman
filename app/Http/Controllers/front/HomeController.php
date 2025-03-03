@@ -11,6 +11,7 @@ use App\Services\BannerService;
 use App\Services\ProductService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Mail\FoundCheap;
 use App\Services\UltraImportService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Cache;
@@ -73,6 +74,18 @@ class HomeController extends Controller
         ]);
 
         Mail::to('office.neoman@gmail.com')->send(new CallWaitForm($data));
+    }
+
+    public function foundCheaper(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required',
+            'phone' => 'required',
+            'product_link' => 'required',
+            'product' => 'required'
+        ]);
+
+        Mail::to('office.neoman@gmail.com')->send(new FoundCheap($data));
     }
 
 

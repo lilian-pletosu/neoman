@@ -30,5 +30,5 @@ Route::get('/get-data-by-id/{GUID}', [UltraImportController::class, 'getDataByID
 Route::post('/commit-receiving-data', [UltraImportController::class, 'commitReceivingData']);
 
 Route::post('post_order', [\App\Http\Controllers\front\CartController::class, 'checkout'])->name('set_order');
-
+Route::post('found_cheaper', [\App\Http\Controllers\front\HomeController::class, 'foundCheaper'])->name('found_cheaper');
 Route::post('callback', [\App\Http\Controllers\front\HomeController::class, 'callWait'])->name('call.store');

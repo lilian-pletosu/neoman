@@ -9,7 +9,7 @@ import FastOrderForm from "@/Components/FastOrderForm.vue";
 const body = ref(document.body);
 const isLocked = useScrollLock(body);
 
-const emit = defineEmits(["close", "select", "call"]);
+const emit = defineEmits(["close", "select", "call", "cheaper"]);
 
 const props = defineProps({
     title: {
@@ -61,6 +61,16 @@ function handleSubmitCall() {
     emit("call", {
         name: document.getElementById("name").value,
         phone: document.getElementById("phone").value,
+    });
+    close();
+}
+
+function handleSubmitCheaper() {
+    emit("cheaper", {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        product: props.product,
+        product_link: document.getElementById("product_link").value,
     });
     close();
 }
@@ -198,7 +208,7 @@ onUnmounted(() => {
                         </form>
                     </template>
                     <template v-if="type === 'cheaper'">
-                        <form class="space-y-4" action="#">
+                        <form class="space-y-4" @submit.prevent="handleSubmitCheaper">
                             <div>
                                 <label
                                     for="name"
@@ -229,14 +239,14 @@ onUnmounted(() => {
                             </div>
                             <div>
                                 <label
-                                    for="link"
+                                    for="product_link"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                     >{{ __("link_to_cheaper_product") }}</label
                                 >
                                 <input
                                     type="url"
-                                    name="link"
-                                    id="link"
+                                    name="product_link"
+                                    id="product_link"
                                     placeholder=""
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                 />
@@ -246,7 +256,7 @@ onUnmounted(() => {
                                 type="submit"
                                 class="flex justify-center w-full h-10 hover:bg-slate-400"
                             >
-                                {{ __("wait_call") }}
+                                {{ __("send") }}
                             </PrimaryButton>
                         </form>
                     </template>
