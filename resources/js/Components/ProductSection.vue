@@ -235,12 +235,12 @@ p .swiper-button-prev.swiper-button-disabled,
             direction="horizontal">
             <swiper-slide v-for="(product, key) in products" class="p-2">
                 <div
-                    class="container-rounded flex items-center justify-center bg-white border border-slate-100 dark:bg-slate-100 w-96 h-[100px] xs:h-[350px] 1xs:h-[400px] 2xs:h-80 3xs:h-96 md:h-[380px] 2xl:h-[450px] 3xl:h-[450px] relative group/card">
+                    class="container-rounded flex items-center justify-center bg-white border border-slate-100 dark:bg-slate-100 w-96 h-[100px] xs:h-[350px] 1xs:h-[430px] 2xs:h-80 3xs:h-96 md:h-[380px] 2xl:h-[450px] 3xl:h-[450px] relative group/card">
                     {{ product.credit }}
                     <div v-if="product?.credits?.length > 0"
                         class="absolute z-20 flex items-center rounded-b-xl -top-0 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 w-auto px-7 py-0.4 p h-auto shadow border-1 border-slate-600">
                         <span class="text-xs font-semibold text-white">{{
-                            __("credit")
+                            __("credit") + " " + "0%"
                             }}</span>
                     </div>
                     <div class="hover:cursor-pointer">

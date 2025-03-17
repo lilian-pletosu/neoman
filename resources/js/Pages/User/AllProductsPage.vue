@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
                                                     >
                                                         <span
                                                             class="text-xs font-semibold text-white"
-                                                            >{{ __("credit") }}
+                                                            >{{ __("credit") + " " + "0%"}}
                                                         </span>
                                                     </div>
                                                 </div>

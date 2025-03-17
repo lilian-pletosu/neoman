@@ -13,6 +13,7 @@ import "vue3-carousel/dist/carousel.css";
 import { Carousel, Navigation, Slide } from "vue3-carousel";
 import { formatPrice } from "@/helpers/helper.js";
 import { usePage } from "@inertiajs/vue3";
+import { useHead } from "@vueuse/head";
 
 const page = usePage();
 const attrs = useAttrs();
@@ -147,7 +148,32 @@ const steps = [{
         type: "product",
     },
 }];
-
+const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: props.product.name,
+    description: props.product.description,
+    image: props.product.images[0]?.image1,
+    sku: props.product.product_code,
+    brand: {
+        '@type': 'Brand',
+        name: props.product.brand?.name || ''
+    },
+    offers: {
+        '@type': 'Offer',
+        price: props.product.has_discount ? props.product.promotion_price : props.product.price,
+        priceCurrency: 'MDL',
+        availability: 'https://schema.org/InStock'
+    }
+};
+useHead({
+    script: [
+        {
+            type: 'application/ld+json',
+            innerHTML: JSON.stringify(productSchema)
+        }
+    ]
+});
 </script>
 
 <template>

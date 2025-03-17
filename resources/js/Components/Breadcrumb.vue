@@ -19,8 +19,8 @@ const page = usePage();
 </script>
 
 <template>
-    <div class="flex w-full">
-        <nav class="flex my-2 md:my-4" aria-label="Breadcrumb">
+    <div class="flex w-full dark:bg-dark dark:border-b dark:border-gray-700">
+        <nav class="flex my-2 md:my-4 " aria-label="Breadcrumb">
             <ol class="flex flex-wrap space-x-1 md:space-x-0.5 rtl:space-x-reverse">
                 <li class="flex items-center">
                     <Link :href="route('home')"

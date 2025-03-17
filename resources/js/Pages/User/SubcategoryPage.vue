@@ -39,9 +39,9 @@ const steps = [{
 
         <hr />
         <!-- component -->
-        <section class="py-6 bg-white">
-            <div class="container mx-auto max-w-[1300px]">
-                <h1 class="pb-10 text-lg font-bold border-b font-mulish md:text-xl lg:text-2xl">
+        <section class="py-6">
+            <div class="container mx-auto max-w-[1300px] dark:bg-dark">
+                <h1 class="pb-10 text-lg font-bold border-b font-mulish md:text-xl lg:text-2xl dark:text-white">
                     {{ subcategory?.name }}
                 </h1>
                 <div class="grid grid-cols-1 pt-12 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-28 lg:gap-y-16">

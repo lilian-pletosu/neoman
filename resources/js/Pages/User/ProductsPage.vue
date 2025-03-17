@@ -462,7 +462,7 @@ option, optionIdx
                                                 <div class="flex justify-center">
                                                     <div
                                                         class="flex items-center rounded-b-xl bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 px-10 py-0.5 p h-auto shadow border-1 border-slate-600">
-                                                        <span class="text-xs font-semibold text-white">{{ __("credit")
+                                                        <span class="text-xs font-semibold text-white">{{ __("credit") + " " + "0%"
                                                             }}
                                                         </span>
                                                     </div>

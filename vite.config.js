@@ -6,7 +6,6 @@ export default defineConfig({
     optimizeDeps: {
         exclude: ['js-big-decimal']
     },
-
     plugins: [
         laravel(['resources/js/app.js']),
         vue({

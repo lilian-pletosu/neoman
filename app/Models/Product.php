@@ -47,10 +47,6 @@ class Product extends Model implements TranslatableContract
         return $this->belongsToMany(AttributeValue::class, 'product_attributes')->withPivot('product_id')->with('attribute');
     }
 
-
-
-
-
     public function scopeFiltered(Builder $query, $attributes)
     {
         $queryBy = [];

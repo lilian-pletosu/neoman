@@ -315,7 +315,7 @@ watch(isOrderChanged, () => {
                             </div>
 
                             <div class="mb-4">
-                                <span class="font-bold text-gray-700 dark:text-gray-300">{{ __("credit") }}:</span>
+                                <span class="font-bold text-gray-700 dark:text-gray-300">{{ __("credit") + " " + "0%"}}:</span>
                                 <div class="flex flex-wrap items-center gap-2 mt-2">
                                     <span v-for="credit in credits" v-if="credits.length" :key="credit.id"
                                         class="relative px-4 py-2 mr-2 font-bold text-gray-700 bg-gray-200 rounded-lg dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600 group/credit">

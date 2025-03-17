@@ -22,7 +22,6 @@ class ProductController extends Controller
         ])->with('parent.parent')->first();
 
         $brandQuery = Brand::brandsOfSubsubCategory($category->id)->get();
-
         $brands[] = [
             'key' => 'brand',
             'name' => trans('app_context.brand'),
@@ -38,7 +37,7 @@ class ProductController extends Controller
 
 
         $products = Product::where('category_id', $category->id)
-            ->with('brand', 'images');
+            ->with('brand', 'images', 'credits');
 
         $attributes = $products->with('attributeValues.attribute')->get()
             ->pluck('attributeValues')
