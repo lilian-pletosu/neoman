@@ -73,6 +73,7 @@ function handleSubmitCheaper() {
         product_link: document.getElementById("product_link").value,
     });
     close();
+    showSuccessMessage();
 }
 
 const selectedTab = ref("credit");
@@ -128,7 +129,7 @@ onUnmounted(() => {
         id="authentication-modal"
         class="fixed inset-0 z-50 flex items-center justify-center overflow-x-scroll bg-gray-900 bg-opacity-50"
     >
-        <div class="relative w-full max-h-full" :class="maxWidthClass">
+        <div v-if="!success" class="relative w-full max-h-full" :class="maxWidthClass">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
@@ -261,7 +262,8 @@ onUnmounted(() => {
                         </form>
                     </template>
                     <template v-if="type === 'buy_1_click'">
-                        <span
+                        <div v-if="!success">
+                            <span
                             class="flex mb-4 font-medium text-center font-mulish"
                             >{{
                                 __("for_fast_order_complete_phone_number")
@@ -271,6 +273,8 @@ onUnmounted(() => {
                             :product="product"
                             @submitSuccess="showSuccessMessage()"
                         />
+                        </div>
+
                     </template>
                     <template v-if="type === 'buy_in_credit'">
                         <div v-if="!success" class="flex flex-col gap-2">
@@ -354,7 +358,12 @@ onUnmounted(() => {
                                 :selected-type="selectedTab"
                             />
                         </div>
-                        <div v-if="success">
+
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div v-if="success">
                             <div class="p-6 bg-white md:mx-auto">
                                 <svg
                                     viewBox="0 0 24 24"
@@ -386,9 +395,5 @@ onUnmounted(() => {
                                 </div>
                             </div>
                         </div>
-                    </template>
-                </div>
-            </div>
-        </div>
     </div>
 </template>

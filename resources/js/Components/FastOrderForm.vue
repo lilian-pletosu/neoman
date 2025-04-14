@@ -34,9 +34,9 @@ function submit() {
 
 <template>
     <form @submit.prevent="submit" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <label for="phone"
-                   class=" block mb-2 text-sm font-medium text-gray-900 dark:text-white col-span-2">{{
+                   class="block col-span-2 mb-2 text-sm font-medium text-gray-900  dark:text-white">{{
                     __('phone')
                 }}
                 <input type="tel" name="phone" v-model="form.phone" id="phone" placeholder="012345678"
@@ -46,7 +46,7 @@ function submit() {
 
         </div>
         <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
-                       class="w-full h-10 flex justify-center hover:bg-slate-400">
+                       class="flex justify-center w-full h-10 hover:bg-slate-400">
             {{
                 __('submit')
             }}

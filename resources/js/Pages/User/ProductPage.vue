@@ -202,7 +202,7 @@ useHead({
                             </div>
 
                             <div class="w-full mt-2 lg:order-1 lg:w-32 lg:flex-shrink-0">
-                                <div v-for="(image, index) in product.images"
+                                <div v-for="(image, index) in product.images" :key="index"
                                     class="flex flex-row items-start lg:flex-col">
                                     <button v-show="image?.image1 != null" :class="{
                                         'border-gray-900':
@@ -274,7 +274,7 @@ useHead({
                             </div>
                         </div>
 
-                        <div v-for="(attribute, key) in product.attributes" class="border-t">
+                        <div v-for="(attribute, key) in product.attributes" :key="key" class="border-t">
                             <div v-if="
                                 ['cantitate', 'Cantitate\''].includes(
                                     key
@@ -443,7 +443,7 @@ attribute, key
                                             <td v-if="attribute.name"
                                                 class="px-6 py-4 whitespace-nowrap capitalize-first">
                                                 <div class="flex space-x-2">
-                                                    <p v-for="value in attribute.values" class="capitalize-first">
+                                                    <p v-for="value in attribute.values" :key="value" class="capitalize-first">
                                                         {{
                                                             value.value === "1"
                                                                 ? __("yes")

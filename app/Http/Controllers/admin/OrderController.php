@@ -102,23 +102,27 @@ class OrderController extends Controller
     {
         if ($request->type == 'deleteProduct') {
             $order = Order::findOrFail($id);
-            $products = $order->products;
-            $index = null;
+
+            $products = is_array($order->products)
+                ? $order->products
+                : json_decode($order->products, true);
+
+            if (isset($products['id'])) {
+                $products = [$products];
+            }
+
             foreach ($products as $key => $product) {
                 if ($product['id'] == $request->product_id) {
-                    $index = $key;
-                    $order['total_price'] -= $product['total_price'];
+                    $order->total_price -= $product['total_price'] ?? $product['price'];
+                    unset($products[$key]);
                     break;
                 }
             }
-            if ($index !== null) {
-                unset($products[$index]);
-            }
 
-            $order->products = array_values($products);
+            $order->products = $products;
             $order->save();
 
-            if (empty($order->products)) {
+            if (empty($products)) {
                 $this->destroy($id);
             }
         }
@@ -151,6 +155,8 @@ class OrderController extends Controller
             $order->delivery_price = $new_delivery_price;
             $order->save();
         }
+
+
         return to_route($this->route);
     }
 
